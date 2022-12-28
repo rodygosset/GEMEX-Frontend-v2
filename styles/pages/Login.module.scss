@@ -1,8 +1,37 @@
 
 @import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.scss";
+@import "@styles/abstracts/_colors.scss";
 
 .container {
     @include flex-container(row, nowrap);
-    gap: 30px;
-    font-weight: 400;
+    align-items: flex-start;
+
+    .login {
+        @include full-size-col;
+        padding: 30px;
+    }
+
+    .hero {
+        @include full-size-col;
+        background: $main-gradient;
+        padding: 30px;
+    }
+
+    .greeting {
+
+        @include flex-col-nowrap;
+        gap: 20px;
+
+        h1 {
+            @include header-1-regular;
+            color: $primary;
+        }
+    
+        p {
+            @include text-md-regular;
+            color: $primary-400;
+        }
+
+    }
 }

@@ -1,12 +1,30 @@
 
 
-@mixin reset-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-@mixin flex-container($direction, $should-wrap) {
+@mixin flex-container($direction, $should-wrap, $justify-content: flex-start, $align-items: stretch) {
     display: flex;
     flex-flow: $direction $should-wrap;
+    justify-content: $justify-content;
+    align-items: $align-items;
+}
+
+@mixin flex-row-nowrap {
+    @include flex-container(row, nowrap);
+}
+
+@mixin flex-row-wrap {
+    @include flex-container(row, wrap);
+}
+
+@mixin flex-col-nowrap {
+    @include flex-container(column, nowrap);
+}
+
+@mixin flex-col-wrap {
+    @include flex-container(row, wrap);
+}
+
+@mixin full-size-col {
+    @include flex-container(column, nowrap, center, center);
+    width: 100%;
+    height: 100%;
 }
