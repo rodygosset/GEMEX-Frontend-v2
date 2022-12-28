@@ -1,0 +1,41 @@
+
+$primary: #2962FF;
+$primary-600: rgba($primary, 0.6);
+$primary-400: rgba($primary, 0.4);
+$primary-200: rgba($primary, 0.2);
+$primary-100: rgba($primary, 0.1);
+
+$secondary: #AA00FA;
+$secondary-600: rgba($secondary, 0.6);
+$secondary-400: rgba($secondary, 0.4);
+$secondary-200: rgba($secondary, 0.2);
+$secondary-100: rgba($secondary, 0.1);
+
+
+$main-gradient: linear-gradient(135deg, $primary 0%, $secondary 75%);
+
+
+$success: #16B364;
+$success-600: rgba($success, 0.6);
+$success-400: rgba($success, 0.4);
+$success-200: rgba($success, 0.2);
+$success-100: rgba($success, 0.1);
+
+$error: #D92D20;
+$error-600: rgba($error, 0.6);
+$error-400: rgba($error, 0.4);
+$error-200: rgba($error, 0.2);
+$error-100: rgba($error, 0.1);
+
+
+$black: #000;
+$black-600: rgba($black, 0.6);
+$black-400: rgba($black, 0.4);
+$black-200: rgba($black, 0.2);
+$black-100: rgba($black, 0.1);
+
+$white: #FFF;
+$white-600: rgba($white, 0.6);
+$white-400: rgba($white, 0.4);
+$white-200: rgba($white, 0.2);
+$white-100: rgba($white, 0.1);

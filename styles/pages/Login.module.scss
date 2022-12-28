@@ -1,0 +1,8 @@
+
+@import "@styles/base/_mixins.scss";
+
+.container {
+    @include flex-container(row, nowrap);
+    gap: 30px;
+    font-weight: 400;
+}

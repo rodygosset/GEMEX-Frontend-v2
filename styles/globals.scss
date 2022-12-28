@@ -1,0 +1,43 @@
+@import "~@fontsource/josefin-sans/latin.css";
+
+@import "@styles/base/_typography.scss";
+
+// rem trick
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.6rem;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: $main-font;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  font-family: $main-font;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+body > div:first-child,
+div#__next,
+div#__next > div {
+  height: 100%;
+  width: 100%;
+}
