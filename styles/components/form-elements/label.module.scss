@@ -1,0 +1,9 @@
+
+@import "@styles/base/_typography.scss";
+@import "@styles/abstracts/_colors.scss";
+
+
+.label {
+    @include text-sm-semibold;
+    color: $primary;
+}

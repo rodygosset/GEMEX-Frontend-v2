@@ -1,0 +1,27 @@
+@import "@styles/base/_reset.scss";
+@import "@styles/base/_typography.scss";
+@import "@styles/abstracts/_colors.scss";
+
+
+
+.textInput {
+    @include reset-form-input;
+    @include text-sm-regular;
+    color: $primary;
+    background: $primary-100;
+
+    padding: 10px 20px;
+    border-radius: 5px;
+
+    &::placeholder {
+        color: $primary-400;
+    }
+
+    &.bigPadding {
+        padding: 20px;
+    }
+
+    &.fullWidth {
+        width: 100%;
+    }
+}

@@ -6,3 +6,21 @@
     padding: 0;
     list-style: none;
 }
+
+@mixin reset-form-input {
+    border: none;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+@mixin reset-button {
+    border: none;
+    background: none;
+    transition: all 200ms ease-in-out;
+
+    &:hover {
+        cursor: pointer;
+    }
+}

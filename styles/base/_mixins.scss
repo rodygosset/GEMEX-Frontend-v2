@@ -28,3 +28,14 @@
     width: 100%;
     height: 100%;
 }
+
+
+// shadows
+
+@mixin spread-shadow($color, $alpha, $y: 30px, $blur: 60px) {
+    box-shadow: 0px $y $blur rgba($color: $color, $alpha: $alpha);
+}
+
+@mixin spread-shadow-primary($y: 30px, $blur: 60px) {
+    @include spread-shadow($primary, 0.4, $y, $blur);
+}
