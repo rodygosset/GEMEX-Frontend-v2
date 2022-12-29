@@ -25,3 +25,7 @@
         width: 100%;
     }
 }
+
+input.textInput:-webkit-autofill {
+    -webkit-text-fill-color: $primary !important;
+}

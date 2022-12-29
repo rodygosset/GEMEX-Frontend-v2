@@ -6,7 +6,7 @@ import { MouseEventHandler } from "react";
 
 interface Props {
     children: any;
-    onClick: MouseEventHandler<HTMLButtonElement>
+    onClick: () => void
     icon?: IconProp;
     bigPadding?: boolean;
     fullWidth?: boolean;
