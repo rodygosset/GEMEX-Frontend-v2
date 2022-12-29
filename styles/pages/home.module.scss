@@ -1,0 +1,20 @@
+@import "@styles/base/_reset.scss";
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.scss";
+@import "@styles/abstracts/_colors.scss";
+@import "@styles/abstracts/_variables.scss";
+
+
+.container {
+	
+
+	padding: $nav-bar-height + 20px 2.5vw $nav-bar-height;
+
+	background: $primary-100;
+}
+
+.main {
+	@include full-size-col;
+}
+
+

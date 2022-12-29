@@ -1,9 +1,10 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import styles from '@styles/pages/Home.module.scss'
+import styles from '@styles/pages/home.module.scss'
 import { signOut, useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import PrimaryCTA from '@components/buttons/primary-cta'
+import Nav from '@components/layout/nav'
 
 const Home: NextPage = () => {
 
@@ -16,14 +17,14 @@ const Home: NextPage = () => {
 
 	return (
 		<div className={styles.container}>
-		<Head>
-			<title>Accueil</title>
-			<meta name="description" content="Page d'accueil de l'application GEMEX" />
-		</Head>
+			<Head>
+				<title>Accueil</title>
+				<meta name="description" content="Page d'accueil de l'application GEMEX" />
+			</Head>
 
-		<main className={styles.main}>
-			<PrimaryCTA onClick={handleLogOut}>Déconnexion</PrimaryCTA>
-		</main>
+			<main className={styles.main}>
+				<PrimaryCTA onClick={handleLogOut}>Déconnexion</PrimaryCTA>
+			</main>
 		</div>
 	)
 }

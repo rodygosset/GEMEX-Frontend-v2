@@ -1,5 +1,5 @@
 import axios from "axios"
-import { apiURL } from "conf/api/conf"
+import { apiURL } from "@conf/api/conf"
 import { AuthOptions } from "next-auth"
 import NextAuth from "next-auth/next"
 
