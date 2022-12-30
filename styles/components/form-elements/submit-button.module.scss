@@ -5,6 +5,7 @@
 
 .submitButton {
     @include reset-button;
+    @include button-text;
     width: fit-content;
     padding: 10px 20px;
     background: $primary;
@@ -26,6 +27,7 @@
 
     input {
         @include reset-button;
+        @include button-text;
         color: $white;
     }
 }
