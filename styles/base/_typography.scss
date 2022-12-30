@@ -197,3 +197,9 @@ $font-weight-bold: 700;
 @mixin button-text {
     @include typo-maker(1.4rem, $font-weight-semibold);
 }
+
+@mixin text-overflow-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

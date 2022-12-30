@@ -4,19 +4,17 @@
 @import "@styles/base/_typography.scss";
 @import "@styles/abstracts/_colors.scss";
 
-@mixin button-styler ($bg-color, $text-color, $padding) {
+@mixin button-styler ($bg-color, $text-color) {
     background: $bg-color;
     color: $text-color;
-    padding: $padding;
-    border-radius: 5px;
 }
 
 @mixin make-primary-button($main-color, $main-color-faded) {
 
-    @include button-styler($main-color-faded, $white, 10px 20px);
+    @include button-styler($main-color-faded, $white);
 
     &.active {
-        @include button-styler($main-color, $white, 10px 20px);
+        @include button-styler($main-color, $white);
         
         &.animateOnHover:hover {
             transform: scale(1.1);
@@ -28,11 +26,11 @@
 
 @mixin make-secondary-button($main-color, $main-color-faded, $main-color-background) {
 
-    @include button-styler($main-color-background, $main-color-faded, 10px 20px);
+    @include button-styler($main-color-background, $main-color-faded);
 
     &.active {
 
-        @include button-styler($main-color-background, $main-color, 10px 20px);
+        @include button-styler($main-color-background, $main-color);
 
         &.animateOnHover:hover {
             background: $main-color;
@@ -47,12 +45,11 @@
 
 @mixin make-tertiary-button($main-color, $main-color-faded, $main-color-background) {
 
-    @include button-styler(none, $main-color-faded, 0px);
+    @include button-styler(none, $main-color-faded);
 
     &.active {
 
-        @include button-styler(none, $main-color, 0px);
-        border-radius: 30px;
+        @include button-styler(none, $main-color);
 
         &.animateOnHover:hover {
             padding: 10px 20px;
@@ -69,6 +66,7 @@
     @include button-text;
     width: fit-content;
     gap: 10px;
+    border-radius: 5px;
 
     &.primary {
 
@@ -140,6 +138,15 @@
 
         }
 
+    }
+
+    &.bigBorderRadius {
+        border-radius: 30px;
+    }
+
+    &.withPadding {
+
+        padding: 10px 20px;
     }
 
     &.bigPadding {

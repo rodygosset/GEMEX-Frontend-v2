@@ -1,0 +1,44 @@
+@import "@styles/base/_reset.scss";
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.scss";
+@import "@styles/abstracts/_colors.scss";
+
+div.dropdownContainer {
+    position: relative;
+    width: 100px;
+    
+    transition: all 200ms ease-in-out;
+
+    &.showDropdown {  
+        width: 120px;
+    }
+
+
+    ul {
+        @include reset-list;
+        @include flex-col-nowrap;
+        position: absolute;
+        width: 100%;
+        gap: 0px;
+
+        background: $primary-100;
+        border-radius: 5px;
+
+        li  a {
+            @include flex-row-nowrap;
+            @include button-text;
+            width: 100%;
+            color: $primary;
+            gap: 10px;
+            padding: 15px;
+            border-radius: 3px;
+
+            &:hover {
+                background: $primary-100;
+            }
+        }
+        
+
+    }
+
+}

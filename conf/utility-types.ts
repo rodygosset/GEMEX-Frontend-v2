@@ -1,5 +1,8 @@
-import { DefaultSession } from "next-auth";
+import { Session } from "next-auth";
+import { User } from "./api/data-types/user";
 
-export interface MySession extends DefaultSession {
+// @ts-ignore
+export interface MySession extends Session {
     access_token: string;
+    user: User;
 }

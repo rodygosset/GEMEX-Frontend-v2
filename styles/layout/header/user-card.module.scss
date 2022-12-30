@@ -1,0 +1,34 @@
+@import "@styles/base/_reset.scss";
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.scss";
+@import "@styles/abstracts/_colors.scss";
+
+.container {
+
+    @include flex-container(row, nowrap, center, center);
+    gap: 30px;
+
+    .illustrationContainer {
+        position: relative;
+        width: 48px;
+        height: 48px;
+    }
+
+    .userInfo {
+
+        @include flex-col-nowrap;
+        gap: 5px;
+
+        h5 {
+            @include text-md-semibold;
+            color: $black;
+        }
+
+        p {
+            @include text-sm-medium;
+            color: $black-400;
+        }
+    
+    }
+    
+}

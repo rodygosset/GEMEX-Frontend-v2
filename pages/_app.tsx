@@ -4,7 +4,7 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { SessionProvider } from 'next-auth/react'
 import RouteGard from '@components/utils/route-gard'
-import Nav from '@components/layout/nav'
+import Header from '@components/layout/header'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           		<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png"/>
 			</Head>
 			<RouteGard>
-				<Nav/>
+				<Header/>
 				<Component {...pageProps} />
 			</RouteGard>
 		</SessionProvider>

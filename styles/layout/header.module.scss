@@ -5,7 +5,7 @@
 @import "@styles/abstracts/_variables.scss";
 
 
-.nav {
+.header {
     @include flex-container(row, nowrap, space-between, center);
     position: absolute;
     top: 0;
@@ -20,13 +20,23 @@
         color: $primary;
 
         svg {
-           font-size: 2.4rem; 
+           font-size: 2rem; 
         }
 
         p {
-            @include text-xl-semibold;
+            @include text-md-semibold;
         }
 
+    }
+
+    nav {
+
+        ul {
+            @include reset-list;
+            @include flex-container(row, nowrap, flex-start, center);
+            gap: 30px;
+
+        }
     }
 
 }

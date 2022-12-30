@@ -8,7 +8,7 @@ import { NextPage } from "next"
 import Head from "next/head"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { FormEvent, FormEventHandler, MouseEventHandler, useEffect, useState } from "react"
+import { FormEvent, FormEventHandler, useState } from "react"
 
 import { signIn, useSession } from "next-auth/react"
 import Button from "@components/button"

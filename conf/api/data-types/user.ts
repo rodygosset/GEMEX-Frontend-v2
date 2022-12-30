@@ -24,3 +24,4 @@ export interface UserGroup {
     id: number
 }
 
+export const getUserFullName = (user: User) => user.prenom + ' ' + user.nom
