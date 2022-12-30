@@ -1,17 +1,23 @@
-import { useSession } from "next-auth/react"
+import { apiURL } from "@conf/api/conf";
+import { MySession } from "@conf/utility-types";
+import axios from "axios";
+import { signOut, useSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import { isAuthError } from "utils/req-utils";
 
 
 interface Props {
-    children: any
+    children: any;
 }
 
 const RouteGard = ({ children }: Props) => {
     const [authorized, setAuthorized] = useState(false)
     const router = useRouter()
 
-    const { status } = useSession()
+    const { data, status } = useSession()
+
+    const session = data as MySession
 
     useEffect(() => {
         authCheck(router.asPath)
@@ -33,16 +39,36 @@ const RouteGard = ({ children }: Props) => {
     }, [status])
 
     const authCheck = (url: string) => {
-        const publicURLs = ['/login']
+        const publicURLs = [
+            '/login',
+            '/404'
+        ]
         const path = url.split('?')[0]
-        if(status == "unauthenticated" && !publicURLs.includes(path)) {
-            setAuthorized(false)
-            console.log("current path", path)
-            router.push({
-                pathname: '/login',
-                query: { returnUrl: url }
-            })
-        } else { setAuthorized(true) }
+        if(!publicURLs.includes(path)) {
+            if(status == "unauthenticated") {
+                setAuthorized(false)
+                router.push({
+                    pathname: '/login',
+                    query: { returnUrl: url }
+                })
+            } else if(status == "authenticated") {
+                // try to get user data using the access token in the session
+                // if the api returns with an auth error, redirect to login page
+                axios.get(`${apiURL}/hello/`, {
+                    headers: { Authorization: `bearer ${session.access_token}` }
+                }).then(res => {
+                    if(res.status == 200) setAuthorized(true)
+                })
+                .catch(error => {
+                    if(isAuthError(error)) {
+                        signOut({ callbackUrl: '/login' })
+                    }
+                })
+            }
+        } else {
+            // in case the url is public
+            setAuthorized(true)
+        }
     }
 
     return (authorized && children)

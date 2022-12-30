@@ -1,13 +1,10 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelToken, CancelTokenSource } from "axios";
+import { MySession } from "@conf/utility-types";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelTokenSource } from "axios";
 import { apiURL, apiURLs } from "conf/api/conf";
-import { DefaultSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router"
+import { isAuthError } from "utils/req-utils";
 import useLogOut from "./useLogOut";
-
-interface MySession extends DefaultSession {
-    access_token: string;
-}
 
 
 export type APIRequestFunction = <T, U>(
@@ -38,8 +35,7 @@ const useAPIRequest = () => {
         onSuccess?: (res: AxiosResponse<T>) => U,
         onFailure?: (error: Error | AxiosError) => U,
         cancelToken?: CancelTokenSource,
-        showPageOn404?: boolean,
-        notifyUser?: boolean
+        showPageOn404?: boolean
     ) => {
         const baseURL = `${apiURL}${apiURLs[itemType]}${additionalPath ? additionalPath : ""}`;
 
@@ -49,21 +45,20 @@ const useAPIRequest = () => {
         }
 
         const handleFailure = (error: Error | AxiosError) => {
-            // if(axios.isAxiosError(error)) {
-            //     const errorMessage = error.message;
-            //     if(error.response) {
-            //         if(error.response.status === 401) { logOut(); return }
-            //         if(!showPageOn404 && notifyUser) {
-            //             utils.notifyUser(`Erreur ${error.response.status} : ${errorMessage}`)
-            //         }
-            //     }
-            // } else {
-            //     console.log(error);
-            // }
-            console.log(error)
-            if(showPageOn404) {
-                router.push('/404')
+            if(axios.isAxiosError(error)) {
+                if(error.response) {
+                    // in case the user's token has expired
+                    // log out
+                    if(isAuthError(error)) {
+                        useLogOut()
+                    } else if(error.response.status == 404 && showPageOn404) {
+                        // redirect to the 404 page
+                        // todo: make 404 page
+                        router.push('/404')
+                    }
+                }
             }
+            console.log(error)
             if(typeof onFailure !== "undefined") {
                 return onFailure(error)
             }
@@ -71,7 +66,6 @@ const useAPIRequest = () => {
 
         const handleSuccess = (res: AxiosResponse<T>) => {
             if(typeof onSuccess !== "undefined") {
-                // console.log("result has arrived")
                 return onSuccess(res)
             }
         }
