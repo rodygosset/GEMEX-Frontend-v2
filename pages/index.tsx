@@ -1,9 +1,8 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '@styles/pages/home.module.scss'
-import { signOut, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
-import PrimaryCTA from '@components/buttons/primary-cta'
 
 interface Props {
 	expo: unknown;
@@ -16,8 +15,6 @@ const Home: NextPage<Props> = () => {
 	// @ts-ignore
 	useEffect(() => console.log(session?.user?.username, status), [session])
 
-	const handleLogOut = () => signOut({ callbackUrl: '/login' })
-
 
 
 	return (
@@ -28,7 +25,7 @@ const Home: NextPage<Props> = () => {
 			</Head>
 
 			<main className={styles.main}>
-				<PrimaryCTA onClick={handleLogOut}>Déconnexion</PrimaryCTA>
+				Hello, World !
 			</main>
 		</div>
 	)

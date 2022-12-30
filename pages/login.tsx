@@ -1,6 +1,5 @@
 import FieldContainer from "@components/form-elements/field-container"
 import Label from "@components/form-elements/label"
-import SubmitButton from "@components/form-elements/submit-button"
 import TextInput from "@components/form-elements/text-field"
 import { faGem, faRightToBracket } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -9,9 +8,10 @@ import { NextPage } from "next"
 import Head from "next/head"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { FormEvent, FormEventHandler, MouseEventHandler, useState } from "react"
+import { FormEvent, FormEventHandler, MouseEventHandler, useEffect, useState } from "react"
 
 import { signIn, useSession } from "next-auth/react"
+import Button from "@components/button"
 
 
 const Login: NextPage = () => {
@@ -39,9 +39,7 @@ const Login: NextPage = () => {
 
     const [signInFailed, setSignInFailed] = useState(false)
 
-    type FormSubmitHandler = FormEventHandler<HTMLFormElement> | MouseEventHandler<HTMLInputElement>
-
-    const handleSubmit: FormSubmitHandler = async (event: FormEvent | MouseEvent) =>{
+    const handleSubmit = async (event: FormEvent | MouseEvent) =>{
         event.preventDefault()
         signIn(
             "credentials", 
@@ -52,7 +50,7 @@ const Login: NextPage = () => {
             }
         ).then((response) => {
             if(!response) return
-            const { ok, error } = response
+            const { ok } = response
             ok ? router.push(returnUrl) : setSignInFailed(true)
         })
     }
@@ -94,12 +92,14 @@ const Login: NextPage = () => {
                             fullWidth
                         />
                     </FieldContainer>
-                    <SubmitButton 
-                        value={"Se connecter"} 
+                    <Button 
                         icon={faRightToBracket}
-                        onSubmit={(handleSubmit as MouseEventHandler)}
+                        type="submit"
+                        onClick={handleSubmit}
                         fullWidth
-                    />
+                    >
+                        Se connecter
+                    </Button>
                 </form>
                 <p className={styles.error + (signInFailed ? ' ' + styles.showError : '')}>Nom d'utilisateur ou mot de passe incorrect</p>
             </div>

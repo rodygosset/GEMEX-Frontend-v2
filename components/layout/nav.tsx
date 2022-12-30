@@ -1,12 +1,16 @@
 
-import { faGem } from "@fortawesome/free-solid-svg-icons"
+import Button from "@components/button"
+import { faGem, faRightFromBracket } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/layout/nav.module.scss"
+import { signOut } from "next-auth/react"
 import { useRouter } from "next/router"
 
 const Nav = () => {
 
     const router = useRouter()
+
+    const handleLogOut = () => signOut({ callbackUrl: '/login' })
 
 
     // don't show the nav bar on specific routes
@@ -25,6 +29,14 @@ const Nav = () => {
                 <FontAwesomeIcon icon={faGem} />
                 <p>GEMEX</p>
             </div>
+
+            <Button 
+                role="tertiary" 
+                status="discouraged" 
+                icon={faRightFromBracket} 
+                onClick={handleLogOut}>
+                    Déconnexion
+            </Button>
         </nav>
         
         :

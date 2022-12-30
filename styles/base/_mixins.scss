@@ -36,6 +36,6 @@
     box-shadow: 0px $y $blur rgba($color: $color, $alpha: $alpha);
 }
 
-@mixin spread-shadow-primary($y: 30px, $blur: 60px) {
-    @include spread-shadow($primary, 0.4, $y, $blur);
+@mixin spread-shadow-colored($color, $y: 30px, $blur: 60px) {
+    @include spread-shadow($color, 0.4, $y, $blur);
 }

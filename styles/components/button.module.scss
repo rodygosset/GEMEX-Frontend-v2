@@ -1,0 +1,152 @@
+
+@import "@styles/base/_reset.scss";
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.scss";
+@import "@styles/abstracts/_colors.scss";
+
+@mixin button-styler ($bg-color, $text-color, $padding) {
+    background: $bg-color;
+    color: $text-color;
+    padding: $padding;
+    border-radius: 5px;
+}
+
+@mixin make-primary-button($main-color, $main-color-faded) {
+
+    @include button-styler($main-color-faded, $white, 10px 20px);
+
+    &.active {
+        @include button-styler($main-color, $white, 10px 20px);
+        
+        &.animateOnHover:hover {
+            transform: scale(1.1);
+            @include spread-shadow-colored($main-color);
+        }
+    }
+}
+
+
+@mixin make-secondary-button($main-color, $main-color-faded, $main-color-background) {
+
+    @include button-styler($main-color-background, $main-color-faded, 10px 20px);
+
+    &.active {
+
+        @include button-styler($main-color-background, $main-color, 10px 20px);
+
+        &.animateOnHover:hover {
+            background: $main-color;
+            color: $white;
+            transform: scale(1.1);
+            @include spread-shadow-colored($main-color);
+        }
+
+    }
+
+} 
+
+@mixin make-tertiary-button($main-color, $main-color-faded, $main-color-background) {
+
+    @include button-styler(none, $main-color-faded, 0px);
+
+    &.active {
+
+        @include button-styler(none, $main-color, 0px);
+        border-radius: 30px;
+
+        &.animateOnHover:hover {
+            padding: 10px 20px;
+            background: $main-color-background;
+        }
+
+    }
+
+}
+
+.button {
+    @include reset-button;
+    @include flex-container(row, nowrap, center, center);
+    @include button-text;
+    width: fit-content;
+    gap: 10px;
+
+    &.primary {
+
+        @include make-primary-button($primary, $primary-600);
+
+        &.success {
+
+            @include make-primary-button($success, $success-600);
+
+        }
+
+        &.danger {
+
+            @include make-primary-button($error, $error-600);
+
+        }
+
+        &.discouraged {
+
+            @include make-primary-button($black-400, $black-100);
+
+        }
+
+    }
+
+    &.secondary {
+
+        @include make-secondary-button($primary, $primary-600, $primary-100);
+
+        &.success {
+
+            @include make-secondary-button($success, $success-600, $success-100);
+
+        }
+
+        &.danger {
+
+            @include make-secondary-button($error, $error-600, $error-100);
+
+        }
+
+        &.discouraged {
+
+            @include make-secondary-button($black-400, $black-100, rgba($black, 0.05));
+
+        }
+        
+    }
+
+    &.tertiary {
+
+        @include make-tertiary-button($primary, $primary-600, $primary-100);
+
+        &.success {
+
+            @include make-tertiary-button($success, $success-600, $success-100);
+
+        }
+
+        &.danger {
+
+            @include make-tertiary-button($error, $error-600, $error-100);
+
+        }
+
+        &.discouraged {
+
+            @include make-tertiary-button($black-400, $black-100, rgba($black, 0.05));
+
+        }
+
+    }
+
+    &.bigPadding {
+        padding: 15px 20px;
+    }
+
+    &.fullWidth {
+        width: 100%;
+    }
+}
