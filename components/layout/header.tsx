@@ -23,13 +23,11 @@ const Header = () => {
     // don't show the nav bar on specific routes
 
     const hiddenHeaderRoutes = [
-        "/login"
-    
+        "/login",
+        "/404"
     ]
 
     const shouldShowHeader = () => !hiddenHeaderRoutes.includes(router.pathname)
-
-    if(!shouldShowHeader()) return
 
     
     const navLinks: NavLink[] = [

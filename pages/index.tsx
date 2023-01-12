@@ -3,6 +3,7 @@ import Head from 'next/head'
 import styles from '@styles/pages/home.module.scss'
 import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
+import Button from '@components/button'
 
 interface Props {
 	expo: unknown;
@@ -25,7 +26,12 @@ const Home: NextPage<Props> = () => {
 			</Head>
 
 			<main className={styles.main}>
-				Hello, World !
+				<Button
+					role="primary"
+					active={true}
+					onClick={() => alert('hello')}>
+					Click Me!
+				</Button>
 			</main>
 		</div>
 	)
