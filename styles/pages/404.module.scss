@@ -12,7 +12,7 @@
     .illustrationContainer {
         position: relative;
         width: 100%;
-        max-width: 700px;
+        max-width: 500px;
         aspect-ratio: 1.226;
     }
 
@@ -26,6 +26,6 @@
 
     p {
         @include text-xl-regular;
-        color: $black-600;
+        color: $primary-600;
     }
 }

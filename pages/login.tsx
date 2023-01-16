@@ -56,16 +56,16 @@ const Login: NextPage = () => {
     }
 
     return (
-        <div className={styles.container}>
+        <main id={styles.container}>
             <Head>
                 <title>Se connecter</title>
                 <meta name="description" content="Page de connexion à l'application GEMEX" />
             </Head>
-            <div className={styles.login}>
-                <div className={styles.greeting}>
+            <section id={styles.loginForm}>
+                <section id={styles.greeting}>
                     <h2>Vous revoilà !</h2>
                     <p>Connectez-vous avec votre nom d&apos;utilisateur et votre matricule.</p>
-                </div>
+                </section>
                 <form 
                     name="login" 
                     onSubmit={(handleSubmit as FormEventHandler)}>
@@ -102,14 +102,14 @@ const Login: NextPage = () => {
                     </Button>
                 </form>
                 <p className={styles.error + (signInFailed ? ' ' + styles.showError : '')}>Nom d'utilisateur ou mot de passe incorrect</p>
-            </div>
-            <div className={styles.hero}>
+            </section>
+            <section id={styles.hero}>
                 <div className={styles.appName}>
                     <FontAwesomeIcon icon={faGem}/>
                     <h1>GEMEX</h1>
                     <p>Gestion, exploitation et maintenance des expositions</p>
                 </div>
-                <div className={styles.illustrationContainer}>
+                <section id={styles.illustrationContainer}>
                     <Image 
                         quality={100}
                         src={'/images/project-team.svg'} 
@@ -121,10 +121,10 @@ const Login: NextPage = () => {
                             top: "auto"
                         }}
                     />
-                </div>
-            </div>
+                </section>
+            </section>
             
-        </div>
+        </main>
     )
 }
 

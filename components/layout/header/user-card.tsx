@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 
 import styles from "@styles/layout/header/user-card.module.scss"
+import { capitalizeFirstLetter } from "utils/general"
 
 
 const UserCard = () => {
@@ -37,7 +38,7 @@ const UserCard = () => {
             </div>
             <div className={styles.userInfo}>
                 <h5>{getUserFullName(session?.user)}</h5>
-                <p>{userRole?.titre}</p>
+                <p>{userRole ? capitalizeFirstLetter(userRole.titre) : ""}</p>
             </div>
 
         </div>

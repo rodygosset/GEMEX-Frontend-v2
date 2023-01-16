@@ -3,11 +3,11 @@
 @import "@styles/base/_typography.scss";
 @import "@styles/abstracts/_colors.scss";
 
-.container {
+#container {
     @include flex-container(row, nowrap);
     align-items: flex-start;
 
-    .login {
+    #loginForm {
         @include full-size-col;
         width: auto;
         flex: 0 0 auto;
@@ -15,7 +15,7 @@
         gap: 60px;
         
 
-        .greeting {
+        #greeting {
 
             @include flex-col-nowrap;
             width: 100%;
@@ -52,7 +52,7 @@
         }
     }
 
-    .hero {
+    #hero {
         @include full-size-col;
         width: auto;
         background: $main-gradient;
@@ -82,7 +82,7 @@
 
         }
 
-        .illustrationContainer {
+        #illustrationContainer {
             position: relative;
             width: 100%;
             max-width: 700px;

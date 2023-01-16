@@ -10,9 +10,11 @@ const My404 = () => {
 
     const router = useRouter()
 
+    const handleClick = () => router.push('/')
+
 
     return (
-        <div className={styles.container}>
+        <main className={styles.container}>
             <div className={styles.illustrationContainer}>
                 <Image 
                     quality={100}
@@ -32,10 +34,10 @@ const My404 = () => {
                 icon={faHome}
                 role="secondary"
                 bigPadding
-                onClick={() => {}}>
-                <Link href="/">Retourner à l'accueil</Link>
+                onClick={handleClick}>
+                <Link href="/">Retour à l'accueil</Link>
             </Button>
-        </div>
+        </main>
     )
 }
 

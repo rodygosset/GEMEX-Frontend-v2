@@ -8,10 +8,10 @@ import useGetUserRole from "@hook/useGetUserRole"
 import { useEffect, useRef, useState } from "react"
 
 import styles from "@styles/layout/header/create-button.module.scss"
-import { formatItemName } from "utils/general"
 import { creatableItemsList } from "@conf/general"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Link from "next/link"
+import { useRouter } from "next/router"
 
 const CreateButton = () => {
 
@@ -42,7 +42,10 @@ const CreateButton = () => {
 
     const allowMultipleItems = getAuthorizedItemsCount() > 1
 
-    const handleCreateFicheClick = () => {}
+
+    const router = useRouter()
+
+    const handleCreateFicheClick = () => router.push("/create/fiches")
 
     // handle dropdown visibility
 
@@ -56,7 +59,7 @@ const CreateButton = () => {
         return styles.dropdownContainer + (showDropdown ? ' ' + styles.showDropdown : '')
     }
 
-    // close the dropdown when user clicks outside the dropdown
+    // close the dropdown when user clicks outside out of it
 
     const buttonRef = useRef(null)
 
@@ -110,7 +113,9 @@ const CreateButton = () => {
                 icon={faFileCirclePlus}
                 role="tertiary"
                 onClick={handleCreateFicheClick}>
-                Nouvelle Fiche
+                <Link href="/create/fiches">
+                    Nouvelle Fiche
+                </Link>
             </Button>
         :
         <></>

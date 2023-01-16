@@ -1,0 +1,39 @@
+
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.scss";
+@import "@styles/abstracts/_colors.scss";
+
+#searchBarContainer {
+
+    @include flex-container(row, nowrap, center, center);
+    width: 50vw;
+    height: 60px;
+    padding: 10px 30px;
+    gap: 10px;
+
+    background: $white;
+    border-radius: 10px;
+    box-shadow: 0px 30px 60px $primary-200;
+
+    // search icon
+
+    svg {
+        @include button-text;
+        color: $primary-600;
+    }
+
+    #textInput {
+        @include reset-form-input;
+        background: none;
+        @include text-md-medium;
+        color: $primary;
+        width: 100%;
+
+        &::placeholder {
+            @include text-md-medium;
+            color: $primary-400;
+        }
+
+    }
+
+}

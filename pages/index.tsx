@@ -3,37 +3,34 @@ import Head from 'next/head'
 import styles from '@styles/pages/home.module.scss'
 import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
-import Button from '@components/button'
+import SearchBar from '@components/form-elements/search-bar'
 
-interface Props {
-	expo: unknown;
-}
-
-const Home: NextPage<Props> = () => {
+const Home: NextPage = () => {
 
 	const { data: session, status } = useSession()
 
 	// @ts-ignore
 	useEffect(() => console.log(session?.user?.username, status), [session])
 
-
-
 	return (
-		<div className={styles.container}>
+		<main id={styles.container}>	
 			<Head>
 				<title>Accueil</title>
 				<meta name="description" content="Page d'accueil de l'application GEMEX" />
 			</Head>
-
-			<main className={styles.main}>
-				<Button
-					role="primary"
-					active={true}
-					onClick={() => alert('hello')}>
-					Click Me!
-				</Button>
-			</main>
-		</div>
+			<section id={styles.searchSection}>
+				<section id={styles.greeting}>
+					<h1>Bienvenu { session?.user ? session.user.prenom : '' }</h1>
+					<p>La base de données et les fiches sont à portée de main sur GEMEX</p>
+				</section>
+				<form onSubmit={e => e.preventDefault()}>
+					<SearchBar/>
+				</form>
+			</section>
+			<section id={styles.infoContainer}>
+				{/* TODO */}
+			</section>
+		</main>
 	)
 }
 

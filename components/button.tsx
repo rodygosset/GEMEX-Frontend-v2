@@ -20,6 +20,7 @@ interface Props {
     fullWidth?: boolean;
     status?: "success" | "danger" | "discouraged";
     bigBorderRadius?: boolean;
+    hidden?: boolean;
 }
 
 export type buttonStatus = "success" | "danger" | "discouraged" | undefined;
@@ -38,7 +39,8 @@ const Button = ({
         bigPadding, 
         fullWidth,
         status,
-        bigBorderRadius
+        bigBorderRadius,
+        hidden = false
     }: Props, ref: LegacyRef<HTMLButtonElement>) => {
 
     const getClassNames = () => {
@@ -60,6 +62,9 @@ const Button = ({
     }
 
     return (
+        hidden ? 
+        <></>
+        :
         <button
             ref={ref}
             className={getClassNames()}

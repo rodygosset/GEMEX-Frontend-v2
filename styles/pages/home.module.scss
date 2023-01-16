@@ -5,16 +5,43 @@
 @import "@styles/abstracts/_variables.scss";
 
 
-.container {
-	
-
-	padding: $nav-bar-height + 20px 2.5vw $nav-bar-height;
-
+#container {
+	@include flex-container(column, nowrap, flex-start, stretch);
+	padding: $nav-bar-height + 20px 7% $nav-bar-height;
 	background: $primary-100;
-}
+	gap: 40px;
 
-.main {
-	@include full-size-col;
+	#searchSection {
+		
+		@include full-size-col;
+		gap: 40px;
+		
+		#greeting {
+
+			@include flex-container(column, nowrap, center, center);
+			gap: 15px;
+	
+			h1 {
+				@include header-2-medium;
+				color: $primary;
+			}
+	
+			p {
+				@include text-md-medium;
+				color: $primary-600;
+			}
+		}
+
+		form {
+			@include flex-container(row, nowrap, center);
+			width: 100%;
+		}
+	}
+
+	#infoContainer {
+		height: 100%;
+	}
+
 }
 
 
