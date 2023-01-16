@@ -1,6 +1,6 @@
 
 import Button from "@components/button";
-import { defaultSearchItem, searchConf } from "@conf/api/search";
+import { defaultSearchItem, itemTypes, searchConf } from "@conf/api/search";
 import { faSearch } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/components/form-elements/search-bar.module.scss"
@@ -80,9 +80,11 @@ const SearchBar = (
                 id={styles.textInput} 
                 placeholder={placeholder}
             />
+            {/* item type select */}
             <Select 
                 name="itemType"
-                options={[]}
+                options={itemTypes}
+                hidden={hideSelect}
             />
             {/* submit button */}
             <Button

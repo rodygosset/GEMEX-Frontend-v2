@@ -1,8 +1,42 @@
+import { SelectOption } from "@utils/react-select/types";
 
 
 export const defaultSearchItem = "fiches"
 
 // type & const definitions for the search filters component
+
+
+// item types
+
+export const itemTypes: SelectOption[] = [
+    {
+        value: 'fiches',
+        label: 'Fiches',
+    },
+    {
+        value: 'fiches_systematiques',
+        label: 'Fiches Systématiques'
+    },
+    {
+        value: 'ilots',
+        label: 'Ilôts',
+    },
+    {
+        value: 'expositions',
+        label: 'Expositions',
+    },
+    {
+        value: 'elements',
+        label: 'Éléments',
+    }
+    // {
+    //     value: 'article',
+    //     label: 'Article',
+    //     icon: faBox,
+    //     permission: 'stocks',
+    // }
+
+]
 
 
 export interface SearchParam {

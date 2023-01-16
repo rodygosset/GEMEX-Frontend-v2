@@ -14,7 +14,7 @@ interface Props {
     isLoading?: boolean;
     required?: boolean;
     hidden?: boolean;
-    onChange?: (optionValue: string | number) => void
+    onChange?: <T>(optionValue: T | T[]) => void
 }
 
 const selectStyles: StylesConfig = {
@@ -55,8 +55,18 @@ const Select = (
 
     const handleSelect = (newValue: unknown) => {
         const newVal = newValue as SelectOption
-        onChange && onChange(newVal.value)
         setSelected(newVal)
+        if(onChange) { // if a handler was provided
+            if(isMulti) {
+                // in case this is a multi select, 
+                // convert SelectOption[] to string[]
+                // the string objects being the label of each selected option
+                onChange((newValue as SelectOption[]).map(option => option.label))
+            } else {
+                // otherwise pass the option's value to the handler
+                onChange(newVal.value)
+            }
+        }
     }
 
     return (
