@@ -1,7 +1,7 @@
 
 @import "@styles/base/_mixins.scss";
-@import "@styles/base/_typography.scss";
-@import "@styles/abstracts/_colors.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
 
 #searchBarContainer {
 
@@ -19,7 +19,10 @@
 
     svg {
         @include button-text;
-        color: $primary-600;
+
+        &.icon {
+            color: $primary-600;
+        }
     }
 
     #textInput {
@@ -27,7 +30,7 @@
         background: none;
         @include text-md-medium;
         color: $primary;
-        width: 100%;
+        flex: 1;
 
         &::placeholder {
             @include text-md-medium;

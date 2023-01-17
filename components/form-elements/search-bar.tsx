@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/components/form-elements/search-bar.module.scss"
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react"
-import Select from "@components/form-elements/select";
+import Select, { OnSelectHandler } from "@components/form-elements/select";
 
 interface Props {
     itemType?: string;
@@ -26,7 +26,6 @@ const SearchBar = (
 
     const placeholder = "Rechercher"
 
-
     // keep the "default param name" up to date, which is the name for the text input value
     // used in the search query that's passed to the search page
     // it needs to be updated when the item type changes 
@@ -39,6 +38,12 @@ const SearchBar = (
         setDefaultParamName(searchConf[itemType].defaultSearchParam)
     }, [itemType])
 
+
+    // notify the parent component when the item type changes
+
+    const handleItemTypeChange: OnSelectHandler = newItemType => {
+        onItemTypeUpdate && onItemTypeUpdate(newItemType as string);
+    }
     
     // submit
 
@@ -73,7 +78,7 @@ const SearchBar = (
 
     return (
         <div id={styles.searchBarContainer}>
-            <FontAwesomeIcon icon={faSearch}/>
+            <FontAwesomeIcon className={styles.icon} icon={faSearch}/>
             <input 
                 type="text" 
                 name={defaultParamName}
@@ -85,6 +90,9 @@ const SearchBar = (
                 name="itemType"
                 options={itemTypes}
                 hidden={hideSelect}
+                onChange={handleItemTypeChange}
+                isSearchable={false}
+                value={itemType}
             />
             {/* submit button */}
             <Button

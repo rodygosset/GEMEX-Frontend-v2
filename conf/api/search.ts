@@ -1,7 +1,7 @@
 import { SelectOption } from "@utils/react-select/types";
 
 
-export const defaultSearchItem = "fiches"
+export const defaultSearchItem = "elements"
 
 // type & const definitions for the search filters component
 
