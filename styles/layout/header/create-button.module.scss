@@ -22,6 +22,7 @@ div.dropdownContainer {
         gap: 0px;
 
         background: $primary-100;
+        backdrop-filter: blur(20px);
         border-radius: 5px;
 
         li  a {
