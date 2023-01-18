@@ -8,6 +8,7 @@ import UserCard from "./header/user-card"
 import { IconProp } from "@fortawesome/fontawesome-svg-core"
 import Button from "@components/button"
 import CreateButton from "./header/create-button"
+import Link from "next/link"
 
 
 interface NavLink {
@@ -52,10 +53,10 @@ const Header = () => {
         shouldShowHeader() ?
 
         <header className={styles.header}>
-            <div className={styles.logoContainer}>  
+            <Link href="/" className={styles.logoContainer}> 
                 <FontAwesomeIcon icon={faGem} />
-                <p>GEMEX</p>
-            </div>
+                GEMEX
+            </Link>
             <nav>
                 <ul>
                     {

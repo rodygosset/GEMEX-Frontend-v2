@@ -5,14 +5,17 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/components/form-elements/search-bar.module.scss"
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react"
+import { ChangeEventHandler, EventHandler, KeyboardEventHandler, MouseEventHandler, useEffect, useState } from "react"
 import Select, { OnSelectHandler } from "@components/form-elements/select";
 
 interface Props {
     itemType?: string;
     hideSelect?: boolean;
     hideCTA?: boolean;
-    onItemTypeUpdate?: (itemType: string) => any
+    fullWidth?: boolean;
+    onItemTypeChange?: (newItemType: string) => void,
+    onInputChange?: (newInputValue: string) => void,
+    onSubmit?: () => void
 }
 
 const SearchBar = (
@@ -20,11 +23,49 @@ const SearchBar = (
         itemType = defaultSearchItem,
         hideSelect,
         hideCTA,
-        onItemTypeUpdate
+        fullWidth,
+        onItemTypeChange,
+        onInputChange,
+        onSubmit
     }: Props
     ) => {
 
     const placeholder = "Rechercher"
+
+    // input state & effects
+
+    const [query, setQuery] = useState('')
+
+    const handleInputChange: ChangeEventHandler<HTMLInputElement> = event => {
+        event.preventDefault()
+        setQuery(event.target.value)
+    }
+
+    // keep the parent component updated with the latest value of the text input
+
+    useEffect(() => {
+        if(onInputChange) {
+            onInputChange(query)
+        } 
+    }, [query])
+
+
+    
+    // keep the item type value in state
+    // so we can use it in the submit handler
+
+    const [searchItemType, setSearchItemType] = useState(itemType)
+
+    // notify the parent component when the item type changes
+    // && update the state variable
+
+    const handleItemTypeChange: OnSelectHandler = newItemType => {
+        setSearchItemType(newItemType as string)
+        if(onItemTypeChange) {
+            onItemTypeChange(newItemType as string)
+        }
+    }
+
 
     // keep the "default param name" up to date, which is the name for the text input value
     // used in the search query that's passed to the search page
@@ -37,51 +78,52 @@ const SearchBar = (
     useEffect(() => {
         setDefaultParamName(searchConf[itemType].defaultSearchParam)
     }, [itemType])
-
-
-    // notify the parent component when the item type changes
-
-    const handleItemTypeChange: OnSelectHandler = newItemType => {
-        onItemTypeUpdate && onItemTypeUpdate(newItemType as string);
-    }
     
     // submit
+    // if provided, run the handler provided by the parent
+    // otherwise, go to the search page
 
     const router = useRouter()
 
-    const handleSubmit = () => {
-        // todo
-        router.push('/search')
+    const handleSubmit: KeyboardEventHandler = e => {
+        e.preventDefault()
+        if(onSubmit) {
+            onSubmit()
+        } else { 
+            console.log("query => ", query)
+            router.push({
+                pathname: "/search",
+                query: {
+                    item: searchItemType,
+                    [defaultParamName]: query
+                }
+            })
+        }
     }
 
     // submit on enter
 
-    useEffect(() => {
-        // we add an event listener that will run the handleSubmit function
-        // when the user hits 'enter'
-        const listener = (event: KeyboardEvent) => {
-            if(event.code == "Enter" || event.code == "NumpadEnter") {
-                event.preventDefault()
-                handleSubmit()
-            }
+    const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = e => {
+        if(e.code == "Enter" || e.code == "NumpadEnter") {
+            handleSubmit(e)
         }
-        // add this listener to our search bar ONLY
-        const searchBar = document.getElementById(styles.searchBarContainer)
-        searchBar?.addEventListener("keydown", listener)
-        // remove the listener on cleanup
-        return () => {
-            searchBar?.removeEventListener("keydown", listener)
-        }
-    }, [])
+    }
+
+    const getClassName = () => {
+        return fullWidth ? styles.fullWidth : ''
+    }
 
     // render
 
     return (
-        <div id={styles.searchBarContainer}>
+        <div id={styles.searchBarContainer} className={getClassName()}>
             <FontAwesomeIcon className={styles.icon} icon={faSearch}/>
             <input 
                 type="text" 
                 name={defaultParamName}
+                value={query}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
                 id={styles.textInput} 
                 placeholder={placeholder}
             />
@@ -92,7 +134,7 @@ const SearchBar = (
                 hidden={hideSelect}
                 onChange={handleItemTypeChange}
                 isSearchable={false}
-                value={itemType}
+                value={searchItemType}
             />
             {/* submit button */}
             <Button

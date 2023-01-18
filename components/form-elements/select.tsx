@@ -1,9 +1,8 @@
-import styles from "@styles/components/form-elements/select.module.scss"
 import colors from "@styles/abstracts/_colors.module.scss"
 import typography from "@styles/base/_typography.module.scss"
 import { SelectOption } from "@utils/react-select/types";
 import { ComponentType, useEffect, useState } from "react";
-import ReactSelect, { components, ContainerProps, CSSObjectWithLabel, DropdownIndicatorProps, StylesConfig } from "react-select";
+import ReactSelect, { components, CSSObjectWithLabel, DropdownIndicatorProps, StylesConfig } from "react-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCaretUp, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
@@ -182,7 +181,7 @@ const Select = (
                 onChange((newValue as SelectOption[]).map(option => option.label))
             } else {
                 // otherwise pass the option's value to the handler
-                onChange(newVal.value)
+                onChange(newVal?.value)
             }
         }
     }
@@ -206,7 +205,6 @@ const Select = (
         <></>
         :
         <ReactSelect
-            className={styles.select}
             options={options}
             styles={selectStyles}
             isSearchable={isSearchable}

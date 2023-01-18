@@ -16,15 +16,12 @@
 
     .logoContainer {
         @include flex-container(row, nowrap, center, center);
+        @include text-md-medium;
         gap: 20px;
         color: $primary;
 
         svg {
            font-size: 2rem; 
-        }
-
-        p {
-            @include text-md-medium;
         }
 
     }
