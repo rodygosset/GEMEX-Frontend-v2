@@ -11,7 +11,7 @@ export const defaultSearchItem = "elements"
 export const itemTypes: SelectOption[] = [
     {
         value: 'fiches',
-        label: 'Fiches',
+        label: 'Fiches'
     },
     {
         value: 'fiches_systematiques',
@@ -19,25 +19,38 @@ export const itemTypes: SelectOption[] = [
     },
     {
         value: 'ilots',
-        label: 'Ilôts',
+        label: 'Ilôts'
     },
     {
         value: 'expositions',
-        label: 'Expositions',
+        label: 'Expositions'
     },
     {
         value: 'elements',
-        label: 'Éléments',
+        label: 'Éléments'
+    },
+    {
+        value: 'stocks',
+        label: 'Stocks'
+    },
+    {
+        value: 'articles',
+        label: 'Articles'
+    },
+    {
+        value: 'constituents',
+        label: 'Constituents'
     }
-    // {
-    //     value: 'article',
-    //     label: 'Article',
-    //     icon: faBox,
-    //     permission: 'stocks',
-    // }
 
 ]
 
+export type SearchFilters = { [param: string]: SearchFilter }
+
+export interface SearchFilter {
+    value: any;
+    conf: SearchParam;
+    checked: boolean;
+}
 
 export interface SearchParam {
     type: string;
@@ -321,7 +334,9 @@ export const searchConf: SearchConf = {
 // used to parse SearchParam objects into URL queries
 
 
-export const searchQueryParams = {
+export type StringArrayObj = { [key: string]: string[] }
+
+export const searchQueryParams: StringArrayObj = {
     users:  [
         'username',
         'prenom',
@@ -456,9 +471,15 @@ export const searchQueryParams = {
         'informations',
         'user_en_charge_id',
         'periodicite',
-        'periodicite_operator',
+        'periodicite_inf',
+        'periodicite_inf_eg',
+        'periodicite_sup',
+        'periodicite_sup_eg',
         'rappel',
-        'rappel_operator',
+        'rappel_inf',
+        'rappel_inf_eg',
+        'rappel_sup',
+        'rappel_sup_eg',
         'annee_initiale',
         'mois_initiale',
         'jour_initiale',

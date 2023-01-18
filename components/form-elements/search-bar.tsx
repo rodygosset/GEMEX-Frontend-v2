@@ -1,17 +1,19 @@
 
-import Button from "@components/button";
-import { defaultSearchItem, itemTypes, searchConf } from "@conf/api/search";
+import Button from "@components/button"
+import { defaultSearchItem, itemTypes, searchConf } from "@conf/api/search"
 import { faSearch } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/components/form-elements/search-bar.module.scss"
-import { useRouter } from "next/router";
-import { ChangeEventHandler, EventHandler, KeyboardEventHandler, MouseEventHandler, useEffect, useState } from "react"
-import Select, { OnSelectHandler } from "@components/form-elements/select";
+import { useRouter } from "next/router"
+import { ChangeEventHandler, KeyboardEventHandler, useEffect, useState } from "react"
+import Select, { OnSelectHandler } from "@components/form-elements/select"
 
 interface Props {
+    defaultValue?: string;
     itemType?: string;
     hideSelect?: boolean;
     hideCTA?: boolean;
+    hideFilters?: boolean;
     fullWidth?: boolean;
     onItemTypeChange?: (newItemType: string) => void,
     onInputChange?: (newInputValue: string) => void,
@@ -20,9 +22,11 @@ interface Props {
 
 const SearchBar = (
     {
+        defaultValue,
         itemType = defaultSearchItem,
         hideSelect,
         hideCTA,
+        hideFilters = true,
         fullWidth,
         onItemTypeChange,
         onInputChange,
@@ -34,7 +38,7 @@ const SearchBar = (
 
     // input state & effects
 
-    const [query, setQuery] = useState('')
+    const [query, setQuery] = useState(defaultValue ? defaultValue : '')
 
     const handleInputChange: ChangeEventHandler<HTMLInputElement> = event => {
         event.preventDefault()
@@ -90,7 +94,6 @@ const SearchBar = (
         if(onSubmit) {
             onSubmit()
         } else { 
-            console.log("query => ", query)
             router.push({
                 pathname: "/search",
                 query: {
