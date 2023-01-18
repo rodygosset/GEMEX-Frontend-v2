@@ -37,7 +37,6 @@ const selectStyles: StylesConfig = {
     container: (base, state) => ({
         ...base,
         width: state.isMulti ? "100%" : "150px",
-        border: "none"
     }),
     control: (base, state) => ({
         ...base,
@@ -49,7 +48,8 @@ const selectStyles: StylesConfig = {
         borderRadius: state.isMulti ? "10px" : "5px",
         "&:hover": {
             border: "0",
-            boxShadow: "none"
+            boxShadow: "none",
+            cursor: "pointer"
         }
     }),
     valueContainer: base => ({
@@ -96,7 +96,8 @@ const selectStyles: StylesConfig = {
         background: state.isSelected ? colors["primary-100"] : "none",
         "&:hover": {
             color: colors["primary"],
-            background: colors["primary-100"]
+            background: colors["primary-100"],
+            cursor: "pointer"
         },
     }),
     multiValue: base => ({

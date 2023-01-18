@@ -10,6 +10,7 @@
     height: 60px;
     padding: 10px 30px;
     gap: 10px;
+    position: relative;
 
     background: $white;
     border-radius: 10px;
@@ -41,6 +42,12 @@
             color: $primary-400;
         }
 
+    }
+
+    .dropdownContainer {
+        position: absolute;
+        top: 50px;
+        width: 100%;
     }
 
 }

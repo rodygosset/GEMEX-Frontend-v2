@@ -1,0 +1,27 @@
+
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+.container {
+
+    @include flex-container(column, nowrap, flex-start, flex-start);
+    background: $white;
+
+    gap: 30px;
+    padding: 20px 30px;
+
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+    h4 {
+        @include text-md-medium;
+        color: $primary-600;
+    }
+
+    #filtersContainer {
+        @include flex-container(column, nowrap, flex-start, flex-start);
+        width: 100%;
+    }
+
+}

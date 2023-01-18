@@ -5,6 +5,7 @@ import styles from "@styles/pages/search.module.scss"
 import { Context } from "@utils/context"
 import { parseURLQuery } from "@utils/search-utils"
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
+import { DynamicObject } from "@utils/types"
 import { GetServerSideProps, NextPage } from "next"
 import { unstable_getServerSession } from "next-auth"
 import Head from "next/head"
@@ -14,7 +15,7 @@ import { authOptions } from "./api/auth/[...nextauth]"
 
 interface Props {
     queryItemType: string;
-    initSearchParams: any;
+    initSearchParams: DynamicObject;
     results: any[];
 }
 
@@ -36,16 +37,29 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
 
     const { searchParams, setSearchParams } = useContext(Context)
 
+    // state 
+
+    const [itemType, setItemType] = useState(queryItemType)
+
+    const [searchResults, setSearchResults] = useState(results)
+    
+    // when the item type changes, 
+    // update the search params
+
+    useEffect(() => setSearchParams({
+        ...searchParams,
+        item: itemType
+    }), [itemType])
+
     // load the search params from the URL query
 
     useEffect(() => {
-        setSearchParams(initSearchParams)
+        setSearchParams({
+            ...initSearchParams,
+            item: itemType
+        })
     }, [])
 
-    // state
-
-    const [itemType, setItemType] = useState(queryItemType)
-    const [searchResults, setSearchResults] = useState(results)
 
     // utils
 
@@ -53,7 +67,16 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
 
     // handlers
 
-    const handleItemTypeChange = (newItemType: string) => setItemType(newItemType)
+    const handleItemTypeChange = (newItemType: string) => {
+        setItemType(newItemType)
+    }
+
+    const handleSearchInputChange = (newInputValue: string) => {
+        setSearchParams({
+            ...searchParams,
+            [getDefaultSearchParam()]: newInputValue
+        })
+    }
 
     const handleFormSubmit = () => {
         router.push({
@@ -74,9 +97,12 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
             <form onSubmit={e => e.preventDefault()}>
 				<SearchBar
                     fullWidth
+                    hideCTA
+                    showFilters
                     defaultValue={ initSearchParams[getDefaultSearchParam()] }
                     itemType={itemType}
                     onItemTypeChange={handleItemTypeChange}
+                    onInputChange={handleSearchInputChange}
                     onSubmit={handleFormSubmit}
                 />
 			</form>

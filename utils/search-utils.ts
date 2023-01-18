@@ -5,13 +5,13 @@ import { DynamicObject } from "@utils/types";
 // convert the URL query string into an object 
 // that contains valid search params for our API
 
-export const parseURLQuery = (query: ParsedUrlQuery): [string, any] => {
+export const parseURLQuery = (query: ParsedUrlQuery): [string, DynamicObject] => {
 
-    if(!query.item || !(query.item.toString() in searchConf)) {
+    if(query.item && !(query.item.toString() in searchConf)) {
         return [defaultSearchItem, {}]
     }
 
-    const itemType = query.item.toString()
+    const itemType =  query.item ? query.item.toString() : defaultSearchItem
     let searchParams: DynamicObject = {}
 
     // get the search parameters as they are, from the URL query
@@ -108,7 +108,7 @@ export const toSearchFiltersObject = (itemType: string, searchParams: DynamicObj
         }
         // turn on "is_active" by default  
         else if(param == "is_active") {
-            newSearchFilters[param].checked = true;
+            newSearchFilters[param].checked = true
         }
     }
 
@@ -144,7 +144,7 @@ const loadDateParam = (param: string, newSearchFilters: SearchFilters, searchPar
 // in the search conf object, number
 
 const loadNumberParam = (param: string, newSearchFilters: SearchFilters, searchParams: DynamicObject, conf: SearchParam) => {
-    let paramName = conf.type == 'number' || conf.type == 'timeDelta' ? param : param.split('_')[0];
+    let paramName = conf.type == 'number' || conf.type == 'timeDelta' ? param : param.split('_')[0]
     // the search parameter can have different names in the search query depending on the operator
     const numberOperatorParams = [
         paramName,
@@ -166,11 +166,11 @@ const loadNumberParam = (param: string, newSearchFilters: SearchFilters, searchP
         if(name in searchParams) {
             if(conf.type == 'number' || conf.type == 'timeDelta') {
                 // load it into the SearchFilters
-                newSearchFilters[param].value = searchParams[name];
-                newSearchFilters[param].conf.defaultValue = searchParams[name];
-                newSearchFilters[param].checked = true;
+                newSearchFilters[param].value = searchParams[name]
+                newSearchFilters[param].conf.defaultValue = searchParams[name]
+                newSearchFilters[param].checked = true
             } else { // if it's a number OPERATOR
-                newSearchFilters[param].conf.defaultValue = operatorOptions[index];
+                newSearchFilters[param].conf.defaultValue = operatorOptions[index]
             }
         }
     })
@@ -189,11 +189,11 @@ export const toURLQuery = (searchFilters: SearchFilters, searchParams: DynamicOb
 
     for(const [filterName, filterData] of searchFiltersArray) {
 
-        const { conf } = filterData;
-        let searchParamName = filterName;
+        const { conf } = filterData
+        let searchParamName = filterName
 
         // don't add unchecked search parameters to the URL query
-        if(!filterData.checked) { continue; }
+        if(!filterData.checked) { continue }
 
         // the following switch statement is used to make adjustements
         // to values of particular data types
@@ -215,14 +215,14 @@ export const toURLQuery = (searchFilters: SearchFilters, searchParams: DynamicOb
 
         // once necessary adjustements have been made
         // update the URL query object
-        urlQuery[searchParamName] = filterData.value;
+        urlQuery[searchParamName] = filterData.value
     }
 
     // retrieve the default search parameter for the item
     // and add it to the urlQuery if it is set and isn't empty
     if(searchConf[itemType].defaultSearchParam in searchParams) {
 
-        let { defaultSearchParam } = searchConf[itemType];
+        let { defaultSearchParam } = searchConf[itemType]
 
         if(searchParams[defaultSearchParam]) {
             urlQuery[defaultSearchParam] = searchParams[defaultSearchParam] 
@@ -252,12 +252,12 @@ const numberOperatorValueToSearchParam = (operatorVal: string): string => {
 
 const dateToSearchParam = (date: { day: number, month: number, year: number }, urlQuery: DynamicObject, searchParamName: string) => {
     if('day' in date) {
-        urlQuery[searchParamName.replace("date", "jour")] = date.day;
+        urlQuery[searchParamName.replace("date", "jour")] = date.day
     }
     if('month' in date) {
-        urlQuery[searchParamName.replace("date", "mois")] = date.month;
+        urlQuery[searchParamName.replace("date", "mois")] = date.month
     }
     if('year' in date) {
-        urlQuery[searchParamName.replace("date", "annee")] = date.year;
+        urlQuery[searchParamName.replace("date", "annee")] = date.year
     }
 }

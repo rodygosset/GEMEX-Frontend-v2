@@ -1,19 +1,20 @@
 
 import Button from "@components/button"
 import { defaultSearchItem, itemTypes, searchConf } from "@conf/api/search"
-import { faSearch } from "@fortawesome/free-solid-svg-icons"
+import { faSearch, faSliders } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/components/form-elements/search-bar.module.scss"
 import { useRouter } from "next/router"
-import { ChangeEventHandler, KeyboardEventHandler, useEffect, useState } from "react"
+import { ChangeEventHandler, KeyboardEventHandler, useEffect, useRef, useState } from "react"
 import Select, { OnSelectHandler } from "@components/form-elements/select"
+import SearchFilters from "@components/search-filters"
 
 interface Props {
     defaultValue?: string;
     itemType?: string;
     hideSelect?: boolean;
     hideCTA?: boolean;
-    hideFilters?: boolean;
+    showFilters?: boolean;
     fullWidth?: boolean;
     onItemTypeChange?: (newItemType: string) => void,
     onInputChange?: (newInputValue: string) => void,
@@ -26,7 +27,7 @@ const SearchBar = (
         itemType = defaultSearchItem,
         hideSelect,
         hideCTA,
-        hideFilters = true,
+        showFilters = false,
         fullWidth,
         onItemTypeChange,
         onInputChange,
@@ -116,6 +117,29 @@ const SearchBar = (
         return fullWidth ? styles.fullWidth : ''
     }
 
+    // manage search filters visibility
+
+    const [showDropdown, setShowDropdown] = useState(false)
+
+    const toggleFiltersVisibilty = () => setShowDropdown(!showDropdown)
+
+    // close the dropdown when user clicks outside out of it
+
+    const buttonRef = useRef(null)
+
+    const dropdownRef = useRef(null)
+
+    const closeIfClickOutside = (event: MouseEvent) => {
+        // @ts-ignore
+        if(buttonRef.current && buttonRef.current.contains(event.target)) return
+        // @ts-ignore
+        if(dropdownRef.current && showDropdown && !dropdownRef.current.contains(event.target)) {
+            setShowDropdown(false)
+        }
+    }
+
+    document.addEventListener('mousedown', closeIfClickOutside)
+
     // render
 
     return (
@@ -139,12 +163,30 @@ const SearchBar = (
                 isSearchable={false}
                 value={searchItemType}
             />
+            {/* search filters */}
+            <Button
+                onClick={toggleFiltersVisibilty}
+                icon={faSliders}
+                hidden={!showFilters}>
+                Filtres
+            </Button>
             {/* submit button */}
             <Button
+                ref={buttonRef}
                 onClick={handleSubmit}
                 hidden={hideCTA}>
                 Rechercher
             </Button>
+            {
+                showDropdown ?
+                <SearchFilters
+                    ref={dropdownRef} 
+                    className={styles.dropdownContainer}
+                    onSubmit={onSubmit}
+                />
+                :
+                <></>
+            }
         </div>
     )
 }

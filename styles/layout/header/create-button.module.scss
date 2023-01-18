@@ -20,6 +20,7 @@ div.dropdownContainer {
         position: absolute;
         width: 100%;
         gap: 0px;
+        z-index: 9999;
 
         background: $primary-100;
         backdrop-filter: blur(20px);

@@ -1,3 +1,4 @@
+import { formatItemName } from "@utils/general";
 import { SelectOption } from "@utils/react-select/types";
 
 
@@ -5,6 +6,14 @@ export const defaultSearchItem = "elements"
 
 // type & const definitions for the search filters component
 
+
+export type OnFilterChangeHandler = (filterName: string, newValue: any) => void
+export type OnFilterToggleHandler = (filterName: string, checked: boolean) => void
+
+
+export const getFilterLabel = (conf: SearchParam) => {
+    return typeof conf.label !== 'undefined' ? conf.label : formatItemName(conf.type.slice(0, conf.type.length-1))
+}
 
 // item types
 
