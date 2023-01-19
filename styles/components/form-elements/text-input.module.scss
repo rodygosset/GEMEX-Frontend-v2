@@ -1,7 +1,7 @@
 @import "@styles/base/_reset.scss";
 @import "@styles/base/_typography.module.scss";
 @import "@styles/abstracts/_colors.module.scss";
-
+@import "@styles/abstracts/_variables.scss";
 
 
 .textInput {
@@ -9,12 +9,13 @@
     @include text-sm-regular;
     color: $primary;
     background: $primary-100;
+    width: $input-width;
 
     padding: 10px 20px;
     border-radius: 5px;
 
     &::placeholder {
-        color: $primary-400;
+        color: $primary-600;
     }
 
     &.bigPadding {

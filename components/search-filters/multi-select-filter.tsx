@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import FilterWrapper from "./filter-wrapper";
 
 
-const SelectFilter = (
+const MultiSelectFilter = (
     {
         name,
         filter,
@@ -30,6 +30,8 @@ const SelectFilter = (
     const makeAPIRequest = useAPIRequest()
 
     useEffect(() => {
+
+        if(!conf.item) return
 
         // start with making a request to the API
 
@@ -70,11 +72,11 @@ const SelectFilter = (
 
         makeAPIRequest(
             "get",
-            conf.type,
+            conf.item,
             undefined,
             undefined,
             handleReqSucess,
-            handleReqFailure
+            handleReqFailure,
         )
 
     }, [])
@@ -101,10 +103,11 @@ const SelectFilter = (
                 isLoading={isLoading}
                 value={selected}
                 onChange={handleChange}
+                isMulti
                 large
             />
         </FilterWrapper>
     )
 }
 
-export default SelectFilter
+export default MultiSelectFilter

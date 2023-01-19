@@ -7,12 +7,19 @@ export const defaultSearchItem = "elements"
 // type & const definitions for the search filters component
 
 
+export interface SearchFilterProps {
+    name: string;
+    filter: SearchFilter;
+    onChange: OnFilterChangeHandler;
+    onToggle: OnFilterToggleHandler;
+}
+
 export type OnFilterChangeHandler = (filterName: string, newValue: any) => void
 export type OnFilterToggleHandler = (filterName: string, checked: boolean) => void
 
 
-export const getFilterLabel = (conf: SearchParam) => {
-    return typeof conf.label !== 'undefined' ? conf.label : formatItemName(conf.type.slice(0, conf.type.length-1))
+export const getFilterLabel = (filterName: string, conf: SearchParam) => {
+    return typeof conf.label !== 'undefined' ? conf.label : formatItemName(filterName)
 }
 
 // item types
@@ -89,7 +96,7 @@ export const timeDeltaSearchParam: SearchParam = {
 
 export const itemSearchParam: SearchParam = {
     type: "",
-    defaultValue: 1,
+    defaultValue: null,
     minValue: 1
 }
 
@@ -142,8 +149,8 @@ export const searchConf: SearchConf = {
             nom: textSearchParam,
             user_id: { ...itemSearchParam, type: "users", label: "Auteur du fichier" },
             ilot_id: { ...itemSearchParam, type: "ilots", label: "Îlot" },
-            exposition_id: { ...itemSearchParam, type: "expositions" },
-            article_id: { ...itemSearchParam, type: "articles" },
+            exposition_id: { ...itemSearchParam, type: "expositions", label: "Exposition" },
+            article_id: { ...itemSearchParam, type: "articles", label: "Article" },
             element_id: { ...itemSearchParam, type: "elements", label: "Élément" }
         },
         searchResultFields: []
@@ -187,7 +194,7 @@ export const searchConf: SearchConf = {
             code: textSearchParam,
             categorie_id: { ...itemSearchParam, type: "categories_articles", label: "Catégorie" },
             lieu_stockage_id: { ...itemSearchParam, type: "lieux_stockage_articles", label: "Lieu de stockage" },
-            stock_id: { ...itemSearchParam, type: "stocks" },
+            stock_id: { ...itemSearchParam, type: "stocks", label: "Stock" },
             quantite: { ...numberSearchParam, label: "Quantité" },
             quantite_operator: numberOperatorSearchParam,
             description: textSearchParam,
@@ -203,10 +210,10 @@ export const searchConf: SearchConf = {
         url: "/api/stocks/historique/search/",
         defaultSearchParam: "article_id",
         searchParams: {
-            article_id: { ...itemSearchParam, type: "articles" },
+            article_id: { ...itemSearchParam, type: "articles", label: "Article" },
             user_id: { ...itemSearchParam, type: "users", label: "Utilisateur" },
-            stock_id: { ...itemSearchParam, type: "stocks" },
-            constituent_id: { ...itemSearchParam, type: "constituents" },
+            stock_id: { ...itemSearchParam, type: "stocks", label: "Stock" },
+            constituent_id: { ...itemSearchParam, type: "constituents", label: "Constituent" },
             quantite: { ...numberSearchParam, label: "Quantité" },
             quantite_operator: numberOperatorSearchParam,
             date_creation: { ...dateSearchParam, label: "Date de création" }
@@ -233,7 +240,7 @@ export const searchConf: SearchConf = {
             nom: textSearchParam,
             commentaire: textSearchParam,
             coefficient: { ...numberSearchParam, minValue: 0 },
-            exposition_id: { ...itemSearchParam, type: "expositions" },
+            exposition_id: { ...itemSearchParam, type: "expositions", label: "Exposition" },
             etat_id: { ...itemSearchParam, type: "etats_elements", label: "État" },
             exploitation_id: { ...itemSearchParam, type: "exploitations_elements", label: "Exploitation" },
             localisation_id: { ...itemSearchParam, type: "localisations_elements", label: "Localisation" },
@@ -253,7 +260,7 @@ export const searchConf: SearchConf = {
             quantite: { ...numberSearchParam, label: "Quantité" },
             quantite_operator: numberOperatorSearchParam,
             element_id: { ...itemSearchParam, type: "elements", label: "Élément" },
-            article_id: { ...itemSearchParam, type: "articles" },
+            article_id: { ...itemSearchParam, type: "articles", label: "Article" },
             date_creation: { ...dateSearchParam, label: "Date de création" }
         },
         searchResultFields: [
@@ -268,7 +275,7 @@ export const searchConf: SearchConf = {
             nom: { ...textSearchParam, label: "Titre" },
             auteur_id: { ...itemSearchParam, type: "users", label: "Auteur de la fiche" },
             ilot_id: { ...itemSearchParam, type: "ilots", label: "Îlot" },
-            exposition_id: { ...itemSearchParam, type: "expositions" },
+            exposition_id: { ...itemSearchParam, type: "expositions", label: "Exposition" },
             element_id: { ...itemSearchParam, type: "elements", label: "Élément" },
             date_debut: { ...dateSearchParam, label: "Date de début" },
             date_fin: { ...dateSearchParam, label: "Date de fin"},
@@ -299,7 +306,7 @@ export const searchConf: SearchConf = {
             nom: { ...textSearchParam, label: "Titre" },
             auteur_id: { ...itemSearchParam, type: "users", label: "Auteur de la fiche" },
             ilot_id: { ...itemSearchParam, type: "ilots", label: "Îlot" },
-            exposition_id: { ...itemSearchParam, type: "expositions" },
+            exposition_id: { ...itemSearchParam, type: "expositions", label: "Exposition" },
             element_id: { ...itemSearchParam, type: "elements", label: "Élément" },
             nature_id: { ...itemSearchParam, type: "natures_operations", label: "Nature de l'opération" },
             description: textSearchParam,

@@ -1,0 +1,15 @@
+
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+.wrapper {
+    @include flex-container(row, nowrap, space-between, center);
+    width: 100%;
+    padding: 10px 0px;
+
+    .label {
+        @include flex-container(row, nowrap, flex-start, center);
+        gap: 15px;
+    }
+}

@@ -1,11 +1,11 @@
 
 import styles from "@styles/components/form-elements/text-input.module.scss"
+import { FormFieldProps } from "@utils/types";
 import { ChangeEvent } from "react";
 
 
-interface Props {
+interface Props extends FormFieldProps<string> {
     placeholder?: string;
-    onChange: (newVal: string) => void;
     name?: string;
     defaultValue?: string;
     currentValue?: string;

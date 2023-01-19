@@ -1,0 +1,60 @@
+
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+$checkbox-size: 20px;
+$checkbox-border-radius: 5px;
+
+.checkbox {
+
+    @include flex-container(row, nowrap, center, center);
+    width: $checkbox-size;
+    height: $checkbox-size;
+
+    background: $primary-200;
+    border-radius: $checkbox-border-radius;
+
+    color: $white;
+
+    span {
+        color: transparent;
+        user-select: none;
+        width: 0px;
+        height: 0px;
+        background: $primary;
+        transition: all 100ms ease-in-out;
+        border-radius: $checkbox-border-radius;
+
+        @include flex-container(row, nowrap, center, center);
+
+        svg {
+            width: 0px;
+            height: 0px;
+            color: $white;
+
+            transition: all 100ms ease-in-out;
+        }
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &.checked {
+        span {
+            width: 100%;
+            height: 100%;
+
+            svg {
+                width: $checkbox-size - $checkbox-border-radius * 1.5 !important;
+                height: $checkbox-size - $checkbox-border-radius * 1.5 !important;
+            }
+        }
+    }
+
+    svg {
+        @include button-text;
+    }
+
+}

@@ -36,10 +36,11 @@
         @include text-md-medium;
         color: $primary;
         flex: 1;
+        width: 100%;
 
         &::placeholder {
             @include text-md-medium;
-            color: $primary-400;
+            color: $primary-600;
         }
 
     }

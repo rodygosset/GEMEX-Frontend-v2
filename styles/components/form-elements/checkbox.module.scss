@@ -1,0 +1,42 @@
+
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+$checkbox-height: 30px;
+
+.checkbox {
+    position: relative;
+    @include flex-container(row, nowrap, center, center);
+    width: $checkbox-height * 2;
+    height: $checkbox-height;
+    border-radius: $checkbox-height;
+
+    background: $primary-200;
+
+    span {
+        left: 0;
+        position: absolute;
+        color: transparent;
+        user-select: none;
+        border-radius: $checkbox-height;
+        width: $checkbox-height;
+        aspect-ratio: 1;
+        background: $white;
+        transition: all 200ms ease-in-out;
+
+        box-shadow: 0px 10px 30px $primary-600;
+    }
+
+    &.checked {
+
+        span {
+            left: $checkbox-height;
+        }
+
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+}

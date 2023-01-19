@@ -32,14 +32,6 @@ export const parseURLQuery = (query: ParsedUrlQuery): [string, DynamicObject] =>
         }
     }
 
-    // if "is_active" is part of the search parameters for the current item type
-    // & it's not present in the URL query
-    // set it to true, by default
-
-    if(searchQueryParams[itemType].includes("is_active") && !("is_active" in query)) {
-        searchParams["is_active"] = true
-    }
-
     return [itemType, searchParams]
 
 }
@@ -99,7 +91,10 @@ export const toSearchFiltersObject = (itemType: string, searchParams: DynamicObj
                     loadDateParam(param, newSearchFilters, searchParams)
                     break
                 case "boolean":
-                    newSearchFilters[param].value = searchParams[param] == "true"
+                    // account for string boolean values and actual boolean values
+                    // because the value may come from the URL query
+                    // or from a CheckBox component (happens when the itemType changes for example)
+                    newSearchFilters[param].value = searchParams[param] == "true" || searchParams[param] == true
                     break
                 default: // text
                     newSearchFilters[param].value = searchParams[param]
@@ -192,8 +187,15 @@ export const toURLQuery = (searchFilters: SearchFilters, searchParams: DynamicOb
         const { conf } = filterData
         let searchParamName = filterName
 
-        // don't add unchecked search parameters to the URL query
-        if(!filterData.checked) { continue }
+        // don't add unchecked or empty search parameters to the URL query
+
+        const emptyValues = [
+            null,
+            undefined,
+            ""
+        ]
+
+        if(!filterData.checked || emptyValues.includes(filterData.value)) { continue }
 
         // the following switch statement is used to make adjustements
         // to values of particular data types

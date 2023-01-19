@@ -51,6 +51,8 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
         item: itemType
     }), [itemType])
 
+    useEffect(() => console.log(searchParams), [searchParams])
+
     // load the search params from the URL query
 
     useEffect(() => {

@@ -5,9 +5,10 @@ import { faSearch, faSliders } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/components/form-elements/search-bar.module.scss"
 import { useRouter } from "next/router"
-import { ChangeEventHandler, KeyboardEventHandler, useEffect, useRef, useState } from "react"
+import { ChangeEventHandler, KeyboardEventHandler, useEffect, useState } from "react"
 import Select, { OnSelectHandler } from "@components/form-elements/select"
 import SearchFilters from "@components/search-filters"
+import { DynamicObject } from "@utils/types"
 
 interface Props {
     defaultValue?: string;
@@ -83,7 +84,24 @@ const SearchBar = (
     useEffect(() => {
         setDefaultParamName(searchConf[itemType].defaultSearchParam)
     }, [itemType])
-    
+
+    // build the default URL query
+
+    const buildURLQuery = () => {
+        let baseURLQuery: DynamicObject = { item: searchItemType }
+        // don't include the text input value
+        // if it's empty
+        if(query) {
+            baseURLQuery[defaultParamName] = query
+        }
+        // if the current item type accepts the "is_active" param
+        // set it to true by default
+        if("is_active" in searchConf[searchItemType].searchParams) {
+            baseURLQuery["is_active"] = true
+        }
+        return baseURLQuery
+    }
+
     // submit
     // if provided, run the handler provided by the parent
     // otherwise, go to the search page
@@ -95,12 +113,10 @@ const SearchBar = (
         if(onSubmit) {
             onSubmit()
         } else { 
+            // submit query to the search page
             router.push({
                 pathname: "/search",
-                query: {
-                    item: searchItemType,
-                    [defaultParamName]: query
-                }
+                query: buildURLQuery()
             })
         }
     }
@@ -119,26 +135,13 @@ const SearchBar = (
 
     // manage search filters visibility
 
-    const [showDropdown, setShowDropdown] = useState(false)
+    const [showDropdown, setShowDropdown] = useState(true)
 
     const toggleFiltersVisibilty = () => setShowDropdown(!showDropdown)
 
-    // close the dropdown when user clicks outside out of it
+    // input conf
 
-    const buttonRef = useRef(null)
-
-    const dropdownRef = useRef(null)
-
-    const closeIfClickOutside = (event: MouseEvent) => {
-        // @ts-ignore
-        if(buttonRef.current && buttonRef.current.contains(event.target)) return
-        // @ts-ignore
-        if(dropdownRef.current && showDropdown && !dropdownRef.current.contains(event.target)) {
-            setShowDropdown(false)
-        }
-    }
-
-    document.addEventListener('mousedown', closeIfClickOutside)
+    const maxLength = 50
 
     // render
 
@@ -153,6 +156,7 @@ const SearchBar = (
                 onKeyDown={handleKeyDown}
                 id={styles.textInput} 
                 placeholder={placeholder}
+                maxLength={maxLength}
             />
             {/* item type select */}
             <Select 
@@ -172,20 +176,19 @@ const SearchBar = (
             </Button>
             {/* submit button */}
             <Button
-                ref={buttonRef}
                 onClick={handleSubmit}
                 hidden={hideCTA}>
                 Rechercher
             </Button>
             {
-                showDropdown ?
+                // search filters
+                showFilters ?
                 <SearchFilters
-                    ref={dropdownRef} 
                     className={styles.dropdownContainer}
+                    hidden={!showDropdown}
                     onSubmit={onSubmit}
                 />
-                :
-                <></>
+                : <></>
             }
         </div>
     )

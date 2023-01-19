@@ -5,12 +5,17 @@ import styles from "@styles/components/search-filters.module.scss"
 import { Context } from "@utils/context"
 import { toSearchFiltersObject, toURLQuery } from "@utils/search-utils"
 import React, { FormEventHandler, useContext, useEffect, useState } from "react"
-import { LegacyRef } from "react"
 import Button from "./button"
+import BooleanFilter from "./search-filters/boolean-filter"
+import MultiSelectFilter from "./search-filters/multi-select-filter"
+import NumericFilter from "./search-filters/numeric-filter"
 import SelectFilter from "./search-filters/select-filter"
+import TextFilter from "./search-filters/text-filter"
+import VerticalScrollBar from "./utils/vertical-scrollbar"
 
 interface Props {
     className?: string;
+    hidden?: boolean;
     onSubmit?: () => void;
 }
 
@@ -21,21 +26,26 @@ interface Props {
 const SearchFilters = (
     {
         className,
+        hidden,
         onSubmit
-    }: Props,
-    ref: LegacyRef<HTMLElement>
+    }: Props
 ) => {
 
     const { searchParams, setSearchParams } = useContext(Context)
 
     // state 
 
-    const [searchFilters, setSearchFilters] = useState(toSearchFiltersObject(searchParams["item"].toString(), searchParams))
+    const [searchFilters, setSearchFilters] = useState(toSearchFiltersObject(searchParams["item"]?.toString(), searchParams))
 
+    // update the filters depending on the item type
+
+    useEffect(() => setSearchFilters(toSearchFiltersObject(searchParams["item"]?.toString(), searchParams)), [searchParams["item"]])
 
     // update the search params when the filters change
 
     useEffect(() => {
+        // avoid "can't access property of undefined" errors :(
+        if(!searchParams["item"]) return
         // get new URL query
         const newURLQuery = toURLQuery(searchFilters, searchParams, searchParams["item"].toString())
         
@@ -50,8 +60,9 @@ const SearchFilters = (
     // utils
 
     const getClassNames = () => {
-        let classNames = styles.container
-        classNames += className ? ' ' + className : ''
+        let classNames = ""
+        classNames += className ? className : ''
+        classNames += hidden ? ' ' + styles.hidden : ''
         return classNames
     }
 
@@ -80,9 +91,9 @@ const SearchFilters = (
         } 
     }
     return (
-        <section className={getClassNames()} ref={ref}>
+        <section className={getClassNames()} id={styles.container}>
             <h4>Paramètres de recherche</h4>
-            <div id={styles.filtersContainer}>
+            <VerticalScrollBar className={styles.filtersContainer}>
                 {
                     // Generate the form
                     // for each SearchFilter
@@ -93,6 +104,51 @@ const SearchFilters = (
                         const { conf } = filter
 
                         switch(conf.type) {
+                            case "text":
+                                // text input
+                                return (
+                                    <TextFilter
+                                        key={filterName}
+                                        name={filterName}
+                                        filter={filter}
+                                        onChange={handleFilterValueChange}
+                                        onToggle={handleFilterCheckedToggle}
+                                    />
+                                )
+                            case "boolean":
+                                // checkbox
+                                return (
+                                    <BooleanFilter
+                                        key={filterName}
+                                        name={filterName}
+                                        filter={filter}
+                                        onChange={handleFilterValueChange}
+                                        onToggle={handleFilterCheckedToggle}
+                                    />
+                                )
+                            case "number":
+                                // numeric input
+                                return (
+                                    <NumericFilter
+                                        key={filterName}
+                                        name={filterName}
+                                        filter={filter}
+                                        onChange={handleFilterValueChange}
+                                        onToggle={handleFilterCheckedToggle}
+                                    />
+                                )
+                            case "itemList": 
+                                // multi select
+                                if(!conf.item || !(conf.item in apiURLs)) { break }
+                                return (
+                                    <MultiSelectFilter
+                                        key={filterName}
+                                        name={filterName}
+                                        filter={filter}
+                                        onChange={handleFilterValueChange}
+                                        onToggle={handleFilterCheckedToggle}
+                                    />
+                                )
                             default:
                                 // select
                                 if(!(conf.type in apiURLs)) { break }
@@ -100,7 +156,7 @@ const SearchFilters = (
                                     <SelectFilter
                                         key={filterName}
                                         name={filterName}
-                                        conf={conf}
+                                        filter={filter}
                                         onChange={handleFilterValueChange}
                                         onToggle={handleFilterCheckedToggle}
                                     />
@@ -108,18 +164,19 @@ const SearchFilters = (
                         }
                     })
                 }
-                {/* Submit button */}
-                <Button 
+            </VerticalScrollBar>
+            {/* Submit button */}
+            <Button 
                     onClick={handleSubmit}
+                    className={styles.submitButton}
                     fullWidth
                     bigPadding
                     type="submit"
                     icon={faMagnifyingGlass}>
                     Rechercher
                 </Button>
-            </div>
         </section>
     )
 }
 
-export default React.forwardRef<HTMLElement, Props>(SearchFilters)
+export default SearchFilters

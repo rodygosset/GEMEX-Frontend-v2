@@ -1,10 +1,10 @@
-import { faCheck } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import styles from "@styles/components/search-filters/filter-checkbox.module.scss"
-import { FormFieldProps } from "@utils/types"
-import { ChangeEvent, MouseEvent } from "react"
 
-const FilterCheckBox = (
+import styles from "@styles/components/form-elements/checkbox.module.scss"
+import { FormFieldProps } from "@utils/types";
+import { ChangeEvent, MouseEvent } from "react";
+
+
+const CheckBox = (
     {
         value,
         onChange
@@ -26,14 +26,10 @@ const FilterCheckBox = (
         <>
             <input type="checkbox" hidden checked={value} onChange={handleChange} />
             <div className={getClassNames()} onClick={handleChange}>
-                <span>
-                    <FontAwesomeIcon icon={faCheck}/>
-                </span>
+                <span>p</span>
             </div>
         </>
     )
-
 }
 
-
-export default FilterCheckBox
+export default CheckBox

@@ -2,8 +2,9 @@
 @import "@styles/base/_mixins.scss";
 @import "@styles/base/_typography.module.scss";
 @import "@styles/abstracts/_colors.module.scss";
+@import "@styles/abstracts/_variables.scss";
 
-.container {
+#container {
 
     @include flex-container(column, nowrap, flex-start, flex-start);
     background: $white;
@@ -14,14 +15,30 @@
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 
+    overflow: hidden;
+
+    transition: all 300ms ease-in-out;
+
+    &.hidden {
+        height: 0px;
+        padding: 0px 30px;
+    }
+
     h4 {
         @include text-md-medium;
         color: $primary-600;
     }
 
-    #filtersContainer {
+    .filtersContainer {
         @include flex-container(column, nowrap, flex-start, flex-start);
         width: 100%;
+        // make sure it never overflows from the body
+        max-height: calc(100vh - calc($nav-bar-height + 300px));
+
+    }
+
+    .submitButton {
+        margin-top: 20px;
     }
 
 }

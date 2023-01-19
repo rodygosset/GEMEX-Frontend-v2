@@ -1,3 +1,4 @@
+import styles from "@styles/components/form-elements/select.module.scss"
 import colors from "@styles/abstracts/_colors.module.scss"
 import typography from "@styles/base/_typography.module.scss"
 import { SelectOption } from "@utils/react-select/types";
@@ -19,6 +20,7 @@ interface Props {
     isLoading?: boolean;
     required?: boolean;
     hidden?: boolean;
+    large?: boolean;
     onChange?: OnSelectHandler
 }
 
@@ -140,6 +142,7 @@ const Select = (
         isLoading = false,
         required = false,
         hidden = false,
+        large,
         onChange
     }: Props
     ) => {
@@ -167,7 +170,7 @@ const Select = (
         if(typeof value !== "undefined") {
             setSelected(getOptionFromValue(value))
         }
-    }, [value])
+    }, [value, options])
 
     // handle option selection
 
@@ -187,12 +190,23 @@ const Select = (
         }
     }
 
+    // utils
+
     const getDropdownIcon = (isMulti: boolean, menuIsOpen: boolean) => {
         if(isMulti) {
             return menuIsOpen ? faChevronUp : faChevronDown
         } else {
             return menuIsOpen ? faCaretUp : faCaretDown
         }
+    }
+
+    const getClassNames = () => {
+        let classNames = ''
+        // when props large & isMulti are combined,
+        // the width is twice the standard $input-width
+        classNames += large ? styles.large : ''
+        classNames += isMulti ? ' ' + styles.isMulti : ''
+        return classNames
     }
 
     const customDropdownIndicator: ComponentType<DropdownIndicatorProps> = props => (
@@ -206,13 +220,13 @@ const Select = (
         <></>
         :
         <ReactSelect
+            className={getClassNames()}
             options={options}
             styles={selectStyles}
             isSearchable={isSearchable}
             isMulti={isMulti}
             isLoading={isLoading}
             menuPortalTarget={document.body}
-            defaultValue={defaultValue}
             value={selected}
             form={form}
             name={name}

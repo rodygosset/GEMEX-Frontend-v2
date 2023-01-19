@@ -21,6 +21,7 @@ interface Props {
     status?: "success" | "danger" | "discouraged";
     bigBorderRadius?: boolean;
     hidden?: boolean;
+    className?: string;
 }
 
 export type buttonStatus = "success" | "danger" | "discouraged" | undefined;
@@ -40,7 +41,8 @@ const Button = ({
         fullWidth,
         status,
         bigBorderRadius,
-        hidden = false
+        hidden,
+        className
     }: Props, ref: LegacyRef<HTMLButtonElement>) => {
 
     const getClassNames = () => {
@@ -53,6 +55,7 @@ const Button = ({
         classNames += ' ' + (role ? styles[role] : styles.primary)
         classNames += (status ? ' ' + styles[status] : '')
         classNames += (bigBorderRadius ? ' ' + styles.bigBorderRadius : '')
+        classNames += className ? ' ' + className : ''
         return classNames
     }
 
