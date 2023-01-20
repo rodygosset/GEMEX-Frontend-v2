@@ -7,10 +7,12 @@ import { toSearchFiltersObject, toURLQuery } from "@utils/search-utils"
 import React, { FormEventHandler, useContext, useEffect, useState } from "react"
 import Button from "./button"
 import BooleanFilter from "./search-filters/boolean-filter"
+import DateFilter from "./search-filters/date-filter"
 import MultiSelectFilter from "./search-filters/multi-select-filter"
 import NumericFilter from "./search-filters/numeric-filter"
 import SelectFilter from "./search-filters/select-filter"
 import TextFilter from "./search-filters/text-filter"
+import TimeDeltaFilter from "./search-filters/time-delta-filter"
 import VerticalScrollBar from "./utils/vertical-scrollbar"
 
 interface Props {
@@ -130,6 +132,28 @@ const SearchFilters = (
                                 // numeric input
                                 return (
                                     <NumericFilter
+                                        key={filterName}
+                                        name={filterName}
+                                        filter={filter}
+                                        onChange={handleFilterValueChange}
+                                        onToggle={handleFilterCheckedToggle}
+                                    />
+                                )
+                            case "date":
+                                // date input
+                                return (
+                                    <DateFilter
+                                        key={filterName}
+                                        name={filterName}
+                                        filter={filter}
+                                        onChange={handleFilterValueChange}
+                                        onToggle={handleFilterCheckedToggle}
+                                    />
+                                )
+                            case "timeDelta":
+                                // filter representing an amount of time
+                                return (
+                                    <TimeDeltaFilter
                                         key={filterName}
                                         name={filterName}
                                         filter={filter}

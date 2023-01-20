@@ -15,7 +15,8 @@ interface Props {
     itemType?: string;
     hideSelect?: boolean;
     hideCTA?: boolean;
-    showFilters?: boolean;
+    showFiltersButton?: boolean;
+    onFiltersToggle?: () => void;
     fullWidth?: boolean;
     onItemTypeChange?: (newItemType: string) => void,
     onInputChange?: (newInputValue: string) => void,
@@ -28,7 +29,8 @@ const SearchBar = (
         itemType = defaultSearchItem,
         hideSelect,
         hideCTA,
-        showFilters = false,
+        showFiltersButton = false,
+        onFiltersToggle,
         fullWidth,
         onItemTypeChange,
         onInputChange,
@@ -135,9 +137,9 @@ const SearchBar = (
 
     // manage search filters visibility
 
-    const [showDropdown, setShowDropdown] = useState(true)
-
-    const toggleFiltersVisibilty = () => setShowDropdown(!showDropdown)
+    const toggleFiltersVisibilty = () => {
+        if(onFiltersToggle) onFiltersToggle()
+    }
 
     // input conf
 
@@ -171,7 +173,7 @@ const SearchBar = (
             <Button
                 onClick={toggleFiltersVisibilty}
                 icon={faSliders}
-                hidden={!showFilters}>
+                hidden={!showFiltersButton}>
                 Filtres
             </Button>
             {/* submit button */}
@@ -181,14 +183,14 @@ const SearchBar = (
                 Rechercher
             </Button>
             {
-                // search filters
-                showFilters ?
-                <SearchFilters
-                    className={styles.dropdownContainer}
-                    hidden={!showDropdown}
-                    onSubmit={onSubmit}
-                />
-                : <></>
+            //     search filters
+            //     showFiltersButton ?
+            //     <SearchFilters
+            //         className={styles.dropdownContainer}
+            //         hidden={!showDropdown}
+            //         onSubmit={onSubmit}
+            //     />
+            //     : <></>
             }
         </div>
     )

@@ -289,7 +289,7 @@ export const searchConf: SearchConf = {
             is_active: { ...booleanSearchParam, defaultValue: true, label: "Active" },
             status_id: { ...itemSearchParam, type: "fiches_status", label: "Status" },
             tags: { ...itemListSearchParam, item: "tags" },
-            date_creation: { ...dateSearchParam, label: "Date de création"}
+            date_creation: { ...dateSearchParam, label: "Date de création" }
         },
         searchResultFields: [
             "user_en_charge_id",
@@ -316,8 +316,8 @@ export const searchConf: SearchConf = {
             periodicite_operator: numberOperatorSearchParam,
             rappel: timeDeltaSearchParam,
             rappel_operator: numberOperatorSearchParam,
-            date_initiale: dateSearchParam,
-            date_prochaine: dateSearchParam,
+            date_initiale: { ...dateSearchParam, label: "Date initiale" },
+            date_prochaine: { ...dateSearchParam, label: "Date prochaine" },
             is_active: { ...booleanSearchParam, defaultValue: true, label: "Active" },
             tags: { ...itemListSearchParam, item: "tags" },
             date_creation: { ...dateSearchParam, label: "Date de création" }

@@ -9,19 +9,19 @@
     @include flex-container(column, nowrap, flex-start, flex-start);
     background: $white;
 
+    width: 500px;
+
     gap: 30px;
     padding: 20px 30px;
 
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    border-radius: 10px;
 
-    overflow: hidden;
+    box-shadow: 0px 30px 60px $primary-200;
 
     transition: all 300ms ease-in-out;
 
     &.hidden {
-        height: 0px;
-        padding: 0px 30px;
+        display: none;
     }
 
     h4 {
@@ -33,12 +33,12 @@
         @include flex-container(column, nowrap, flex-start, flex-start);
         width: 100%;
         // make sure it never overflows from the body
-        max-height: calc(100vh - calc($nav-bar-height + 300px));
+        max-height: calc(100vh - calc($nav-bar-height + 280px));
 
     }
 
     .submitButton {
-        margin-top: 20px;
+        margin-top: auto;
     }
 
 }

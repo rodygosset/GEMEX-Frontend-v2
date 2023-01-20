@@ -15,7 +15,7 @@
     background: $white;
     border-radius: 10px;
     box-shadow: 0px 30px 60px $primary-200;
-
+    
     &.fullWidth {
         width: 100%;
     }
@@ -43,12 +43,6 @@
             color: $primary-600;
         }
 
-    }
-
-    .dropdownContainer {
-        position: absolute;
-        top: 50px;
-        width: 100%;
     }
 
 }

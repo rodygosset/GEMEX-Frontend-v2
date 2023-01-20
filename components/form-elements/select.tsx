@@ -202,10 +202,7 @@ const Select = (
 
     const getClassNames = () => {
         let classNames = ''
-        // when props large & isMulti are combined,
-        // the width is twice the standard $input-width
         classNames += large ? styles.large : ''
-        classNames += isMulti ? ' ' + styles.isMulti : ''
         return classNames
     }
 

@@ -1,4 +1,5 @@
 import SearchBar from "@components/form-elements/search-bar"
+import SearchFilters from "@components/search-filters"
 import { searchConf } from "@conf/api/search"
 import { MySession } from "@conf/utility-types"
 import styles from "@styles/pages/search.module.scss"
@@ -42,7 +43,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
     const [itemType, setItemType] = useState(queryItemType)
 
     const [searchResults, setSearchResults] = useState(results)
-    
+
     // when the item type changes, 
     // update the search params
 
@@ -61,6 +62,13 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
             item: itemType
         })
     }, [])
+
+    // manage search filters visibility
+
+    
+    const [showFilters, setShowFilters] = useState(false)
+    
+    const toggleFiltersVisibilty = () => setShowFilters(!showFilters)
 
 
     // utils
@@ -96,18 +104,23 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
 				<title>Recherche</title>
 				<meta name="description" content="Page de recherche de GEMEX" />
 			</Head>
-            <form onSubmit={e => e.preventDefault()}>
-				<SearchBar
+            <SearchFilters 
+                hidden={!showFilters} 
+                onSubmit={handleFormSubmit}
+            />
+            <form onSubmit={e => e.preventDefault()}> 
+                <SearchBar
                     fullWidth
                     hideCTA
-                    showFilters
+                    showFiltersButton
+                    onFiltersToggle={toggleFiltersVisibilty}
                     defaultValue={ initSearchParams[getDefaultSearchParam()] }
                     itemType={itemType}
                     onItemTypeChange={handleItemTypeChange}
                     onInputChange={handleSearchInputChange}
                     onSubmit={handleFormSubmit}
                 />
-			</form>
+            </form>
         </main>
     )
 }

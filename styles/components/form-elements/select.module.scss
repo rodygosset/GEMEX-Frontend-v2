@@ -6,8 +6,4 @@
 
 .large {
     width: $input-width !important;
-
-    &.isMulti {
-        width: $input-width * 2 !important;   
-    }
 }
