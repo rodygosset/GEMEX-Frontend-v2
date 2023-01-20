@@ -1,0 +1,39 @@
+
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/abstracts/_variables.scss";
+
+.container {
+
+    @include flex-container(row, nowrap, flex-start, center);
+    gap: 10px;
+    padding: 20px 30px;
+    width: $input-width;
+    border-radius: 5px;
+
+    background: $primary-100;
+
+    .wrapper {
+        width: fit-content;
+    }
+    
+    .dateInput {
+        @include reset-form-input;
+        @include button-text;
+        color: $primary;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .header {
+        @include flex-container(row, nowrap, center, center);
+        gap: 10px;
+        background: $primary-100;
+        padding: 10px;
+        @include button-text;
+    }
+
+}

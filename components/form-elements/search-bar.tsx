@@ -7,7 +7,6 @@ import styles from "@styles/components/form-elements/search-bar.module.scss"
 import { useRouter } from "next/router"
 import { ChangeEventHandler, KeyboardEventHandler, useEffect, useState } from "react"
 import Select, { OnSelectHandler } from "@components/form-elements/select"
-import SearchFilters from "@components/search-filters"
 import { DynamicObject } from "@utils/types"
 
 interface Props {
@@ -182,16 +181,6 @@ const SearchBar = (
                 hidden={hideCTA}>
                 Rechercher
             </Button>
-            {
-            //     search filters
-            //     showFiltersButton ?
-            //     <SearchFilters
-            //         className={styles.dropdownContainer}
-            //         hidden={!showDropdown}
-            //         onSubmit={onSubmit}
-            //     />
-            //     : <></>
-            }
         </div>
     )
 }

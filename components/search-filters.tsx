@@ -83,6 +83,9 @@ const SearchFilters = (
         let newSearchFilters = { ...searchFilters }
         newSearchFilters[filterName].checked = checked
         setSearchFilters(newSearchFilters)
+        if(newSearchFilters[filterName].conf.type == "date") {
+            console.log("date checked ?", filterName, checked)
+        }
     }
 
 
@@ -100,7 +103,6 @@ const SearchFilters = (
                     // Generate the form
                     // for each SearchFilter
                     // render a component according to its type
-
                     Object.keys(searchFilters).map(filterName => {
                         const filter = searchFilters[filterName]
                         const { conf } = filter
@@ -191,14 +193,14 @@ const SearchFilters = (
             </VerticalScrollBar>
             {/* Submit button */}
             <Button 
-                    onClick={handleSubmit}
-                    className={styles.submitButton}
-                    fullWidth
-                    bigPadding
-                    type="submit"
-                    icon={faMagnifyingGlass}>
-                    Rechercher
-                </Button>
+                onClick={handleSubmit}
+                className={styles.submitButton}
+                fullWidth
+                bigPadding
+                type="submit"
+                icon={faMagnifyingGlass}>
+                Rechercher
+            </Button>
         </section>
     )
 }

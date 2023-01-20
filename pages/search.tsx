@@ -66,7 +66,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
     // manage search filters visibility
 
     
-    const [showFilters, setShowFilters] = useState(false)
+    const [showFilters, setShowFilters] = useState(true)
     
     const toggleFiltersVisibilty = () => setShowFilters(!showFilters)
 

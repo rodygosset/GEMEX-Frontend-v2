@@ -1,6 +1,6 @@
 import { defaultSearchItem, searchConf, SearchFilters, SearchParam, searchQueryParams } from "@conf/api/search";
 import { ParsedUrlQuery } from "querystring";
-import { DynamicObject } from "@utils/types";
+import { DateInputValue, DynamicObject } from "@utils/types";
 
 // convert the URL query string into an object 
 // that contains valid search params for our API
@@ -76,6 +76,12 @@ export const toSearchFiltersObject = (itemType: string, searchParams: DynamicObj
         // if a value for the current search parameter
         // was provided through the URL query string
 
+        const specialFilterTypes = [
+            "date",
+            "timeDelta",
+            "numberOperator"
+        ]
+
         if(param in searchParams) { 
             newSearchFilters[param].checked = true
             // set the value to the one provided in the query
@@ -83,12 +89,7 @@ export const toSearchFiltersObject = (itemType: string, searchParams: DynamicObj
             // depending on its expected type (from the conf)
             switch(conf.type) {
                 case "number":
-                case "timeDelta":
-                case "numberOperator":
                     loadNumberParam(param, newSearchFilters, searchParams, conf)
-                    break
-                case "date":
-                    loadDateParam(param, newSearchFilters, searchParams)
                     break
                 case "boolean":
                     // account for string boolean values and actual boolean values
@@ -100,6 +101,21 @@ export const toSearchFiltersObject = (itemType: string, searchParams: DynamicObj
                     newSearchFilters[param].value = searchParams[param]
                     break
             }
+        } else if(specialFilterTypes.includes(conf.type)) {
+            // for some types of filter
+            // the name won't appear as is in the URL query
+            // because it can be broken into several values
+            switch(conf.type) {
+                case "timeDelta":
+                case "numberOperator":
+                    loadNumberParam(param, newSearchFilters, searchParams, conf)
+                    break
+                case "date":
+                    loadDateParam(param, newSearchFilters, searchParams)
+                    break
+                default:
+                    break
+            }
         }
         // turn on "is_active" by default  
         else if(param == "is_active") {
@@ -109,7 +125,7 @@ export const toSearchFiltersObject = (itemType: string, searchParams: DynamicObj
 
     // return the new SearchFilters object
 
-    return newSearchFilters;
+    return newSearchFilters
 }
 
 // given that in the search conf object, date params aren't seperated into 
@@ -128,11 +144,27 @@ const loadDateParam = (param: string, newSearchFilters: SearchFilters, searchPar
         param.replace('date', 'jour')
     ]
 
+    // bridge between search param names & DateInputValue object properties
+    
+    const getDateUnitFromParam = (param: string) => {
+        if(param.includes("annee")) return "year"
+        if(param.includes("mois"))  return "month"
+        if(param.includes("jour"))   return "day"
+    }
+    let dateInputValue: DateInputValue = {}
     for(const dateParam of dateParams) {
         if(dateParam in searchParams) {
-            newSearchFilters[dateParam].checked = true
+            // get param value & store it inside our DateInputValue object
+            // to be used by the SearchFilters
+            // @ts-ignore
+            dateInputValue[getDateUnitFromParam(dateParam)] = searchParams[dateParam]
         }
     }
+    // don't load the value if it's not properly formatted
+    if(!("year" in dateInputValue) || ("day" in dateInputValue && !("month" in dateInputValue))) return
+    // load the value
+    newSearchFilters[param].value = dateInputValue
+    newSearchFilters[param].checked = true
 }
 
 // same problem here as in the above function
