@@ -107,16 +107,21 @@ const SearchFilters = (
                         const filter = searchFilters[filterName]
                         const { conf } = filter
 
+                        // DRY
+                        const filterProps = {
+                            name: filterName,
+                            filter: filter,
+                            onChange: handleFilterValueChange,
+                            onToggle: handleFilterCheckedToggle
+                        }
+
                         switch(conf.type) {
                             case "text":
                                 // text input
                                 return (
                                     <TextFilter
                                         key={filterName}
-                                        name={filterName}
-                                        filter={filter}
-                                        onChange={handleFilterValueChange}
-                                        onToggle={handleFilterCheckedToggle}
+                                        {...filterProps}
                                     />
                                 )
                             case "boolean":
@@ -124,10 +129,7 @@ const SearchFilters = (
                                 return (
                                     <BooleanFilter
                                         key={filterName}
-                                        name={filterName}
-                                        filter={filter}
-                                        onChange={handleFilterValueChange}
-                                        onToggle={handleFilterCheckedToggle}
+                                        {...filterProps}
                                     />
                                 )
                             case "number":
@@ -135,10 +137,7 @@ const SearchFilters = (
                                 return (
                                     <NumericFilter
                                         key={filterName}
-                                        name={filterName}
-                                        filter={filter}
-                                        onChange={handleFilterValueChange}
-                                        onToggle={handleFilterCheckedToggle}
+                                        {...filterProps}
                                     />
                                 )
                             case "date":
@@ -146,10 +145,7 @@ const SearchFilters = (
                                 return (
                                     <DateFilter
                                         key={filterName}
-                                        name={filterName}
-                                        filter={filter}
-                                        onChange={handleFilterValueChange}
-                                        onToggle={handleFilterCheckedToggle}
+                                        {...filterProps}
                                     />
                                 )
                             case "timeDelta":
@@ -157,10 +153,7 @@ const SearchFilters = (
                                 return (
                                     <TimeDeltaFilter
                                         key={filterName}
-                                        name={filterName}
-                                        filter={filter}
-                                        onChange={handleFilterValueChange}
-                                        onToggle={handleFilterCheckedToggle}
+                                        {...filterProps}
                                     />
                                 )
                             case "itemList": 
@@ -169,10 +162,7 @@ const SearchFilters = (
                                 return (
                                     <MultiSelectFilter
                                         key={filterName}
-                                        name={filterName}
-                                        filter={filter}
-                                        onChange={handleFilterValueChange}
-                                        onToggle={handleFilterCheckedToggle}
+                                        {...filterProps}
                                     />
                                 )
                             default:
@@ -181,10 +171,7 @@ const SearchFilters = (
                                 return (
                                     <SelectFilter
                                         key={filterName}
-                                        name={filterName}
-                                        filter={filter}
-                                        onChange={handleFilterValueChange}
-                                        onToggle={handleFilterCheckedToggle}
+                                        {...filterProps}
                                     />
                                 )    
                         }

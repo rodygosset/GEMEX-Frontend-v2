@@ -7,6 +7,9 @@ import { getDatePickerProps } from "@utils/form-elements/date-input"
 import { DateFormat } from "@utils/types";
 import React from "react";
 import { CustomInput } from "./date-input-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Dropdown from "@components/dropdown";
+import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 
 // This input is used both by the search form,
 // in which case strict is set to false
@@ -90,6 +93,12 @@ const DateInput = (
         onChange(newValue)
     }
     
+    const handleFormatChange = (newValueLabel: string) => {
+        const formatOption = formatOptions.find(option => option.label == newValueLabel)
+        if(!formatOption) return
+        setDateFormat(formatOption)
+    }
+
     // render
 
     return (
@@ -110,6 +119,19 @@ const DateInput = (
                     // @ts-ignore
                     customInput={<CustomInput/>}
                 />
+                {
+                    !strict &&
+                    <>
+                        <div className={styles.seperator}>p</div>
+                        <Dropdown
+                            className={styles.dropdown}
+                            listItems={formatOptions.map(option => option.label)}
+                            onSelect={handleFormatChange}>
+                            <FontAwesomeIcon icon={faCalendar}/>
+                            <p>{ dateFormat.label }</p>
+                        </Dropdown>
+                    </>
+                }
             </div>
         </>
     )

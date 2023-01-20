@@ -7,6 +7,7 @@
     @include flex-container(row, nowrap, space-between, center);
     width: 100%;
     padding: 10px 0px;
+    gap: 10px;
 
     .label {
         @include flex-container(row, nowrap, flex-start, center);

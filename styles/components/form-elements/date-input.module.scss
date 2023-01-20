@@ -6,9 +6,9 @@
 
 .container {
 
-    @include flex-container(row, nowrap, flex-start, center);
+    @include flex-container(row, nowrap, center, center);
     gap: 10px;
-    padding: 20px 30px;
+    padding: 20px;
     width: $input-width;
     border-radius: 5px;
 
@@ -34,6 +34,38 @@
         background: $primary-100;
         padding: 10px;
         @include button-text;
+    }
+
+    .seperator {
+        height: 100%;
+        width: 2px;
+        background: $primary-200;
+        color: transparent;
+    }
+
+    div.dropdown {
+        justify-content: flex-start;
+        width: fit-content;
+
+        p, svg {
+            @include button-text;
+            color: $primary;
+        }
+
+        ul {
+            border-radius: 3px;
+
+            li {
+                color: $primary-600;
+                padding: 5px 10px;
+
+                &:hover {
+                    cursor: pointer;
+                    color: $primary;
+                    background: $primary-100;
+                }
+            }
+        }
     }
 
 }

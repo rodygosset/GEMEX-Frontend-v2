@@ -66,7 +66,7 @@ const selectStyles: StylesConfig = {
         ...typographyReset,
         color: colors["primary"],
     }),
-    clearIndicator: (base, props) => ({
+    clearIndicator: base => ({
         ...base,
         color: colors["primary-400"],
         "&:hover": {

@@ -24,6 +24,7 @@
 
     svg {
         @include button-text;
+        width: 14px;
 
         &.icon {
             color: $primary-600;
