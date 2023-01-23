@@ -94,7 +94,13 @@ div.react-datepicker {
                 background: $primary-100;
             }
 
+            &--today {
+                color: $primary;
+            }
+
             &--keyboard-selected {
+                color: $white !important;
+                font-weight: $font-weight-regular;
                 background: $primary;
 
                 &:hover {
