@@ -12,6 +12,8 @@ export interface SearchFilterProps {
     filter: SearchFilter;
     onChange: OnFilterChangeHandler;
     onToggle: OnFilterToggleHandler;
+    getOperatorValue?: (filterName: string) => string;
+    setOperatorValue?: (filterName: string, operatorValue: string) => void;
 }
 
 export type OnFilterChangeHandler = (filterName: string, newValue: any) => void

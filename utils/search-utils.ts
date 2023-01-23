@@ -197,7 +197,13 @@ const loadNumberParam = (param: string, newSearchFilters: SearchFilters, searchP
                 newSearchFilters[param].conf.defaultValue = searchParams[name]
                 newSearchFilters[param].checked = true
             } else { // if it's a number OPERATOR
-                newSearchFilters[param].conf.defaultValue = operatorOptions[index]
+                // load the default value for the comparison operator
+                newSearchFilters[param].value = operatorOptions[index].value
+                newSearchFilters[param].conf.defaultValue = operatorOptions[index].value
+                // load the value for the actual number & turn on the filter
+                newSearchFilters[paramName].value = searchParams[name]
+                newSearchFilters[paramName].conf.defaultValue = searchParams[name]
+                newSearchFilters[paramName].checked = true
             }
         }
     })

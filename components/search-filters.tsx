@@ -3,6 +3,7 @@ import { apiURLs } from "@conf/api/conf"
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 import styles from "@styles/components/search-filters.module.scss"
 import { Context } from "@utils/context"
+import { defaultOperator, hasNumberOperatorParam } from "@utils/form-elements/time-delta-input"
 import { toSearchFiltersObject, toURLQuery } from "@utils/search-utils"
 import React, { FormEventHandler, useContext, useEffect, useState } from "react"
 import Button from "./button"
@@ -46,6 +47,7 @@ const SearchFilters = (
     // update the search params when the filters change
 
     useEffect(() => {
+        console.log(searchFilters)
         // avoid "can't access property of undefined" errors :(
         if(!searchParams["item"]) return
         // get new URL query
@@ -83,9 +85,19 @@ const SearchFilters = (
         let newSearchFilters = { ...searchFilters }
         newSearchFilters[filterName].checked = checked
         setSearchFilters(newSearchFilters)
-        if(newSearchFilters[filterName].conf.type == "date") {
-            console.log("date checked ?", filterName, checked)
-        }
+    }
+
+    // utils for time delta & number inputs
+
+    const getOperatorValue = (filterName: string) => {
+        // fool-proofing
+        if(!hasNumberOperatorParam(filterName, searchParams["item"]?.toString())) return defaultOperator
+        return searchFilters[filterName + '_operator'].value
+    }
+
+    const setOperatorValue = (filterName: string, operatorValue: string) => {
+        if(!hasNumberOperatorParam(filterName, searchParams["item"]?.toString())) return
+        handleFilterValueChange(filterName + "_operator", operatorValue)
     }
 
 
@@ -139,6 +151,8 @@ const SearchFilters = (
                                         <NumericFilter
                                             key={filterName}
                                             {...filterProps}
+                                            getOperatorValue={getOperatorValue}
+                                            setOperatorValue={setOperatorValue}
                                         />
                                     )
                                 case "date":
@@ -155,6 +169,8 @@ const SearchFilters = (
                                         <TimeDeltaFilter
                                             key={filterName}
                                             {...filterProps}
+                                            getOperatorValue={getOperatorValue}
+                                            setOperatorValue={setOperatorValue}
                                         />
                                     )
                                 case "itemList": 
