@@ -163,6 +163,10 @@ const DateInput = (
                 hidden
             />
             <div className={styles.container}>
+                {
+                    strict && 
+                    <FontAwesomeIcon icon={faCalendar} className={styles.calendarIcon}/>
+                }
                 <DatePicker
                     selected={date}
                     wrapperClassName={styles.wrapper}
