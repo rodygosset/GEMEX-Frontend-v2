@@ -24,6 +24,13 @@
     padding: 0px 20px;
     border-radius: 5px;
 
+    &.embedded {
+        background: none;
+        padding: 0px;
+        gap: 5px;
+        height: fit-content;
+    }
+
     input {
         @include reset-form-input;
         @include text-sm-medium;

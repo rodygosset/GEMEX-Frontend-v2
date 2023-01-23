@@ -12,8 +12,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCalendar } from "@fortawesome/free-solid-svg-icons"
 import { StylesConfig } from "react-select"
 import Select from "./select"
-
 import { fr } from "date-fns/locale"
+import VerticalSeperator from "@components/utils/vertical-seperator"
 
 // This input is used both by the search form,
 // in which case strict is set to false
@@ -35,7 +35,7 @@ interface Props {
 
 // custom select styles for the format selector
 
-const customSelectStyles: StylesConfig = {
+export const embeddedSelectStyles: StylesConfig = {
     container: base => ({
         ...base,
         width: "fit-content",
@@ -67,12 +67,7 @@ const customSelectStyles: StylesConfig = {
     }),
     dropdownIndicator: base => ({
         ...base,
-        display: "none",
-        // padding: "0px 0px 0px 8px",
-        // color: colors["primary"],
-        // "&:hover": {
-        //     color: colors["primary"]
-        // }
+        display: "none"
     }),
     menu: base => ({
         ...base,
@@ -148,8 +143,8 @@ const DateInput = (
         onChange(newValue)
     }
     
-    const handleFormatChange = (newValueLabel: string) => {
-        const formatOption = formatOptions.find(option => option.value == newValueLabel)
+    const handleFormatChange = (newValue: string) => {
+        const formatOption = formatOptions.find(option => option.value == newValue)
         if(!formatOption) return
         setDateFormat(formatOption)
     }
@@ -182,7 +177,7 @@ const DateInput = (
                 {
                     !strict &&
                     <>
-                        <div className={styles.seperator}>p</div>
+                        <VerticalSeperator/>
                         <FontAwesomeIcon icon={faCalendar} className={styles.calendarIcon}/>
                         <Select
                             name={name}
@@ -191,7 +186,7 @@ const DateInput = (
                             // to avoid needless state updates
                             defaultValue={format}
                             onChange={handleFormatChange}
-                            customStyles={customSelectStyles}
+                            customStyles={embeddedSelectStyles}
                             isSearchable={false}
                         />
                     </>

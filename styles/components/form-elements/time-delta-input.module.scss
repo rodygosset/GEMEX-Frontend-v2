@@ -1,0 +1,22 @@
+
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/abstracts/_variables.scss";
+
+.container {
+
+    @include flex-container(row, nowrap, center, center);
+    gap: 10px;
+    padding: 10px 20px;
+    width: $input-width;
+    border-radius: 5px;
+
+    background: $primary-100;
+
+    .clockIcon {
+        @include button-text;
+        color: $primary
+    }
+
+}

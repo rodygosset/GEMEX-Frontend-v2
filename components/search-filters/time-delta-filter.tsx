@@ -28,7 +28,7 @@ const TimeDeltaFilter = (
 
     // handlers
 
-    const handleChange = (newValue: boolean) => onChange(name, newValue)
+    const handleChange = (newValue: number) => onChange(name, newValue)
 
     // render
 
@@ -40,6 +40,7 @@ const TimeDeltaFilter = (
             checked={filter.checked}
         >
             <TimeDeltaInput 
+                name={name}
                 value={filter.value} 
                 onChange={handleChange} 
             />

@@ -1,0 +1,10 @@
+
+@import "@styles/abstracts/_colors.module.scss";
+
+.seperator {
+    height: 100%;
+    width: 2px;
+    background: $primary-200;
+    color: transparent;
+    user-select: none;
+}

@@ -98,96 +98,98 @@ const SearchFilters = (
     return (
         <section className={getClassNames()} id={styles.container}>
             <h4>Paramètres de recherche</h4>
-            <VerticalScrollBar className={styles.filtersContainer}>
-                {
-                    // Generate the form
-                    // for each SearchFilter
-                    // render a component according to its type
-                    Object.keys(searchFilters).map(filterName => {
-                        const filter = searchFilters[filterName]
-                        const { conf } = filter
+            <form onSubmit={ e => e.preventDefault() }>
+                <VerticalScrollBar className={styles.filtersContainer}>
+                    {
+                        // Generate the form
+                        // for each SearchFilter
+                        // render a component according to its type
+                        Object.keys(searchFilters).map(filterName => {
+                            const filter = searchFilters[filterName]
+                            const { conf } = filter
 
-                        // DRY
-                        const filterProps = {
-                            name: filterName,
-                            filter: filter,
-                            onChange: handleFilterValueChange,
-                            onToggle: handleFilterCheckedToggle
-                        }
+                            // DRY
+                            const filterProps = {
+                                name: filterName,
+                                filter: filter,
+                                onChange: handleFilterValueChange,
+                                onToggle: handleFilterCheckedToggle
+                            }
 
-                        switch(conf.type) {
-                            case "text":
-                                // text input
-                                return (
-                                    <TextFilter
-                                        key={filterName}
-                                        {...filterProps}
-                                    />
-                                )
-                            case "boolean":
-                                // checkbox
-                                return (
-                                    <BooleanFilter
-                                        key={filterName}
-                                        {...filterProps}
-                                    />
-                                )
-                            case "number":
-                                // numeric input
-                                return (
-                                    <NumericFilter
-                                        key={filterName}
-                                        {...filterProps}
-                                    />
-                                )
-                            case "date":
-                                // date input
-                                return (
-                                    <DateFilter
-                                        key={filterName}
-                                        {...filterProps}
-                                    />
-                                )
-                            case "timeDelta":
-                                // filter representing an amount of time
-                                return (
-                                    <TimeDeltaFilter
-                                        key={filterName}
-                                        {...filterProps}
-                                    />
-                                )
-                            case "itemList": 
-                                // multi select
-                                if(!conf.item || !(conf.item in apiURLs)) { break }
-                                return (
-                                    <MultiSelectFilter
-                                        key={filterName}
-                                        {...filterProps}
-                                    />
-                                )
-                            default:
-                                // select
-                                if(!(conf.type in apiURLs)) { break }
-                                return (
-                                    <SelectFilter
-                                        key={filterName}
-                                        {...filterProps}
-                                    />
-                                )    
-                        }
-                    })
-                }
-            </VerticalScrollBar>
-            {/* Submit button */}
-            <Button 
-                onClick={handleSubmit}
-                className={styles.submitButton}
-                fullWidth
-                bigPadding
-                type="submit"
-                icon={faMagnifyingGlass}>
-                Rechercher
-            </Button>
+                            switch(conf.type) {
+                                case "text":
+                                    // text input
+                                    return (
+                                        <TextFilter
+                                            key={filterName}
+                                            {...filterProps}
+                                        />
+                                    )
+                                case "boolean":
+                                    // checkbox
+                                    return (
+                                        <BooleanFilter
+                                            key={filterName}
+                                            {...filterProps}
+                                        />
+                                    )
+                                case "number":
+                                    // numeric input
+                                    return (
+                                        <NumericFilter
+                                            key={filterName}
+                                            {...filterProps}
+                                        />
+                                    )
+                                case "date":
+                                    // date input
+                                    return (
+                                        <DateFilter
+                                            key={filterName}
+                                            {...filterProps}
+                                        />
+                                    )
+                                case "timeDelta":
+                                    // filter representing an amount of time
+                                    return (
+                                        <TimeDeltaFilter
+                                            key={filterName}
+                                            {...filterProps}
+                                        />
+                                    )
+                                case "itemList": 
+                                    // multi select
+                                    if(!conf.item || !(conf.item in apiURLs)) { break }
+                                    return (
+                                        <MultiSelectFilter
+                                            key={filterName}
+                                            {...filterProps}
+                                        />
+                                    )
+                                default:
+                                    // select
+                                    if(!(conf.type in apiURLs)) { break }
+                                    return (
+                                        <SelectFilter
+                                            key={filterName}
+                                            {...filterProps}
+                                        />
+                                    )    
+                            }
+                        })
+                    }
+                </VerticalScrollBar>
+                {/* Submit button */}
+                <Button 
+                    onClick={handleSubmit}
+                    className={styles.submitButton}
+                    fullWidth
+                    bigPadding
+                    type="submit"
+                    icon={faMagnifyingGlass}>
+                    Rechercher
+                </Button>
+            </form>
         </section>
     )
 }

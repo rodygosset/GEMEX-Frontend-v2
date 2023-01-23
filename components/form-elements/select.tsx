@@ -95,8 +95,8 @@ const selectStyles: StylesConfig = {
     option: (base, state) => ({
         ...base,
         ...typographyReset,
-        color: state.isSelected ? colors["primary"] : colors["primary-600"],
-        background: state.isSelected ? colors["primary-100"] : "none",
+        color: state.isSelected || state.isFocused ? colors["primary"] : colors["primary-600"],
+        background: state.isSelected || state.isFocused ? colors["primary-100"] : "none",
         "&:hover": {
             color: colors["primary"],
             background: colors["primary-100"],

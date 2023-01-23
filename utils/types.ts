@@ -15,3 +15,7 @@ export interface DateInputValue {
 }
 
 export type DateFormat = "yyyy" | "MM/yyyy" | "dd/MM/yyyy"
+
+export type TimeDeltaUnit = "days" | "weeks" | "months"
+
+export const defaultTimeDeltaUnit: TimeDeltaUnit = "days"

@@ -33,16 +33,25 @@
         color: $primary-600;
     }
 
-    .filtersContainer {
+    form {
         @include flex-container(column, nowrap, flex-start, flex-start);
         width: 100%;
-        // make sure it never overflows from the body
-        max-height: calc(100vh - calc($nav-bar-height + 280px));
-
-    }
-
-    .submitButton {
-        margin-top: auto;
+        height: fit-content;
+        gap: 30px;
+        padding: 0px;
+        margin: 0px;
+    
+        .filtersContainer {
+            @include flex-container(column, nowrap, flex-start, flex-start);
+            width: 100%;
+            // make sure it never overflows from the body
+            max-height: calc(100vh - calc($nav-bar-height + 280px));
+    
+        }
+    
+        .submitButton {
+            margin-top: auto;
+        }
     }
 
 }
