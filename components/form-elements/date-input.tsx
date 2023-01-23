@@ -169,6 +169,7 @@ const DateInput = (
                     onChange={date => handleDateChange(date)}
                     { ...getDatePickerProps(dateFormat) }
                     dateFormat={dateFormat.value}
+                    locale="fr-FR"
                     // @ts-ignore
                     customInput={<CustomInput/>}
                 />
@@ -180,7 +181,9 @@ const DateInput = (
                         <Select
                             name={name}
                             options={formatOptions}
-                            // value={format}
+                            // only enforce value on first load
+                            // to avoid needless state updates
+                            defaultValue={format}
                             onChange={handleFormatChange}
                             customStyles={customSelectStyles}
                             isSearchable={false}

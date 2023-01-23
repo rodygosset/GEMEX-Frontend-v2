@@ -1,4 +1,6 @@
 import '../styles/globals.scss'
+// for date inputs
+import "@styles/components/form-elements/react-datepicker.scss"
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
