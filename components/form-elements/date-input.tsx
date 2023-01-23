@@ -13,6 +13,8 @@ import { faCalendar } from "@fortawesome/free-solid-svg-icons"
 import { StylesConfig } from "react-select"
 import Select from "./select"
 
+import { fr } from "date-fns/locale"
+
 // This input is used both by the search form,
 // in which case strict is set to false
 // & by other forms, which use it in its default mode
@@ -173,7 +175,7 @@ const DateInput = (
                     onChange={date => handleDateChange(date)}
                     { ...getDatePickerProps(dateFormat) }
                     dateFormat={dateFormat.value}
-                    locale="fr-FR"
+                    locale={fr}
                     // @ts-ignore
                     customInput={<CustomInput/>}
                 />
