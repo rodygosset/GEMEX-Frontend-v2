@@ -7,12 +7,12 @@ import ReactSelect, { components, CSSObjectWithLabel, DropdownIndicatorProps, St
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCaretUp, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
-export type OnSelectHandler = <T>(optionValue: T | T[]) => void
+export type OnSelectHandler<T = any> = (optionValue: T) => void
 
 interface Props {
     options: SelectOption[];
-    defaultValue?: string | number;
-    value?: string | number;
+    defaultValue?: string | string[] | number;
+    value?: string | string[] | number;
     form?: string;
     name: string;
     isMulti?: boolean;
@@ -21,7 +21,8 @@ interface Props {
     required?: boolean;
     hidden?: boolean;
     large?: boolean;
-    onChange?: OnSelectHandler
+    customStyles?: StylesConfig;
+    onChange?: OnSelectHandler;
 }
 
 const typographyReset: CSSObjectWithLabel = {
@@ -143,6 +144,7 @@ const Select = (
         required = false,
         hidden = false,
         large,
+        customStyles,
         onChange
     }: Props
     ) => {
@@ -156,9 +158,19 @@ const Select = (
 
     // state & lyfecycle
 
-    const getOptionFromValue = (val: string | number) => options.find(option => option.value == val)
+    const getOptionFromValue = (val: typeof value) => {
+        if(isMulti && val) {  
+            // make sure val ain't null or undefined ==> fool-proofing
+            // find all options part of the provided array of strings (val)
+            // which represent the options' labels
+            return options.filter(option => (val as string[]).includes(option.label))
+        } else {
+            // just find a single option matching the value
+            return options.find(option => option.value == val)
+        }
+    }
 
-    const [selected, setSelected] = useState<SelectOption>()
+    const [selected, setSelected] = useState<SelectOption | SelectOption[]>()
 
     useEffect(() => {
         if(typeof defaultValue !== "undefined") {
@@ -175,7 +187,7 @@ const Select = (
     // handle option selection
 
     const handleSelect = (newValue: unknown) => {
-        const newVal = newValue as SelectOption
+        const newVal = newValue as SelectOption | SelectOption[]
         setSelected(newVal)
         if(onChange) { // if a handler was provided
             if(isMulti) {
@@ -185,6 +197,7 @@ const Select = (
                 onChange((newValue as SelectOption[]).map(option => option.label))
             } else {
                 // otherwise pass the option's value to the handler
+                // @ts-ignore
                 onChange(newVal?.value)
             }
         }
@@ -206,6 +219,14 @@ const Select = (
         return classNames
     }
 
+
+    // include customStyles if it was provided
+    
+    const getStyles = () => customStyles ? { ...selectStyles, ...customStyles } : selectStyles
+
+    // replace the dropdown indicator with a caret or a chevron
+    // depending on whether this is a simple or multi select
+
     const customDropdownIndicator: ComponentType<DropdownIndicatorProps> = props => (
         <components.DropdownIndicator {...props}>
             <FontAwesomeIcon icon={getDropdownIcon(props.isMulti, props.selectProps.menuIsOpen)} />
@@ -219,7 +240,7 @@ const Select = (
         <ReactSelect
             className={getClassNames()}
             options={options}
-            styles={selectStyles}
+            styles={getStyles()}
             isSearchable={isSearchable}
             isMulti={isMulti}
             isLoading={isLoading}

@@ -20,7 +20,7 @@ const MultiSelectFilter = (
     // state
 
     const [options, setOptions] = useState<SelectOption[]>([])
-    const [selected, setSelected] = useState<number>(filter.value)
+    const [selected, setSelected] = useState<string[]>(filter.value)
     
     const [isLoading, setIsLoading] = useState(true)
 
@@ -83,8 +83,8 @@ const MultiSelectFilter = (
 
     // handlers
 
-    const handleChange: OnSelectHandler = optionValue => {
-        setSelected(optionValue as number)
+    const handleChange: OnSelectHandler<string[]> = optionValue => {
+        setSelected(optionValue)
         onChange(name, optionValue)
     }
 

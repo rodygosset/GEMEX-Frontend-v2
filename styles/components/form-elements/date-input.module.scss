@@ -43,6 +43,11 @@
         color: transparent;
     }
 
+    .calendarIcon {
+        @include button-text;
+        color: $primary
+    }
+
     div.dropdown {
         justify-content: flex-start;
         width: fit-content;

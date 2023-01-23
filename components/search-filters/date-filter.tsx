@@ -58,6 +58,7 @@ const DateFilter = (
             checked={filter.checked}
         >
             <DateInput 
+                name={name}
                 value={getDateValue()} 
                 onChange={handleChange}
                 strict={false}

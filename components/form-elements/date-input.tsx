@@ -1,15 +1,17 @@
 import styles from "@styles/components/form-elements/date-input.module.scss"
+import colors from "@styles/abstracts/_colors.module.scss"
 import DatePicker from "react-datepicker"
-import "react-datepicker/dist/react-datepicker.css";
+import "react-datepicker/dist/react-datepicker.css"
 import { SelectOption } from "@utils/react-select/types"
 import { useEffect, useState } from "react"
 import { getDatePickerProps } from "@utils/form-elements/date-input"
-import { DateFormat } from "@utils/types";
-import React from "react";
-import { CustomInput } from "./date-input-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Dropdown from "@components/dropdown";
-import { faCalendar } from "@fortawesome/free-solid-svg-icons";
+import { DateFormat } from "@utils/types"
+import React from "react"
+import { CustomInput } from "./date-input-components"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCalendar } from "@fortawesome/free-solid-svg-icons"
+import { StylesConfig } from "react-select"
+import Select from "./select"
 
 // This input is used both by the search form,
 // in which case strict is set to false
@@ -20,6 +22,7 @@ interface Props {
     // select a single month, year or day
     // or whether they're obliged to select a complete date
     // ==> (DD/MM/YY)
+    name: string;
     value?: Date;
     strict?: boolean;
     format?: DateFormat;
@@ -28,8 +31,58 @@ interface Props {
 }
 
 
+// custom select styles for the format selector
+
+const customSelectStyles: StylesConfig = {
+    container: base => ({
+        ...base,
+        width: "fit-content",
+    }),
+    control: base => ({
+        ...base,
+        border: "0",
+        boxShadow: "none",
+        background: "none",
+        padding: "0px",
+        alignContent: "center",
+        margin: "0px",
+        height: "fit-content",
+        minHeight: "fit-content",
+        "&:hover": {
+            border: "0",
+            boxShadow: "none",
+            cursor: "pointer"
+        }
+    }),
+    valueContainer: base => ({
+        ...base,
+        padding: "0px"
+    }),
+    indicatorsContainer: base => ({
+        ...base,
+        width: "fit-content",
+        height: "fit-content"
+    }),
+    dropdownIndicator: base => ({
+        ...base,
+        display: "none",
+        // padding: "0px 0px 0px 8px",
+        // color: colors["primary"],
+        // "&:hover": {
+        //     color: colors["primary"]
+        // }
+    }),
+    menu: base => ({
+        ...base,
+        boxShadow: `0px 30px 60px ${colors["primary-200"]}`,
+        minWidth: "60px"
+    }),
+}
+
+
 const DateInput = (
     {
+        name,
         value,
         strict = true,
         format,
@@ -94,7 +147,7 @@ const DateInput = (
     }
     
     const handleFormatChange = (newValueLabel: string) => {
-        const formatOption = formatOptions.find(option => option.label == newValueLabel)
+        const formatOption = formatOptions.find(option => option.value == newValueLabel)
         if(!formatOption) return
         setDateFormat(formatOption)
     }
@@ -123,13 +176,15 @@ const DateInput = (
                     !strict &&
                     <>
                         <div className={styles.seperator}>p</div>
-                        <Dropdown
-                            className={styles.dropdown}
-                            listItems={formatOptions.map(option => option.label)}
-                            onSelect={handleFormatChange}>
-                            <FontAwesomeIcon icon={faCalendar}/>
-                            <p>{ dateFormat.label }</p>
-                        </Dropdown>
+                        <FontAwesomeIcon icon={faCalendar} className={styles.calendarIcon}/>
+                        <Select
+                            name={name}
+                            options={formatOptions}
+                            // value={format}
+                            onChange={handleFormatChange}
+                            customStyles={customSelectStyles}
+                            isSearchable={false}
+                        />
                     </>
                 }
             </div>

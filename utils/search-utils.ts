@@ -227,7 +227,9 @@ export const toURLQuery = (searchFilters: SearchFilters, searchParams: DynamicOb
             ""
         ]
 
-        if(!filterData.checked || emptyValues.includes(filterData.value)) { continue }
+        if(!filterData.checked || emptyValues.includes(filterData.value)
+        // account for arrays
+        || Array.isArray(filterData.value) && filterData.value.length == 0) { continue }
 
         // the following switch statement is used to make adjustements
         // to values of particular data types
