@@ -1,20 +1,20 @@
-import { MySession } from "@conf/utility-types";
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelTokenSource } from "axios";
-import { apiURL, apiURLs } from "conf/api/conf";
-import { useSession } from "next-auth/react";
+import { MySession } from "@conf/utility-types"
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios"
+import { apiURL, apiURLs } from "conf/api/conf"
+import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
-import { isAuthError } from "utils/req-utils";
+import { isAuthError } from "utils/req-utils"
 import useLogOut from "./useLogOut";
 
 
-export type APIRequestFunction = <T, U>(
+export type APIRequestFunction = <T, U = T>(
     verb: "get" | "post" | "put" | "delete", 
     itemType: string, 
     additionalPath?: string, 
     data?: any, 
     onSuccess?: (res: AxiosResponse<T>) => U, 
-    onFailure?: (error: Error | AxiosError) => U, 
-    cancelToken?: CancelTokenSource,
+    onFailure?: (error: Error | AxiosError) => U,
+    abortSignal?: AbortSignal, 
     showPageOn404?: boolean,
     notifyUser?: boolean
 ) => Promise<U>
@@ -34,7 +34,7 @@ const useAPIRequest = () => {
         data?: any,
         onSuccess?: (res: AxiosResponse<T>) => U,
         onFailure?: (error: Error | AxiosError) => U,
-        cancelToken?: CancelTokenSource,
+        abortSignal?: AbortSignal,
         showPageOn404?: boolean
     ) => {
         const baseURL = `${apiURL}${apiURLs[itemType]}${additionalPath ? additionalPath : ""}`;
@@ -58,10 +58,9 @@ const useAPIRequest = () => {
                     }
                 }
             }
-            console.log(error)
             if(typeof onFailure !== "undefined") {
                 return onFailure(error)
-            }
+            } else return error
         }
 
         const handleSuccess = (res: AxiosResponse<T>) => {
@@ -76,13 +75,9 @@ const useAPIRequest = () => {
             }
         }
 
-        if(typeof cancelToken !== "undefined") {
-            reqConfig["cancelToken"] = cancelToken.token
-        }
-
+        if(typeof abortSignal != "undefined") reqConfig.signal = abortSignal
         
         const reqData = data ? data : {}
-        
 
         switch(verb) {
             case "get":

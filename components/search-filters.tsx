@@ -47,7 +47,6 @@ const SearchFilters = (
     // update the search params when the filters change
 
     useEffect(() => {
-        console.log(searchFilters)
         // avoid "can't access property of undefined" errors :(
         if(!searchParams["item"]) return
         // get new URL query
@@ -57,7 +56,7 @@ const SearchFilters = (
         const shouldUpdate = JSON.stringify(newURLQuery) !== JSON.stringify(searchParams)
         
         if(shouldUpdate) {
-            setSearchParams(newURLQuery)
+            setSearchParams({ ...newURLQuery })
         }
     }, [searchFilters])
 
@@ -110,7 +109,7 @@ const SearchFilters = (
     return (
         <section className={getClassNames()} id={styles.container}>
             <h4>Paramètres de recherche</h4>
-            <form onSubmit={ e => e.preventDefault() }>
+            <form onSubmit={ e => e.preventDefault() } name="search-filters">
                 <VerticalScrollBar className={styles.filtersContainer}>
                     {
                         // Generate the form

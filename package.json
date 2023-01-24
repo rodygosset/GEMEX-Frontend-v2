@@ -21,7 +21,8 @@
     "react-datepicker": "^4.8.0",
     "react-dom": "18.2.0",
     "react-select": "^5.7.0",
-    "sass": "^1.57.1"
+    "sass": "^1.57.1",
+    "util": "^0.12.5"
   },
   "devDependencies": {
     "@types/node": "18.11.18",

@@ -23,9 +23,7 @@ const Home: NextPage = () => {
 					<h1>Bienvenu { session?.user ? session.user.prenom : '' }</h1>
 					<p>La base de données et les fiches sont à portée de main sur GEMEX</p>
 				</section>
-				<form onSubmit={e => e.preventDefault()} name="search-form">
-					<SearchBar/>
-				</form>
+				<SearchBar/>
 			</section>
 			<section id={styles.infoContainer}>
 				{/* TODO */}

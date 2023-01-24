@@ -1,17 +1,20 @@
 import SearchBar from "@components/form-elements/search-bar"
 import SearchFilters from "@components/search-filters"
-import { searchConf } from "@conf/api/search"
+import { searchConf, SearchResultsMetaData } from "@conf/api/search"
 import { MySession } from "@conf/utility-types"
+import useAPIRequest from "@hook/useAPIRequest"
+import { useGetSearchResultsMetaData } from "@hook/useGetSearchResultsMetaData"
 import styles from "@styles/pages/search.module.scss"
 import { Context } from "@utils/context"
 import { parseURLQuery } from "@utils/search-utils"
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
 import { DynamicObject } from "@utils/types"
+import { AxiosResponse } from "axios"
 import { GetServerSideProps, NextPage } from "next"
 import { unstable_getServerSession } from "next-auth"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { authOptions } from "./api/auth/[...nextauth]"
 
 interface Props {
@@ -33,7 +36,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
     // important to note: 
     // searchParams represents the filtered url query
     // that we get from the router
-    // this is the object we pass to the search request to our backend API
+    // this is the object we pass to our backend API in our search request
     // searchParams is NOT the object representing the state of the SearchFilters component
 
     const { searchParams, setSearchParams } = useContext(Context)
@@ -43,6 +46,8 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
     const [itemType, setItemType] = useState(queryItemType)
 
     const [searchResults, setSearchResults] = useState(results)
+    
+    useEffect(() => console.log(searchResults), [searchResults])
 
     // when the item type changes, 
     // update the search params
@@ -54,6 +59,21 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
 
     useEffect(() => console.log(searchParams), [searchParams])
 
+    // search results meta-data
+    const [metaData, setMetaData] = useState<SearchResultsMetaData>()
+
+    // when the search results change
+    // fetch corresponding meta-data
+
+    const getMetaData = useGetSearchResultsMetaData()
+
+    useEffect(() => {
+        getMetaData(itemType, searchResults).then(metaData => setMetaData(metaData))
+    }, [searchResults])
+
+    useEffect(() => console.log(metaData), [metaData])
+
+
     // load the search params from the URL query
 
     useEffect(() => {
@@ -62,6 +82,85 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
             item: itemType
         })
     }, [])
+
+    // data fetching & pagination logic
+
+    const makeAPIRequest = useAPIRequest()
+    
+    const [isLoading, setIsLoading] = useState(false)
+
+    // we need to cancel on-going search requests
+    // after a new one has been made
+    // for that, we use the native AbortController
+
+    const reqController = useRef<AbortController>()
+
+    const [currentPageNb, setCurrentPageNb] = useState(1)
+    const [totalPagesNb, setTotalPagesNb] = useState(1)
+
+
+    // on each search request, compute the total number of pages
+
+    const getTotalPagesNb = () => {
+        // make a request to our API to get the number of search results
+        // & divide that by the number of results per page 
+        makeAPIRequest<{nb_results: number}, void>(
+            "post", 
+            itemType,
+            "search/nb",
+            searchParams,
+            (res: AxiosResponse<{nb_results: number}>) => setTotalPagesNb(Math.ceil(res.data.nb_results / resultsPerPage)),
+            undefined
+        )
+    }
+
+    useEffect(getTotalPagesNb, [searchResults])
+
+    // go back to the first page
+    // when the search parameters or the search item change
+    
+    useEffect(() => {
+        setCurrentPageNb(1)
+        getTotalPagesNb()
+    }, [itemType, searchParams])
+
+    // fetch data on page change
+    // & when the item type or the search params are updated
+
+    useEffect(() => {
+
+        // let the user know we're fetching data
+
+        setIsLoading(true)
+
+        // cancel previous request if it exists
+
+        if(typeof reqController.current != "undefined") reqController.current.abort()
+
+        // new abort controller for the new request we're going to make
+
+        reqController.current = new AbortController()
+
+        // make a request to our backend API
+
+        const handleSuccess = (res: AxiosResponse<any[]>) => { // if our request succeeded
+            // extract the data from the response object
+            setSearchResults([...res.data])
+            setIsLoading(false)
+            reqController.current = undefined
+        }
+
+        makeAPIRequest<any[], void>(
+            "post", 
+            itemType,
+            `search/?skip=${(currentPageNb - 1) * resultsPerPage}&max=${resultsPerPage}`,
+            searchParams,
+            handleSuccess,
+            undefined,
+            reqController.current.signal
+        )
+
+    }, [itemType, searchParams, currentPageNb])
 
     // manage search filters visibility
 
@@ -95,8 +194,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
         })
     }
 
-
-    // todo => parse the URL query into a Filters object
+    // render
 
     return (
         <main id={styles.container}>
@@ -108,7 +206,8 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
                 hidden={!showFilters} 
                 onSubmit={handleFormSubmit}
             />
-            <form onSubmit={e => e.preventDefault()}> 
+
+            <div id={styles.searchResultsContainer}> 
                 <SearchBar
                     fullWidth
                     hideCTA
@@ -120,7 +219,10 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
                     onInputChange={handleSearchInputChange}
                     onSubmit={handleFormSubmit}
                 />
-            </form>
+                <section id={styles.searchResultsContainer}>
+                    hello
+                </section>
+            </div>
         </main>
     )
 }

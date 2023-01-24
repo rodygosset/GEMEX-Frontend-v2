@@ -1,5 +1,5 @@
-import { MySession } from "@conf/utility-types";
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelTokenSource } from "axios";
+import { MySession } from "@conf/utility-types"
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios"
 import { apiURL, apiURLs } from "conf/api/conf"
 
 
@@ -10,8 +10,8 @@ export interface SSRAPIRequestArgs<T,U> {
     additionalPath?: string, 
     data?: any, 
     onSuccess?: (res: AxiosResponse<T>) => U, 
-    onFailure?: (error: Error | AxiosError) => U, 
-    cancelToken?: CancelTokenSource,
+    onFailure?: (error: Error | AxiosError) => U,
+    abortSignal?: AbortSignal, 
     showPageOn404?: boolean,
     notifyUser?: boolean
 }
@@ -30,7 +30,7 @@ const SSRmakeAPIRequest = async <T, U>(
         data,
         onSuccess,
         onFailure,
-        cancelToken
+        abortSignal
     }: SSRAPIRequestArgs<T,U>
 ) => {
 
@@ -46,8 +46,6 @@ const SSRmakeAPIRequest = async <T, U>(
             if(error.response) {
                 console.log(`Erreur ${error.response.status} : ${errorMessage}`)
             }
-        } else {
-            // console.log(error);
         }
         if(typeof onFailure !== "undefined") {
             return onFailure(error)
@@ -67,10 +65,7 @@ const SSRmakeAPIRequest = async <T, U>(
         }
     }
 
-    if(typeof cancelToken !== "undefined") {
-        reqConfig["cancelToken"] = cancelToken.token
-    }
-
+    if(typeof abortSignal != "undefined") reqConfig.signal = abortSignal
     
     const reqData = data ? data : {}
     

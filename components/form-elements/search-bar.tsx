@@ -147,7 +147,11 @@ const SearchBar = (
     // render
 
     return (
-        <div id={styles.searchBarContainer} className={getClassName()}>
+        <form 
+            name="search-bar"
+            id={styles.searchBarContainer} 
+            className={getClassName()}
+            onSubmit={() => handleSubmit}>
             <FontAwesomeIcon className={styles.icon} icon={faSearch}/>
             <input 
                 type="text" 
@@ -181,7 +185,7 @@ const SearchBar = (
                 hidden={hideCTA}>
                 Rechercher
             </Button>
-        </div>
+        </form>
     )
 }
 

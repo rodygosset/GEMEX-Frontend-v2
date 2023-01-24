@@ -6,6 +6,12 @@ export const defaultSearchItem = "elements"
 
 // type & const definitions for the search filters component
 
+export interface SearchResultsMetaData {
+    [attr: string]: {
+        ids: number[];
+        values: string[];
+    }
+}
 
 export interface SearchFilterProps {
     name: string;
