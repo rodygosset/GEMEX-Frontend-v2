@@ -41,3 +41,6 @@ export const toISO = (date: Date) => {
     tmp.setFullYear(date.getFullYear(), date.getMonth(), date.getDate())
     return tmp.toISOString().split('T')[0]
 }
+
+
+export const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }

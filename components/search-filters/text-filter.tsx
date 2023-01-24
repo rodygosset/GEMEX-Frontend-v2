@@ -1,4 +1,4 @@
-import TextInput from "@components/form-elements/text-field"
+import TextInput from "@components/form-elements/text-input"
 import { getFilterLabel, SearchFilterProps } from "@conf/api/search"
 import FilterWrapper from "./filter-wrapper"
 

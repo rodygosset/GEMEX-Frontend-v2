@@ -4,8 +4,9 @@ import { FormFieldProps } from "@utils/types";
 import { ChangeEvent } from "react";
 
 
-interface Props extends FormFieldProps<string> {
+interface Props {
     placeholder?: string;
+    onChange: (newValue: string) => void;
     name?: string;
     defaultValue?: string;
     currentValue?: string;
@@ -22,7 +23,7 @@ const TextInput = ({
         currentValue, 
         bigPadding, 
         password,
-        fullWidth,
+        fullWidth
     }: Props) => {
 
     const getClassNames = () => {

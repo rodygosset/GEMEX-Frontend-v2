@@ -1,3 +1,4 @@
+import { faBox, faBoxOpen, faFile, faFileAlt, faLandmark, faLayerGroup, faMonument, faPuzzlePiece, faUser, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { formatItemName } from "@utils/general";
 import { SelectOption } from "@utils/react-select/types";
 
@@ -32,7 +33,7 @@ export const getFilterLabel = (filterName: string, conf: SearchParam) => {
 
 // item types
 
-export const itemTypes: SelectOption[] = [
+export const itemTypes: SelectOption<string>[] = [
     {
         value: 'fiches',
         label: 'Fiches'
@@ -67,6 +68,28 @@ export const itemTypes: SelectOption[] = [
     }
 
 ]
+
+// item icons
+
+export interface SearchItemIconConf {
+    [propName: string]: IconDefinition
+}
+
+
+export const searchItemIcons: SearchItemIconConf = {
+    users: faUser,
+    fichiers: faFile,
+    ilots: faLandmark,
+    expositions: faMonument,
+    articles: faBoxOpen,
+    historiques_stocks: faFileAlt,
+    stocks: faLayerGroup,
+    elements: faBox,
+    constituents: faPuzzlePiece,
+    fiches: faFileAlt,
+    fiches_systematiques: faFileAlt,
+    historiques_fiches_systematiques: faFileAlt,
+}
 
 export type SearchFilters = { [param: string]: SearchFilter }
 

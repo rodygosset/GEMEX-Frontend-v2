@@ -7,7 +7,10 @@ import useAPIRequest from "./useAPIRequest"
 // The following hook gets relevant meta-data for each search result item
 // from our backend API, & according to the current item type
 
-export const useGetSearchResultsMetaData = () => {
+// meta-data here means the data displayed on the search result item cards
+// on the search page
+
+export const useGetMetaData = () => {
 
     const makeAPIRequest = useAPIRequest()
 

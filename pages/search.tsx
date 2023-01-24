@@ -1,12 +1,15 @@
+import SearchResultCard from "@components/cards/search-result-card"
 import SearchBar from "@components/form-elements/search-bar"
 import SearchFilters from "@components/search-filters"
+import VerticalScrollBar from "@components/utils/vertical-scrollbar"
 import { searchConf, SearchResultsMetaData } from "@conf/api/search"
 import { MySession } from "@conf/utility-types"
 import useAPIRequest from "@hook/useAPIRequest"
-import { useGetSearchResultsMetaData } from "@hook/useGetSearchResultsMetaData"
+import { useGetMetaData } from "@hook/useGetMetaData"
 import styles from "@styles/pages/search.module.scss"
 import { Context } from "@utils/context"
 import { parseURLQuery } from "@utils/search-utils"
+import { SSRGetMetaData } from "@utils/ssr-get-metadata"
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
 import { DynamicObject } from "@utils/types"
 import { AxiosResponse } from "axios"
@@ -21,11 +24,12 @@ interface Props {
     queryItemType: string;
     initSearchParams: DynamicObject;
     results: any[];
+    initMetaData: SearchResultsMetaData;
 }
 
 const resultsPerPage = 30
 
-const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) => {
+const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, initMetaData }) => {
 
     const router = useRouter()
 
@@ -60,15 +64,18 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
     useEffect(() => console.log(searchParams), [searchParams])
 
     // search results meta-data
-    const [metaData, setMetaData] = useState<SearchResultsMetaData>()
+    const [metaData, setMetaData] = useState(initMetaData)
 
     // when the search results change
     // fetch corresponding meta-data
 
-    const getMetaData = useGetSearchResultsMetaData()
+    const getMetaData = useGetMetaData()
 
     useEffect(() => {
-        getMetaData(itemType, searchResults).then(metaData => setMetaData(metaData))
+        getMetaData(itemType, searchResults).then(metaData => {
+            if(metaData) setMetaData(metaData)
+            else setMetaData({})
+        })
     }, [searchResults])
 
     useEffect(() => console.log(metaData), [metaData])
@@ -96,12 +103,14 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
     const reqController = useRef<AbortController>()
 
     const [currentPageNb, setCurrentPageNb] = useState(1)
+    const [nbResults, setNbResults] = useState(0)
     const [totalPagesNb, setTotalPagesNb] = useState(1)
 
 
-    // on each search request, compute the total number of pages
+    // on each search request, get the number of results
+    // & compute the total number of pages
 
-    const getTotalPagesNb = () => {
+    const getNbResults = () => {
         // make a request to our API to get the number of search results
         // & divide that by the number of results per page 
         makeAPIRequest<{nb_results: number}, void>(
@@ -109,19 +118,21 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
             itemType,
             "search/nb",
             searchParams,
-            (res: AxiosResponse<{nb_results: number}>) => setTotalPagesNb(Math.ceil(res.data.nb_results / resultsPerPage)),
+            (res: AxiosResponse<{nb_results: number}>) => setNbResults(res.data.nb_results),
             undefined
         )
     }
 
-    useEffect(getTotalPagesNb, [searchResults])
+    useEffect(getNbResults, [searchResults])
+
+    useEffect(() => setTotalPagesNb(Math.ceil(nbResults / resultsPerPage)), [nbResults])
 
     // go back to the first page
     // when the search parameters or the search item change
     
     useEffect(() => {
         setCurrentPageNb(1)
-        getTotalPagesNb()
+        getNbResults()
     }, [itemType, searchParams])
 
     // fetch data on page change
@@ -170,9 +181,19 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
     const toggleFiltersVisibilty = () => setShowFilters(!showFilters)
 
 
+    // manage view mode (list or card)
+
+    const [isListView, setIsListView] = useState<boolean>(true)
+
     // utils
 
     const getDefaultSearchParam = () => searchConf[itemType].defaultSearchParam
+
+    const getResultsContainerClassNames = () => {
+        let classNames = ''
+        classNames += isListView ? styles.listView : ''
+        return classNames
+    }
 
     // handlers
 
@@ -207,7 +228,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
                 onSubmit={handleFormSubmit}
             />
 
-            <div id={styles.searchResultsContainer}> 
+            <div id={styles.mainColumn}> 
                 <SearchBar
                     fullWidth
                     hideCTA
@@ -219,8 +240,26 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results }) =
                     onInputChange={handleSearchInputChange}
                     onSubmit={handleFormSubmit}
                 />
-                <section id={styles.searchResultsContainer}>
-                    hello
+                <section>
+                    <h3>Résultats de recherche ({ nbResults })</h3>
+                    <VerticalScrollBar className={styles.scrollContainer}>
+                        <ul 
+                            id={styles.searchResults} 
+                            className={getResultsContainerClassNames()}>
+                        {
+                            searchResults.map(item => {
+                                return (
+                                    <SearchResultCard
+                                        itemType={itemType}
+                                        data={item}
+                                        globalMetaData={metaData}
+                                        listView={isListView}
+                                    />
+                                )
+                            })
+                        }
+                        </ul>
+                    </VerticalScrollBar>
                 </section>
             </div>
         </main>
@@ -235,9 +274,22 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     const [itemType, searchParams] = parseURLQuery(context.query)
 
+    // in case something goes wrong
+
+    const emptyProps: { props: Props } = {
+        props: {
+            queryItemType: itemType,
+            initSearchParams: searchParams,
+            results: [],
+            initMetaData: {}
+        }
+    }
+
     // retrieve the session, with the user's auth token
 
     const session = await unstable_getServerSession(context.req, context.res, authOptions)
+
+    if(session == null) return emptyProps
 
     // make the request to the API
 
@@ -250,13 +302,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
         onSuccess: res => res.data,
     })
 
+    // get the meta-data for the search results
+
+    const metaData = await SSRGetMetaData(itemType, results ? results : [], session as MySession)
+
     // pass the result as props
 
     return {
         props: {
             queryItemType: itemType,
             initSearchParams: searchParams,
-            results: results ? results : []
+            results: results ? results : [],
+            initMetaData: metaData ? metaData : {}
         }
     }
 }

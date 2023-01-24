@@ -1,0 +1,130 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/abstracts/_variables.scss";
+
+.listItem {
+
+    @include flex-container(column, nowrap, flex-start, flex-start);
+    gap: 20px;
+    padding: 20px 30px;
+
+    width: $search-result-card-width;
+    height: $search-result-card-height;
+    background: $primary-100;
+    border-radius: 20px;
+
+    transition: all 200ms ease-in-out;
+
+    h4 {
+        @include header-4-medium;
+        width: 100%;
+
+        a {
+            @include flex-container(row, nowrap, flex-start, center);
+            gap: 10px;
+            @include header-4-medium;
+            width: 100%;
+            color: $primary;
+
+            svg {
+                font-size: $h3-font-size;
+                width: $h3-font-size;
+                height: $h3-font-size;
+            }
+
+            span {    
+                width: 100%;
+                @include text-overflow-ellipsis;
+            }
+        }
+    }
+
+
+    ul {
+        @include reset-list;
+        @include flex-container(column, nowrap, flex-start, flex-start);
+        gap: 5px;
+        width: 100%;
+
+        li {
+            @include flex-container(row, nowrap, flex-start, center);
+            @include text-sm-medium;
+            
+            width: 100%;
+            gap: 15px;
+
+            .label {
+                color: $primary-400;
+            }
+
+            .metaData {
+                width: 100%;
+                @include text-overflow-ellipsis;
+            }
+
+            a {
+                @include flex-container(row, nowrap, flex-start, flex-start);
+                width: 100%;
+                gap: 5px;
+                color: $secondary;
+                transition: all 200ms ease-in-out;
+                overflow: hidden;
+
+                span {
+                    color: $secondary;
+                }
+                
+                &:hover {
+                    transform: scale(1.1);
+                    text-decoration: underline;
+                }
+            }
+
+            span {
+                color: $primary;
+            }
+        }
+
+    }
+
+    &:hover {
+        cursor: pointer;
+        background: $primary;
+        box-shadow: 0px 30px 60px $primary-400;
+        transform: scale(1.1);
+
+        h4 a {
+            color: $white;
+        }
+
+        ul li {
+            .label {
+                color: $white-400;
+            }
+
+            a, span  {
+                color: $white;
+            }
+        }
+
+    }
+
+
+    &.listView {
+        @include flex-container(row, nowrap, flex-start, center);
+        width: 100%;
+        height: fit-content;
+        border-radius: 0px;
+
+        &:hover {
+            transform: none;
+        }
+
+        border-bottom: 1px solid $primary-100;
+
+        ul {
+            @include flex-container(row, nowrap, flex-start, center);
+        }
+    }
+}
