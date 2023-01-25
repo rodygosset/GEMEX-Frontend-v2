@@ -1,6 +1,6 @@
 import FieldContainer from "@components/form-elements/field-container"
 import Label from "@components/form-elements/label"
-import TextInput from "@components/form-elements/text-field"
+import TextInput from "@components/form-elements/text-input"
 import { faGem, faRightToBracket } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/pages/login.module.scss"

@@ -117,11 +117,19 @@
         height: fit-content;
         border-radius: 0px;
 
+
+        padding: 10px 30px;
+
         &:hover {
             transform: none;
         }
 
         border-bottom: 1px solid $primary-100;
+
+        h4, h4 a {
+            @include text-md-medium;
+            width: 100%;
+        }
 
         ul {
             @include flex-container(row, nowrap, flex-start, center);

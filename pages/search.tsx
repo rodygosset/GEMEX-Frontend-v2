@@ -250,6 +250,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                             searchResults.map(item => {
                                 return (
                                     <SearchResultCard
+                                        key={item.nom}
                                         itemType={itemType}
                                         data={item}
                                         globalMetaData={metaData}

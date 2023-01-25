@@ -36,7 +36,7 @@
     form {
         @include flex-container(column, nowrap, flex-start, flex-start);
         width: 100%;
-        height: fit-content;
+        height: 100%;
         gap: 30px;
         padding: 0px;
         margin: 0px;
