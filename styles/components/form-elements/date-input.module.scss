@@ -38,7 +38,8 @@
 
     .calendarIcon {
         @include button-text;
-        color: $primary
+        color: $primary;
+        width: 14px;
     }
 
 }

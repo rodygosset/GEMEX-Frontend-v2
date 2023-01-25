@@ -39,6 +39,7 @@ export const embeddedSelectStyles: StylesConfig = {
     container: base => ({
         ...base,
         width: "fit-content",
+        minWidth: "50px"
     }),
     control: base => ({
         ...base,
