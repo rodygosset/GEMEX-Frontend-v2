@@ -54,7 +54,6 @@ const SearchResultCard = (
             // if the data for this field is null
             // reflect that in the metaData object, so we don't display it
             if(data[field] == null) {
-                console.log(`${field} in data => `, data)
                 tmp.push(null)
                 return
             }

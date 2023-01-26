@@ -16,14 +16,16 @@
 
     transition: all 200ms ease-in-out;
 
+    h4, h4 a {
+        @include text-md-medium;
+    }
+
     h4 {
-        @include header-4-medium;
         width: 100%;
 
         a {
             @include flex-container(row, nowrap, flex-start, center);
             gap: 10px;
-            @include header-4-medium;
             width: 100%;
             color: $primary;
 
@@ -128,7 +130,6 @@
         border-bottom: 1px solid $primary-100;
 
         h4, h4 a {
-            @include text-md-medium;
             flex: 1;
         }
 

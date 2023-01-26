@@ -66,6 +66,55 @@
 					border-radius: 10px;
 					@include flex-container(column, nowrap, flex-start, stretch);
 					gap: 0px;
+				
+					& li:first-child {
+						border-radius: 5px 5px 0px 0px;
+					}
+	
+					& li:last-child {
+						border-radius: 0px 0px 5px 5px;
+						border: none;
+					}
+				
+				}
+			}
+
+			.loadingIndicatorContainer {
+				@include flex-container(column, nowrap, center, center);
+				height: 100%;
+
+				gap: 60px;
+
+				h4 {
+					@include header-4-regular;
+					color: $primary;
+				}
+
+			}
+
+
+			.noResultsMessageContainer {
+
+				@include flex-container(column, nowrap, center, center);
+				gap: 30px;
+				height: 100%;
+
+				.illustrationContainer {
+					position: relative;
+					width: 100%;
+					max-width: 500px;
+					aspect-ratio: 1.226;
+				}
+
+
+				h1 {
+					@include header-1-regular;
+					color: $primary;
+				}
+
+				p {
+					@include text-md-regular;
+					color: $primary-600;
 				}
 			}
 

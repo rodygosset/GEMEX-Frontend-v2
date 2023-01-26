@@ -3,6 +3,7 @@ import SearchResultCard from "@components/cards/search-result-card"
 import SearchBar from "@components/form-elements/search-bar"
 import Pagination from "@components/pagination"
 import SearchFilters from "@components/search-filters"
+import LoadingIndicator from "@components/utils/loading-indicator"
 import VerticalScrollBar from "@components/utils/vertical-scrollbar"
 import { searchConf, SearchResultsMetaData } from "@conf/api/search"
 import { MySession } from "@conf/utility-types"
@@ -22,6 +23,8 @@ import Head from "next/head"
 import { useRouter } from "next/router"
 import { useContext, useEffect, useRef, useState } from "react"
 import { authOptions } from "./api/auth/[...nextauth]"
+
+import Image from "next/image"
 
 interface Props {
     queryItemType: string;
@@ -257,7 +260,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                     { 
                         // don't display any content
                         // if there aren't no search results
-                        searchResults.length > 0 ?
+                        searchResults.length > 0 && !isLoading ?
                         <>
                             <h3>Résultats de recherche ({ nbResults })</h3>
                             <div className={styles.viewModeContainer}>
@@ -304,7 +307,34 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                             />
                         </>
                         :
-                        <></>
+                        // while loading
+                        // display a loading indicator
+                        isLoading ?
+                        <div className={styles.loadingIndicatorContainer}>
+                            <LoadingIndicator/>
+                            <h4>Chargement...</h4>
+                        </div>
+                        :
+                        // if there aren't any results
+                        // display the corresponding illustration
+                        // & a message for the user
+                        <div className={styles.noResultsMessageContainer}>
+                            <div className={styles.illustrationContainer}>
+                                <Image 
+                                    quality={100}
+                                    src={'/images/no-results-illustration.svg'} 
+                                    alt={"Aucun résultat."} 
+                                    priority
+                                    fill
+                                    style={{ 
+                                        objectFit: "contain", 
+                                        top: "auto"
+                                    }}
+                                />
+                            </div>
+                            <h1>Aucun résultat...</h1>
+                            <p>Ré-essayer en changeant les paramètres de recherche</p>
+                        </div>
 
                     }
                 </section>
