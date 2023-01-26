@@ -326,8 +326,7 @@ export const searchConf: SearchConf = {
             "user_en_charge_id",
             "ilot_id",
             "exposition_id",
-            "element_id",
-            "tags"
+            "element_id"
         ]
     },
     fiches_systematiques: {
@@ -357,8 +356,7 @@ export const searchConf: SearchConf = {
             "user_en_charge_id",
             "ilot_id",
             "exposition_id",
-            "element_id",
-            "date_prochaine"
+            "element_id"
         ]
     },
     historiques_fiches_systematiques: {

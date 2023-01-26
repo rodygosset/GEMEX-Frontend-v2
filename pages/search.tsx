@@ -1,9 +1,12 @@
+import Button from "@components/button"
 import SearchResultCard from "@components/cards/search-result-card"
 import SearchBar from "@components/form-elements/search-bar"
+import Pagination from "@components/pagination"
 import SearchFilters from "@components/search-filters"
 import VerticalScrollBar from "@components/utils/vertical-scrollbar"
 import { searchConf, SearchResultsMetaData } from "@conf/api/search"
 import { MySession } from "@conf/utility-types"
+import { faList, faTableCellsLarge } from "@fortawesome/free-solid-svg-icons"
 import useAPIRequest from "@hook/useAPIRequest"
 import { useGetMetaData } from "@hook/useGetMetaData"
 import styles from "@styles/pages/search.module.scss"
@@ -51,7 +54,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 
     const [searchResults, setSearchResults] = useState(results)
     
-    useEffect(() => console.log(searchResults), [searchResults])
+    // useEffect(() => console.log(searchResults), [searchResults])
 
     // when the item type changes, 
     // update the search params
@@ -61,7 +64,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         item: itemType
     }), [itemType])
 
-    useEffect(() => console.log(searchParams), [searchParams])
+    // useEffect(() => console.log(searchParams), [searchParams])
 
     // search results meta-data
     const [metaData, setMetaData] = useState(initMetaData)
@@ -183,7 +186,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 
     // manage view mode (list or card)
 
-    const [isListView, setIsListView] = useState<boolean>(true)
+    const [isListView, setIsListView] = useState<boolean>(false)
 
     // utils
 
@@ -193,6 +196,16 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         let classNames = ''
         classNames += isListView ? styles.listView : ''
         return classNames
+    }
+
+    // compute which view mode button should show as the current selected view mode
+    // & return the corresponding CSS class
+
+    const getViewModeButtonClassName = (isListViewButton: boolean) => {
+        if(isListViewButton && isListView || !isListViewButton && !isListView) {
+            return styles.selected
+        }
+        return ''
     }
 
     // handlers
@@ -241,26 +254,59 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                     onSubmit={handleFormSubmit}
                 />
                 <section>
-                    <h3>Résultats de recherche ({ nbResults })</h3>
-                    <VerticalScrollBar className={styles.scrollContainer}>
-                        <ul 
-                            id={styles.searchResults} 
-                            className={getResultsContainerClassNames()}>
-                        {
-                            searchResults.map(item => {
-                                return (
-                                    <SearchResultCard
-                                        key={item.nom}
-                                        itemType={itemType}
-                                        data={item}
-                                        globalMetaData={metaData}
-                                        listView={isListView}
-                                    />
-                                )
-                            })
-                        }
-                        </ul>
-                    </VerticalScrollBar>
+                    { 
+                        // don't display any content
+                        // if there aren't no search results
+                        searchResults.length > 0 ?
+                        <>
+                            <h3>Résultats de recherche ({ nbResults })</h3>
+                            <div className={styles.viewModeContainer}>
+                                <Button
+                                    className={getViewModeButtonClassName(false)}
+                                    icon={faTableCellsLarge}
+                                    role="tertiary"
+                                    bigPadding
+                                    onClick={() => setIsListView(false)}>
+                                    Cartes
+                                </Button>
+                                <Button
+                                    className={getViewModeButtonClassName(true)}
+                                    icon={faList}
+                                    role="tertiary"
+                                    bigPadding
+                                    onClick={() => setIsListView(true)}>
+                                    Liste
+                                </Button>
+                            </div>
+                            <VerticalScrollBar className={styles.scrollContainer}>
+                                <ul 
+                                    id={styles.searchResults} 
+                                    className={getResultsContainerClassNames()}>
+                                {
+                                    searchResults.map(item => {
+                                        return (
+                                            <SearchResultCard
+                                                key={item.nom}
+                                                itemType={itemType}
+                                                data={item}
+                                                globalMetaData={metaData}
+                                                listView={isListView}
+                                            />
+                                        )
+                                    })
+                                }
+                                </ul>
+                            </VerticalScrollBar>
+                            <Pagination
+                                currentPageNb={currentPageNb}
+                                totalPagesNb={totalPagesNb}
+                                setPageNb={setCurrentPageNb}
+                            />
+                        </>
+                        :
+                        <></>
+
+                    }
                 </section>
             </div>
         </main>

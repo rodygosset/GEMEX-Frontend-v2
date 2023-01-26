@@ -52,7 +52,9 @@
         @include button-styler(none, $main-color);
 
         &.animateOnHover:hover {
-            padding: 10px 20px;
+            &:not(.bigPadding) {
+                padding: 10px 20px;
+            }
             background: $main-color-background;
         }
 

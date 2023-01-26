@@ -1,0 +1,32 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+.container {
+
+    @include flex-container(row, nowrap, center, center);
+    gap: 10px;
+    padding: 10px 20px;
+
+    button {
+        padding: 15px;
+        
+        &.edgeButton {
+            padding: 15px;
+            border: 2px solid $primary-100;
+
+            &:hover {
+                transform: scale(1.1);
+                padding: 15px;
+            }
+        }
+
+    }
+
+    p {
+        @include button-text;
+        color: $primary;
+    }
+
+
+}

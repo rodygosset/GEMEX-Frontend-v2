@@ -40,7 +40,9 @@ export const useGetMetaData = () => {
         // build an object that contains the field names as keys 
         // and the list of values as values
         let itemData: SearchResultsMetaData = Object.fromEntries(itemDataFields.map((field, index) => {
-            return [field, { ids: itemDataValuesArray[index], values: [] }]
+            // get rid of null values for IDs
+            const ids = itemDataValuesArray[index].filter(value => value != null)
+            return [field, { ids: ids, values: [] }]
         }))
 
 
@@ -64,7 +66,7 @@ export const useGetMetaData = () => {
             for(const value of itemData[field].ids) {
 
                 // don't make a request if the value is null
-                if(value == null) return
+                if(value == null) continue
 
                 // format the received data before displaying it
                 const handleSuccess = (res: AxiosResponse) => {

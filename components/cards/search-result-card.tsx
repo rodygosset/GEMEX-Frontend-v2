@@ -43,13 +43,22 @@ const SearchResultCard = (
     useEffect(() => {
         if(!globalMetaData) return
 
-        const tmp: any[] = []
+        let tmp: any[] = []
 
 
         // for each attribute / field
         // get the value from the globalMetaData object
         // update local state when done
         searchResultConfig.forEach(field => {
+            
+            // if the data for this field is null
+            // reflect that in the metaData object, so we don't display it
+            if(data[field] == null) {
+                console.log(`${field} in data => `, data)
+                tmp.push(null)
+                return
+            }
+
             const fieldConf = viewConf[itemType][field]
 
             // format it properly if it's a date value

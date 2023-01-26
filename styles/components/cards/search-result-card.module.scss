@@ -46,6 +46,7 @@
         @include flex-container(column, nowrap, flex-start, flex-start);
         gap: 5px;
         width: 100%;
+        height: 100%;
 
         li {
             @include flex-container(row, nowrap, flex-start, center);
@@ -113,7 +114,7 @@
 
     &.listView {
         @include flex-container(row, nowrap, flex-start, center);
-        width: 100%;
+        width: auto;
         height: fit-content;
         border-radius: 0px;
 
@@ -128,11 +129,17 @@
 
         h4, h4 a {
             @include text-md-medium;
-            width: 100%;
+            flex: 1;
         }
 
         ul {
-            @include flex-container(row, nowrap, flex-start, center);
+            @include flex-container(row, wrap, flex-start, center);
+            flex: 1;
+
+            li {
+                width: auto;
+                flex: 1;
+            }
         }
     }
 }
