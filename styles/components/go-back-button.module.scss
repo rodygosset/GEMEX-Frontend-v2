@@ -1,0 +1,37 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+$go-back-button-size: 60px;
+
+.goBackButton {
+
+    @include reset-button;
+    @include flex-container(row, nowrap, center, center);
+
+    width: $go-back-button-size;
+    height: $go-back-button-size;
+    border-radius: $go-back-button-size;
+
+    background: $primary-100;
+
+    transition: all 200ms ease-in-out;
+
+    svg {
+        height: 15px;
+        width: 10px;
+        color: $primary;
+    }
+
+    &:hover {
+
+        transform: scale(1.1);
+
+        background: $primary;
+        box-shadow: 0px 30px 60px $primary-400;
+
+        svg {
+            color: $white;
+        }
+    }
+}

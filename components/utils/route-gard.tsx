@@ -1,9 +1,10 @@
 import { apiURL } from "@conf/api/conf";
 import { MySession } from "@conf/utility-types";
+import { Context } from "@utils/context";
 import axios from "axios";
 import { signOut, useSession } from "next-auth/react"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { isAuthError } from "utils/req-utils";
 
 
@@ -19,13 +20,29 @@ const RouteGard = ({ children }: Props) => {
 
     const session = data as MySession
 
+    const { navHistory, setNavHistory } = useContext(Context)
+
     useEffect(() => {
         authCheck(router.asPath)
         
         const hideContent = () => setAuthorized(false)
-        
+
+        // independent routes manage the nav history on route change
+
+        const independentRoutes = [
+            "/search"
+        ]
+
         // when the route change beings, hide the page
-        router.events.on('routeChangeStart', hideContent)
+        // & add the current route (before the route has changed)
+        // to the nav history
+        router.events.on('routeChangeStart', () => {
+            hideContent()
+            // don't do anything if the current route is independent
+            if(independentRoutes.includes(router.pathname)) return
+            // if not, add it to the navHistory
+            setNavHistory([...navHistory, router.pathname])
+        })
 
         // run authCheck again when the route change is complete
 

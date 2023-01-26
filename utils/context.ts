@@ -7,14 +7,18 @@ export interface SearchParamsType {
     [prop: string]: string | number;
 }
 
-export interface SearchContext {
+export interface AppContext {
     searchParams: SearchParamsType;
-    setSearchParams: (newSearchParams: SearchParamsType) => void
+    setSearchParams: (newSearchParams: SearchParamsType) => void;
+    navHistory: string[];
+    setNavHistory: (newNavHistory: string[]) => void;
 }
 
-export const searchContext: SearchContext = {
+export const searchContext: AppContext = {
     searchParams: {},
-    setSearchParams: () => {}
+    setSearchParams: () => {},
+    navHistory: [],
+    setNavHistory: () => {}
 }
 
 export const Context = React.createContext(searchContext)

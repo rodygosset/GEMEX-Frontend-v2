@@ -5,9 +5,7 @@
 
 #container {
     @include flex-container(row, nowrap, flex-start, flex-start);
-	// max-width: 100%;
 	padding: $nav-bar-height + 20px 7% $nav-bar-height;
-	background: $primary-100;
 	gap: 40px;
 
 	#mainColumn {
@@ -108,13 +106,15 @@
 
 
 				h1 {
-					@include header-1-regular;
+					@include header-2-regular;
 					color: $primary;
+					text-align: center;
 				}
 
 				p {
 					@include text-md-regular;
 					color: $primary-600;
+					text-align: center;
 				}
 			}
 

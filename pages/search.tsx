@@ -376,7 +376,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
         itemType: itemType,
         additionalPath: `search/?skip=0&max=${resultsPerPage}`, // get page 1
         data: searchParams,
-        onSuccess: res => res.data,
+        onSuccess: res => res.data
     })
 
     // get the meta-data for the search results

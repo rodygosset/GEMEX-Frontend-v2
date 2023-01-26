@@ -15,12 +15,19 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 	// set up the search context
 
 	const [searchParams, setSearchParams] = useState<SearchParamsType>({})
+
+	// set up app navigation history
+
+	const [navHistory, setNavHistory] = useState<string[]>([])
 	
 	// memoize the context
 	
-	const contextValue = useMemo(
-		() => ({ searchParams, setSearchParams }), [searchParams]
-	)
+	const contextValue = useMemo(() => ({ 
+		searchParams, 
+		setSearchParams,
+		navHistory,
+		setNavHistory 
+	}), [searchParams])
 
 
 	return (

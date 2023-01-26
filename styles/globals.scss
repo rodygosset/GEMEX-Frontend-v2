@@ -6,11 +6,12 @@
 
 html {
 	font-size: 62.5%;
-	background: $white, rgba($color: $primary, $alpha: 0.05);
+	background: $white;
 }
 
 body {
 	font-size: 1.6rem;
+	background: rgba($primary, 0.05);
 }
 
 html, body, div#__next {

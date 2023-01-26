@@ -10,7 +10,7 @@ export interface SSRAPIRequestArgs<T,U> {
     additionalPath?: string, 
     data?: any, 
     onSuccess?: (res: AxiosResponse<T>) => U, 
-    onFailure?: (error: Error | AxiosError) => U,
+    onFailure?: (error: Error | AxiosError) => U | void,
     abortSignal?: AbortSignal, 
     showPageOn404?: boolean,
     notifyUser?: boolean
