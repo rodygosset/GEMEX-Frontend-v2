@@ -18,6 +18,8 @@ const RouteGard = ({ children }: Props) => {
 
     const { data, status } = useSession()
 
+    const { navHistory } = useContext(Context)
+
     const session = data as MySession
 
     useEffect(() => {
@@ -30,7 +32,7 @@ const RouteGard = ({ children }: Props) => {
             hideContent()
         })
 
-        // run authCheck again when the route change is complete
+        // run authCheck when the route change is complete
 
         router.events.on('routeChangeComplete', authCheck)
 
@@ -47,38 +49,44 @@ const RouteGard = ({ children }: Props) => {
             '/404'
         ]
         const path = url.split('?')[0]
-        if(!publicURLs.includes(path)) {
-            if(status == "unauthenticated") {
-                setAuthorized(false)
-                router.push({
-                    pathname: '/login',
-                    query: { returnUrl: url }
-                })
-            } else if(status == "authenticated") {
-                // try to get user data using the access token in the session
-                axios.get(`${apiURL}/hello/`, {
-                    headers: { Authorization: `bearer ${session.access_token}` }
-                })
-                // if everything's well
-                .then(res => {
-                    if(res.status == 200) setAuthorized(true)
-                })
-                // or if the api returns an auth error, redirect to login page
-                .catch(error => {
-                    if(isAuthError(error)) {
-                        // serialize the return url to use it in the query
-                        const query = new URLSearchParams({
-                            returnURL: url
-                        }).toString()
-                        // sign out
-                        // indicating to the login page which url to go back to 
-                        signOut({ callbackUrl: `/login?${query}` })
-                    }
-                })
-            }
-        } else {
-            // in case the url is public
+        // in case the current route is public
+        if(publicURLs.includes(path)) {
             setAuthorized(true)
+            return
+        }
+        // in case we have to go to the login page
+        // make sure we return to the latest route in the nav history
+        const returnUrl = navHistory.length > 0 ? navHistory[navHistory.length - 1] : url
+        // if the new route isn't public => requires authentication
+        if(status == "unauthenticated") {
+            setAuthorized(false)
+            router.push({
+                pathname: '/login',
+                query: { returnUrl: returnUrl }
+            })
+        } else if(status == "authenticated") {
+            // try to get data from an authenticated API route
+            // using our session access token
+            axios.get(`${apiURL}/hello/`, {
+                headers: { Authorization: `bearer ${session.access_token}` }
+            })
+            // if the request succeeds
+            // show the current page
+            .then(res => {
+                if(res.status == 200) setAuthorized(true)
+            })
+            // if the api returns an auth error, redirect to login page
+            .catch(error => {
+                if(isAuthError(error)) {
+                    // serialize the return url to use it in the query
+                    const query = new URLSearchParams({
+                        returnUrl: returnUrl
+                    }).toString()
+                    // sign out
+                    // indicating to the login page which url to go back to 
+                    signOut({ callbackUrl: `/login?${query}` })
+                }
+            })
         }
     }
 
