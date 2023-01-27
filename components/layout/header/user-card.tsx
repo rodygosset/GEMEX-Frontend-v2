@@ -1,25 +1,16 @@
-import { getUserFullName, UserRole } from "@conf/api/data-types/user"
+import { getUserFullName } from "@conf/api/data-types/user"
 import { MySession } from "@conf/utility-types"
-import useGetUserRole from "@hook/useGetUserRole"
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
 import Image from "next/image"
 
 import styles from "@styles/layout/header/user-card.module.scss"
 import { capitalizeFirstLetter } from "utils/general"
 
-
 const UserCard = () => {
 
     const session = useSession().data as MySession
 
-    const [userRole, setUserRole] = useState<UserRole>()
-
-    const getUserRole = useGetUserRole()
-
-    useEffect(() => {
-        getUserRole().then(setUserRole)
-    }, [])
+    const { userRole } = session
 
     return (
         <div className={styles.container}>

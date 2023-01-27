@@ -111,22 +111,7 @@ const SearchResultCard = (
 
     const handleClick = (event: MouseEvent) => {
         event.stopPropagation()
-        // event.preventDefault()
-        // before opening the link,
-        // update the nav history by appending the current route
-        // updateNavHistory()
         router.push(getHref())
-    }
-
-    // when the user clicks on meta-data link
-
-    const handleMetaDataLinkClick = (event: MouseEvent, linkItemType: string, id: number) => {
-        event.stopPropagation()
-        // event.preventDefault()
-        // before opening the link,
-        // update the nav history by appending the current route
-        // updateNavHistory()
-        router.push(getMetaDataLinkHref(linkItemType, id))
     }
 
 
@@ -155,12 +140,16 @@ const SearchResultCard = (
 
     const getHref = () => {
         if(href) return href
-        return `/view/${itemType}/${data.id}`
+        const viewItemType = itemType == "fiches_systematiques" ? "fiches/systematiques" : itemType
+        return `/view/${viewItemType}/${data.id}`
     }
 
     // build the URL for each piece of meta-data that is a link
 
-    const getMetaDataLinkHref = (linkItemType: string, id: number) => `/view/${linkItemType}/${id}`
+    const getMetaDataLinkHref = (linkItemType: string, id: number) => {
+        const viewLinkItemType = linkItemType == "fiches_systematiques" ? "fiches/systematiques" : linkItemType
+        return `/view/${viewLinkItemType}/${id}`
+    }
 
     // render
 

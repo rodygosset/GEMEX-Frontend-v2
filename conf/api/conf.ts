@@ -47,4 +47,24 @@ export const apiURLs: APIURLsType = {
 export const TO_BE_ASSIGNED_TAG = "À attribuer"
 
 
+// permissions for each item type
 
+interface ItemTypesPermissionsType {
+    [itemType: string]: string;
+} 
+
+export const itemTypesPermissions: ItemTypesPermissionsType = {
+    users: "users",
+    roles: "users",
+    groups: "users",
+    ilots: "ilots",
+    expositions: "expositions",
+    articles: "stocks",
+    historiques_stocks: "stocks",
+    stocks: "stocks",
+    elements: "elements",
+    constituents: "stocks",
+    fiches: "fiches",
+    fiches_systematiques: "systematiques",
+    historiques_fiches_systematiques: "historique"
+}

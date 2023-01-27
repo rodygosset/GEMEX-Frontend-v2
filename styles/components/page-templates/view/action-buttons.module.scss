@@ -1,0 +1,15 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/abstracts/_variables.scss";
+
+
+#actionButtons {
+    @include flex-container(row, nowrap, flex-start, center);
+    gap: 30px;
+
+    button {
+        border: 1px solid $primary-100;
+    }
+
+}

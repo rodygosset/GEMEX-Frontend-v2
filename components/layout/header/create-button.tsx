@@ -4,7 +4,6 @@
 
 import Button from "@components/button"
 import { faAngleDown, faAngleUp, faFileCirclePlus } from "@fortawesome/free-solid-svg-icons"
-import useGetUserRole from "@hook/useGetUserRole"
 import { useEffect, useRef, useState } from "react"
 
 import styles from "@styles/layout/header/create-button.module.scss"
@@ -12,17 +11,21 @@ import { creatableItemsList } from "@conf/general"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { useSession } from "next-auth/react"
+import { MySession } from "@conf/utility-types"
 
 const CreateButton = () => {
 
     // get info about the current user's permissions
 
+    const session = useSession().data as MySession
+
+    const { userRole } = session 
+
     const [userPermissions, setUserPermissions] = useState<string[]>()
 
-    const getUserRole = useGetUserRole()
-
     useEffect(() => {
-        getUserRole().then(role => setUserPermissions(role?.permissions.split(',')))
+        setUserPermissions(userRole.permissions.split(','))
     }, [])
 
 

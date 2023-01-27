@@ -6,6 +6,7 @@ import NextAuth from "next-auth/next"
 import FormData from 'form-data'
 
 import CredentialsProvider from "next-auth/providers/credentials"
+import { User, UserRole } from "@conf/api/data-types/user"
 
 
 export const authOptions: AuthOptions = {
@@ -21,6 +22,7 @@ export const authOptions: AuthOptions = {
             username: { label: "Nom d'utilisateur", type: "text", placeholder: "Entrez votre nom d'utilisateur" },
             password: {  label: "Matricule", type: "password" }
         },
+        // @ts-ignore
         async authorize(credentials: any) { 
 
             // build the form data 
@@ -35,7 +37,13 @@ export const authOptions: AuthOptions = {
             // If no error and we have the JWT, return the access token
             if (res.status == 200) {
                 // get user data
-                const { data: userData } = await axios.get(`${apiURL}/api/users/me`, {
+                const { data: userData } = await axios.get<User>(`${apiURL}/api/users/me`, {
+                    headers: {
+                        Authorization: `bearer ${res.data.access_token}` 
+                    }
+                })
+                // get user role
+                const { data: userRole } = await axios.get<UserRole>(`${apiURL}/api/users/roles/id/${userData.role_id}`, {
                     headers: {
                         Authorization: `bearer ${res.data.access_token}` 
                     }
@@ -43,7 +51,8 @@ export const authOptions: AuthOptions = {
                 // return the access token along with user data
                 return {
                     access_token: res.data.access_token,
-                    ...userData 
+                    ...userData,
+                    role: userRole 
                 }
 
             }
@@ -65,9 +74,11 @@ export const authOptions: AuthOptions = {
         async jwt({ token, user }) {
             if(user) {
                 // @ts-ignore
-                token = { access_token: user.access_token }
+                token = { access_token: user.access_token, userRole: user.role }
                 // @ts-ignore
                 delete user.access_token
+                // @ts-ignore
+                delete user.role
                 token.user = user
             }
             return token
@@ -77,6 +88,8 @@ export const authOptions: AuthOptions = {
             session.access_token = token.access_token
             // @ts-ignore
             session.user = token.user
+            // @ts-ignore
+            session.userRole = token.userRole
             return session
         }
     },

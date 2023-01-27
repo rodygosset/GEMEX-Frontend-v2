@@ -37,16 +37,6 @@
 			}
 
 		}
-
-		#actionButtons {
-			@include flex-container(row, nowrap, flex-start, center);
-			gap: 30px;
-
-			button {
-				border: 1px solid $primary-100;
-			}
-
-		}
 		
 
 	}
