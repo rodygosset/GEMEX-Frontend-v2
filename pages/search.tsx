@@ -89,7 +89,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         })
     }, [searchResults])
 
-    useEffect(() => console.log(metaData), [metaData])
+    // useEffect(() => console.log(metaData), [metaData])
 
 
     // load the search params from the URL query
@@ -130,7 +130,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
             "search/nb",
             searchParams,
             (res: AxiosResponse<{nb_results: number}>) => setNbResults(res.data.nb_results),
-            undefined
+            () => console.log("search params => ", searchParams)
         )
     }
 
@@ -178,7 +178,8 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
             `search/?skip=${(currentPageNb - 1) * resultsPerPage}&max=${resultsPerPage}`,
             searchParams,
             handleSuccess,
-            undefined,
+            // @ts-ignore
+            () => console.log("search params => ", searchParams),
             reqController.current.signal
         )
 

@@ -19,18 +19,21 @@ export const parseURLQuery = (query: ParsedUrlQuery): [string, DynamicObject] =>
     // get the search parameters as they are, from the URL query
 
     for(const param in query) {
-        if(searchQueryParams[itemType].includes(param)) {
-            // in case the current parameter is supposed to be a list
-            // but it's only one item long
-            // it will be just a string inside the query object,
-            // so we need to put it in an array
-            if(param in searchConf[itemType] && searchConf[itemType].searchParams[param].type == 'itemList' &&
-                typeof query[param] == 'string') {
-                searchParams[param] = [ query[param]?.toString() ]
-            } else {
-                // otherwise, just add the key/value pair to the search params
-                searchParams[param] = query[param]
-            }
+        // don't include key / value pairs from the URL query
+        // which don't correspond to a search param in the API conf
+        if(!searchQueryParams[itemType].includes(param)) {
+            continue
+        }
+        // in case the current parameter is supposed to be a list
+        // but it's only one item long
+        // it will be just a string inside the query object,
+        // so we need to put it in an array
+        if(param in searchConf[itemType].searchParams && searchConf[itemType].searchParams[param].type == 'itemList' &&
+            typeof query[param] == 'string') {
+            searchParams[param] = [ query[param]?.toString() ]
+        } else {
+            // otherwise, just add the key/value pair to the search params
+            searchParams[param] = query[param]
         }
     }
 
