@@ -34,12 +34,13 @@ const ViewElements: NextPage<Props> = (
 
     return (
         data ?
-        <ViewTemplate>
+        <ViewTemplate
+            itemType={itemType}
+            itemTitle={data.nom}>
             <Head>
 				<title>{data.nom} (Element)</title>
 				<meta name="description" content={`Informations sur l'élement d'exposition ${data.nom}`} />
 			</Head>
-            <GoBackButton/>
         </ViewTemplate>
         :
         // if we couldn't retrive the data

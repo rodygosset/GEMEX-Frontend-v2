@@ -1,0 +1,12 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+
+.hr {
+    width: 100%;
+    height: 2px;
+    border: none;
+
+    background: $primary-100;
+
+}

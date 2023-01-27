@@ -6,11 +6,49 @@
 
 #container {
 
-    @include flex-container(column, nowrap, flex-start, flex-start);
+    @include flex-container(row, nowrap, flex-start, flex-start);
 	padding: $nav-bar-height + 20px 7% $nav-bar-height;
-	gap: 30px;
+	gap: 60px;
 
+	.backButtonContainer {
+		@include flex-container(row, nowrap, flex-start, flex-start);
+	}
 
+	section {
 
+		@include flex-container(column, nowrap, flex-start, stretch);
+		gap: 30px;
+		flex: 1;
+		height: 100%;
+
+		#itemTitle {
+
+			@include flex-container(column, nowrap, flex-start, flex-start);
+			gap: 10px;
+			
+			h1 {
+				@include header-3-semibold;
+				color: $primary;
+			}
+	
+			p {
+				@include text-md-medium;
+				color: $primary-600;
+			}
+
+		}
+
+		#actionButtons {
+			@include flex-container(row, nowrap, flex-start, center);
+			gap: 30px;
+
+			button {
+				border: 1px solid $primary-100;
+			}
+
+		}
+		
+
+	}
 
 }

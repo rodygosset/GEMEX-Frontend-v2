@@ -178,8 +178,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
             `search/?skip=${(currentPageNb - 1) * resultsPerPage}&max=${resultsPerPage}`,
             searchParams,
             handleSuccess,
-            // @ts-ignore
-            () => console.log("search params => ", searchParams),
+            undefined,
             reqController.current.signal
         )
 
@@ -249,10 +248,10 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         // @ts-ignore
         const query = new URLSearchParams(searchParams).toString()
         // get rid of the last update we made to the nav history
-        navHistory.pop()
+        const newNavHistory = navHistory.slice(0, navHistory.length - 1)
         // replace it with the URL corresponding to the current search params
-        setNavHistory([...navHistory, `/search?${query}`])
-    }, [searchParams])
+        setNavHistory([...newNavHistory, `/search?${query}`])
+    }, [searchParams, itemType])
 
     // render
 
