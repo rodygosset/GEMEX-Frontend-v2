@@ -7,8 +7,9 @@ import Head from 'next/head'
 import { SessionProvider } from 'next-auth/react'
 import RouteGard from '@components/utils/route-gard'
 import Header from '@components/layout/header'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Context, SearchParamsType } from '@utils/context'
+import { useRouter } from 'next/router'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
@@ -27,8 +28,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 		setSearchParams,
 		navHistory,
 		setNavHistory 
-	}), [searchParams])
+	}), [searchParams, navHistory])
 
+	// keep nav history updated
+
+	const router = useRouter()
+
+	useEffect(() => setNavHistory([...navHistory, router.asPath]), [router.asPath])
 
 	return (
 		<SessionProvider session={session}>

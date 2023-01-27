@@ -1,14 +1,15 @@
-import { apiURLs } from "@conf/api/conf";
-import { getFilterLabel, searchConf, SearchConf, searchItemIcons, SearchResultsMetaData } from "@conf/api/search";
-import { viewConf } from "@conf/view";
-import { faLink } from "@fortawesome/free-solid-svg-icons";
+import { apiURLs } from "@conf/api/conf"
+import { getFilterLabel, searchConf, SearchConf, searchItemIcons, SearchResultsMetaData } from "@conf/api/search"
+import { viewConf } from "@conf/view"
+import { faLink } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/components/cards/search-result-card.module.scss"
-import { capitalizeEachWord, capitalizeFirstLetter, dateOptions } from "@utils/general";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { MouseEvent } from "react";
+import { Context } from "@utils/context"
+import { capitalizeEachWord, capitalizeFirstLetter, dateOptions } from "@utils/general"
+import Link from "next/link"
+import { useRouter } from "next/router"
+import { useContext, useEffect, useState } from "react"
+import { MouseEvent } from "react"
 
 interface Props {
     data: any;
@@ -86,15 +87,45 @@ const SearchResultCard = (
 
     }, [globalMetaData])
 
+    // manage the nav history
+
+    const {
+        searchParams,
+        navHistory,
+        setNavHistory
+    } = useContext(Context)
+
+    
+    // build a URL query string from the searchParams object
+    // & build a valid URL from there
+
+    const getCurrentRoute = () => {
+        const queryString = new URLSearchParams(searchParams as Record<string, string>).toString()
+        return `/search?${queryString}`
+    }
+
+    const updateNavHistory = () => setNavHistory([...navHistory, getCurrentRoute()])
+
 
     // handlers
 
-    const handleClick = () => router.push(getHref())
+    const handleClick = (event: MouseEvent) => {
+        event.stopPropagation()
+        // event.preventDefault()
+        // before opening the link,
+        // update the nav history by appending the current route
+        // updateNavHistory()
+        router.push(getHref())
+    }
 
-    // when user clicks on meta-data link
+    // when the user clicks on meta-data link
 
     const handleMetaDataLinkClick = (event: MouseEvent, linkItemType: string, id: number) => {
         event.stopPropagation()
+        // event.preventDefault()
+        // before opening the link,
+        // update the nav history by appending the current route
+        // updateNavHistory()
         router.push(getMetaDataLinkHref(linkItemType, id))
     }
 
@@ -135,7 +166,7 @@ const SearchResultCard = (
 
     return (
         <li 
-            onClick={handleClick}
+            onClick={e => handleClick(e)}
             className={getClassNames()}>
             <h4>
                 <Link href={getHref()}>
@@ -159,8 +190,8 @@ const SearchResultCard = (
                                 fieldConf.type in apiURLs ?
                                 // display it accordingly
                                 <Link 
-                                    href={getMetaDataLinkHref(fieldConf.type, data[field])} 
-                                    onClick={e => handleMetaDataLinkClick(e, fieldConf.type, data[index])}>
+                                    onClick={e => e.stopPropagation()}
+                                    href={getMetaDataLinkHref(fieldConf.type, data[field])}>
                                     <FontAwesomeIcon icon={faLink}/>
                                     <span className={styles.metaData}>{metaData[index]}</span>
                                 </Link>

@@ -49,7 +49,12 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
     // this is the object we pass to our backend API in our search request
     // searchParams is NOT the object representing the state of the SearchFilters component
 
-    const { searchParams, setSearchParams } = useContext(Context)
+    const {
+        searchParams, 
+        setSearchParams, 
+        navHistory, 
+        setNavHistory
+    } = useContext(Context)
 
     // state 
 
@@ -225,11 +230,28 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
     }
 
     const handleFormSubmit = () => {
+        // before pushing to the new url
+        // to get the search results
+        // push to the current url to the nav history
+        setNavHistory([...navHistory, router.asPath])
+        // submit search query
         router.push({
             pathname: '/search',
             query: searchParams
         })
     }
+
+    // keep nav history up to date
+
+    useEffect(() => {
+        // build the query string from the latest search params
+        // @ts-ignore
+        const query = new URLSearchParams(searchParams).toString()
+        // get rid of the last update we made to the nav history
+        navHistory.pop()
+        // replace it with the URL corresponding to the current search params
+        setNavHistory([...navHistory, `/search?${query}`])
+    }, [searchParams])
 
     // render
 

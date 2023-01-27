@@ -21,7 +21,7 @@ const Login: NextPage = () => {
     let returnUrl = router.query.returnUrl?.toString() || '/';
 
     // if the return url is /login, change it to the home page
-    if(returnUrl == "/login") { returnUrl = '/'; }
+    if(returnUrl == "/login") { returnUrl = '/' }
 
 
     // if the user's already authenticated, redirect to returnUrl
@@ -59,7 +59,10 @@ const Login: NextPage = () => {
         <main id={styles.container}>
             <Head>
                 <title>Se connecter</title>
-                <meta name="description" content="Page de connexion à l'application GEMEX" />
+                <meta 
+                    name="description" 
+                    content="Page de connexion à l'application GEMEX" 
+                />
             </Head>
             <section id={styles.loginForm}>
                 <section id={styles.greeting}>

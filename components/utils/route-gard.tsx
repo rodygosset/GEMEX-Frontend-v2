@@ -20,28 +20,14 @@ const RouteGard = ({ children }: Props) => {
 
     const session = data as MySession
 
-    const { navHistory, setNavHistory } = useContext(Context)
-
     useEffect(() => {
         authCheck(router.asPath)
         
         const hideContent = () => setAuthorized(false)
 
-        // independent routes manage the nav history on route change
-
-        const independentRoutes = [
-            "/search"
-        ]
-
         // when the route change beings, hide the page
-        // & add the current route (before the route has changed)
-        // to the nav history
         router.events.on('routeChangeStart', () => {
             hideContent()
-            // don't do anything if the current route is independent
-            if(independentRoutes.includes(router.pathname)) return
-            // if not, add it to the navHistory
-            setNavHistory([...navHistory, router.pathname])
         })
 
         // run authCheck again when the route change is complete
@@ -70,15 +56,23 @@ const RouteGard = ({ children }: Props) => {
                 })
             } else if(status == "authenticated") {
                 // try to get user data using the access token in the session
-                // if the api returns with an auth error, redirect to login page
                 axios.get(`${apiURL}/hello/`, {
                     headers: { Authorization: `bearer ${session.access_token}` }
-                }).then(res => {
+                })
+                // if everything's well
+                .then(res => {
                     if(res.status == 200) setAuthorized(true)
                 })
+                // or if the api returns an auth error, redirect to login page
                 .catch(error => {
                     if(isAuthError(error)) {
-                        signOut({ callbackUrl: '/login' })
+                        // serialize the return url to use it in the query
+                        const query = new URLSearchParams({
+                            returnURL: url
+                        }).toString()
+                        // sign out
+                        // indicating to the login page which url to go back to 
+                        signOut({ callbackUrl: `/login?${query}` })
                     }
                 })
             }

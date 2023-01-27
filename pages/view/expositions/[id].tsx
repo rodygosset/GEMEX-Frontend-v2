@@ -28,7 +28,7 @@ const ViewExposition: NextPage<Props> = (
     }
 ) => {
 
-    useEffect(() => console.log(data), [])
+    // useEffect(() => console.log(data), [])
 
     // render
 
