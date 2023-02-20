@@ -1,6 +1,8 @@
 
 import Button from "@components/button";
+import DeleteDialog from "@components/modals/delete-dialog";
 import { itemTypesPermissions } from "@conf/api/conf";
+import { APPROVED_STATUS_ID, Fiche } from "@conf/api/data-types/fiche";
 import { MySession } from "@conf/utility-types";
 import { faClockRotateLeft, faFileLines, faPenToSquare, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styles from "@styles/components/page-templates/view/action-buttons.module.scss"
@@ -10,17 +12,19 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react";
 
 
-// this component handle the logic 
+// this component handles the logic 
 // to decide which buttons to show the user on the view page
 // & the logic for each button
 
 interface Props {
     itemType: string;
+    itemData: any;
 }
 
 const ActionButtons = (
     {
-        itemType
+        itemType,
+        itemData
     }: Props
 ) => {
 
@@ -31,21 +35,27 @@ const ActionButtons = (
     // user privileges
     // impacts which action buttons to show
 
-    const [hasFicheCreationPrivileges, setHasFicheCreationPrivileges] = useState(true)
-    const [hasHistoryPrivileges, setHasHistoryPrivileges] = useState(true)
-    const [hasItemPrivileges, setHasItemPrivileges] = useState(true)
-    const [hasItemDeletionPrivileges, setHasItemDeletionPrivileges] = useState(true)
-
+    const [hasFicheCreationPrivileges, setHasFicheCreationPrivileges] = useState(false)
+    const [hasHistoryPrivileges, setHasHistoryPrivileges] = useState(false)
+    const [hasItemPrivileges, setHasItemPrivileges] = useState(false)
+    const [hasItemDeletionPrivileges, setHasItemDeletionPrivileges] = useState(false)
+    const [showActionButtons, setShowActionButtons] = useState(false)
 
     // determine which permissions the user has
 
-    const { userRole } = useSession().data as MySession
+    const { user, userRole } = useSession().data as MySession
 
     useEffect(() => {
         setHasFicheCreationPrivileges(userRole.permissions.includes("fiches"))
         setHasHistoryPrivileges(userRole.permissions.includes("historique"))
         setHasItemPrivileges(userRole.permissions.includes(itemTypesPermissions[itemType]))
         setHasItemDeletionPrivileges(userRole.suppression.includes(itemTypesPermissions[itemType]))
+        setShowActionButtons(
+            shouldShowFicheCreationButton() ||
+            shouldShowHistoryButton() ||
+            shouldShowEditButton() ||
+            shouldShowDeleteButton()
+        )
     }, [])
     
     // action buttons handlers
@@ -55,7 +65,6 @@ const ActionButtons = (
     const getCreateFicheLink = () => `/create/fiches?itemType=${itemType}&itemId=${router.query.id}`
 
     const handleCreateFicheClick = () => router.push(getCreateFicheLink())
-
 
     // Fiche Systématique History button
 
@@ -71,9 +80,13 @@ const ActionButtons = (
 
     // delete current item
 
-    const handleDeleteClick = () => {
-        // todo
-    }
+    // modal logic
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    
+    // show delete dialog
+
+    const handleDeleteClick = () => setShowDeleteModal(true)
 
     // logic used to determine which buttons to show
 
@@ -99,16 +112,25 @@ const ActionButtons = (
 
     // only show the edit button if:
     // - the user has edit privileges on the current item type
-    // - the current item type is not "fiches" or "fiches_systematiques"
-    // - the current item type is "fiches" &:
+    // - the current item type is anything but "fiches"
+    // -  or the current item type is "fiches" &:
     //      - the user is the author, a manager or was assigned the task
     //      - the status is anything but "Validée"
-    // - the current item type if "fiches_systematiques" &:
-    //      - the user has "systématiques" privileges
+
+    const userCanEditFicheItem = () => {
+        let ficheData = itemData as Fiche
+        return (
+            userRole.permissions.includes("manage") ||
+            ficheData.auteur_id == user.id ||
+            ficheData.user_en_charge_id == user.id
+        ) && ficheData.status_id != APPROVED_STATUS_ID
+    }
 
     const shouldShowEditButton = () => {
-        // todo
-        return hasItemPrivileges
+        return (
+            hasItemPrivileges && 
+            (itemType == "fiches" ? userCanEditFicheItem() : true)
+        )
     }
 
     // only show the delete button if:
@@ -118,70 +140,102 @@ const ActionButtons = (
     //      - the user is the author & the status is anything but "validée"
     //      - the user is the author & a manager & the status is "validée"
 
-    const shouldShowDeleteButton = () => {
-        // todo
-        return hasItemDeletionPrivileges
+
+    const userCanDeleteFicheItem = () => {
+        let ficheData = itemData as Fiche
+        return (
+            ficheData.auteur_id == user.id &&
+            (
+                ficheData.status_id != APPROVED_STATUS_ID ||
+                userRole.permissions.includes("manage")
+            )
+        )
     }
+
+    const shouldShowDeleteButton = () => {
+        return (
+            hasItemDeletionPrivileges || 
+            (itemType == "fiches" && userCanDeleteFicheItem())
+        )
+    }
+
+
 
     // render
 
     return (
-        <div id={styles.actionButtons}>
+        <>
         {
-            // determine whether the button should be visible
-            shouldShowFicheCreationButton() ?
-            <Button
-                role="tertiary"
-                icon={faFileLines}
-                onClick={handleCreateFicheClick}>
-                <Link href={getCreateFicheLink()}>
-                    Créer une fiche
-                </Link>
-            </Button>
-            :
+            showActionButtons ?
+            <div id={styles.actionButtons}>
+            {
+                // determine whether the button should be visible
+                shouldShowFicheCreationButton() ?
+                <Button
+                    role="tertiary"
+                    icon={faFileLines}
+                    onClick={handleCreateFicheClick}>
+                    <Link href={getCreateFicheLink()}>
+                        Créer une fiche
+                    </Link>
+                </Button>
+                :
+                <></>
+            }
+            {
+                // determine whether the button should be visible
+                shouldShowHistoryButton() ?
+                <Button
+                    role="tertiary"
+                    icon={faClockRotateLeft}
+                    status="success"
+                    onClick={handleHistoryClick}>
+                    Historique
+                </Button>
+                :
+                <></>
+            }
+            {
+                // determine whether the button should be visible
+                shouldShowEditButton() ?
+                <Button
+                    role="tertiary"
+                    icon={faPenToSquare}
+                    onClick={handleEditClick}>
+                    <Link href={getEditLink()}>
+                        Modifier
+                    </Link>
+                </Button>
+                :
+                <></>
+            }
+            {
+                // determine whether the button should be visible
+                shouldShowDeleteButton() ?
+                <Button
+                    role="tertiary"
+                    status="danger"
+                    icon={faTrashAlt}
+                    onClick={handleDeleteClick}>
+                    Supprimer
+                </Button>
+                :
+                <></>
+            }
+            {
+                // delete dialog
+                <DeleteDialog 
+                    isVisible={showDeleteModal}
+                    closeDialog={() => setShowDeleteModal(false)}
+                    itemType={itemType}
+                    itemTitle={itemData.nom}
+                />
+            }
+            </div> 
+            : 
             <></>
         }
-        {
-            // determine whether the button should be visible
-            shouldShowHistoryButton() ?
-            <Button
-                role="tertiary"
-                icon={faClockRotateLeft}
-                status="success"
-                onClick={handleHistoryClick}>
-                Historique
-            </Button>
-            :
-            <></>
-        }
-        {
-            // determine whether the button should be visible
-            shouldShowEditButton() ?
-            <Button
-                role="tertiary"
-                icon={faPenToSquare}
-                onClick={handleEditClick}>
-                <Link href={getEditLink()}>
-                    Modifier
-                </Link>
-            </Button>
-            :
-            <></>
-        }
-        {
-            // determine whether the button should be visible
-            shouldShowDeleteButton() ?
-            <Button
-                role="tertiary"
-                status="danger"
-                icon={faTrashAlt}
-                onClick={handleDeleteClick}>
-                Supprimer
-            </Button>
-            :
-            <></>
-        }
-        </div>
+        </>
     )
 }
 

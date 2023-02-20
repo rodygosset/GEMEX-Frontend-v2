@@ -1,0 +1,51 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/abstracts/_variables.scss";
+
+.container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    @include flex-container(column, nowrap, center, center);
+    width: 100vw;
+    height: 100vh;
+
+    background: $black-100;
+    backdrop-filter: blur(5px);
+
+    .modal {
+        @include flex-container(column, nowrap, center, flex-start);
+        gap: 20px;
+
+        width: 380px;
+        padding: 40px;
+
+        border-radius: 15px;
+
+        background: $white;
+
+        h4 {
+            @include header-4-semibold;
+            color: $primary;
+        }
+        
+        p {
+            @include text-sm-regular;
+            color: $primary-400;
+
+            span {
+                @include text-sm-bold;
+                color: $primary;
+            }
+
+        }
+
+        .buttonsContainer {
+            @include flex-container(row, nowrap, stretch, center);
+            width: 100%;
+            gap: 20px;
+        }
+    }
+
+}

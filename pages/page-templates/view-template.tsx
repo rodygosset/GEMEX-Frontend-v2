@@ -11,13 +11,15 @@ interface Props {
     children: any;
     itemType: string;
     itemTitle: string;
+    itemData: any;
 }
 
 const ViewTemplate = (
     {
         children,
         itemType,
-        itemTitle
+        itemTitle,
+        itemData
     }: Props
 ) => {
 
@@ -44,7 +46,7 @@ const ViewTemplate = (
                     <h1>{itemTitle}</h1>
                     <p>{ getItemTypeLabel() }</p>
                 </div>
-                <ActionButtons itemType={itemType}/>
+                <ActionButtons itemType={itemType} itemData={itemData}/>
                 <HorizontalSeperator/>
             </section>
             { children }

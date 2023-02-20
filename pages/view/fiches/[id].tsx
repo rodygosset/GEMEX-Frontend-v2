@@ -7,6 +7,7 @@ import { unstable_getServerSession } from "next-auth"
 import Head from "next/head"
 import { authOptions } from "pages/api/auth/[...nextauth]"
 import ViewTemplate from "pages/page-templates/view-template"
+import { useEffect } from "react"
 
 
 // this page displays information about a given Fiche object
@@ -26,7 +27,7 @@ const ViewFiche: NextPage<Props> = (
     }
 ) => {
 
-    // useEffect(() => console.log(data), [])
+    useEffect(() => console.log(data), [])
 
     // render
 
@@ -34,7 +35,8 @@ const ViewFiche: NextPage<Props> = (
         data ?
         <ViewTemplate
             itemType={itemType}
-            itemTitle={data.nom}>
+            itemTitle={data.nom}
+            itemData={data}>
             <Head>
 				<title>{data.nom} (Fiche)</title>
 				<meta name="description" content={`Informations sur la fiche ${data.nom}`} />

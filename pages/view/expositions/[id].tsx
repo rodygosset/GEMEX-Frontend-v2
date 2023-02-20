@@ -34,7 +34,8 @@ const ViewExposition: NextPage<Props> = (
         data ?
         <ViewTemplate
             itemType={itemType}
-            itemTitle={data.nom}>
+            itemTitle={data.nom}
+            itemData={data}>
             <Head>
 				<title>{data.nom} (Exposition)</title>
 				<meta name="description" content={`Informations sur l'exposition ${data.nom}`} />
