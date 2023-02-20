@@ -38,7 +38,52 @@
 
 		}
 		
+		.contentContainer {
+			@include flex-container(row, nowrap, stretch, stretch);
+			gap: 60px;
+			width: 100%;
+			height: 100%;
+
+
+			.column {
+				@include flex-container(column, nowrap, flex-start, stretch);
+				gap: 30px;
+				width: 100%;
+				height: 100%;
+
+				@include reset-list;
+
+				li {
+					@include flex-container(row, nowrap, space-between, center);
+					gap: 15px;
+					width: 100%;
+					color: $primary;
+
+					.itemLabel {
+						@include flex-container(row, nowrap, flex-start, center);
+						gap: 10px;
+
+						h5 {
+							@include text-sm-regular;
+						}
+
+						svg {
+							width: 1.4rem;
+							height: 1.4rem;
+						}
+					}
+
+					p {
+						@include  text-sm-regular;
+						padding: 10px 20px;
+						background: $primary-100;
+						border-radius: 5px;
+					}
+				}
+			}
+		}
 
 	}
+
 
 }

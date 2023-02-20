@@ -1,8 +1,11 @@
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { faBarsProgress, faCalendar, faClipboard, faComment, faEnvelope, faFile, faHashtag, faHourglass, faLink, faList, faMonument, faRepeat, faTag } from "@fortawesome/free-solid-svg-icons";
 import { SearchParam } from "./api/search";
 
 
 export interface Attribute extends SearchParam {
     fullWidth?: boolean;
+    icon: IconProp;
 };
 
 export interface LinkAttribute extends Attribute {
@@ -10,51 +13,60 @@ export interface LinkAttribute extends Attribute {
 }
 
 export const textAttribute: Attribute = {
+    icon: faComment,
     type: "text",
     defaultValue: ""
 }
 
 export const textAreaAttribute: Attribute = {
+    icon: faClipboard,
     type: "textArea",
     defaultValue: ""
 }
 
 export const numberAttribute: Attribute = {
+    icon: faHashtag,
     type: "number",
     defaultValue: 1
 }
 
 export const timeDeltaAttribute: Attribute = {
+    icon: faHourglass,
     type:"timeDelta"
 }
 
 export const itemAttribute: Attribute = {
+    icon: faLink,
     type: "",
     defaultValue: 1,
     minValue: 1
 }
 
 export const ficheStatusAttribute: Attribute = {
+    icon: faBarsProgress,
     type: "fiches_status",
     label: "Status"
 }
 
 export const itemListAttribute: Attribute = {
+    icon: faList,
     type: "itemList",
     item: ""
 }
 
 export const linkAttribute: LinkAttribute = {
+    icon: faLink,
     type: "link",
     searchParam: ""
 }
 
-export const dateAttribute: Attribute = { type: "date" } 
+export const dateAttribute: Attribute = { icon: faCalendar, type: "date" } 
 
-export const booleanAttribute: Attribute = { type: "boolean", defaultValue: false }
+export const booleanAttribute: Attribute = { icon: faRepeat, type: "boolean", defaultValue: false }
 
 
 export const fileAttribute: Attribute = {
+    icon: faFile,
     type: "file"
 }
 
@@ -162,17 +174,17 @@ export const viewConf: ViewConf = {
     },
     elements: {
         nom: textAttribute,
+        exposition_id: { ...itemAttribute, type: "expositions", label: "Exposition", icon: faMonument },
+        date_creation: { ...dateAttribute, label: "Créé le" },
+        commentaire: textAreaAttribute,
+        categories: { ...itemListAttribute, item: "categories_elements", label: "Catégories", icon: faTag },
         numero: { ...textAttribute, label: "Numéro"},
-        exposition_id: { ...itemAttribute, type: "expositions", label: "Exposition" },
         etat_id: { ...itemAttribute, type: "etats_elements", label: "État" },
         exploitation_id: { ...itemAttribute, type: "exploitations_elements", label: "Exploitation" },
         localisation_id: { ...itemAttribute, type: "localisations_elements", label: "Localisation" },
         coefficient: { ...numberAttribute, minValue: 0 },
-        commentaire: textAreaAttribute,
-        categories: { ...itemListAttribute, item: "categories_elements", label: "Catégories" },
+        constituents: { ...linkAttribute, searchParam: "element_id" },
         fichiers: fileAttribute,
-        date_creation: { ...dateAttribute, label: "Date de création" },
-        constituents: { ...linkAttribute, searchParam: "element_id" }
     },
     constituents: {
         nom: { ...textAttribute, fullWidth: true },

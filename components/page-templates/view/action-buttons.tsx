@@ -50,13 +50,20 @@ const ActionButtons = (
         setHasHistoryPrivileges(userRole.permissions.includes("historique"))
         setHasItemPrivileges(userRole.permissions.includes(itemTypesPermissions[itemType]))
         setHasItemDeletionPrivileges(userRole.suppression.includes(itemTypesPermissions[itemType]))
+    }, [])
+
+    useEffect(() => {
         setShowActionButtons(
             shouldShowFicheCreationButton() ||
             shouldShowHistoryButton() ||
             shouldShowEditButton() ||
             shouldShowDeleteButton()
         )
-    }, [])
+    }, [hasFicheCreationPrivileges, 
+        hasHistoryPrivileges, 
+        hasItemPrivileges,
+        hasItemDeletionPrivileges
+    ])
     
     // action buttons handlers
 

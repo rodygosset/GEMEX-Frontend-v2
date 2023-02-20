@@ -1,37 +1,35 @@
 
 import GoBackButton from "@components/go-back-button"
 import ActionButtons from "@components/page-templates/view/action-buttons"
+import Content from "@components/page-templates/view/content"
 import HorizontalSeperator from "@components/utils/horizontal-seperator"
 import { itemTypes } from "@conf/api/search"
 import styles from "@styles/page-templates/view-template.module.scss"
-import { formatItemName } from "@utils/general"
+import { toSingular } from "@utils/general"
 
 
 interface Props {
-    children: any;
     itemType: string;
     itemTitle: string;
     itemData: any;
+    extraData?: any;
 }
 
 const ViewTemplate = (
     {
-        children,
         itemType,
         itemTitle,
-        itemData
+        itemData,
+        extraData
     }: Props
 ) => {
-
-    // state
-
 
     
     // utils
 
     const getItemTypeLabel = () => {
         const label = itemTypes.find(type => type.value == itemType)?.label.slice(0, -1)
-        return label|| formatItemName(itemType)
+        return itemType.split('_').length > 1 ? toSingular(itemType) : label
     } 
 
     // render
@@ -48,8 +46,12 @@ const ViewTemplate = (
                 </div>
                 <ActionButtons itemType={itemType} itemData={itemData}/>
                 <HorizontalSeperator/>
+                <Content 
+                    itemType={itemType} 
+                    itemData={itemData} 
+                    extraData={extraData}
+                />
             </section>
-            { children }
         </main>
     )
 }

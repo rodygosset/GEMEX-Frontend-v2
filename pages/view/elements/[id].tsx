@@ -1,5 +1,7 @@
+import styles from "@styles/page-templates/view-template.module.scss"
 import { Element } from "@conf/api/data-types/element"
 import { MySession } from "@conf/utility-types"
+import { getExtraSSRData } from "@utils/req-utils"
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
 import axios from "axios"
 import { GetServerSideProps, NextPage } from "next"
@@ -7,6 +9,7 @@ import { unstable_getServerSession } from "next-auth"
 import Head from "next/head"
 import { authOptions } from "pages/api/auth/[...nextauth]"
 import ViewTemplate from "pages/page-templates/view-template"
+import { useEffect } from "react"
 
 
 // this page displays information about a given Exposition object
@@ -16,31 +19,44 @@ const itemType = "elements"
 
 interface Props {
     data: Element | null;
+    extra: {
+        exposition: string;
+        etat: string;
+        exploitation: string;
+        localisation: string;
+    } | null
 }
 
 
 
 const ViewElements: NextPage<Props> = (
     {
-        data
+        data,
+        extra
     }
 ) => {
 
-    // useEffect(() => console.log(data), [])
+    useEffect(() => console.log(data, extra), [])
+
+    // in order to 
 
     // render
 
     return (
-        data ?
-        <ViewTemplate
-            itemType={itemType}
-            itemTitle={data.nom}
-            itemData={data}>
+        data && extra ?
+        <>
             <Head>
-				<title>{data.nom} (Element)</title>
-				<meta name="description" content={`Informations sur l'élement d'exposition ${data.nom}`} />
-			</Head>
-        </ViewTemplate>
+                <title>{data.nom} (Element)</title>
+                <meta name="description" content={`Informations sur l'élement d'exposition ${data.nom}`} />
+            </Head>
+                
+            <ViewTemplate
+                itemType={itemType}
+                itemTitle={data.nom}
+                itemData={data}
+                extraData={extra}
+            />
+        </>
         :
         // if we couldn't retrive the data
         // let the user know there was a problem
@@ -64,7 +80,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     // return empty props if we don't have an auth token
     // because if means we have no way to retrieve the data
 
-    if(session == null) return { props: { data: null } }
+    if(session == null) return { props: { data: null, extra: null } }
 
     // make the API request
 
@@ -87,12 +103,44 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     if(is404) return { notFound: true } // show the 404 page
 
+    // retrieving the extra data we need to display
+
+    const exposition = await getExtraSSRData(
+        session as MySession, 
+        "expositions", 
+        (data as Element).exposition_id
+    )
+
+    const etat = await getExtraSSRData(
+        session as MySession, 
+        "etats_elements", 
+        (data as Element).etat_id
+    )
+
+    const exploitation = await getExtraSSRData(
+        session as MySession, 
+        "exploitations_elements", 
+        (data as Element).exploitation_id
+    )
+
+    const localisation = await getExtraSSRData(
+        session as MySession, 
+        "localisations_elements", 
+        (data as Element).localisation_id
+    )
+
     // if everything went well
     // return the data as Props
 
     return {
         props: {
-            data: data ? data : null
+            data: data ? data : null,
+            extra: {
+                exposition: exposition ? exposition : "Erreur",
+                etat: etat ? etat : "Erreur",
+                exploitation: exploitation ? exploitation : "Erreur",
+                localisation: localisation ? localisation : "Erreur"
+            }
         }
     }
 

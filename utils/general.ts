@@ -1,5 +1,13 @@
 
-
+export const toSingular = (itemType: string) => {
+    const tokens = itemType.split('_')
+    const toRemove = ['s', 'x']
+    const isPluralWord = (word: string) => toRemove.includes(word[word.length-1])
+    const itemTypeSingular = tokens.map(word => {
+        return isPluralWord(word) ? word.substring(0, word.length-1) : word
+    }).join(' ')
+    return capitalizeEachWord(itemTypeSingular)
+}
 
 export const formatItemName = (name: string) => {
     const asArray = name.split(' ')

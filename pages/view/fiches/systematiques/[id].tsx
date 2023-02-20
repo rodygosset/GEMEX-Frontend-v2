@@ -1,4 +1,4 @@
-import { Exposition } from "@conf/api/data-types/exposition"
+import { FicheSystematique } from "@conf/api/data-types/fiche"
 import { MySession } from "@conf/utility-types"
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
 import axios from "axios"
@@ -7,20 +7,21 @@ import { unstable_getServerSession } from "next-auth"
 import Head from "next/head"
 import { authOptions } from "pages/api/auth/[...nextauth]"
 import ViewTemplate from "pages/page-templates/view-template"
+import { useEffect } from "react"
 
 
-// this page displays information about a given Exposition object
+// this page displays information about a given Fiche object
 // the data is retrieved in getServerSideProps
 
-const itemType = "expositions"
+const itemType = "fiches_systematiques"
 
 interface Props {
-    data: Exposition | null;
+    data: FicheSystematique | null;
 }
 
 
 
-const ViewExposition: NextPage<Props> = (
+const ViewFiche: NextPage<Props> = (
     {
         data
     }
@@ -34,8 +35,8 @@ const ViewExposition: NextPage<Props> = (
         data ?
         <>
             <Head>
-                <title>{data.nom} (Exposition)</title>
-                <meta name="description" content={`Informations sur l'exposition ${data.nom}`} />
+                <title>{data.nom} (Fiche Systématique)</title>
+                <meta name="description" content={`Informations sur la fiche systématique ${data.nom}`} />
             </Head>
             
             <ViewTemplate
@@ -56,9 +57,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     // retrive the data about the expo by making a request to our backend API
 
-    // start with getting the expo's DB id
+    // start with getting the item's DB id
 
-    const expoId = context.query.id
+    const ficheId = context.query.id
 
     // retrieve the session, containing the user's auth token
 
@@ -73,11 +74,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     let is404 = false
 
-    const data = await SSRmakeAPIRequest<Exposition, Exposition>({
+    const data = await SSRmakeAPIRequest<FicheSystematique, FicheSystematique>({
         session: session as MySession,
         verb: "get",
         itemType: itemType,
-        additionalPath: `id/${expoId}`, 
+        additionalPath: `id/${ficheId}`, 
         onSuccess: res => res.data,
         onFailure: error => {
             if(axios.isAxiosError(error) && error.response?.status == 404) {
@@ -86,7 +87,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
         }
     })
 
-    // in case the provided exposition_id doesn't exist in the database
+    // in case the provided fiche_id doesn't exist in the database
 
     if(is404) return { notFound: true } // show the 404 page
 
@@ -101,4 +102,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
 }
 
-export default ViewExposition
+export default ViewFiche

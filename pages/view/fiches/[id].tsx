@@ -33,15 +33,17 @@ const ViewFiche: NextPage<Props> = (
 
     return (
         data ?
-        <ViewTemplate
-            itemType={itemType}
-            itemTitle={data.nom}
-            itemData={data}>
+        <>
             <Head>
 				<title>{data.nom} (Fiche)</title>
 				<meta name="description" content={`Informations sur la fiche ${data.nom}`} />
 			</Head>
-        </ViewTemplate>
+            <ViewTemplate
+                itemType={itemType}
+                itemTitle={data.nom}
+                itemData={data}
+            />
+        </>
         :
         // if we couldn't retrive the data
         // let the user know there was a problem

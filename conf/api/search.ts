@@ -163,7 +163,6 @@ export const searchConf: SearchConf = {
             username: { ...textSearchParam, label: "Nom d'utilisateur" },
             prenom: { ...textSearchParam, label: "Prénom" },
             nom: textSearchParam,
-            email: { ...textSearchParam, label: "Adresse e-mail" },
             role_id: { ...itemSearchParam, type: "roles", label: "Rôle" },
             groups: { ...itemListSearchParam, item: "groups", label: "Groupes" }
         },

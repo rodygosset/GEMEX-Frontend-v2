@@ -7,6 +7,7 @@ export interface Element {
     coefficient: number;
     exposition_id: number;
     etat_id: number;
+    exploitation_id: number;
     localisation_id: number;
     categories: string[];
     fichiers: string[];
