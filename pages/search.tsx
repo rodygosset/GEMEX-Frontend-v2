@@ -56,9 +56,34 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         setNavHistory
     } = useContext(Context)
 
+
     // state 
 
     const [itemType, setItemType] = useState(queryItemType)
+
+    // load the search params from the URL query
+
+    useEffect(() => {
+        setSearchParams({
+            ...initSearchParams,
+            item: itemType
+        })
+    }, [])
+
+    // make sure we don't update the search params object
+    // until the default search params have been loaded
+
+    const [initSearchParamsLoaded, setInitSearchParamsLoaded] = useState(false)
+
+    useEffect(() => {
+        if(!initSearchParamsLoaded &&
+            JSON.stringify(searchParams) == JSON.stringify({ ...initSearchParams, item: queryItemType })) {
+                setInitSearchParamsLoaded(true)
+            }
+    }, [searchParams])
+
+    // search results
+
 
     const [searchResults, setSearchResults] = useState(results)
     
@@ -67,12 +92,15 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
     // when the item type changes, 
     // update the search params
 
-    useEffect(() => setSearchParams({
-        ...searchParams,
-        item: itemType
-    }), [itemType])
+    useEffect(() => {
+        if(!initSearchParamsLoaded) return
+        setSearchParams({
+            ...searchParams,
+            item: itemType
+        })
+    }, [itemType])
 
-    // useEffect(() => console.log(searchParams), [searchParams])
+    useEffect(() => console.log(searchParams), [searchParams])
 
     // search results meta-data
     const [metaData, setMetaData] = useState(initMetaData)
@@ -91,16 +119,6 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 
     // useEffect(() => console.log(metaData), [metaData])
 
-
-    // load the search params from the URL query
-
-    useEffect(() => {
-        setSearchParams({
-            ...initSearchParams,
-            item: itemType
-        })
-    }, [])
-
     // data fetching & pagination logic
 
     const makeAPIRequest = useAPIRequest()
@@ -109,7 +127,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 
     // we need to cancel on-going search requests
     // after a new one has been made
-    // for that, we use the native AbortController
+    // for that purpose, we use the native AbortController
 
     const reqController = useRef<AbortController>()
 
@@ -261,10 +279,18 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 				<title>Recherche</title>
 				<meta name="description" content="Page de recherche de GEMEX" />
 			</Head>
-            <SearchFilters 
-                hidden={!showFilters} 
-                onSubmit={handleFormSubmit}
-            />
+            {
+                // don't load the search filters
+                // until the default search params have been loaded
+                // to make sure they are not ignored
+                initSearchParamsLoaded ?
+                <SearchFilters 
+                    hidden={!showFilters} 
+                    onSubmit={handleFormSubmit}
+                />
+                :
+                <></>
+            }
 
             <div id={styles.mainColumn}> 
                 <SearchBar

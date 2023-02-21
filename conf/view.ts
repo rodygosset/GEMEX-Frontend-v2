@@ -1,7 +1,17 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faBarsProgress, faCalendar, faClipboard, faComment, faEnvelope, faFile, faHashtag, faHourglass, faLink, faList, faMonument, faRepeat, faTag } from "@fortawesome/free-solid-svg-icons";
+import { faBarsProgress, faCalendar, faClipboard, faComment, faFile, faHashtag, faHourglass, faLink, faList, faMonument, faRepeat, faTag } from "@fortawesome/free-solid-svg-icons";
 import { SearchParam } from "./api/search";
 
+
+export const viewableItemTypes = [
+    "ilots",
+    "expositions",
+    "articles",
+    "constituents",
+    "elements",
+    "fiches",
+    "fiches_systematiques"
+]
 
 export interface Attribute extends SearchParam {
     fullWidth?: boolean;

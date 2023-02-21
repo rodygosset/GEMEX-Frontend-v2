@@ -28,6 +28,7 @@ const RouteGard = ({ children }: Props) => {
         const hideContent = () => setAuthorized(false)
 
         // when the route change beings, hide the page
+        // also, clear the search params
         router.events.on('routeChangeStart', () => {
             hideContent()
         })

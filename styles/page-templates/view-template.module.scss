@@ -74,10 +74,16 @@
 					}
 
 					p {
-						@include  text-sm-regular;
+						@include flex-container(row, nowrap, center, center);
+						gap: 10px;
+						@include text-sm-regular;
 						padding: 10px 20px;
 						background: $primary-100;
 						border-radius: 5px;
+
+						svg, a {
+							color: $secondary;
+						}
 					}
 				}
 			}

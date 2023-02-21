@@ -1,7 +1,7 @@
 import styles from "@styles/page-templates/view-template.module.scss"
 import { Element } from "@conf/api/data-types/element"
 import { MySession } from "@conf/utility-types"
-import { getExtraSSRData } from "@utils/req-utils"
+import { getExtraSSRData, isAuthError } from "@utils/req-utils"
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
 import axios from "axios"
 import { GetServerSideProps, NextPage } from "next"
@@ -85,6 +85,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     // make the API request
 
     let is404 = false
+    let is401 = false
 
     const data = await SSRmakeAPIRequest<Element, Element>({
         session: session as MySession,
@@ -93,15 +94,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
         additionalPath: `id/${elementId}`, 
         onSuccess: res => res.data,
         onFailure: error => {
-            if(axios.isAxiosError(error) && error.response?.status == 404) {
+            if(isAuthError(error)) is401 = true
+            else if(axios.isAxiosError(error) && error.response?.status == 404) {
                 is404 = true
             }
         }
     })
 
+    if(is401) return { props: { data: null, extra: null } }
+
     // in case the provided exposition_id doesn't exist in the database
 
-    if(is404) return { notFound: true } // show the 404 page
+    else if(is404) return { notFound: true } // show the 404 page
 
     // retrieving the extra data we need to display
 

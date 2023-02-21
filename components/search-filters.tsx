@@ -54,7 +54,6 @@ const SearchFilters = (
         
         // only update when the values have changed
         const shouldUpdate = JSON.stringify(newURLQuery) !== JSON.stringify(searchParams)
-        
         if(shouldUpdate) {
             setSearchParams({ ...newURLQuery })
         }

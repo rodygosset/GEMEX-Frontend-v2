@@ -89,23 +89,7 @@ const SearchResultCard = (
 
     // manage the nav history
 
-    const {
-        searchParams,
-        navHistory,
-        setNavHistory
-    } = useContext(Context)
-
-    
-    // build a URL query string from the searchParams object
-    // & build a valid URL from there
-
-    const getCurrentRoute = () => {
-        const queryString = new URLSearchParams(searchParams as Record<string, string>).toString()
-        return `/search?${queryString}`
-    }
-
-    const updateNavHistory = () => setNavHistory([...navHistory, getCurrentRoute()])
-
+    const { setSearchParams } = useContext(Context)
 
     // handlers
 
