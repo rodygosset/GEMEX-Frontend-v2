@@ -3,6 +3,7 @@ import GoBackButton from "@components/go-back-button"
 import ActionButtons from "@components/page-templates/view/action-buttons"
 import Content from "@components/page-templates/view/content"
 import HorizontalSeperator from "@components/utils/horizontal-seperator"
+import VerticalScrollBar from "@components/utils/vertical-scrollbar"
 import { itemTypes } from "@conf/api/search"
 import styles from "@styles/page-templates/view-template.module.scss"
 import { toSingular } from "@utils/general"
@@ -46,11 +47,13 @@ const ViewTemplate = (
                 </div>
                 <ActionButtons itemType={itemType} itemData={itemData}/>
                 <HorizontalSeperator/>
-                <Content 
-                    itemType={itemType} 
-                    itemData={itemData} 
-                    extraData={extraData}
-                />
+                <VerticalScrollBar className={styles.contentScrollContainer}>
+                    <Content 
+                        itemType={itemType} 
+                        itemData={itemData} 
+                        extraData={extraData}
+                    />
+                </VerticalScrollBar>
             </section>
         </main>
     )

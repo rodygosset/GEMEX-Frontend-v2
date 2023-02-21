@@ -1,5 +1,6 @@
 import { Exposition } from "@conf/api/data-types/exposition"
 import { MySession } from "@conf/utility-types"
+import { getExtraSSRData, isAuthError } from "@utils/req-utils"
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
 import axios from "axios"
 import { GetServerSideProps, NextPage } from "next"
@@ -16,13 +17,18 @@ const itemType = "expositions"
 
 interface Props {
     data: Exposition | null;
+    extra: {
+        ilot: string;
+        regie: string;
+    } | null;
 }
 
 
 
 const ViewExposition: NextPage<Props> = (
     {
-        data
+        data,
+        extra
     }
 ) => {
 
@@ -42,6 +48,7 @@ const ViewExposition: NextPage<Props> = (
                 itemType={itemType}
                 itemTitle={data.nom}
                 itemData={data}
+                extraData={extra}
             />
         </>
         :
@@ -67,11 +74,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     // return empty props if we don't have an auth token
     // because if means we have no way to retrieve the data
 
-    if(session == null) return { props: { data: null } }
+    if(session == null) return { props: { data: null, extra: null } }
 
     // make the API request
 
     let is404 = false
+    let is401 = false
 
     const data = await SSRmakeAPIRequest<Exposition, Exposition>({
         session: session as MySession,
@@ -80,22 +88,43 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
         additionalPath: `id/${expoId}`, 
         onSuccess: res => res.data,
         onFailure: error => {
-            if(axios.isAxiosError(error) && error.response?.status == 404) {
+            if(isAuthError(error)) is401 = true
+            else if(axios.isAxiosError(error) && error.response?.status == 404) {
                 is404 = true
             }
         }
     })
 
+    if(is401) return { props: { data: null, extra: null } }
+
     // in case the provided exposition_id doesn't exist in the database
 
-    if(is404) return { notFound: true } // show the 404 page
+    else if(is404) return { notFound: true } // show the 404 page
+
+    // retrieving the extra data we need to display
+
+    const ilot = await getExtraSSRData(
+        session as MySession, 
+        "ilots", 
+        (data as Exposition).ilot_id
+    )
+
+    const regie = await getExtraSSRData(
+        session as MySession, 
+        "regies", 
+        (data as Exposition).regie_id
+    )
 
     // if everything went well
     // return the data as Props
 
     return {
         props: {
-            data: data ? data : null
+            data: data ? data : null,
+            extra: {
+                ilot: ilot ? ilot : "Erreur",
+                regie: regie ? regie : "Erreur"
+            }
         }
     }
 

@@ -250,7 +250,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
     const handleFormSubmit = () => {
         // before pushing to the new url
         // to get the search results
-        // push to the current url to the nav history
+        // push the current url to the nav history
         setNavHistory([...navHistory, router.asPath])
         // submit search query
         router.push({

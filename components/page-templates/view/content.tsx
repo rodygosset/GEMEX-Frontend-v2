@@ -54,10 +54,11 @@ const Content = (
             // build a link object so that the content item component
             // can render it accordingly
             const getData = () => {
+                const extraAttrName = attributeName.split('_').slice(0,-1).join('_') 
                 if(attributeName.includes('_id') && extraData
-                && Object.keys(extraData).includes(attributeName.split('_')[0])) {
+                && Object.keys(extraData).includes(extraAttrName)) {
                     return { 
-                        label: extraData[attributeName.split('_')[0]],
+                        label: extraData[extraAttrName],
                         id: itemData[attributeName]
                     }
                 } else { 
@@ -72,6 +73,7 @@ const Content = (
                     conf={viewConf[itemType][attributeName]}
                     data={getData()}
                     itemType={itemType}
+                    itemData={itemData}
                 />
             )
         })

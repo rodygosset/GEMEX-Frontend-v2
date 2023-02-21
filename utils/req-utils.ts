@@ -17,8 +17,14 @@ export const getExtraSSRData = async (session: MySession, itemType: string, id: 
         verb: "get",
         itemType: itemType,
         additionalPath: `id/${id}`, 
-        onSuccess: res => res.data.nom,
-        onFailure: error => {
+        onSuccess: res => {
+            if(itemType == "users") {
+                return res.data.prenom + " " + res.data.nom
+            } else {
+                return res.data.nom
+            }
+        },
+        onFailure: () => {
             return "Erreur"
         }
     })

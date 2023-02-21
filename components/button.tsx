@@ -18,7 +18,7 @@ interface Props {
     hasPadding?: boolean;
     bigPadding?: boolean;
     fullWidth?: boolean;
-    status?: "success" | "danger" | "discouraged";
+    status?: "progress" | "success" | "danger" | "discouraged";
     bigBorderRadius?: boolean;
     hidden?: boolean;
     className?: string;

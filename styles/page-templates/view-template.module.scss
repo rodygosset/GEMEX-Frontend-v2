@@ -37,56 +37,92 @@
 			}
 
 		}
-		
-		.contentContainer {
-			@include flex-container(row, nowrap, stretch, stretch);
-			gap: 60px;
-			width: 100%;
-			height: 100%;
 
+		.contentScrollContainer {
+			// make sure it never overflows from the body
+            max-height: calc(100vh - calc($nav-bar-height + 280px));
 
-			.column {
-				@include flex-container(column, nowrap, flex-start, stretch);
-				gap: 30px;
+			.contentContainer {
+				@include flex-container(row, nowrap, stretch, stretch);
+				gap: 60px;
 				width: 100%;
 				height: 100%;
-
-				@include reset-list;
-
-				li {
-					@include flex-container(row, nowrap, space-between, center);
-					gap: 15px;
+	
+	
+				.column {
+					@include flex-container(column, nowrap, flex-start, stretch);
+					gap: 30px;
 					width: 100%;
-					color: $primary;
-
-					.itemLabel {
-						@include flex-container(row, nowrap, flex-start, center);
-						gap: 10px;
-
-						h5 {
+					height: 100%;
+	
+					@include reset-list;
+	
+					li {
+						@include flex-container(row, nowrap, space-between, center);
+						gap: 15px;
+						width: 100%;
+						color: $primary;
+	
+						&.isFullWidth {
+							@include flex-container(column, nowrap, flex-start, flex-start);
+						
+							p {
+								width: 100%;
+								padding: 20px;
+							}
+						}
+	
+						.itemLabel {
+							@include flex-container(row, nowrap, flex-start, center);
+							gap: 10px;
+	
+							h5 {
+								@include text-sm-regular;
+							}
+	
+							svg {
+								width: 1.4rem;
+								height: 1.4rem;
+							}
+						}
+	
+						ul {
+							@include flex-container(row, wrap, flex-start, center);
+							@include reset-list;
+							column-gap: 30px;
+							row-gap: 15px;
+	
+							li {
+								@include button-text;
+								padding: 10px 20px;
+								border-radius: 30px;
+								border: 1px solid $primary-100;
+								transition: all 200ms ease-in-out;
+	
+								&:hover {
+									background: $primary-100;
+									cursor: pointer;
+								}
+							}
+						}
+	
+						p {
+							@include flex-container(row, nowrap, flex-start, center);
+							gap: 10px;
 							@include text-sm-regular;
-						}
-
-						svg {
-							width: 1.4rem;
-							height: 1.4rem;
-						}
-					}
-
-					p {
-						@include flex-container(row, nowrap, center, center);
-						gap: 10px;
-						@include text-sm-regular;
-						padding: 10px 20px;
-						background: $primary-100;
-						border-radius: 5px;
-
-						svg, a {
-							color: $secondary;
+							padding: 10px 20px;
+							background: $primary-100;
+							border-radius: 5px;
+	
+							svg, a {
+								color: $secondary;
+							}
 						}
 					}
 				}
 			}
+	
+
 		}
 
 	}

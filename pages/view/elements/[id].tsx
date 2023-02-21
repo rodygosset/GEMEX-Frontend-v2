@@ -9,7 +9,6 @@ import { unstable_getServerSession } from "next-auth"
 import Head from "next/head"
 import { authOptions } from "pages/api/auth/[...nextauth]"
 import ViewTemplate from "pages/page-templates/view-template"
-import { useEffect } from "react"
 
 
 // this page displays information about a given Exposition object
@@ -36,7 +35,7 @@ const ViewElements: NextPage<Props> = (
     }
 ) => {
 
-    useEffect(() => console.log(data, extra), [])
+    // useEffect(() => console.log(data, extra), [])
 
     // in order to 
 

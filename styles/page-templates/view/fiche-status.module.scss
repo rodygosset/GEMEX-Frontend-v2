@@ -1,0 +1,49 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/abstracts/_variables.scss";
+
+@mixin make-border($color) {
+    border: 1px solid $color;
+
+    &:hover {
+        background: $color;
+    }
+}
+
+.container {
+    @include flex-container(row, wrap, flex-start, center);
+    gap: 15px;
+
+    span {
+        @include button-text;
+        padding: 10px 20px;
+        border-radius: 30px;
+        transition: all 200ms ease-in-out;
+    }
+
+    .warning {
+        @include make-border($warning-100);
+        color: $warning;
+    }
+
+    .primary {
+        @include make-border($primary-100);
+        color: $primary;
+    }
+    
+    .progress {
+        @include make-border($secondary-100);
+        color: $secondary;
+    }
+    
+    .success {
+        @include make-border($success-100);
+        color: $success;
+    }
+    
+    .error {
+        @include make-border($error-100);
+        color: $error;
+    }
+}
