@@ -19,3 +19,11 @@ export type DateFormat = "yyyy" | "MM/yyyy" | "dd/MM/yyyy"
 export type TimeDeltaUnit = "days" | "weeks" | "months"
 
 export const defaultTimeDeltaUnit: TimeDeltaUnit = "days"
+
+
+export interface TimeDeltaObj {
+    months?: number;
+    weeks?: number;
+    days?: number;
+    hours?: number;
+}

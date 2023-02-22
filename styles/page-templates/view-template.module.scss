@@ -12,6 +12,39 @@
 
 	.backButtonContainer {
 		@include flex-container(row, nowrap, flex-start, flex-start);
+
+		@mixin make-go-back-button($color) {
+			background: rgba($color: $color, $alpha: 0.1);
+
+			svg {
+				color: $color
+			}
+
+			&:hover {
+				background: $color;
+				box-shadow: 0px 30px 60px rgba($color: $color, $alpha: 0.4);
+				
+				svg {
+					color: $white;
+				}
+			}
+		}
+
+		a.qualite {
+			@include make-go-back-button($secondary);
+		}
+
+		a.relance {
+			@include make-go-back-button($warning);
+		}
+
+		a.panne {
+			@include make-go-back-button($error);
+		}
+
+		a.systematique {
+			@include make-go-back-button($success);
+		}
 	}
 
 	section {
@@ -34,6 +67,42 @@
 			p {
 				@include text-md-medium;
 				color: $primary-600;
+			}
+
+			&.qualite {
+				h1 {
+					color: $secondary;
+				}
+				p {
+					color: $secondary-600;
+				}
+			}
+
+			&.relance {
+				h1 {
+					color: $warning;
+				}
+				p {
+					color: $warning-600;
+				}
+			}
+
+			&.panne {
+				h1 {
+					color: $error;
+				}
+				p {
+					color: $error-600;
+				}
+			}
+
+			&.systematique {
+				h1 {
+					color: $success;
+				}
+				p {
+					color: $success-600;
+				}
 			}
 
 		}

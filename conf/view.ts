@@ -1,11 +1,12 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faBox, faCalendar, faClipboard, faComment, faFile, faFlag, faHashtag, faHeadset, faHourglass, faLandmark, faLink, faList, faMonument, faPersonDigging, faPowerOff, faRepeat, faTag, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBox, faBoxOpen, faCalendar, faClipboard, faComment, faFile, faFlag, faHashtag, faHeadset, faHourglass, faHourglassHalf, faLandmark, faLink, faList, faLocationDot, faMonument, faPersonDigging, faPowerOff, faPuzzlePiece, faRepeat, faTag, faTimeline, faTruck, faUser } from "@fortawesome/free-solid-svg-icons";
 import { SearchParam } from "./api/search";
 
 
 export const viewableItemTypes = [
     "ilots",
     "expositions",
+    "stocks",
     "articles",
     "constituents",
     "elements",
@@ -41,7 +42,7 @@ export const numberAttribute: Attribute = {
 }
 
 export const timeDeltaAttribute: Attribute = {
-    icon: faHourglass,
+    icon: faHourglassHalf,
     type:"timeDelta"
 }
 
@@ -110,10 +111,10 @@ export const viewConf: ViewConf = {
     ilots: {
         nom: textAttribute,
         numero: { ...textAttribute, label: "Numéro"},
-        localisation_id: { ...itemAttribute, type: "localisations_ilots", label: "Localisation" },
         fichiers: fileAttribute,
+        expositions: { ...linkAttribute, icon: faMonument, label: "Expositions", searchParam: "ilot_id" },
+        localisation_id: { ...itemAttribute, type: "localisations_ilots", icon: faLocationDot, label: "Localisation" },
         date_creation: { ...dateAttribute, label: "Date de création"},
-        expositions: { ...linkAttribute, searchParam: "ilot_id" }
     },
     regies: {
         nom: textAttribute,
@@ -140,18 +141,18 @@ export const viewConf: ViewConf = {
     },
     articles: {
         nom: textAttribute,
-        fournisseur: textAttribute,
-        code: textAttribute,
-        stock_id: { ...itemAttribute, type: "stocks", label: "Stock" },
+        code: { ...textAttribute, icon: faHashtag },
+        description: textAreaAttribute,
         quantite: { ...numberAttribute, label: "Quantité" },
         seuil_orange: { ...numberAttribute, label: "Seuil Orange" },
         seuil_rouge: { ...numberAttribute, label: "Seuil Rouge" },
-        categorie_id: { ...itemAttribute, type: "categories_articles", label: "Catégorie" },
-        lieu_stockage_id: { ...itemAttribute, type: "lieux_stockage_articles", label: "Lieu de stockage" },
-        description: textAreaAttribute,
+        fournisseur: { ...textAttribute, icon: faTruck },
+        stock_id: { ...itemAttribute, type: "stocks", icon: faBox, label: "Stock" },
+        categorie_id: { ...itemAttribute, type: "categories_articles", icon: faTag, label: "Catégorie" },
+        lieu_stockage_id: { ...itemAttribute, type: "lieux_stockage_articles", icon: faLocationDot, label: "Lieu de stockage" },
         fichiers: fileAttribute,
         date_creation: { ...dateAttribute, label: "Date de création" },
-        constituents: { ...linkAttribute, searchParam: "article_id" }
+        constituents: { ...linkAttribute, icon: faPuzzlePiece, label: "Constituents", searchParam: "article_id" }
     },
     historiques_stocks: {
         article_id: { ...itemAttribute, type: "articles", label: "Article" },
@@ -162,8 +163,7 @@ export const viewConf: ViewConf = {
     },
     stocks: {
         nom: { ...textAttribute, fullWidth: true },
-        historique: { ...itemListAttribute, item: "historiques_stocks", fullWidth: true },
-        articles: { ...itemListAttribute, item: "articles", fullWidth: true },
+        articles: { ...linkAttribute, icon: faBoxOpen, searchParam: "stock_id", label: "Articles" },
         date_creation: { ...dateAttribute, label: "Date de création" }
     },
     categories_elements: {
@@ -198,8 +198,8 @@ export const viewConf: ViewConf = {
     },
     constituents: {
         nom: { ...textAttribute, fullWidth: true },
-        article_id: { ...itemAttribute, type: "articles", label: "Article" },
-        element_id: { ...itemAttribute, type: "elements", label: "Élément" },
+        article_id: { ...itemAttribute, type: "articles", icon: faBoxOpen, label: "Article" },
+        element_id: { ...itemAttribute, type: "elements", icon: faBox, label: "Élément" },
         quantite: { ...numberAttribute, label: "Quantité" },
         date_creation: { ...dateAttribute, label: "Date de création" }
     },
@@ -243,22 +243,22 @@ export const viewConf: ViewConf = {
     },
     fiches_systematiques: {
         nom: { ...textAttribute, fullWidth: true },
-        auteur_id: { ...itemAttribute, type: "users", label: "Auteur de la fiche" },
-        user_en_charge_id: { ...itemAttribute, type: "users", label: "Utilisateur en charge" },
+        auteur_id: { ...itemAttribute, type: "users", icon: faUser, label: "Auteur de la fiche" },
+        user_en_charge_id: { ...itemAttribute, type: "users", icon: faUser, label: "Utilisateur en charge" },
         ilot_id: { ...itemAttribute, type: "ilots", label: "Îlot" },
         exposition_id: { ...itemAttribute, type: "expositions", label: "Exposition" },
         element_id: { ...itemAttribute, type: "elements", label: "Élément" },
-        nature_id: { ...itemAttribute, type: "natures_operations", label: "Nature de l'opération" },
-        periodicite: { ...timeDeltaAttribute, label: "Periodicité" },
-        rappel: timeDeltaAttribute,
-        date_initiale: dateAttribute,
-        date_rappel: dateAttribute,
-        date_prochaine: dateAttribute,
         description: textAreaAttribute,
         informations: textAreaAttribute,
         tags: { ...itemListAttribute, item: "tags" },
-        fichiers: fileAttribute,
+        nature_id: { ...itemAttribute, type: "natures_operations", icon: faPersonDigging, label: "Nature de l'opération" },
+        periodicite: { ...timeDeltaAttribute, label: "Periodicité" },
+        rappel: timeDeltaAttribute,
+        date_initiale: { ...dateAttribute, label: "Date initiale" },
+        date_rappel: { ...dateAttribute, label: "Date de rappel" },
+        date_prochaine: { ...dateAttribute, label: "Date prochaine" },
         date_creation: { ...dateAttribute, label: "Date de création" },
+        fichiers: fileAttribute,
         is_active: { ...booleanAttribute, defaultValue: true, label: "Active" }
     },
     historiques_fiches_systematiques: {

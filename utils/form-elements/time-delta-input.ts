@@ -3,7 +3,7 @@
 
 import { searchConf } from "@conf/api/search"
 import { SelectOption } from "@utils/react-select/types"
-import { defaultTimeDeltaUnit, TimeDeltaUnit } from "@utils/types"
+import { defaultTimeDeltaUnit, TimeDeltaObj, TimeDeltaUnit } from "@utils/types"
 import { secondsInDay, secondsInMonth, secondsInWeek } from "date-fns"
 
 
@@ -51,4 +51,65 @@ export const hasNumberOperatorParam = (paramName: string, itemType?: string) => 
     if(!itemType) return false
     const operatorParamName = paramName + "_operator"
     return operatorParamName in searchConf[itemType].searchParams
+}
+
+
+// convert a number to a time delta object
+// delta is a number of seconds
+
+export const numberToDelta = (delta: number) => {
+
+    let timeDelta: TimeDeltaObj = {}
+    
+    // compute the number of months, weeks & days that the number represents
+
+    let remainder = delta
+
+    if(remainder >= secondsInMonth) {
+        timeDelta.months = Math.floor(remainder / secondsInMonth)
+        remainder = timeDelta.months % secondsInMonth
+    }
+    if(remainder >= secondsInWeek) {
+        timeDelta.weeks = Math.floor(remainder / secondsInWeek)
+        remainder = timeDelta.weeks % secondsInWeek
+    }
+    if(remainder >= secondsInDay) {
+        timeDelta.days = Math.floor(remainder / secondsInDay)
+    }
+
+    return timeDelta
+
+}
+
+
+// convert a time delta object to a human readable string
+
+export const deltaToString = (delta: TimeDeltaObj) => {
+    let deltaString = ""
+    // check for months
+    if(typeof delta.months !== "undefined") {
+        deltaString += `${delta.months} mois`
+        // add a comma if there are more units
+        if(typeof delta.weeks !== "undefined"
+        || typeof delta.days !== "undefined") {
+            deltaString += ", "
+        }
+    }
+    // check for weeks
+    if(typeof delta.weeks !== "undefined") {
+        deltaString += `${delta.weeks} semaine`
+        // determine if it should be plural
+        deltaString += delta.weeks > 1 ? 's' : ''
+        // add a comma if there are more units
+        if(typeof delta.days !== "undefined") {
+            deltaString += ", "
+        }
+    }
+    // check for weeks
+    if(typeof delta.days !== "undefined") {
+        deltaString += `${delta.days} jour`
+        // determine if it should be plural
+        deltaString += delta.days > 1 ? 's' : ''
+    }
+    return deltaString
 }

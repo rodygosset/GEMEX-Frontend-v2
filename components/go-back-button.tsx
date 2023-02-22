@@ -13,11 +13,13 @@ import { useRouter } from "next/router"
 // and is styled according to the GEMEX design system
 
 interface Props {
+    className?: string;
     onClick?: () => void
 }
 
 const GoBackButton = (
     {
+        className,
         onClick
     }: Props
 ) => {
@@ -50,12 +52,18 @@ const GoBackButton = (
         router.push(getHref())
     }
 
+    const getClassNames = () => {
+        let classNames = styles.goBackButton
+        classNames += className ? ' ' + className : ''
+        return classNames
+    }
+
     // render
 
     return (
         <Link 
             href={getHref()}
-            className={styles.goBackButton}
+            className={getClassNames()}
             onClick={e => handleClick(e)}>
             <FontAwesomeIcon icon={faChevronLeft}/>
         </Link>

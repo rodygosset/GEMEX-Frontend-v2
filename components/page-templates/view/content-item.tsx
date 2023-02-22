@@ -1,8 +1,8 @@
 import styles from "@styles/page-templates/view-template.module.scss"
-import { getFilterLabel } from "@conf/api/search";
+import { getFilterLabel, searchConf } from "@conf/api/search";
 import { Attribute, LinkAttribute, viewableItemTypes } from "@conf/view"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { capitalizeEachWord, dateOptions } from "@utils/general";
+import { capitalizeEachWord, dateOptions, toSingular } from "@utils/general";
 import { apiURLs } from "@conf/api/conf";
 import Link from "next/link";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
@@ -11,6 +11,7 @@ import CheckBox from "@components/form-elements/checkbox";
 import FicheStatus from "./fiche-status";
 import { Fiche } from "@conf/api/data-types/fiche";
 import FilterCheckBox from "@components/search-filters/filter-checkbox";
+import { deltaToString, numberToDelta } from "@utils/form-elements/time-delta-input";
 
 // this component is used in the View page
 // to display each item's attribute according to its type
@@ -58,6 +59,9 @@ const ContentItem = (
                 }
                 const asDate = new Date(data)
                 textValue = capitalizeEachWord(asDate.toLocaleDateString('fr-fr', dateOptions))
+                return <p>{textValue}</p>
+            case "timeDelta":
+                textValue = deltaToString(numberToDelta(data))
                 return <p>{textValue}</p>
             case "text":
             case "textArea":
@@ -125,6 +129,10 @@ const ContentItem = (
     }
 
     // logic differs for itemList attributes
+
+    const itemTypetoAttributeName = (type: string) => {
+        return toSingular(type).toLowerCase().replace(' ', '_') + '_id'
+    }
 
     const getItemListLink = (item: string) => `/search?item=${itemType}&${name}=${item}`
 

@@ -1,5 +1,5 @@
 import { faBox, faBoxOpen, faFile, faFileAlt, faLandmark, faLayerGroup, faMonument, faPuzzlePiece, faUser, IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { formatItemName } from "@utils/general";
+import { formatItemName, toSingular } from "@utils/general";
 import { SelectOption } from "@utils/react-select/types";
 
 
@@ -28,7 +28,7 @@ export type OnFilterToggleHandler = (filterName: string, checked: boolean) => vo
 
 
 export const getFilterLabel = (filterName: string, conf: SearchParam) => {
-    return typeof conf.label !== 'undefined' ? conf.label : formatItemName(filterName)
+    return typeof conf.label !== 'undefined' ? conf.label : toSingular(filterName)
 }
 
 // item types
