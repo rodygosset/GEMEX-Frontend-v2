@@ -24,7 +24,9 @@ const Header = () => {
 
     const router = useRouter()
 
-    const { user } = useSession().data as MySession
+    const session = useSession()
+
+    const user = (session.data as MySession)?.user
 
     // don't show the nav bar on specific routes
 
@@ -45,8 +47,8 @@ const Header = () => {
         {
             icon: faFileLines,
             text: "Mes fiches",
-            link: `/search?item=fiches&auteur_id=${user.id}`,
-            onClick: () => router.push(`/search?item=fiches&auteur_id=${user.id}`)
+            link: `/search?item=fiches&auteur_id=${user?.id}`,
+            onClick: () => router.push(`/search?item=fiches&auteur_id=${user?.id}`)
         },
         {
             icon: faFileCirclePlus,

@@ -71,3 +71,158 @@ export interface HistoriqueFicheSystematiqueCreate {
     commentaire: string;
     date: string;
 }
+
+
+// configuration
+
+
+export interface FicheTypeConf {
+    validation: boolean;
+    hiddenFields: string[];
+    excludedFields: string[];
+    defaultValues: { [propName: string]: string | string[] | number | boolean }
+}
+
+export interface FichesConf {
+    [propName: string]: FicheTypeConf
+}
+
+// the following objects are used to determine 
+// how the user can interact with different types of Fiche objects
+// (hidden fields, default values for forms, excluded fields...)
+
+export const fichesCreateConf: FichesConf = {
+    "opération": {
+        validation: true,
+        hiddenFields: [
+            "tags",
+            "is_active"
+        ],
+        excludedFields: [ "is_active" ],
+        defaultValues: {
+            tags: [
+                "Opération"
+            ]
+        }
+    },
+    "relance": {
+        validation: false,
+        hiddenFields: [
+            "date_fin",
+            "remarque",
+            "numero_di",
+            "type_id",
+            "is_active",
+            "tags"
+        ],
+        excludedFields: [
+            "is_active"
+        ],
+        defaultValues: {
+            tags: [
+                "Relance"
+            ],
+            type_id: 4 // correctif
+        }
+    },
+    "panne": {
+        validation: true,
+        hiddenFields: [
+            "date_fin",
+            "is_active",
+            "tags"
+        ],
+        excludedFields: [
+            "is_active"
+        ],
+        defaultValues: {
+            tags: [
+                "Panne"
+            ]
+        }
+    },
+    "systématique": {
+        validation: false,
+        hiddenFields: [
+            "user_en_charge_id",
+            "is_active",
+            "tags"
+        ],
+        excludedFields: [
+            "is_active"
+        ],
+        defaultValues: {
+            tags: [
+                "Systématique"
+            ]
+        }
+    }
+}
+
+// type definitions for configuration objects
+
+export interface FicheTypeViewConf {
+    excludedFields: string[];
+}
+
+export interface FichesEditConf {
+    [propName: string]: FicheTypeViewConf
+}
+
+// conf differs between the create & edit forms
+
+export const fichesEditConf: FichesEditConf = {
+    "opération": {
+        excludedFields: [
+            "tags"
+        ]
+    },
+    "relance": {
+        excludedFields: [
+            "date_fin",
+            "remarque",
+            "numero_di",
+            "type_id",
+            "tags"
+        ]
+    },
+    "panne": {
+        excludedFields: [
+            "tags"
+        ]
+    },
+    "systématique": {
+        excludedFields: [
+            "date_initiale",
+            "tags"
+        ]
+    }
+}
+
+// for the view page
+
+export const fichesViewConf: FichesEditConf = {
+    "opération": {
+        excludedFields: [
+            "validation"
+        ]
+    },
+    "relance": {
+        excludedFields: [
+            "date_fin",
+            "remarque",
+            "numero_di",
+            "type_id",
+            "validation"
+        ]
+    },
+    "panne": {
+        excludedFields: [
+            "validation"
+        ]
+    },
+    "systématique": {
+        excludedFields: [
+        ]
+    }
+}

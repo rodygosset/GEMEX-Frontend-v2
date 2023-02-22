@@ -18,15 +18,15 @@ const CreateButton = () => {
 
     // get info about the current user's permissions
 
-    const session = useSession().data as MySession
+    const session = useSession().data as MySession | null
 
-    const { userRole } = session 
+    const userRole = session?.userRole 
 
     const [userPermissions, setUserPermissions] = useState<string[]>()
 
     useEffect(() => {
-        setUserPermissions(userRole.permissions.split(','))
-    }, [])
+        setUserPermissions(userRole?.permissions.split(','))
+    }, [userRole])
 
 
     // if the user doesn't have create permission on any of the items above

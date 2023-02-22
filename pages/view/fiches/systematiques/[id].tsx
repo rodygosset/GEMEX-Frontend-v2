@@ -1,4 +1,4 @@
-import { FicheSystematique } from "@conf/api/data-types/fiche"
+import { fichesViewConf, FicheSystematique } from "@conf/api/data-types/fiche"
 import { MySession } from "@conf/utility-types"
 import { getExtraSSRData, isAuthError } from "@utils/req-utils"
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
@@ -38,6 +38,10 @@ const ViewFicheSystematique: NextPage<Props> = (
 
     // useEffect(() => console.log(data), [])
 
+    // utils
+
+    const getHiddenAttributes = () => fichesViewConf["systématique"].excludedFields
+
     // render
 
     return (
@@ -53,6 +57,7 @@ const ViewFicheSystematique: NextPage<Props> = (
                 itemTitle={data.nom}
                 itemData={data}
                 extraData={extra}
+                hidden={getHiddenAttributes()}
             />
         </>
         :

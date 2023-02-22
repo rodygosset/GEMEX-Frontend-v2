@@ -1,4 +1,4 @@
-import { Fiche } from "@conf/api/data-types/fiche"
+import { Fiche, fichesViewConf } from "@conf/api/data-types/fiche"
 import { MySession } from "@conf/utility-types"
 import { getExtraSSRData, isAuthError } from "@utils/req-utils"
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
@@ -40,6 +40,15 @@ const ViewFiche: NextPage<Props> = (
 
     // useEffect(() => console.log(data), [])
 
+
+    // utils
+
+    const getHiddenAttributes = () => {
+        if(!data || data.tags.length == 0) return []
+        const ficheType = data.tags[0].toLowerCase()
+        return fichesViewConf[ficheType].excludedFields
+    }
+
     // render
 
     return (
@@ -54,6 +63,7 @@ const ViewFiche: NextPage<Props> = (
                 itemTitle={data.nom}
                 itemData={data}
                 extraData={extra}
+                hidden={getHiddenAttributes()}
             />
         </>
         :

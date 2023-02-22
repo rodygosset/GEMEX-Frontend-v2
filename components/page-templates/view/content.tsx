@@ -7,6 +7,7 @@ interface Props {
     itemType: string;
     itemData: any;
     extraData?: any;
+    hidden?: string[];
 }
 
 // the goal of this component is to generate a list
@@ -18,7 +19,8 @@ const Content = (
     {
         itemType,
         itemData,
-        extraData
+        extraData,
+        hidden
     }: Props
 ) => {
 
@@ -38,7 +40,9 @@ const Content = (
     // divide the item's attribute between the two columns
 
     useEffect(() => {
-        const attributes = Object.keys(viewConf[itemType]).filter(attr => !hiddenAttributes.includes(attr))
+        const attributes = Object.keys(viewConf[itemType])
+        .filter(attr => !hiddenAttributes.includes(attr))
+        .filter(attr => hidden ? !hidden.includes(attr) : true)
         const middle = Math.floor(attributes.length / 2)
         setFirstColumnItems(attributes.slice(0, middle))
         setSecondColumnItems(attributes.slice(middle))

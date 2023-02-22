@@ -30,10 +30,6 @@
 			}
 		}
 
-		a.qualite {
-			@include make-go-back-button($secondary);
-		}
-
 		a.relance {
 			@include make-go-back-button($warning);
 		}
@@ -67,15 +63,6 @@
 			p {
 				@include text-md-medium;
 				color: $primary-600;
-			}
-
-			&.qualite {
-				h1 {
-					color: $secondary;
-				}
-				p {
-					color: $secondary-600;
-				}
 			}
 
 			&.relance {

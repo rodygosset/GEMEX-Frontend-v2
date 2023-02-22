@@ -15,6 +15,7 @@ interface Props {
     itemTitle: string;
     itemData: any;
     extraData?: any;
+    hidden?: string[];
 }
 
 const ViewTemplate = (
@@ -22,7 +23,8 @@ const ViewTemplate = (
         itemType,
         itemTitle,
         itemData,
-        extraData
+        extraData,
+        hidden
     }: Props
 ) => {
 
@@ -41,8 +43,6 @@ const ViewTemplate = (
             // determine which type of Fiche the current one is
             // using the tags attribute
             switch(ficheData.tags[0]) {
-                case "Qualité":
-                    return styles.qualite
                 case "Relance":
                     return styles.relance
                 case "Panne":
@@ -74,6 +74,7 @@ const ViewTemplate = (
                         itemType={itemType} 
                         itemData={itemData} 
                         extraData={extraData}
+                        hidden={hidden}
                     />
                 </VerticalScrollBar>
             </section>
