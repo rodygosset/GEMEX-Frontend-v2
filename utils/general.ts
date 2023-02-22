@@ -1,4 +1,9 @@
 
+
+export const itemTypetoAttributeName = (type: string) => {
+    return toSingular(type).toLowerCase().replace(' ', '_') + '_id'
+}
+
 export const toSingular = (itemType: string) => {
     const tokens = itemType.split('_')
     const toRemove = ['s', 'x']

@@ -1,0 +1,18 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+
+.container {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    @include flex-container(column, nowrap, center, center);
+    width: 100vw;
+    height: 100vh;
+
+    background: $black-100;
+    backdrop-filter: blur(5px);
+
+
+}

@@ -4,8 +4,7 @@ import styles from "@styles/components/modals/delete-dialog.module.scss"
 import { Context } from "@utils/context";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
-import { Portal } from "react-portal"
-
+import ModalContainer from "./modal-container";
 
 interface Props {
     isVisible: boolean;
@@ -93,64 +92,54 @@ const DeleteDialog = (
 
     return (
         <>
-        {
-            isVisible && !showConfirmationDialog ?
-            <Portal>
-                <div className={styles.container}>
-                    <section className={styles.modal}>
-                        <h4>Supprimer un item</h4>
-                        <p>Êtes-vous sûr(e) de vouloir supprimer <span>{itemTitle}</span> ?</p>
-                        <div className={styles.buttonsContainer}>
-                            <Button
-                                onClick={handleNoClick}
-                                role="secondary"
-                                animateOnHover={false}
-                                fullWidth>
-                                Annuler
-                            </Button>
-                            <Button
-                                onClick={handleYesClick}
-                                role="primary"
-                                status="danger"
-                                fullWidth>
-                                Supprimer
-                            </Button>
-                        </div>
-                    </section>
-                </div>
-            </Portal>
-            : 
-            <></>
-        }
-        {
-            showConfirmationDialog ?
-            <Portal>
-                <div className={styles.container}>
-                    <section className={styles.modal}>
-                        <h4>Confirmation</h4>
-                        <p>Confirmez la suppression de <span>{itemTitle}</span></p>
-                        <div className={styles.buttonsContainer}>
-                            <Button
-                                onClick={handleCancellation}
-                                role="secondary"
-                                animateOnHover={false}
-                                fullWidth>
-                                Annuler
-                            </Button>
-                            <Button
-                                onClick={handleDelete}
-                                role="primary"
-                                status="danger"
-                                fullWidth>
-                                Supprimer
-                            </Button>
-                        </div>
-                    </section>
-                </div>
-            </Portal>
-            :
-            <></>
-        }
+            <ModalContainer 
+                isVisible={isVisible && !showConfirmationDialog}
+                closeModal={closeDialog}>
+                <section className={styles.modal}>
+                    <h4>Supprimer un item</h4>
+                    <p>Êtes-vous sûr(e) de vouloir supprimer <span>{itemTitle}</span> ?</p>
+                    <div className={styles.buttonsContainer}>
+                        <Button
+                            onClick={handleNoClick}
+                            role="secondary"
+                            animateOnHover={false}
+                            fullWidth>
+                            Annuler
+                        </Button>
+                        <Button
+                            onClick={handleYesClick}
+                            role="primary"
+                            status="danger"
+                            fullWidth>
+                            Supprimer
+                        </Button>
+                    </div>
+                </section>
+            </ModalContainer>
+            <ModalContainer
+                isVisible={showConfirmationDialog}
+                closeModal={closeDialog}>
+                <section className={styles.modal}>
+                    <h4>Confirmation</h4>
+                    <p>Confirmez la suppression de <span>{itemTitle}</span></p>
+                    <div className={styles.buttonsContainer}>
+                        <Button
+                            onClick={handleCancellation}
+                            role="secondary"
+                            animateOnHover={false}
+                            fullWidth>
+                            Annuler
+                        </Button>
+                        <Button
+                            onClick={handleDelete}
+                            role="primary"
+                            status="danger"
+                            fullWidth>
+                            Supprimer
+                        </Button>
+                    </div>
+                </section>
+            </ModalContainer>
         </>
     )
 

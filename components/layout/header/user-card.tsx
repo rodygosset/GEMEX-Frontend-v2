@@ -8,9 +8,9 @@ import { capitalizeFirstLetter } from "utils/general"
 
 const UserCard = () => {
 
-    const session = useSession().data as MySession
+    const session = useSession().data as MySession | null
 
-    const { userRole } = session
+    const userRole = session?.userRole
 
     return (
         <div className={styles.container}>
@@ -27,10 +27,15 @@ const UserCard = () => {
                     }}
                 />
             </div>
-            <div className={styles.userInfo}>
-                <h5>{getUserFullName(session?.user)}</h5>
-                <p>{userRole ? capitalizeFirstLetter(userRole.titre) : ""}</p>
-            </div>
+            {
+                session ?
+                <div className={styles.userInfo}>
+                    <h5>{getUserFullName(session?.user)}</h5>
+                    <p>{userRole ? capitalizeFirstLetter(userRole.titre) : ""}</p>
+                </div>
+                :
+                <></>
+            }
 
         </div>
     )

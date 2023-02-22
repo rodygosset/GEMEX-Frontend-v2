@@ -130,10 +130,6 @@ const ContentItem = (
 
     // logic differs for itemList attributes
 
-    const itemTypetoAttributeName = (type: string) => {
-        return toSingular(type).toLowerCase().replace(' ', '_') + '_id'
-    }
-
     const getItemListLink = (item: string) => `/search?item=${itemType}&${name}=${item}`
 
     const getClassNames = () => {

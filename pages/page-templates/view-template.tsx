@@ -1,7 +1,9 @@
 
+import FileCard from "@components/cards/file-card"
 import GoBackButton from "@components/go-back-button"
 import ActionButtons from "@components/page-templates/view/action-buttons"
 import Content from "@components/page-templates/view/content"
+import ViewFiles from "@components/page-templates/view/view-files"
 import HorizontalSeperator from "@components/utils/horizontal-seperator"
 import VerticalScrollBar from "@components/utils/vertical-scrollbar"
 import { Fiche } from "@conf/api/data-types/fiche"
@@ -55,6 +57,12 @@ const ViewTemplate = (
         }
     }
 
+    const itemTypeHasFiles = () => "fichiers" in itemData
+    
+    // cast itemData.fichiers from any to string[]
+    
+    const getFileNames = () => itemData.fichiers as string[]
+
     // render
 
     return (
@@ -76,6 +84,17 @@ const ViewTemplate = (
                         extraData={extraData}
                         hidden={hidden}
                     />
+                    {
+                        // only render the file cards 
+                        // if the current item contains a list of file names
+                        itemTypeHasFiles() ?
+                        <ViewFiles 
+                            itemType={itemType} 
+                            itemData={itemData}
+                        />
+                        :
+                        <></>
+                    }
                 </VerticalScrollBar>
             </section>
         </main>
