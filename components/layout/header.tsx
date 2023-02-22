@@ -9,17 +9,22 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core"
 import Button from "@components/button"
 import CreateButton from "./header/create-button"
 import Link from "next/link"
+import { useSession } from "next-auth/react"
+import { MySession } from "@conf/utility-types"
 
 
 interface NavLink {
     icon: IconProp;
     text: string;
+    link?: string;
     onClick: () => void;
 }
 
 const Header = () => {
 
     const router = useRouter()
+
+    const { user } = useSession().data as MySession
 
     // don't show the nav bar on specific routes
 
@@ -40,7 +45,8 @@ const Header = () => {
         {
             icon: faFileLines,
             text: "Mes fiches",
-            onClick: () => {}
+            link: `/search?item=fiches&auteur_id=${user.id}`,
+            onClick: () => router.push(`/search?item=fiches&auteur_id=${user.id}`)
         },
         {
             icon: faFileCirclePlus,
@@ -60,7 +66,7 @@ const Header = () => {
             <nav>
                 <ul>
                     {
-                        navLinks.map(({icon, text, onClick}, index) => {
+                        navLinks.map(({icon, text, link, onClick}, index) => {
                             return (
                                 <li key={index}>
                                     {
@@ -71,7 +77,12 @@ const Header = () => {
                                             icon={icon}
                                             role="tertiary"
                                             onClick={onClick}>
-                                            {text}
+                                        {
+                                            link ?
+                                            <Link href={link}>{text}</Link>
+                                            :
+                                            text
+                                        }
                                         </Button>
                                     }
                                 </li>
