@@ -2,12 +2,11 @@ import styles from "@styles/page-templates/view-template.module.scss"
 import { getFilterLabel, searchConf } from "@conf/api/search";
 import { Attribute, LinkAttribute, viewableItemTypes } from "@conf/view"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { capitalizeEachWord, dateOptions, toSingular } from "@utils/general";
+import { capitalizeEachWord, dateOptions } from "@utils/general";
 import { apiURLs } from "@conf/api/conf";
 import Link from "next/link";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import CheckBox from "@components/form-elements/checkbox";
 import FicheStatus from "./fiche-status";
 import { Fiche } from "@conf/api/data-types/fiche";
 import FilterCheckBox from "@components/search-filters/filter-checkbox";
@@ -145,7 +144,7 @@ const ContentItem = (
     return (
         <li className={getClassNames()}>
             <div className={styles.itemLabel}>    
-                <FontAwesomeIcon icon={conf.icon}/>
+                {/* <FontAwesomeIcon icon={conf.icon}/> */}
                 <h5>{getFilterLabel(name, conf)}</h5>
             </div>
             {

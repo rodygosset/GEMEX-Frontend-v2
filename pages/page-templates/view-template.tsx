@@ -1,5 +1,3 @@
-
-import FileCard from "@components/cards/file-card"
 import GoBackButton from "@components/go-back-button"
 import ActionButtons from "@components/page-templates/view/action-buttons"
 import Content from "@components/page-templates/view/content"

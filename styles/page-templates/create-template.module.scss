@@ -1,0 +1,142 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/abstracts/_variables.scss";
+
+
+#container {
+
+    @include flex-container(row, nowrap, flex-start, flex-start);
+	padding: $nav-bar-height + 20px 7% $nav-bar-height;
+	gap: 60px;
+
+
+    .backButtonContainer {
+		@include flex-container(row, nowrap, flex-start, flex-start);
+
+		@mixin make-go-back-button($color) {
+			background: rgba($color: $color, $alpha: 0.1);
+
+			svg {
+				color: $color
+			}
+
+			&:hover {
+				background: $color;
+				box-shadow: 0px 30px 60px rgba($color: $color, $alpha: 0.4);
+				
+				svg {
+					color: $white;
+				}
+			}
+		}
+
+		a.relance {
+			@include make-go-back-button($warning);
+		}
+
+		a.panne {
+			@include make-go-back-button($error);
+		}
+
+		a.systematique {
+			@include make-go-back-button($success);
+		}
+	}
+
+
+    section {
+
+		@include flex-container(column, nowrap, flex-start, stretch);
+		gap: 30px;
+		flex: 1;
+		height: 100%;
+
+		#itemTitle {
+
+			@include flex-container(column, nowrap, flex-start, flex-start);
+			gap: 20px;
+			
+			.titleInput {
+                @include header-3-semibold;
+                padding: 20px;
+            }
+	
+            .itemTypeContainer {
+                @include flex-container(row, nowrap, flex-start, center);
+			    gap: 15px;
+             
+                p {
+                    @include text-md-medium;
+                    color: $primary-600;
+                }
+            }
+
+			&.relance {
+				.titleInput {
+                    background: $warning-100;
+					color: $warning;
+
+                    &::placeholder {
+                        color: $warning-400;
+                    }
+				}
+
+                .itemTypeContainer {
+                    p {
+                        color: $warning-600;
+                    }
+                    div {
+                        color: $warning !important;
+                    }
+                }
+
+			}
+
+			&.panne {
+				.titleInput {
+                    background: $error-100;
+					color: $error;
+
+                    &::placeholder {
+                        color: $error-400;
+                    }
+				}
+
+                .itemTypeContainer {
+                    p {
+                        color: $error-600;
+                    }
+                    div {
+                        color: $error !important;
+                    }
+                }
+
+			}
+
+			&.systematique {
+				.titleInput {
+                    background: $success-100;
+					color: $success;
+
+                    &::placeholder {
+                        color: $success-400;
+                    }
+				}
+
+                .itemTypeContainer {
+                    p {
+                        color: $success-600;
+                    }
+
+                    div {
+                        color: $success !important;
+                    }
+                }
+
+			}
+
+		}
+    }
+
+}

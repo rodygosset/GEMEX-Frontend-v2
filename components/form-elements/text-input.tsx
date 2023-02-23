@@ -1,10 +1,10 @@
 
 import styles from "@styles/components/form-elements/text-input.module.scss"
-import { FormFieldProps } from "@utils/types";
 import { ChangeEvent } from "react";
 
 
 interface Props {
+    className?: string;
     placeholder?: string;
     onChange: (newValue: string) => void;
     name?: string;
@@ -16,6 +16,7 @@ interface Props {
 }
 
 const TextInput = ({ 
+        className,
         placeholder, 
         onChange, 
         name,
@@ -27,7 +28,8 @@ const TextInput = ({
     }: Props) => {
 
     const getClassNames = () => {
-        let classNames =  styles.textInput 
+        let classNames = styles.textInput 
+        classNames += (className ? ' ' + className : '')
         classNames += (bigPadding ? ' ' + styles.bigPadding : '') 
         classNames += (fullWidth ? ' ' + styles.fullWidth : '')
         return classNames

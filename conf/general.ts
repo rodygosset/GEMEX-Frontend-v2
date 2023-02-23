@@ -42,3 +42,34 @@ export const creatableItemsList: CreatableItem[] = [
     // }
 
 ]
+
+
+export const itemNames = {
+    users: "Utilisateurs",
+    roles: "Rôles",
+    groups: "Groupes",
+    fichiers: "Fichers",
+    localisations_ilots: "Localisations Îlots",
+    ilots: "Îlots",
+    notifications: "Notifications",
+    regies: "Régies",
+    expositions: "Expositions",
+    categories_articles: "Catégories Articles",
+    lieux_stockage_articles: "Lieux Stockage Articles",
+    articles: "Articles",
+    historiques_stocks: "Historiques stocks",
+    stocks: "Stocks",
+    categories_elements: "Catégories Éléments",
+    etats_elements: "Etats Éléments",
+    exploitations_elements: "Exploitations Éléments",
+    localisations_elements: "Localisations Éléments",
+    elements: "Éléments",
+    constituents: "Constituents",
+    tags: "Tags",
+    types_operations: "Types d'Opération",
+    natures_operations: "Natures d'Opération",
+    fiches_status: "Status",
+    fiches: "Fiches",
+    fiches_systematiques: "Fiches systématiques",
+    historiques_fiches_systematiques: "Historiques fiches systématiques"
+}

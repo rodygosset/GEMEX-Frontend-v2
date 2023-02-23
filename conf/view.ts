@@ -250,7 +250,7 @@ export const viewConf: ViewConf = {
         element_id: { ...itemAttribute, type: "elements", label: "Élément" },
         description: textAreaAttribute,
         informations: textAreaAttribute,
-        tags: { ...itemListAttribute, item: "tags" },
+        tags: { ...itemListAttribute, item: "tags", label: "Tags" },
         nature_id: { ...itemAttribute, type: "natures_operations", icon: faPersonDigging, label: "Nature de l'opération" },
         periodicite: { ...timeDeltaAttribute, label: "Periodicité" },
         rappel: timeDeltaAttribute,

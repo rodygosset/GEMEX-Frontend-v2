@@ -36,7 +36,7 @@ const stateMessagesStyle = (base: CSSObjectWithLabel) => ({
     color: colors["primary-600"]
 })
 
-const selectStyles: StylesConfig = {
+export const selectStyles: StylesConfig = {
     container: (base, state) => ({
         ...base,
         width: state.isMulti ? "100%" : "150px",

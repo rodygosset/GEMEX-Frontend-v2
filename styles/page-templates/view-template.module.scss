@@ -133,7 +133,7 @@
 							gap: 10px;
 	
 							h5 {
-								@include text-sm-regular;
+								@include text-md-regular;
 							}
 	
 							svg {
@@ -165,7 +165,7 @@
 						p {
 							@include flex-container(row, nowrap, flex-start, center);
 							gap: 10px;
-							@include text-sm-regular;
+							@include text-md-regular;
 							padding: 10px 20px;
 							background: $primary-100;
 							border-radius: 5px;

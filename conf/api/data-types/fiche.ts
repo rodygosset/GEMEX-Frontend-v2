@@ -75,6 +75,13 @@ export interface HistoriqueFicheSystematiqueCreate {
 
 // configuration
 
+export const ficheTypes = [
+    "opération",
+    "relance",
+    "panne",
+    "systématique"
+]
+
 
 export interface FicheTypeConf {
     validation: boolean;
