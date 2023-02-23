@@ -44,14 +44,15 @@ const NumericField = (
         return !isNaN(str) && !isNaN(parseFloat(str))
     }
 
-    // check is the new value for N inside the provided bounds
+    // check whether the new value for N is inside the provided bounds
     // account for min and / or max being possibly undefined (not provided)
 
     const isInBounds = (val: number) => {
-        if(!min && !max) return true
-        if(min && max && val >= min && val <= max) return true
-        else if(min && val >= min) return true
-        else if(max && val <= max) return true
+        if(typeof min == "undefined" && typeof max == "undefined") return true
+        else if(typeof min != "undefined" && typeof max != "undefined" && 
+                val >= min && val <= max) return true
+        else if(typeof min != "undefined" && val >= min) return true
+        else if(typeof max != "undefined" && val <= max) return true
         return false
     }
 

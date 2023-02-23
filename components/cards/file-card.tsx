@@ -1,6 +1,6 @@
 import styles from "@styles/components/cards/file-card.module.scss"
 import { Fichier } from "@conf/api/data-types/fichier";
-import { User } from "@conf/api/data-types/user";
+import { getUserFullName, User } from "@conf/api/data-types/user";
 import { useEffect, useState } from "react";
 import useAPIRequest from "@hook/useAPIRequest";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -54,7 +54,8 @@ const FileCard = (
     // render
 
     return (
-        fileInfo ?
+        // only render the card once we've extracted the info we want to display
+        fileOwner && fileInfo ?
         <>
             <li className={styles.fileCard} onClick={handleClick}>
                 <FontAwesomeIcon icon={fileInfo.icon}/>
@@ -62,6 +63,7 @@ const FileCard = (
                     <h5>
                         {fileInfo.fileName}
                         {
+                            // don't display the count if it ain't at least one
                             fileInfo.count > 0 ?
                             ` (${fileInfo.count})`
                             : 
@@ -74,6 +76,9 @@ const FileCard = (
             <FilePreviewer 
                 isVisible={isModalVisible}
                 closeModal={() => setIsModalVisible(false)}
+                fileName={file.nom}
+                fileInfo={fileInfo}
+                ownerFullName={getUserFullName(fileOwner)}
             />
         </>
         :

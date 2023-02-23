@@ -1,0 +1,77 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+.modal {
+
+    @include flex-container(column, nowrap, center, center);
+    gap: 30px;
+    padding: 60px;
+    border-radius: 15px;
+    background: $white;
+
+    max-height: 95vh;
+    max-width: 80vw;
+
+    .header {
+
+        @include flex-container(row, nowrap, space-between, flex-start);
+        gap: 60px;
+        width: 100%;
+
+        .fileInfo {
+
+            @include flex-container(column, nowrap, center, flex-start);
+            gap: 15px;
+            width: 100%;
+            min-width: 0;
+
+            .fileName {
+
+                @include flex-container(row, nowrap, flex-start, center);
+                gap: 10px;
+                width: 100%;
+                min-width: 0;
+
+                svg {
+                    width: 30px;
+                    height: 30px;
+                    color: $primary;
+                }
+
+                h3 {
+                    @include header-3-medium;
+                    color: $primary;
+                    width: 100%;
+                    @include text-overflow-ellipsis;
+                }
+
+            }
+
+            p {
+                @include text-md-regular;
+                color: $primary-400;
+            }
+
+        }
+    }
+
+
+
+    .imageContainer {
+
+        position: relative;
+        min-height: 50vh;
+        min-width: 50vw;
+        max-height: 50vh;
+        max-width: 50vw;
+
+    }
+
+
+    .unsupportedFileTypeMessage {
+        @include text-md-regular;
+		color: $primary-400;
+    }
+
+}

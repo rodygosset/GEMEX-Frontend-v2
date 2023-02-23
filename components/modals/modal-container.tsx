@@ -5,14 +5,12 @@ import styles from "@styles/components/modals/modal-container.module.scss"
 interface Props {
     children: any;
     isVisible: boolean;
-    closeModal: () => void;
 }
 
 const ModalContainer = (
     {
         children,
-        isVisible,
-        closeModal
+        isVisible
     }: Props
 ) => {
 
@@ -23,7 +21,7 @@ const ModalContainer = (
         {
             isVisible ?
             <Portal>
-                <div className={styles.container} onClick={closeModal}>
+                <div className={styles.container}>
                     { children }
                 </div>
             </Portal>

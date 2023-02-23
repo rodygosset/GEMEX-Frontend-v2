@@ -180,7 +180,7 @@
 
 			.fileCardsContainer {
 				@include flex-container(column, nowrap, flex-start, stretch);
-				gap: 30px;
+				gap: 15px;
 				padding-bottom: 20px;
 
 				h4 {
@@ -190,8 +190,13 @@
 
 				ul {
 					@include reset-list;
-					@include flex-container(row, nowrap, flex-start, center);
+					@include flex-container(row, wrap, flex-start, center);
 					gap: 30px;
+				}
+
+				p.noFilesMessage {
+					@include text-md-regular;
+					color: $primary-400;
 				}
 			}
 	

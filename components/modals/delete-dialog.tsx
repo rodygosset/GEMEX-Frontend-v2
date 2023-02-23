@@ -92,9 +92,7 @@ const DeleteDialog = (
 
     return (
         <>
-            <ModalContainer 
-                isVisible={isVisible && !showConfirmationDialog}
-                closeModal={closeDialog}>
+            <ModalContainer isVisible={isVisible && !showConfirmationDialog}>
                 <section className={styles.modal}>
                     <h4>Supprimer un item</h4>
                     <p>Êtes-vous sûr(e) de vouloir supprimer <span>{itemTitle}</span> ?</p>
@@ -116,9 +114,7 @@ const DeleteDialog = (
                     </div>
                 </section>
             </ModalContainer>
-            <ModalContainer
-                isVisible={showConfirmationDialog}
-                closeModal={closeDialog}>
+            <ModalContainer isVisible={showConfirmationDialog}>
                 <section className={styles.modal}>
                     <h4>Confirmation</h4>
                     <p>Confirmez la suppression de <span>{itemTitle}</span></p>

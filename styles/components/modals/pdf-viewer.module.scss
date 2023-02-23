@@ -1,0 +1,33 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+
+.pdfViewer {
+    @include flex-container(row, nowrap, center, center);
+    gap: 10px;
+
+    .pdfViewerPage {
+        @include flex-container(row, nowrap, center, center);
+        canvas {
+            width: auto !important;
+            height: 100% !important;
+            max-height: 60vh !important;
+        }
+    
+        div {
+            display: none;
+        }
+    }
+
+}
+
+.pdfViewerInfo {
+    @include flex-container(row, nowrap, center, center);
+    gap: 15px;
+
+    span {
+        @include text-md-medium;
+        color: $primary;
+    }
+}

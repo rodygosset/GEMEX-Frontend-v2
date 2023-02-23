@@ -48,13 +48,18 @@ const ViewFiles = (
     return (
         <div className={styles.fileCardsContainer}>
             <h4>Fichiers</h4>
-            <ul>
             {
-                fichiers.map(fileName => { 
-                    return <FileCard file={fileName}/>
-                })
+                fichiers.length > 0 ?
+                <ul>
+                {
+                    fichiers.map(file => { 
+                        return <FileCard key={file.nom} file={file}/>
+                    })
+                }
+                </ul>
+                :
+                <p className={styles.noFilesMessage}><i>Aucun fichier n'est associé à cet item</i></p>
             }
-            </ul>
         </div>
     )
 }
