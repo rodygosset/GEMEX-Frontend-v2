@@ -19,6 +19,7 @@ import VerticalScrollBar from "./utils/vertical-scrollbar"
 interface Props {
     className?: string;
     hidden?: boolean;
+    hideSearchButton?: boolean;
     onSubmit?: () => void;
 }
 
@@ -29,6 +30,7 @@ interface Props {
 const SearchFilters = (
     {
         className,
+        hideSearchButton,
         hidden,
         onSubmit
     }: Props
@@ -193,16 +195,21 @@ const SearchFilters = (
                         })
                     }
                 </VerticalScrollBar>
-                {/* Submit button */}
-                <Button 
-                    onClick={handleSubmit}
-                    className={styles.submitButton}
-                    fullWidth
-                    bigPadding
-                    type="submit"
-                    icon={faMagnifyingGlass}>
-                    Rechercher
-                </Button>
+                {
+                    !hideSearchButton ?
+                    /* Submit button */
+                    <Button 
+                        onClick={handleSubmit}
+                        className={styles.submitButton}
+                        fullWidth
+                        bigPadding
+                        type="submit"
+                        icon={faMagnifyingGlass}>
+                        Rechercher
+                    </Button>
+                    :
+                    <></>
+                }
             </form>
         </section>
     )

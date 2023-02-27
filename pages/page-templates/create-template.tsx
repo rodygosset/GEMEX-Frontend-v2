@@ -15,6 +15,7 @@ import { AxiosResponse } from "axios"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { StylesConfig } from "react-select"
+import CreateForm from "@components/forms/create-form"
 
 
 // custom styles for the fiche type select
@@ -89,6 +90,7 @@ const CreateTemplate = (
     }
 
     useEffect(() => setFormData(getInitFormData()), [])
+    useEffect(() => console.log(formData), [formData])
 
     // the following function is passed to form elements 
     // so they can update the value of the field they're rendering
@@ -96,7 +98,7 @@ const CreateTemplate = (
     const updateField = (fieldName: string, newValue: any) => {
         let newFormData = { ...formData }
         newFormData[fieldName].value = newValue;
-        // console.log(`'${fieldId}' was updated!`)
+        // console.log(`'${fieldName}' was updated!`)
         // console.log(newValue)
         setFormData(newFormData)
     }
@@ -230,6 +232,7 @@ const CreateTemplate = (
                                 name="Type de fiche"
                                 customStyles={customSelectStyles}
                                 options={ficheTypeOptions}
+                                value={ficheType}
                                 defaultValue={ficheTypeOptions[0].value}
                                 onChange={setFicheType}
                             />
@@ -240,6 +243,16 @@ const CreateTemplate = (
                 </div>
                 <HorizontalSeperator/>
                 <VerticalScrollBar className={styles.contentScrollContainer}>
+                    {
+                        formData ?
+                        <CreateForm
+                            itemType={itemType}
+                            formData={formData}
+                            onChange={updateField}
+                        />
+                        :
+                        <></>
+                    }
                 </VerticalScrollBar>
             </section>
         </main>

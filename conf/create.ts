@@ -39,7 +39,6 @@ export const timeDeltaFormElement: FormElement = {
 
 export const itemFormElement: FormElement = {
     type: "",
-    defaultValue: 1,
     minValue: 1
 }
 

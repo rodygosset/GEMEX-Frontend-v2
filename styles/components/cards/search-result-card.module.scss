@@ -143,4 +143,26 @@
             }
         }
     }
+
+    &.selected {
+        border: 2px solid $primary;
+        background: $primary-200;
+
+        &:hover {
+            h4 a {
+                color: $primary;
+            }
+    
+            ul li {
+                .label {
+                    color: $primary-400;
+                }
+    
+                a, span  {
+                    color: $primary;
+                }
+            }
+    
+        }
+    }
 }

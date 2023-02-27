@@ -137,6 +137,28 @@
 			}
 
 		}
+
+		.contentScrollContainer {
+			// make sure it never overflows from the body
+            max-height: calc(100vh - calc($nav-bar-height + 280px));
+			@include flex-container(column, nowrap, flex-start, stretch);
+			gap: 30px;
+
+			#createForm {
+				@include flex-container(row, nowrap, stretch, stretch);
+				gap: 60px;
+				width: 100%;
+
+				.column {
+					@include flex-container(column, nowrap, flex-start, stretch);
+					gap: 30px;
+					width: 50%;
+					flex: 1 1 0px;
+	
+					@include reset-list;
+				}
+			}
+		}
     }
 
 }

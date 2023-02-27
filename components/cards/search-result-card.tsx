@@ -4,11 +4,10 @@ import { viewConf } from "@conf/view"
 import { faLink } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/components/cards/search-result-card.module.scss"
-import { Context } from "@utils/context"
 import { capitalizeEachWord, capitalizeFirstLetter, dateOptions } from "@utils/general"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { MouseEvent } from "react"
 
 interface Props {
@@ -17,6 +16,9 @@ interface Props {
     href?: string;
     globalMetaData: SearchResultsMetaData;
     listView?: boolean;
+    isSelected?: boolean;
+    areLinksDisabled?: boolean;
+    onClick?: () => void;
 }
 
 const SearchResultCard = (
@@ -25,7 +27,10 @@ const SearchResultCard = (
         itemType,
         href,
         globalMetaData,
-        listView
+        listView,
+        isSelected,
+        areLinksDisabled,
+        onClick
     }: Props
 ) => {
 
@@ -87,15 +92,20 @@ const SearchResultCard = (
 
     }, [globalMetaData])
 
-    // manage the nav history
-
-    const { setSearchParams } = useContext(Context)
-
     // handlers
 
     const handleClick = (event: MouseEvent) => {
         event.stopPropagation()
-        router.push(getHref())
+        if(typeof onClick !== "undefined") {
+            onClick()
+        } else if(!areLinksDisabled) {
+            router.push(getHref())
+        }
+    }
+
+    const handleLinkClick = (event: MouseEvent) => {
+        if(areLinksDisabled) event.preventDefault()
+        else event.stopPropagation()
     }
 
 
@@ -104,6 +114,7 @@ const SearchResultCard = (
     const getClassNames = () => {
         let classNames = styles.listItem
         classNames += listView ? ' ' + styles.listView : ''
+        classNames += isSelected ? ' ' + styles.selected : ''
         return classNames
     }
 
@@ -142,7 +153,7 @@ const SearchResultCard = (
             onClick={e => handleClick(e)}
             className={getClassNames()}>
             <h4>
-                <Link href={getHref()}>
+                <Link href={getHref()} onClick={handleLinkClick}>
                     <FontAwesomeIcon icon={getItemIcon()}/>
                     <span>{ getItemTitle() }</span>
                 </Link>
@@ -163,7 +174,7 @@ const SearchResultCard = (
                                 fieldConf.type in apiURLs ?
                                 // display it accordingly
                                 <Link 
-                                    onClick={e => e.stopPropagation()}
+                                    onClick={handleLinkClick}
                                     href={getMetaDataLinkHref(fieldConf.type, data[field])}>
                                     <FontAwesomeIcon icon={faLink}/>
                                     <span className={styles.metaData}>{metaData[index]}</span>

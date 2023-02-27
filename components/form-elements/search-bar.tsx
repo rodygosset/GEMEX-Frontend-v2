@@ -8,13 +8,16 @@ import { useRouter } from "next/router"
 import { ChangeEventHandler, KeyboardEventHandler, useEffect, useState } from "react"
 import Select, { OnSelectHandler } from "@components/form-elements/select"
 import { DynamicObject } from "@utils/types"
+import SearchFilters from "@components/search-filters"
 
 interface Props {
     defaultValue?: string;
     itemType?: string;
+    hiddenItemTypes?: string[];
     hideSelect?: boolean;
     hideCTA?: boolean;
     showFiltersButton?: boolean;
+    embedFilters?: boolean;
     onFiltersToggle?: () => void;
     fullWidth?: boolean;
     onItemTypeChange?: (newItemType: string) => void,
@@ -26,9 +29,11 @@ const SearchBar = (
     {
         defaultValue,
         itemType = defaultSearchItem,
+        hiddenItemTypes,
         hideSelect,
         hideCTA,
         showFiltersButton = false,
+        embedFilters = false,
         onFiltersToggle,
         fullWidth,
         onItemTypeChange,
@@ -71,6 +76,13 @@ const SearchBar = (
         if(onItemTypeChange) {
             onItemTypeChange(newItemType as string)
         }
+    }
+
+    // filter the itemTypes array to remove the item types that are hidden
+
+    const getItemTypes = () => {
+        if(!hiddenItemTypes) return itemTypes
+        return itemTypes.filter(type => !hiddenItemTypes.includes(type.value))
     }
 
 
@@ -135,9 +147,14 @@ const SearchBar = (
     }
 
     // manage search filters visibility
+    
+    const [showFilters, setShowFilters] = useState(false)
 
     const toggleFiltersVisibilty = () => {
         if(onFiltersToggle) onFiltersToggle()
+        else {
+            setShowFilters(!showFilters)
+        }
     }
 
     // input conf
@@ -166,7 +183,7 @@ const SearchBar = (
             {/* item type select */}
             <Select 
                 name="itemType"
-                options={itemTypes}
+                options={getItemTypes()}
                 hidden={hideSelect}
                 onChange={handleItemTypeChange}
                 isSearchable={false}
@@ -185,6 +202,17 @@ const SearchBar = (
                 hidden={hideCTA}>
                 Rechercher
             </Button>
+            {
+                // in case the user wants to embed the filters
+                embedFilters ?
+                <SearchFilters 
+                    className={styles.embeddedFilters} 
+                    hidden={!showFilters} 
+                    hideSearchButton 
+                />
+                :
+                <></>
+            }
         </form>
     )
 }

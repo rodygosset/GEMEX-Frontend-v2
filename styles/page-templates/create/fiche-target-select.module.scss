@@ -1,0 +1,28 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+.inputContainer {
+
+    @include flex-container(row, nowrap, space-between, center);
+    gap: 15px;
+    width: 100%;
+    padding: 10px 20px;
+    background: $primary-100;
+    border-radius: 7px;
+
+    p {
+
+        @include text-sm-regular;
+        @include text-overflow-ellipsis;
+        color: $primary;
+        width: 0px;
+        // make sure the content doesn't make the container grow bigger
+        flex: 1 1 0;
+
+        span {
+            color: $primary-400;
+        }
+
+    }
+}

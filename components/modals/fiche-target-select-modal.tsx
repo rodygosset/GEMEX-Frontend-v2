@@ -1,74 +1,60 @@
-import Button from "@components/button"
-import SearchResultCard from "@components/cards/search-result-card"
-import SearchBar from "@components/form-elements/search-bar"
-import Pagination from "@components/pagination"
-import SearchFilters from "@components/search-filters"
-import LoadingIndicator from "@components/utils/loading-indicator"
-import VerticalScrollBar from "@components/utils/vertical-scrollbar"
-import { searchConf, SearchResultsMetaData } from "@conf/api/search"
-import { MySession } from "@conf/utility-types"
-import { faList, faTableCellsLarge } from "@fortawesome/free-solid-svg-icons"
-import useAPIRequest from "@hook/useAPIRequest"
-import { useGetMetaData } from "@hook/useGetMetaData"
-import styles from "@styles/pages/search.module.scss"
-import { Context } from "@utils/context"
-import { parseURLQuery } from "@utils/search-utils"
-import { SSRGetMetaData } from "@utils/ssr-get-metadata"
-import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
-import { DynamicObject } from "@utils/types"
-import { AxiosResponse } from "axios"
-import { GetServerSideProps, NextPage } from "next"
-import { unstable_getServerSession } from "next-auth"
-import Head from "next/head"
-import { useRouter } from "next/router"
-import { useContext, useEffect, useRef, useState } from "react"
-import { authOptions } from "./api/auth/[...nextauth]"
+import styles from "@styles/components/modals/fiche-target-select-modal.module.scss"
+import Button from "@components/button";
+import ModalContainer from "./modal-container";
+import { useContext, useEffect, useRef, useState } from "react";
+import SearchBar from "@components/form-elements/search-bar";
+import { Context } from "@utils/context";
+import { SearchResultsMetaData } from "@conf/api/search";
+import { useGetMetaData } from "@hook/useGetMetaData";
+import SearchFilters from "@components/search-filters";
+import LoadingIndicator from "@components/utils/loading-indicator";
+import Pagination from "@components/pagination";
+import VerticalScrollBar from "@components/utils/vertical-scrollbar";
+import useAPIRequest from "@hook/useAPIRequest";
+import { AxiosResponse } from "axios";
+import { resultsPerPage } from "pages/search";
+import SearchResultCard from "@components/cards/search-result-card";
+import { faList, faTableCellsLarge } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
 
-import Image from "next/image"
 
 interface Props {
-    queryItemType: string;
-    initSearchParams: DynamicObject;
-    results: any[];
-    initMetaData: SearchResultsMetaData;
+    isVisible: boolean;
+    closeModal: () => void;
+    onSelect: (itemType: string, id: number) => void;
 }
 
-export const resultsPerPage = 30
+// this modal is used to allow the user to choose an item
+// which is either a "ilot", an expo or an element
+// using the features fond on the search page
+// it is used in the fiches creation & edit pages
 
-const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, initMetaData }) => {
-
-    const router = useRouter()
-
-    // we use the context API to store search parameters
-    // so they can be shared between components,
-    // like the SearchFilters component & this page
-
-    // important to note: 
-    // searchParams represents the filtered url query
-    // that we get from the router
-    // this is the object we pass to our backend API in our search request
-    // searchParams is NOT the object representing the state of the SearchFilters component
-
-    const {
-        searchParams, 
-        setSearchParams, 
-        navHistory, 
-        setNavHistory
-    } = useContext(Context)
+const FicheTargetSelectModal = (
+    {
+        isVisible,
+        closeModal,
+        onSelect
+    }: Props
+) => {
 
 
     // state 
 
-    const [itemType, setItemType] = useState(queryItemType)
+    const [itemType, setItemType] = useState("elements")
 
-    // load the search params from the URL query
+    const hiddenItemTypes = [
+        "fiches",
+        "fiches_systematiques",
+        "stocks",
+        "articles",
+        "constituents"
+    ]
 
-    useEffect(() => {
-        setSearchParams({
-            ...initSearchParams,
-            item: itemType
-        })
-    }, [])
+    // clear the search params
+
+    const { searchParams, setSearchParams } = useContext(Context)
+
+    useEffect(() => setSearchParams({ item: itemType }), [])
 
     // make sure we don't update the search params object
     // until the default search params have been loaded
@@ -77,17 +63,10 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 
     useEffect(() => {
         if(!initSearchParamsLoaded &&
-            JSON.stringify(searchParams) == JSON.stringify({ ...initSearchParams, item: queryItemType })) {
+            JSON.stringify(searchParams) == JSON.stringify({ item: itemType })) {
                 setInitSearchParamsLoaded(true)
             }
     }, [searchParams])
-
-    // search results
-
-
-    const [searchResults, setSearchResults] = useState(results)
-    
-    // useEffect(() => console.log(searchResults), [searchResults])
 
     // when the item type changes, 
     // update the search params
@@ -100,10 +79,13 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         })
     }, [itemType])
 
-    useEffect(() => console.log(searchParams), [searchParams])
+    // search results
+
+    const [searchResults, setSearchResults] = useState<any[]>([])
 
     // search results meta-data
-    const [metaData, setMetaData] = useState(initMetaData)
+    
+    const [metaData, setMetaData] = useState<SearchResultsMetaData>({})
 
     // when the search results change
     // fetch corresponding meta-data
@@ -117,7 +99,18 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         })
     }, [searchResults])
 
-    // useEffect(() => console.log(metaData), [metaData])
+    // handlers
+
+    const handleItemTypeChange = (newItemType: string) => {
+        setItemType(newItemType)
+    }
+
+    const handleSearchInputChange = (newInputValue: string) => {
+        setSearchParams({
+            ...searchParams,
+            nom: newInputValue
+        })
+    }
 
     // data fetching & pagination logic
 
@@ -169,6 +162,10 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 
     useEffect(() => {
 
+        // make sure nothing is selected when we reload the search results
+
+        setSelectedItemId(0)
+
         // let the user know we're fetching data
 
         setIsLoading(true)
@@ -202,21 +199,14 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 
     }, [itemType, searchParams, currentPageNb])
 
-    // manage search filters visibility
 
-    
-    const [showFilters, setShowFilters] = useState(true)
-    
-    const toggleFiltersVisibilty = () => setShowFilters(!showFilters)
 
 
     // manage view mode (list or card)
 
-    const [isListView, setIsListView] = useState<boolean>(false)
+    const [isListView, setIsListView] = useState<boolean>(true)
 
     // utils
-
-    const getDefaultSearchParam = () => searchConf[itemType].defaultSearchParam
 
     const getResultsContainerClassNames = () => {
         let classNames = ''
@@ -234,77 +224,44 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         return ''
     }
 
-    // handlers
+    // manage card selection
 
-    const handleItemTypeChange = (newItemType: string) => {
-        setItemType(newItemType)
+    const [selectedItemId, setSelectedItemId] = useState<number>(0)
+
+    const isSelected = (id: number) => selectedItemId == id
+
+    const toggleIsSelected = (id: number) => isSelected(id) ? setSelectedItemId(0) : setSelectedItemId(id)
+
+    const handleSelect = () => {
+        onSelect(itemType, selectedItemId) 
+        closeModal()
     }
-
-    const handleSearchInputChange = (newInputValue: string) => {
-        setSearchParams({
-            ...searchParams,
-            [getDefaultSearchParam()]: newInputValue
-        })
-    }
-
-    const handleFormSubmit = () => {
-        // before pushing to the new url
-        // to get the search results
-        // push the current url to the nav history
-        setNavHistory([...navHistory, router.asPath])
-        // submit search query
-        router.push({
-            pathname: '/search',
-            query: searchParams
-        })
-    }
-
-    // keep nav history up to date
-
-    useEffect(() => {
-        // build the query string from the latest search params
-        // @ts-ignore
-        const query = new URLSearchParams(searchParams).toString()
-        // get rid of the last update we made to the nav history
-        const newNavHistory = navHistory.slice(0, navHistory.length - 1)
-        // replace it with the URL corresponding to the current search params
-        setNavHistory([...newNavHistory, `/search?${query}`])
-    }, [searchParams, itemType])
 
     // render
 
     return (
-        <main id={styles.container}>
-            <Head>
-				<title>Recherche</title>
-				<meta name="description" content="Page de recherche de GEMEX" />
-			</Head>
-            {
-                // don't load the search filters
-                // until the default search params have been loaded
-                // to make sure they are not ignored
-                initSearchParamsLoaded ?
-                <SearchFilters 
-                    hidden={!showFilters} 
-                    onSubmit={handleFormSubmit}
-                />
-                :
-                <></>
-            }
-
-            <div id={styles.mainColumn}> 
-                <SearchBar
-                    fullWidth
-                    hideCTA
-                    showFiltersButton
-                    onFiltersToggle={toggleFiltersVisibilty}
-                    defaultValue={ initSearchParams[getDefaultSearchParam()] }
-                    itemType={itemType}
-                    onItemTypeChange={handleItemTypeChange}
-                    onInputChange={handleSearchInputChange}
-                    onSubmit={handleFormSubmit}
-                />
-                <section>
+        <ModalContainer isVisible={isVisible}>
+            <div className={styles.modal}>
+                <div className={styles.mainColumn}>
+                    {
+                        // don't load the search filters
+                        // until the default search params have been loaded
+                        // to make sure they are not ignored
+                        initSearchParamsLoaded ?
+                        <SearchBar
+                            fullWidth
+                            hideCTA
+                            hiddenItemTypes={hiddenItemTypes}
+                            showFiltersButton
+                            embedFilters
+                            itemType={itemType}
+                            onItemTypeChange={handleItemTypeChange}
+                            onInputChange={handleSearchInputChange}
+                        />
+                        :
+                        <></>
+                    }
+                    <section>
                     { 
                         // don't display any content
                         // if there aren't no search results
@@ -342,6 +299,9 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                                                 data={item}
                                                 globalMetaData={metaData}
                                                 listView={isListView}
+                                                areLinksDisabled
+                                                isSelected={isSelected(item.id)}
+                                                onClick={() => toggleIsSelected(item.id)}
                                             />
                                         )
                                     })
@@ -385,62 +345,25 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                         </div>
 
                     }
-                </section>
+                    </section>
+                    <div className={styles.CTAContainer}>
+                        <Button
+                            role="secondary"
+                            animateOnHover={false}
+                            onClick={closeModal}>
+                            Annuler
+                        </Button>
+                        <Button
+                            active={selectedItemId != 0}
+                            onClick={handleSelect}>
+                            Sélectionner
+                        </Button>
+                    </div>
+                </div>
             </div>
-        </main>
+        </ModalContainer>
     )
+
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
-
-    // get initial search results by making a request to the API
-    // start by parsing the URL query into an object
-    // that contains valid search params for our API
-
-    const [itemType, searchParams] = parseURLQuery(context.query)
-
-    // in case something goes wrong
-
-    const emptyProps: { props: Props } = {
-        props: {
-            queryItemType: itemType,
-            initSearchParams: searchParams,
-            results: [],
-            initMetaData: {}
-        }
-    }
-
-    // retrieve the session, with the user's auth token
-
-    const session = await unstable_getServerSession(context.req, context.res, authOptions)
-
-    if(session == null) return emptyProps
-
-    // make the request to the API
-
-    const results = await SSRmakeAPIRequest<any[], any[]>({
-        session: session as MySession,
-        verb: "post",
-        itemType: itemType,
-        additionalPath: `search/?skip=0&max=${resultsPerPage}`, // get page 1
-        data: searchParams,
-        onSuccess: res => res.data
-    })
-
-    // get the meta-data for the search results
-
-    const metaData = await SSRGetMetaData(itemType, results ? results : [], session as MySession)
-
-    // pass the result as props
-
-    return {
-        props: {
-            queryItemType: itemType,
-            initSearchParams: searchParams,
-            results: results ? results : [],
-            initMetaData: metaData ? metaData : {}
-        }
-    }
-}
-
-export default Search
+export default FicheTargetSelectModal

@@ -6,7 +6,7 @@ import { APPROVED_STATUS_ID, Fiche } from "@conf/api/data-types/fiche";
 import { MySession } from "@conf/utility-types";
 import { faClockRotateLeft, faFileLines, faHeartBroken, faPenToSquare, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import useAPIRequest from "@hook/useAPIRequest";
-import styles from "@styles/components/page-templates/view/action-buttons.module.scss"
+import styles from "@styles/page-templates/view/action-buttons.module.scss"
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router"
