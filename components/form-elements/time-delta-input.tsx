@@ -17,6 +17,7 @@ import { secondsInDay, secondsInMonth, secondsInWeek } from "date-fns";
 interface Props {
     name: string;
     value?: number;
+    isInErrorState?: boolean;
     onChange?: (newValue: number) => void;
 }
 
@@ -34,6 +35,7 @@ const TimeDeltaInput = (
     {
         name,
         value,
+        isInErrorState,
         onChange
     }: Props
 ) => {
@@ -132,6 +134,14 @@ const TimeDeltaInput = (
         handleChange(getValueForUnit())
     }
 
+    // utils
+
+    const getClassNames = () => {
+        let classNames = styles.container
+        classNames += isInErrorState ? ' ' + styles.error : ''
+        return classNames
+    }
+
     // render
 
     return (
@@ -142,11 +152,11 @@ const TimeDeltaInput = (
                 onChange={event => handleChange(Number(event.target.value))} 
                 hidden
             />
-            <div className={styles.container}>
+            <div className={getClassNames()}>
                 <NumericField
                     value={unitValue}
                     onChange={handleChange}
-                    min={0}
+                    min={1}
                     embedded
                 />
                 <VerticalSeperator/>

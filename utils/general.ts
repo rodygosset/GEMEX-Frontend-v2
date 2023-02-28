@@ -56,4 +56,6 @@ export const toISO = (date: Date) => {
 }
 
 
+export const frenchToISO = (date: string) => date.split('/').reverse().join('-')
+
 export const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }

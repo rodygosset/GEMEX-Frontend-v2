@@ -11,6 +11,7 @@ interface Props {
     itemType: string;
     formData: FormFieldsObj;
     onChange: (field: string, value: any) => void;
+    onSubmit: () => void;
     hidden?: string[];
 }
 
@@ -19,6 +20,7 @@ const CreateForm = (
         itemType,
         formData,
         onChange,
+        onSubmit,
         hidden
     }: Props
 ) => {
@@ -44,13 +46,14 @@ const CreateForm = (
         const middle = Math.floor(fields.length / 2)
         setFirstColumnFields(fields.slice(0, middle))
         setSecondColumnFields(fields.slice(middle))
-    }, [itemType])
+    }, [itemType, formData])
 
     // render the list of fields for the current item type
     // this logic was exported into a function because DRY
 
     const renderList = (fieldList: string[]) => {
         return fieldList.map(fieldName => {
+            if(fieldName == "fichiers") return
             return (
                 <FormField 
                     key={fieldName}
@@ -67,7 +70,7 @@ const CreateForm = (
     // render
 
     return (
-        <form id={styles.createForm}>
+        <form id={styles.createForm} onSubmit={onSubmit}>
             <div className={styles.column}>
             {
                 renderList(firstColumnFields)
@@ -78,6 +81,7 @@ const CreateForm = (
                 renderList(secondColumnFields)
             }
             </div>
+            
         </form>
     )
 }

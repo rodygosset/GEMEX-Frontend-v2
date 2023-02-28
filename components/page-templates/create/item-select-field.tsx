@@ -9,6 +9,7 @@ interface Props {
     itemType: string;
     name: string;
     value: any;
+    isInErrorState?: boolean;
     onSelect: (value: string | number | string[]) => void
 }
 
@@ -17,6 +18,7 @@ const ItemSelectField = (
         itemType,
         name,
         value,
+        isInErrorState,
         onSelect
     }: Props
 ) => {
@@ -55,6 +57,7 @@ const ItemSelectField = (
             options={selectOptions}
             value={value}
             onChange={onSelect}
+            isInErrorState={isInErrorState}
         />
     )
 }

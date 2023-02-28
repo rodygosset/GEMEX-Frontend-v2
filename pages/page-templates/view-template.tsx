@@ -57,10 +57,6 @@ const ViewTemplate = (
 
     const itemTypeHasFiles = () => "fichiers" in itemData
     
-    // cast itemData.fichiers from any to string[]
-    
-    const getFileNames = () => itemData.fichiers as string[]
-
     // render
 
     return (

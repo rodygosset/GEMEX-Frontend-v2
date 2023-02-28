@@ -22,6 +22,7 @@ interface Props {
     hidden?: boolean;
     large?: boolean;
     customStyles?: StylesConfig;
+    isInErrorState?: boolean;
     onChange?: OnSelectHandler;
 }
 
@@ -145,6 +146,7 @@ const Select = (
         hidden = false,
         large,
         customStyles,
+        isInErrorState,
         onChange
     }: Props
     ) => {
@@ -216,6 +218,7 @@ const Select = (
     const getClassNames = () => {
         let classNames = ''
         classNames += large ? styles.large : ''
+        classNames += isInErrorState ? ' ' + styles.error : ''
         return classNames
     }
 

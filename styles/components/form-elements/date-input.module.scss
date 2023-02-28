@@ -8,11 +8,21 @@
 
     @include flex-container(row, nowrap, center, center);
     gap: 10px;
-    padding: 20px;
+    padding: 10px 20px;
     width: $input-width;
     border-radius: 5px;
 
     background: $primary-100;
+
+    &.bigPadding {
+        padding: 20px;
+    }
+
+    &.large {
+        .calendarIcon {
+            display: none;
+        }
+    }
 
     .wrapper {
         width: fit-content;

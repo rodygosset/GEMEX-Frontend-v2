@@ -118,7 +118,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     const auteur = await getExtraSSRData(
         session as MySession, 
         "users", 
-        (data as FicheSystematique).user_en_charge_id
+        (data as FicheSystematique).auteur_id
     )
 
     const ilot = data?.ilot_id ? await getExtraSSRData(

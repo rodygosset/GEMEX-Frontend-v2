@@ -8,6 +8,7 @@ import { unstable_getServerSession } from "next-auth"
 import Head from "next/head"
 import { authOptions } from "pages/api/auth/[...nextauth]"
 import ViewTemplate from "pages/page-templates/view-template"
+import { useEffect } from "react"
 
 
 // this page displays information about a given Fiche object
@@ -122,7 +123,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     const auteur = await getExtraSSRData(
         session as MySession, 
         "users", 
-        (data as Fiche).user_en_charge_id
+        (data as Fiche).auteur_id
     )
 
     const ilot = data?.ilot_id ? await getExtraSSRData(

@@ -4,8 +4,8 @@ import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { SelectOption } from "@utils/react-select/types"
 import { useEffect, useState } from "react"
-import { getDatePickerProps } from "@utils/form-elements/date-input"
-import { DateFormat } from "@utils/types"
+import { getDatePickerProps, toDateObject } from "@utils/form-elements/date-input"
+import { DateFormat, DateInputValue } from "@utils/types"
 import React from "react"
 import { CustomInput } from "./date-input-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -28,6 +28,9 @@ interface Props {
     value?: Date;
     strict?: boolean;
     format?: DateFormat;
+    bigPadding?: boolean;
+    showLocaleDate?: boolean;
+    minDate?: Date;
     onChange: (newValue: Date) => void;
     onFormatChange?: (newFormat: DateFormat) => void;
 }
@@ -84,6 +87,9 @@ const DateInput = (
         value,
         strict = true,
         format,
+        bigPadding = true,
+        showLocaleDate = false,
+        minDate,
         onChange,
         onFormatChange
     }: Props
@@ -136,6 +142,13 @@ const DateInput = (
         setDateFormat(getFormatOption(format))
     }, [format])
 
+    // update current date when min date changes
+
+    useEffect(() => {
+        if(!value || !minDate) return
+        if(value < minDate) handleDateChange(minDate)
+    }, [minDate])
+
     // handlers 
 
     const handleDateChange = (newValue: Date | null) => {
@@ -150,6 +163,15 @@ const DateInput = (
         setDateFormat(formatOption)
     }
 
+    // utils
+
+    const getClassNames = () => {
+        let classNames = styles.container
+        classNames += bigPadding ? ' ' + styles.bigPadding : ''
+        classNames += showLocaleDate ? ' ' + styles.large : ''
+        return classNames
+    }
+
     // render
 
     return (
@@ -160,7 +182,7 @@ const DateInput = (
                 onChange={event => handleDateChange(new Date(event.target.value))} 
                 hidden
             />
-            <div className={styles.container}>
+            <div className={getClassNames()}>
                 {
                     strict && 
                     <FontAwesomeIcon icon={faCalendar} className={styles.calendarIcon}/>
@@ -172,8 +194,9 @@ const DateInput = (
                     { ...getDatePickerProps(dateFormat) }
                     dateFormat={dateFormat.value}
                     locale={fr}
+                    minDate={minDate}
                     // @ts-ignore
-                    customInput={<CustomInput/>}
+                    customInput={<CustomInput showLocaleDate={showLocaleDate} />}
                 />
                 {
                     !strict &&

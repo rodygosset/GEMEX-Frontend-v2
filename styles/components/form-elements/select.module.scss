@@ -7,3 +7,8 @@
 .large {
     width: $input-width !important;
 }
+
+.error {
+    @include error-state;
+    border-radius: 5px;
+}

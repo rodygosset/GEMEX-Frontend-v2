@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 interface Props {
     currentItemType: string;
     value: number;
+    isInErrorState?: boolean;
     onChange: (fieldName: string, value: any) => void
 }
 
@@ -16,6 +17,7 @@ const FicheTargetSelect = (
     {
         currentItemType,
         value,
+        isInErrorState,
         onChange
     }: Props
 ) => {
@@ -79,11 +81,17 @@ const FicheTargetSelect = (
         return label ? label : ""
     }
 
+    const getClassNames = () => {
+        let classNames = styles.inputContainer
+        classNames += isInErrorState ? ' ' + styles.error : ''
+        return classNames
+    }
+
     // render
 
     return (
         <>
-            <div className={styles.inputContainer}>
+            <div className={getClassNames()}>
                 {
                     selectedItemLabel ?
                     <p>

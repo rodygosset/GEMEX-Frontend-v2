@@ -1,10 +1,18 @@
+import styles from "@styles/components/forms/form-field.module.scss"
 import FicheTargetSelect from "@components/page-templates/create/fiche-target-select";
 import { apiURLs } from "@conf/api/conf";
 import { FormFieldsObj } from "@conf/create";
-import { itemTypetoAttributeName } from "@utils/general";
+import { itemTypetoAttributeName, toISO } from "@utils/general";
 import { getFilterLabel } from "@conf/api/search";
 import ItemSelectField from "@components/page-templates/create/item-select-field";
 import Label from "@components/form-elements/label";
+import TextInput from "@components/form-elements/text-input";
+import CheckBox from "@components/form-elements/checkbox";
+import DateInput from "@components/form-elements/date-input";
+import { toDateObject } from "@utils/form-elements/date-input";
+import { DateInputValue } from "@utils/types";
+import TimeDeltaInput from "@components/form-elements/time-delta-input";
+import ItemMultiSelect from "@components/form-elements/multi-select";
 
 
 interface Props {
@@ -23,15 +31,97 @@ const FormField = (
     }: Props
 ) => {
 
-    const { conf } = formData[fieldName]
+    
 
     const isHidden = () => (
-        ["expositions", "elements"].includes(conf.type) &&
+        ["expositions", "elements"].includes(formData[fieldName].conf.type) &&
         itemType.includes("fiches")
     )
 
     const getField = () => {
+
+        const { conf } = formData[fieldName]
+
+        // utils
+
+        const getTextValue = () => {
+            const { value: val } = formData[fieldName]
+            return val ? val : ""
+        }
+
+        // utils for date fields
+
+        // for date fields
+        // convert the value to a Date object before passing it to the DateInput component
+        const getDateValue = () => {
+            const { value: val } = formData[fieldName]
+            return val ? new Date(val) : undefined
+        }
+
+        const handleDateChange = (newValue: Date) => onChange(fieldName, toISO(newValue))
+
+        const handleChange = (value: any) => onChange(fieldName, value)
+        
+        // render
+
         switch(conf.type) {
+            case "text":
+                return (
+                    <TextInput
+                        name={fieldName}
+                        onChange={handleChange}
+                        currentValue={getTextValue()}
+                        required={conf.required}
+                        isInErrorState={formData[fieldName].isInErrorState}
+                    />
+                )
+            case "textArea":
+                return (
+                    <TextInput
+                        name={fieldName}
+                        onChange={handleChange}
+                        currentValue={getTextValue()}
+                        fullWidth
+                        isTextArea
+                        required={conf.required}
+                        isInErrorState={formData[fieldName].isInErrorState}
+                    />
+                )
+            case "boolean":
+                return (
+                    <CheckBox
+                        value={formData[fieldName].value}
+                        onChange={handleChange}
+                    />
+                )
+            case "timeDelta":
+                return (
+                    <TimeDeltaInput 
+                        name={fieldName}
+                        value={formData[fieldName].value} 
+                        onChange={handleChange} 
+                        isInErrorState={formData[fieldName].isInErrorState}
+                    />
+                )
+            case "date":
+                const getMinDate = () => {
+                    // make sure an "ending date" field never precedes
+                    // the "starting date" associated with it
+                    if(fieldName == "date_fin" && typeof formData["date_debut"] !== "undefined") {
+                        return new Date(formData["date_debut"].value)
+                    }
+                }
+                return (
+                    <DateInput 
+                        name={fieldName}
+                        value={getDateValue()} 
+                        onChange={handleDateChange}
+                        strict={true}
+                        bigPadding={false}
+                        showLocaleDate
+                        minDate={getMinDate()}
+                    />
+                )
             case "ilots":
                 // in case we're dealing with a fiche item
                 // instead of a select
@@ -56,9 +146,21 @@ const FormField = (
                             currentItemType={getCurrentItemType()}
                             value={getValue()}
                             onChange={onChange}
+                            isInErrorState={formData[fieldName].isInErrorState}
                         />
                     )
                 }
+            case "itemList":
+                // multi select
+                if(!conf.item || !(conf.item in apiURLs)) { break }
+                return (
+                    <ItemMultiSelect
+                        name={fieldName}
+                        itemType={conf.item}
+                        selected={formData[fieldName].value}
+                        onChange={handleChange}
+                    />
+                )
             default: 
                 // don't render a select if the item type is incorrect
                 // or if we're dealing with a fiche item 
@@ -73,21 +175,28 @@ const FormField = (
                 const selectName = getFilterLabel(fieldName, conf)
                 return (
                     <ItemSelectField
-                        key={selectName}
                         itemType={conf.type}
                         name={selectName}
                         value={formData[fieldName].value}
-                        onSelect={value => onChange(fieldName, value)}
+                        onSelect={handleChange}
+                        isInErrorState={formData[fieldName].isInErrorState}
                     />
                 )
         }
     }
 
+    // render
+
+    if(!(fieldName in formData)) return <></>
+
     return (
         <>
         {
             !isHidden() ?
-            getField()
+            <div className={styles.field}>
+                <Label htmlFor={fieldName}>{getFilterLabel(fieldName, formData[fieldName].conf)}</Label>
+                { getField() }
+            </div>
             :
             <></>
         }

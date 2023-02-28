@@ -20,4 +20,8 @@
         width: 14px;
     }
 
+    &.error {
+        @include error-state;
+    }
+
 }

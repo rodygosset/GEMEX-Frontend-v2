@@ -136,6 +136,11 @@
 
 			}
 
+			.formErrorMessage {
+				@include text-md-medium;
+				color: $error;
+			}
+
 		}
 
 		.contentScrollContainer {
@@ -158,6 +163,10 @@
 					@include reset-list;
 				}
 			}
+		}
+
+		button {
+			margin: auto;
 		}
     }
 

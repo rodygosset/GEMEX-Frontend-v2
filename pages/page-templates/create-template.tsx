@@ -16,6 +16,9 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { StylesConfig } from "react-select"
 import CreateForm from "@components/forms/create-form"
+import { fichesCreateConf } from "@conf/api/data-types/fiche"
+import Button from "@components/button"
+import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons"
 
 
 // custom styles for the fiche type select
@@ -39,11 +42,15 @@ const customSelectStyles: StylesConfig = {
 
 interface Props {
     itemType: string;
+    hidden?: string[];
+    defaultValues?: DynamicObject;
 }
 
 const CreateTemplate = (
     {
-        itemType
+        itemType,
+        hidden,
+        defaultValues
     }: Props
 ) => {
 
@@ -56,6 +63,30 @@ const CreateTemplate = (
 
     const [formData, setFormData] = useState<FormFieldsObj>()
 
+    // in case the item type is Fiche
+    // keep track of the type of Fiche the user's chosen
+
+    const [ficheType, setFicheType] = useState<string>("opération")
+
+    const ficheTypeOptions: SelectOption[] = [
+        {
+            label: "Opération",
+            value: "opération"
+        },
+        {
+            label: "Relance",
+            value: "relance"
+        },
+        {
+            label: "Panne",
+            value: "panne"
+        },
+        {
+            label: "Systématique",
+            value: "systématique"
+        }
+    ]
+
     // build the object which will hold our form's state
     // its shape is determined by the createFormConf for the current item type
     // it's a list of key / value pairs for which the keys are an attribute
@@ -64,12 +95,16 @@ const CreateTemplate = (
     // => the default values are loaded by the following function 
     // as it builds this object
 
+    // also, in case it is a Fiche object
+    // default values will be pulled from the ficheCreateConf object
+    // according to the current fiche type
+
     const getInitFormData = () => {
         if(!(itemType in createFormConf)) return
 
         // load the form fields for the current item type
 
-        let fields = Object.entries<FormElement>(createFormConf[itemType])
+        let fields = Object.entries<FormElement>(createFormConf[getFormItemType()])
 
         let initFormData: FormFieldsObj = {}
 
@@ -103,12 +138,35 @@ const CreateTemplate = (
             initFormData[fieldName].value = Number(queryItemId)
         }
 
+        if(itemType.includes("fiches")) {
+            // & load default values for the current type
+
+            for(const fieldName in fichesCreateConf[ficheType].defaultValues) {
+                initFormData[fieldName].value = fichesCreateConf[ficheType].defaultValues[fieldName]
+            }
+
+            // also remove excluded fields
+
+            for(const fieldName of fichesCreateConf[ficheType].excludedFields) {
+                delete initFormData[fieldName]
+            } 
+        }
+
+        // load the default values provided as props
+
+        if(defaultValues) {
+            for(const fieldName in defaultValues) {
+                initFormData[fieldName].value = defaultValues[fieldName]
+            }
+        }
+
         // once we're done loading the form data for the current item
         // return it
         return initFormData
     }
 
-    useEffect(() => setFormData(getInitFormData()), [])
+    useEffect(() => setFormData(getInitFormData()), [itemType, ficheType])
+
     useEffect(() => console.log(formData), [formData])
 
     // the following function is passed to form elements 
@@ -117,10 +175,20 @@ const CreateTemplate = (
     const updateField = (fieldName: string, newValue: any) => {
         let newFormData = { ...formData }
         newFormData[fieldName].value = newValue;
+        // update the error state is the field ain't empty
+        if(newFormData[fieldName].isInErrorState) {
+            newFormData[fieldName].isInErrorState = isEmpty(newValue)
+        }
         // console.log(`'${fieldName}' was updated!`)
         // console.log(newValue)
         setFormData(newFormData)
     }
+
+    // force re-render
+
+    const [refreshTrigger, setRefreshTrigger] = useState(false)
+
+    const refresh = () => setRefreshTrigger(!refreshTrigger)
 
     // get the value of each field
     // & build an object we can send in a POST request to our backend API
@@ -137,11 +205,75 @@ const CreateTemplate = (
 
     const makeAPIRequest = useAPIRequest()
 
-    const handleSubmit = (e: SubmitEvent) => {
-        e.preventDefault()
+    // make sure no required field is left empty
+
+    const isEmpty = (value: any) => {
+        if(typeof value == "string") return !value
+        return typeof value == "undefined" || value == null
+    }
+
+    const ficheTargetItemTypes = [
+        "ilot_id",
+        "exposition_id",
+        "element_id"
+    ]
+
+    // the following function checks whether any of the fiche target item type fields
+    // has a value
+
+    const isFicheTargetItemEmpty = () => {
+        if(!formData) return true
+        let isTargetFieldEmpty = true
+        for(const fieldName of ficheTargetItemTypes) {
+            if(!isEmpty(formData[fieldName].value)) {
+                isTargetFieldEmpty = false
+            }
+        }
+        return isTargetFieldEmpty
+    }
+
+    // validate the form before submitting it
+
+    const [validationError, setValidationError] = useState(false)
+
+    const validateFormData = () => {
+        if(!formData) return false
+        let validated = true
+
+        const validateField = (fieldName: string) => {
+            // if the value of the current field is empty
+            // let the user know by highlighting the field
+            // using error state
+            if(isEmpty(formData[fieldName].value) && formData[fieldName].conf.required) {
+                formData[fieldName].isInErrorState = true
+                validated = false
+            }
+        }
+
+        // run check for each field
+
+        for(const fieldName in formData) {
+            validateField(fieldName)
+        }
+
+        if(itemType == "fiches" && isFicheTargetItemEmpty()) {
+            formData["ilot_id"].isInErrorState = true
+            validated = false
+        }
+
+        return validated
+    }
+
+    const handleSubmit = () => {
         const submitData = buildSubmitData()
         // console.log("submit data ==> ")
         // console.log(submitData)
+        // console.log("is validated ? => ", validateFormData())
+        if(!validateFormData()) {
+            setValidationError(true)
+            refresh()
+            return
+        } else setValidationError(false)
         // POST the form data to the appropriate API endpoint
         // if our form submission was successful
 
@@ -155,46 +287,17 @@ const CreateTemplate = (
             }
         }
 
-        const getItemType = () => (
-            itemType == "fiches" && ficheType == "systématique" 
-            ? "fiches_systematiques" : "fiches"
-        )
-
         // POST the data
 
         makeAPIRequest(
             "post",
-            getItemType(),
+            getFormItemType(),
             undefined,
             submitData,
             handleSuccess
         )
 
     }
-
-    // in case the item type is Fiche
-    // keep track of the type of Fiche the user's chosen
-
-    const [ficheType, setFicheType] = useState<string>("opération")
-
-    const ficheTypeOptions: SelectOption[] = [
-        {
-            label: "Opération",
-            value: "opération"
-        },
-        {
-            label: "Relance",
-            value: "relance"
-        },
-        {
-            label: "Panne",
-            value: "panne"
-        },
-        {
-            label: "Systématique",
-            value: "systématique"
-        }
-    ]
 
     // utils
 
@@ -227,6 +330,29 @@ const CreateTemplate = (
         return createFormConf[itemType].nom.label
     }
 
+    const getFormItemType = () =>  {
+        return itemType == "fiches" && ficheType == "systématique" ? "fiches_systematiques" : itemType 
+    }
+
+    // if the item type is Fiche, 
+    // hide fields that are marked as hidden in the create conf object
+
+    // also, in case a list of hidden fields are provided as props
+    // include it in the return value
+
+    const getHiddenFields = () => {
+        if(!itemType.includes("fiches")) return 
+        const hiddenFields = itemType.includes("fiches") ? fichesCreateConf[ficheType].hiddenFields : []
+        return hidden ? [...hidden, ...hiddenFields] : hiddenFields
+    }
+
+    // handlers
+
+    // make sure the main field doesn't have spaces at the beginning or the end of it
+    // to avoid bugs in communicating with the backend API
+
+    const handleTitleChange = (newTitle: string) => updateField("nom", newTitle.trim())
+
     // render
 
     return (
@@ -239,7 +365,8 @@ const CreateTemplate = (
                     <TextInput 
                         className={styles.titleInput}
                         placeholder={getTitlePlaceHolder()}
-                        onChange={newVal => updateField("nom", newVal)}
+                        onChange={handleTitleChange}
+                        isInErrorState={formData?.nom.isInErrorState}
                     />
                     <div className={styles.itemTypeContainer}>
                         <p>{ getItemTypeLabel() }</p>
@@ -252,25 +379,41 @@ const CreateTemplate = (
                                 value={ficheType}
                                 defaultValue={ficheTypeOptions[0].value}
                                 onChange={setFicheType}
+                                isSearchable={false}
                             />
                             :
                             <></>
                         }
                     </div>
+                    {
+                        validationError ?
+                        <p className={styles.formErrorMessage}>
+                            Remplissez les champs requis avant de soumettre le formulaire...
+                        </p>
+                        :
+                        <></>
+                    }
                 </div>
                 <HorizontalSeperator/>
                 <VerticalScrollBar className={styles.contentScrollContainer}>
                     {
                         formData ?
                         <CreateForm
-                            itemType={itemType}
+                            itemType={getFormItemType()}
                             formData={formData}
                             onChange={updateField}
+                            hidden={getHiddenFields()}
+                            onSubmit={handleSubmit}
                         />
                         :
                         <></>
                     }
                 </VerticalScrollBar>
+                <Button
+                    icon={faFloppyDisk}
+                    onClick={handleSubmit}>
+                    Créer
+                </Button>
             </section>
         </main>
     )

@@ -58,7 +58,7 @@ const Content = (
             // build a link object so that the content item component
             // can render it accordingly
             const getData = () => {
-                const extraAttrName = attributeName.split('_').slice(0,-1).join('_') 
+                const extraAttrName = attributeName.replace('_id', '')
                 if(attributeName.includes('_id') && extraData
                 && Object.keys(extraData).includes(extraAttrName)) {
                     return { 

@@ -84,7 +84,6 @@ export const ficheTypes = [
 
 
 export interface FicheTypeConf {
-    validation: boolean;
     hiddenFields: string[];
     excludedFields: string[];
     defaultValues: { [propName: string]: string | string[] | number | boolean }
@@ -100,27 +99,28 @@ export interface FichesConf {
 
 export const fichesCreateConf: FichesConf = {
     "opération": {
-        validation: true,
         hiddenFields: [
             "tags",
-            "is_active"
+            "is_active",
+            "validation"
         ],
         excludedFields: [ "is_active" ],
         defaultValues: {
             tags: [
                 "Opération"
-            ]
+            ],
+            validation: true
         }
     },
     "relance": {
-        validation: false,
         hiddenFields: [
             "date_fin",
             "remarque",
             "numero_di",
             "type_id",
             "is_active",
-            "tags"
+            "tags",
+            "validation"
         ],
         excludedFields: [
             "is_active"
@@ -129,15 +129,16 @@ export const fichesCreateConf: FichesConf = {
             tags: [
                 "Relance"
             ],
-            type_id: 4 // correctif
+            type_id: 4, // correctif
+            validation: false
         }
     },
     "panne": {
-        validation: true,
         hiddenFields: [
             "date_fin",
             "is_active",
-            "tags"
+            "tags",
+            "validation"
         ],
         excludedFields: [
             "is_active"
@@ -145,11 +146,11 @@ export const fichesCreateConf: FichesConf = {
         defaultValues: {
             tags: [
                 "Panne"
-            ]
+            ],
+            validation: true
         }
     },
     "systématique": {
-        validation: false,
         hiddenFields: [
             "user_en_charge_id",
             "is_active",

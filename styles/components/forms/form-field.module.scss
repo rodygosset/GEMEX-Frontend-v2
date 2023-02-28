@@ -1,0 +1,10 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+.field {
+
+    @include flex-container(row, wrap, space-between, center);
+	gap: 20px;
+
+}
