@@ -209,6 +209,7 @@ const SearchBar = (
                     className={styles.embeddedFilters} 
                     hidden={!showFilters} 
                     hideSearchButton 
+                    isForm={false}
                 />
                 :
                 <></>

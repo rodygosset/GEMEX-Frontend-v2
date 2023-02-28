@@ -8,7 +8,7 @@ import { createFormConf, FormElement, FormFieldsObj } from "@conf/create"
 import useAPIRequest from "@hook/useAPIRequest"
 import styles from "@styles/page-templates/create-template.module.scss"
 import colors from "@styles/abstracts/_colors.module.scss"
-import { toSingular } from "@utils/general"
+import { itemTypetoAttributeName, toSingular } from "@utils/general"
 import { SelectOption } from "@utils/react-select/types"
 import { DynamicObject } from "@utils/types"
 import { AxiosResponse } from "axios"
@@ -47,6 +47,10 @@ const CreateTemplate = (
     }: Props
 ) => {
 
+    // access url query 
+
+    const router = useRouter()
+
     // state which will hold the form data
     // => each field's value & its configuration info
 
@@ -84,6 +88,21 @@ const CreateTemplate = (
             }
         }
 
+        // if we're creating a Fiche
+        // & the target item was provided through the URL query
+        // load it
+
+        const queryItemType = typeof router.query.itemType !== "undefined" ? router.query.itemType.toString() : ""
+        const queryItemId = typeof router.query.itemId !== "undefined" ? router.query.itemId.toString() : ""
+
+        if(itemType.includes("fiches") && queryItemType && queryItemId 
+        // make sure the id is a number
+        // @ts-ignore
+        && !isNaN(queryItemId) && !isNaN(parseFloat(queryItemId))) {
+            const fieldName = itemTypetoAttributeName(queryItemType)
+            initFormData[fieldName].value = Number(queryItemId)
+        }
+
         // once we're done loading the form data for the current item
         // return it
         return initFormData
@@ -117,8 +136,6 @@ const CreateTemplate = (
     // submit logic
 
     const makeAPIRequest = useAPIRequest()
-
-    const router = useRouter()
 
     const handleSubmit = (e: SubmitEvent) => {
         e.preventDefault()

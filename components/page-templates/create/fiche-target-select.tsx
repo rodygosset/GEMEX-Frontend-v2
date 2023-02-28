@@ -1,8 +1,9 @@
 import Button from "@components/button"
 import FicheTargetSelectModal from "@components/modals/fiche-target-select-modal"
+import { itemTypes } from "@conf/api/search"
 import useAPIRequest from "@hook/useAPIRequest"
 import styles from "@styles/page-templates/create/fiche-target-select.module.scss"
-import { itemTypetoAttributeName } from "@utils/general"
+import { itemTypetoAttributeName, toSingular } from "@utils/general"
 import { useEffect, useState } from "react"
 
 interface Props {
@@ -39,6 +40,7 @@ const FicheTargetSelect = (
     }
 
     useEffect(() => {
+        if(value == null || value == undefined) return
         // get the label for the current item 
         // & account for errors by making sure we got back a string
         getLabel(currentItemType, value)
@@ -70,22 +72,27 @@ const FicheTargetSelect = (
         }
     }
 
+    // utils
+
+    const getItemTypeLabel = () => {
+        const label = itemTypes.find(type => type.value == currentItemType)?.label
+        return label ? label : ""
+    }
+
     // render
 
     return (
         <>
             <div className={styles.inputContainer}>
-                <p>
                 {
                     selectedItemLabel ?
-                    <>
-                        <span>{selectedItemLabel}</span>
-                        <span>{currentItemType}</span>
-                    </>
+                    <p>
+                        <span className={styles.itemLabel}>{selectedItemLabel}</span>
+                        <span>{toSingular(getItemTypeLabel())}</span>
+                    </p>
                     :
-                    <span>Sélectionner...</span>
+                    <p>Sélectionner...</p>
                 }
-                </p>
                 <Button
                     onClick={() => setShowModal(true)}>
                     Choisir

@@ -242,123 +242,121 @@ const FicheTargetSelectModal = (
     return (
         <ModalContainer isVisible={isVisible}>
             <div className={styles.modal}>
-                <div className={styles.mainColumn}>
-                    {
-                        // don't load the search filters
-                        // until the default search params have been loaded
-                        // to make sure they are not ignored
-                        initSearchParamsLoaded ?
-                        <SearchBar
-                            fullWidth
-                            hideCTA
-                            hiddenItemTypes={hiddenItemTypes}
-                            showFiltersButton
-                            embedFilters
-                            itemType={itemType}
-                            onItemTypeChange={handleItemTypeChange}
-                            onInputChange={handleSearchInputChange}
+            {
+                // don't load the search filters
+                // until the default search params have been loaded
+                // to make sure they are not ignored
+                initSearchParamsLoaded ?
+                <SearchBar
+                    fullWidth
+                    hideCTA
+                    hiddenItemTypes={hiddenItemTypes}
+                    showFiltersButton
+                    embedFilters
+                    itemType={itemType}
+                    onItemTypeChange={handleItemTypeChange}
+                    onInputChange={handleSearchInputChange}
+                />
+                :
+                <></>
+            }
+                <section>
+                { 
+                    // don't display any content
+                    // if there aren't no search results
+                    searchResults.length > 0 && !isLoading ?
+                    <>
+                        <h3>Résultats de recherche ({ nbResults })</h3>
+                        <div className={styles.viewModeContainer}>
+                            <Button
+                                className={getViewModeButtonClassName(false)}
+                                icon={faTableCellsLarge}
+                                role="tertiary"
+                                bigPadding
+                                onClick={() => setIsListView(false)}>
+                                Cartes
+                            </Button>
+                            <Button
+                                className={getViewModeButtonClassName(true)}
+                                icon={faList}
+                                role="tertiary"
+                                bigPadding
+                                onClick={() => setIsListView(true)}>
+                                Liste
+                            </Button>
+                        </div>
+                        <VerticalScrollBar className={styles.scrollContainer}>
+                            <ul 
+                                id={styles.searchResults} 
+                                className={getResultsContainerClassNames()}>
+                            {
+                                searchResults.map(item => {
+                                    return (
+                                        <SearchResultCard
+                                            key={item.nom}
+                                            itemType={itemType}
+                                            data={item}
+                                            globalMetaData={metaData}
+                                            listView={isListView}
+                                            areLinksDisabled
+                                            isSelected={isSelected(item.id)}
+                                            onClick={() => toggleIsSelected(item.id)}
+                                        />
+                                    )
+                                })
+                            }
+                            </ul>
+                        </VerticalScrollBar>
+                        <Pagination
+                            currentPageNb={currentPageNb}
+                            totalPagesNb={totalPagesNb}
+                            setPageNb={setCurrentPageNb}
                         />
-                        :
-                        <></>
-                    }
-                    <section>
-                    { 
-                        // don't display any content
-                        // if there aren't no search results
-                        searchResults.length > 0 && !isLoading ?
-                        <>
-                            <h3>Résultats de recherche ({ nbResults })</h3>
-                            <div className={styles.viewModeContainer}>
-                                <Button
-                                    className={getViewModeButtonClassName(false)}
-                                    icon={faTableCellsLarge}
-                                    role="tertiary"
-                                    bigPadding
-                                    onClick={() => setIsListView(false)}>
-                                    Cartes
-                                </Button>
-                                <Button
-                                    className={getViewModeButtonClassName(true)}
-                                    icon={faList}
-                                    role="tertiary"
-                                    bigPadding
-                                    onClick={() => setIsListView(true)}>
-                                    Liste
-                                </Button>
-                            </div>
-                            <VerticalScrollBar className={styles.scrollContainer}>
-                                <ul 
-                                    id={styles.searchResults} 
-                                    className={getResultsContainerClassNames()}>
-                                {
-                                    searchResults.map(item => {
-                                        return (
-                                            <SearchResultCard
-                                                key={item.nom}
-                                                itemType={itemType}
-                                                data={item}
-                                                globalMetaData={metaData}
-                                                listView={isListView}
-                                                areLinksDisabled
-                                                isSelected={isSelected(item.id)}
-                                                onClick={() => toggleIsSelected(item.id)}
-                                            />
-                                        )
-                                    })
-                                }
-                                </ul>
-                            </VerticalScrollBar>
-                            <Pagination
-                                currentPageNb={currentPageNb}
-                                totalPagesNb={totalPagesNb}
-                                setPageNb={setCurrentPageNb}
-                            />
-                        </>
-                        :
-                        // while loading
-                        // display a loading indicator
-                        isLoading ?
-                        <div className={styles.loadingIndicatorContainer}>
-                            <LoadingIndicator/>
-                            <h4>Chargement...</h4>
-                        </div>
-                        :
-                        // if there aren't any results
-                        // display the corresponding illustration
-                        // & a message for the user
-                        <div className={styles.noResultsMessageContainer}>
-                            <div className={styles.illustrationContainer}>
-                                <Image 
-                                    quality={100}
-                                    src={'/images/no-results-illustration.svg'} 
-                                    alt={"Aucun résultat."} 
-                                    priority
-                                    fill
-                                    style={{ 
-                                        objectFit: "contain", 
-                                        top: "auto"
-                                    }}
-                                />
-                            </div>
-                            <h1>Aucun résultat...</h1>
-                            <p>Ré-essayer en changeant les paramètres de recherche</p>
-                        </div>
-
-                    }
-                    </section>
-                    <div className={styles.CTAContainer}>
-                        <Button
-                            role="secondary"
-                            animateOnHover={false}
-                            onClick={closeModal}>
-                            Annuler
-                        </Button>
-                        <Button
-                            active={selectedItemId != 0}
-                            onClick={handleSelect}>
-                            Sélectionner
-                        </Button>
+                    </>
+                    :
+                    // while loading
+                    // display a loading indicator
+                    isLoading ?
+                    <div className={styles.loadingIndicatorContainer}>
+                        <LoadingIndicator/>
+                        <h4>Chargement...</h4>
                     </div>
+                    :
+                    // if there aren't any results
+                    // display the corresponding illustration
+                    // & a message for the user
+                    <div className={styles.noResultsMessageContainer}>
+                        <div className={styles.illustrationContainer}>
+                            <Image 
+                                quality={100}
+                                src={'/images/no-results-illustration.svg'} 
+                                alt={"Aucun résultat."} 
+                                priority
+                                fill
+                                style={{ 
+                                    objectFit: "contain", 
+                                    top: "auto"
+                                }}
+                            />
+                        </div>
+                        <h1>Aucun résultat...</h1>
+                        <p>Ré-essayer en changeant les paramètres de recherche</p>
+                    </div>
+
+                }
+                </section>
+                <div className={styles.CTAContainer}>
+                    <Button
+                        role="secondary"
+                        animateOnHover={false}
+                        onClick={closeModal}>
+                        Annuler
+                    </Button>
+                    <Button
+                        active={selectedItemId != 0}
+                        onClick={handleSelect}>
+                        Sélectionner
+                    </Button>
                 </div>
             </div>
         </ModalContainer>

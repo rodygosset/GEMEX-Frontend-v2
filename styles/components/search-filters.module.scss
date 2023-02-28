@@ -34,7 +34,7 @@
         color: $primary-600;
     }
 
-    form {
+    form, .searchFilters {
         @include flex-container(column, nowrap, flex-start, flex-start);
         width: 100%;
         height: 100%;

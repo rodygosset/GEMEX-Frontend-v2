@@ -20,6 +20,7 @@ interface Props {
     className?: string;
     hidden?: boolean;
     hideSearchButton?: boolean;
+    isForm?: boolean;
     onSubmit?: () => void;
 }
 
@@ -32,6 +33,7 @@ const SearchFilters = (
         className,
         hideSearchButton,
         hidden,
+        isForm = true,
         onSubmit
     }: Props
 ) => {
@@ -107,92 +109,105 @@ const SearchFilters = (
             onSubmit()
         } 
     }
-    return (
-        <section className={getClassNames()} id={styles.container}>
-            <h4>Paramètres de recherche</h4>
-            <form onSubmit={ e => e.preventDefault() } name="search-filters">
+
+    // the rendering logic was extracted
+    // to allow the option to render the search filters
+    // inside a form, 
+    // or inside a simple div
+    // to avoid invalid dom nesting
+
+    const renderFilters = () => {
+        // Generate the form
+        // for each SearchFilter
+        // render a component according to its type
+        return Object.keys(searchFilters).map(filterName => {
+            const filter = searchFilters[filterName]
+            const { conf } = filter
+
+            // DRY
+            const filterProps = {
+                name: filterName,
+                filter: filter,
+                onChange: handleFilterValueChange,
+                onToggle: handleFilterCheckedToggle
+            }
+
+            switch(conf.type) {
+                case "text":
+                    // text input
+                    return (
+                        <TextFilter
+                            key={filterName}
+                            {...filterProps}
+                        />
+                    )
+                case "boolean":
+                    // checkbox
+                    return (
+                        <BooleanFilter
+                            key={filterName}
+                            {...filterProps}
+                        />
+                    )
+                case "number":
+                    // numeric input
+                    return (
+                        <NumericFilter
+                            key={filterName}
+                            {...filterProps}
+                            getOperatorValue={getOperatorValue}
+                            setOperatorValue={setOperatorValue}
+                        />
+                    )
+                case "date":
+                    // date input
+                    return (
+                        <DateFilter
+                            key={filterName}
+                            {...filterProps}
+                        />
+                    )
+                case "timeDelta":
+                    // filter representing an amount of time
+                    return (
+                        <TimeDeltaFilter
+                            key={filterName}
+                            {...filterProps}
+                            getOperatorValue={getOperatorValue}
+                            setOperatorValue={setOperatorValue}
+                        />
+                    )
+                case "itemList": 
+                    // multi select
+                    if(!conf.item || !(conf.item in apiURLs)) { break }
+                    return (
+                        <MultiSelectFilter
+                            key={filterName}
+                            {...filterProps}
+                        />
+                    )
+                default:
+                    // select
+                    if(!(conf.type in apiURLs)) { break }
+                    return (
+                        <SelectFilter
+                            key={filterName}
+                            {...filterProps}
+                        />
+                    )    
+            }
+        }) 
+    }
+
+    const renderForm = () => {
+        return (
+            <>
                 <VerticalScrollBar className={styles.filtersContainer}>
                     {
                         // Generate the form
                         // for each SearchFilter
                         // render a component according to its type
-                        Object.keys(searchFilters).map(filterName => {
-                            const filter = searchFilters[filterName]
-                            const { conf } = filter
-
-                            // DRY
-                            const filterProps = {
-                                name: filterName,
-                                filter: filter,
-                                onChange: handleFilterValueChange,
-                                onToggle: handleFilterCheckedToggle
-                            }
-
-                            switch(conf.type) {
-                                case "text":
-                                    // text input
-                                    return (
-                                        <TextFilter
-                                            key={filterName}
-                                            {...filterProps}
-                                        />
-                                    )
-                                case "boolean":
-                                    // checkbox
-                                    return (
-                                        <BooleanFilter
-                                            key={filterName}
-                                            {...filterProps}
-                                        />
-                                    )
-                                case "number":
-                                    // numeric input
-                                    return (
-                                        <NumericFilter
-                                            key={filterName}
-                                            {...filterProps}
-                                            getOperatorValue={getOperatorValue}
-                                            setOperatorValue={setOperatorValue}
-                                        />
-                                    )
-                                case "date":
-                                    // date input
-                                    return (
-                                        <DateFilter
-                                            key={filterName}
-                                            {...filterProps}
-                                        />
-                                    )
-                                case "timeDelta":
-                                    // filter representing an amount of time
-                                    return (
-                                        <TimeDeltaFilter
-                                            key={filterName}
-                                            {...filterProps}
-                                            getOperatorValue={getOperatorValue}
-                                            setOperatorValue={setOperatorValue}
-                                        />
-                                    )
-                                case "itemList": 
-                                    // multi select
-                                    if(!conf.item || !(conf.item in apiURLs)) { break }
-                                    return (
-                                        <MultiSelectFilter
-                                            key={filterName}
-                                            {...filterProps}
-                                        />
-                                    )
-                                default:
-                                    // select
-                                    if(!(conf.type in apiURLs)) { break }
-                                    return (
-                                        <SelectFilter
-                                            key={filterName}
-                                            {...filterProps}
-                                        />
-                                    )    
-                            }
-                        })
+                        renderFilters()
                     }
                 </VerticalScrollBar>
                 {
@@ -210,7 +225,27 @@ const SearchFilters = (
                     :
                     <></>
                 }
-            </form>
+            </>
+        )
+    }
+
+    return (
+        <section className={getClassNames()} id={styles.container}>
+            <h4>Paramètres de recherche</h4>
+            {
+                isForm ?
+                <form onSubmit={ e => e.preventDefault() } name="search-filters">
+                {
+                    renderForm()
+                } 
+                </form>   
+                :
+                <div className={styles.searchFilters}>
+                {
+                    renderForm()
+                }
+                </div>
+            }
         </section>
     )
 }

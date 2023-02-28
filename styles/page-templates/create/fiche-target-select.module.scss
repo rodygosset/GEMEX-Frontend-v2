@@ -12,16 +12,24 @@
     border-radius: 7px;
 
     p {
-
+        @include flex-container(column, nowrap, center, flex-start);
         @include text-sm-regular;
         @include text-overflow-ellipsis;
-        color: $primary;
+        color: $primary-400;
         width: 0px;
-        // make sure the content doesn't make the container grow bigger
+        // make sure the content doesn't make the container grow bigg
         flex: 1 1 0;
 
+
         span {
-            color: $primary-400;
+            @include text-sm-regular;
+            @include text-overflow-ellipsis;
+            color: $primary-600;
+
+            &.itemLabel {
+                @include text-sm-semibold;
+                color: $primary;
+            }
         }
 
     }
