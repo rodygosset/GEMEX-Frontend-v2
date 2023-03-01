@@ -1,0 +1,58 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+.container {
+
+    @include flex-container(column, nowrap, flex-start, flex-start);
+    gap: 30px;
+    width: 100%;
+
+    h4 {
+        @include header-4-medium;
+        color: $primary;
+    }
+
+    .fileListContainer {
+
+        @include flex-container(row, wrap, flex-start, center);
+        gap: 30px;
+
+        .fileList {
+            @include flex-container(row, wrap, flex-start, center);
+            @include reset-list;
+            gap: 30px;
+        }
+
+        .noFilesContainer {
+
+            @include flex-container(row, nowrap, flex-start, center);
+            gap: 30px;
+            width: 100%;
+
+            .illustrationContainer {
+                position: relative;
+                width: 130px;
+                height: 130px;
+            }
+
+            .textContent {
+                @include flex-container(column, nowrap, center, flex-start);
+                gap: 15px;
+    
+                p {
+                    @include text-md-regular;
+                    color: $primary-400;
+                }
+    
+                button {
+                    border: 1px solid $primary-100;
+                }
+    
+            }
+
+        }
+
+    }
+
+}

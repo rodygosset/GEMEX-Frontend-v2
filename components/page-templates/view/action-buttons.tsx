@@ -82,7 +82,7 @@ const ActionButtons = (
 
     // edit current item
 
-    const getEditLink = () => `/edit/${itemType}/${router.query.id}`
+    const getEditLink = () => `/edit/${itemType.replace("_", "/")}/${router.query.id}`
 
     const handleEditClick = () => router.push(getEditLink())
 
@@ -204,8 +204,6 @@ const ActionButtons = (
             userRole.permissions.includes("manage")
         )
     }
-
-
 
     // render
 

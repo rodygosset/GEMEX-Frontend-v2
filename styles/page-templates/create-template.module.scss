@@ -150,17 +150,33 @@
 			gap: 30px;
 
 			#createForm {
-				@include flex-container(row, nowrap, stretch, stretch);
-				gap: 60px;
-				width: 100%;
 
-				.column {
-					@include flex-container(column, nowrap, flex-start, stretch);
-					gap: 30px;
-					width: 50%;
-					flex: 1 1 0px;
-	
-					@include reset-list;
+				@include flex-container(column, nowrap, flex-start, stretch);
+				gap: 30px;
+
+				.columnsContainer {
+					@include flex-container(row, nowrap, stretch, stretch);
+					gap: 60px;
+					width: 100%;
+
+					.column {
+						@include flex-container(column, nowrap, flex-start, stretch);
+						gap: 30px;
+						width: 50%;
+						flex: 1 1 0px;
+		
+						@include reset-list;
+					}
+
+					@media (max-width: $bp-md) {
+						flex-flow: column nowrap;
+
+						.column {
+							width: 100%;
+							flex: 1;
+						}
+					}
+
 				}
 			}
 		}

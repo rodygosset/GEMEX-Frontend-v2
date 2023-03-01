@@ -6,14 +6,28 @@ import useAPIRequest from "@hook/useAPIRequest";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { destructFileName, FileInfo } from "@utils/fichiers";
 import FilePreviewer from "@components/modals/file-previewer";
+import Button from "@components/button";
+import { faFolderOpen, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
     file: Fichier;
+    multiSelectionMode?: boolean;
+    isSelected?: boolean;
+    isSearchResult?: boolean;
+    isListItem?: boolean;
+    onDeSelect?: () => void;
+    onClick?: () => void;
 }
 
 const FileCard = (
     {
-        file
+        file,
+        multiSelectionMode,
+        isSelected,
+        isSearchResult,
+        isListItem,
+        onDeSelect,
+        onClick
     }: Props
 ) => {
 
@@ -49,7 +63,18 @@ const FileCard = (
 
     const [isModalVisible, setIsModalVisible] = useState(false)
 
-    const handleClick = () => setIsModalVisible(true)
+    const handleClick = () => {
+        if(!onClick) setIsModalVisible(true)
+        else onClick()
+    }
+
+    const getClassNames = () => {
+        let classNames = styles.fileCard
+        classNames += isSelected ? ' ' + styles.selected : ''
+        classNames += isSearchResult ? ' ' + styles.searchResult : ''
+        classNames += isListItem ? ' ' + styles.listItem : ''
+        return classNames
+    }
 
     // render
 
@@ -57,8 +82,21 @@ const FileCard = (
         // only render the card once we've extracted the info we want to display
         fileOwner && fileInfo ?
         <>
-            <li className={styles.fileCard} onClick={handleClick}>
-                <FontAwesomeIcon icon={fileInfo.icon}/>
+            <li className={getClassNames()} onClick={handleClick}>
+                {
+                    multiSelectionMode && onDeSelect ?
+                    <Button
+                        className={styles.xMark}
+                        icon={faXmark}
+                        role="tertiary"
+                        hasPadding={false}
+                        animateOnHover={false}
+                        onClick={onDeSelect}>
+                    </Button>
+                    :
+                    <></>
+                }
+                <FontAwesomeIcon icon={fileInfo.icon} className={styles.fileIcon} />
                 <div>
                     <h5>
                         {fileInfo.fileName}
@@ -72,6 +110,22 @@ const FileCard = (
                     </h5>
                     <p>{fileInfo.author}</p>
                 </div>
+                {
+                    isSearchResult ?
+                    <div className={styles.viewButtonContainer}>
+                        <Button
+                            className={styles.viewButton}
+                            icon={faFolderOpen}
+                            role="tertiary"
+                            onClick={e => {
+                                e.stopPropagation()
+                                setIsModalVisible(true)
+                            }}>
+                        </Button>
+                    </div>
+                    :
+                    <></>
+                }
             </li>
             <FilePreviewer 
                 isVisible={isModalVisible}

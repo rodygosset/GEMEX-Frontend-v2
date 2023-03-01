@@ -19,6 +19,8 @@ import CreateForm from "@components/forms/create-form"
 import { fichesCreateConf } from "@conf/api/data-types/fiche"
 import Button from "@components/button"
 import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons"
+import { MySession } from "@conf/utility-types"
+import { useSession } from "next-auth/react"
 
 
 // custom styles for the fiche type select
@@ -86,6 +88,19 @@ const CreateTemplate = (
             value: "systématique"
         }
     ]
+
+    // don't allow unauthorized users to create "fiches systematiques"
+
+    const session = useSession()
+    
+    const userRole = (session.data as MySession | null)?.userRole
+
+    const getFicheTypeOptions = () => (
+        userRole && userRole.permissions.includes("systematiques") ? 
+        ficheTypeOptions
+        :
+        ficheTypeOptions.filter(option => option.value != "systématique")
+    )
 
     // build the object which will hold our form's state
     // its shape is determined by the createFormConf for the current item type
@@ -292,7 +307,7 @@ const CreateTemplate = (
             if(res.status == 200) {
                 // redirect the user to the view page
                 // for the new item that's been create
-                const getItemType = () => itemType == "fiches_systematiques" ? "fiches/systematiques" : itemType
+                const getItemType = () => getFormItemType().replace('_', '/')
                 router.push(`/view/${getItemType()}/${res.data.id}`)
             }
         }
@@ -363,8 +378,6 @@ const CreateTemplate = (
 
     const handleTitleChange = (newTitle: string) => updateField("nom", newTitle.trim())
 
-    const getTitle = () => formData ? formData.nom.value : ""
-
     // render
 
     return (
@@ -378,7 +391,6 @@ const CreateTemplate = (
                         className={styles.titleInput}
                         placeholder={getTitlePlaceHolder()}
                         onChange={handleTitleChange}
-                        currentValue={getTitle()}
                         isInErrorState={formData?.nom.isInErrorState}
                     />
                     <div className={styles.itemTypeContainer}>
@@ -388,7 +400,7 @@ const CreateTemplate = (
                             <Select
                                 name="Type de fiche"
                                 customStyles={customSelectStyles}
-                                options={ficheTypeOptions}
+                                options={getFicheTypeOptions()}
                                 value={ficheType}
                                 defaultValue={ficheTypeOptions[0].value}
                                 onChange={setFicheType}

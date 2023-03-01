@@ -1,3 +1,4 @@
+import FileInput from "@components/form-elements/file-input";
 import { FormFieldsObj } from "@conf/create";
 import styles from "@styles/page-templates/create-template.module.scss"
 import { useEffect, useState } from "react";
@@ -71,17 +72,29 @@ const CreateForm = (
 
     return (
         <form id={styles.createForm} onSubmit={onSubmit}>
-            <div className={styles.column}>
-            {
-                renderList(firstColumnFields)
-            }
+            <div className={styles.columnsContainer}>
+                <div className={styles.column}>
+                {
+                    renderList(firstColumnFields)
+                }
+                </div>
+                <div className={styles.column}>
+                {
+                    renderList(secondColumnFields)
+                }
+                </div>
             </div>
-            <div className={styles.column}>
             {
-                renderList(secondColumnFields)
+                // only render the file cards 
+                // if the current item contains a list of file names
+                "fichiers" in formData ?
+                <FileInput
+                    value={formData["fichiers"].value}
+                    onChange={value => onChange("fichiers", value)}
+                />
+                :
+                <></>
             }
-            </div>
-            
         </form>
     )
 }

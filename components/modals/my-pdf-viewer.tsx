@@ -21,8 +21,8 @@ const MyPDFViewer = (
     }: Props
 ) => {
 
-    const [nbPages, setNbPages] = useState<number>(0)
-    const [pageNb, setPageNb] = useState<number>(0)
+    const [nbPages, setNbPages] = useState<number>(1)
+    const [pageNb, setPageNb] = useState<number>(1)
 
     const onDocumentLoadSuccess = (numPages: number) => {
         setNbPages(numPages)

@@ -19,6 +19,7 @@ interface Props {
     value?: number;
     max?: number;
     min?: number;
+    strictComparison?: boolean;
     isInErrorState?: boolean;
     onChange?: (newValue: number) => void;
 }
@@ -39,6 +40,7 @@ const TimeDeltaInput = (
         value,
         max,
         min,
+        strictComparison,
         isInErrorState,
         onChange
     }: Props
@@ -161,6 +163,18 @@ const TimeDeltaInput = (
         return classNames
     }
 
+    const getMinValueForUnit = () => {
+        if(!min) return 1
+        const minVal = getValueForUnit(min)
+        return strictComparison ? minVal + 1 : minVal
+    }
+
+    const getMaxValueForUnit = () => {
+        if(!max) return
+        const maxVal = getValueForUnit(max)
+        return strictComparison ? maxVal - 1 : maxVal
+    }
+
     // render
 
     return (
@@ -175,8 +189,8 @@ const TimeDeltaInput = (
                 <NumericField
                     value={unitValue}
                     onChange={handleChange}
-                    min={min ? getValueForUnit(min) : 1}
-                    max={max ? getValueForUnit(max) : undefined}
+                    min={getMinValueForUnit()}
+                    max={getMaxValueForUnit()}
                     embedded
                 />
                 <VerticalSeperator/>

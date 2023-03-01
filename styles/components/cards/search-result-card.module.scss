@@ -145,7 +145,7 @@
     }
 
     &.selected {
-        border: 2px solid $primary;
+        border: 2px solid $primary !important;
         background: $primary-200;
 
         &:hover {

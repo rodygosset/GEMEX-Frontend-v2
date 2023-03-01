@@ -23,7 +23,7 @@
     
     p {
         @include text-sm-regular;
-        color: $primary-400;
+        color: $primary-600;
 
         span {
             @include text-sm-bold;

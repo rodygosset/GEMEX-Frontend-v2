@@ -13,6 +13,7 @@ import { toDateObject } from "@utils/form-elements/date-input";
 import { DateInputValue } from "@utils/types";
 import TimeDeltaInput from "@components/form-elements/time-delta-input";
 import ItemMultiSelect from "@components/form-elements/multi-select";
+import NumericField from "@components/form-elements/numeric-field";
 
 
 interface Props {
@@ -94,6 +95,13 @@ const FormField = (
                         onChange={handleChange}
                     />
                 )
+            case "number":
+                return (
+                    <NumericField
+                        value={formData[fieldName].value}
+                        onChange={handleChange}
+                    />
+                )
             case "timeDelta":
                 // for fiches systematiques
                 // make sure rappel is always smaller than periodicite
@@ -107,12 +115,14 @@ const FormField = (
                         return formData["rappel"].value
                     }
                 }
+                const isStrict = () => ["periodicite", "rappel"].includes(fieldName)
                 return (
                     <TimeDeltaInput 
                         name={fieldName}
                         value={formData[fieldName].value} 
                         max={getMax()}
                         min={getMin()}
+                        strictComparison={isStrict()}
                         onChange={handleChange} 
                         isInErrorState={formData[fieldName].isInErrorState}
                     />
@@ -140,6 +150,7 @@ const FormField = (
                 // in case we're dealing with a fiche item
                 // instead of a select
                 // render a FicheTargetSelect component
+                console.log("started here")
                 if(itemType.includes("fiches")) {
 
                     // get the correct item type for the target item
@@ -163,7 +174,18 @@ const FormField = (
                             isInErrorState={formData[fieldName].isInErrorState}
                         />
                     )
+                } else {
+                    return (
+                        <ItemSelectField
+                            itemType={conf.type}
+                            name={getFilterLabel(fieldName, conf)}
+                            value={formData[fieldName].value}
+                            onSelect={handleChange}
+                            isInErrorState={formData[fieldName].isInErrorState}
+                        />
+                    )
                 }
+                console.log("got here")
             case "itemList":
                 // multi select
                 if(!conf.item || !(conf.item in apiURLs)) { break }

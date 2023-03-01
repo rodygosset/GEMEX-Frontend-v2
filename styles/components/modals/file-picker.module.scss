@@ -1,0 +1,132 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/abstracts/_variables.scss";
+
+.modal {
+
+    @include flex-container(column, nowrap, center, center);
+    gap: 30px;
+    padding: 60px;
+    border-radius: 15px;
+
+    background: $white;
+
+    box-shadow: 0px 30px 60px $primary-100;
+
+    width: 90vw;
+
+    h4 {
+        @include header-4-semibold;
+        color: $primary;
+    }
+
+    .scrollContainer {
+        height: calc(95vh - 4 * calc($nav-bar-height + 25px) - calc(50px + 60px))
+    }
+
+    .fileList {
+
+        @include reset-list;
+        // @include flex-container(row, wrap, flex-start, flex-start);
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        justify-items: center;
+        align-items: start;
+        // height: 100%;
+        gap: 30px;
+
+        &.listView {
+            border-radius: 10px;
+            @include flex-container(column, nowrap, flex-start, stretch);
+            gap: 0px;
+        
+            & li:first-child {
+                border-radius: 5px 5px 0px 0px;
+            }
+
+            & li:last-child {
+                border-radius: 0px 0px 5px 5px;
+                border: none;
+            }
+        
+        }
+    }
+
+    .loadingIndicatorContainer {
+        @include flex-container(column, nowrap, center, center);
+        height: 100%;
+
+        gap: 60px;
+
+        h4 {
+            @include header-4-regular;
+            color: $primary;
+        }
+
+    }
+
+
+    .noResultsMessageContainer {
+
+        @include flex-container(column, nowrap, center, center);
+        gap: 30px;
+        height: 100%;
+
+        .illustrationContainer {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1.226;
+        }
+
+
+        h1 {
+            @include header-2-regular;
+            color: $primary;
+            text-align: center;
+        }
+
+        p {
+            @include text-md-regular;
+            color: $primary-600;
+            text-align: center;
+        }
+    }
+
+    .buttonsContainer {
+
+        @include flex-container(row, nowrap, space-between, center);
+        gap: 30px;
+        width: 100%;
+
+
+        .buttonGroup {
+            @include flex-container(row, nowrap, flex-start, center);
+            gap: 10px;
+
+            button {
+                border: 2px solid $primary-100;
+
+                &:hover {
+                    border: none;
+                }
+
+                &.selected {
+                    border: none;
+                    background: $primary-100;
+                }
+            }
+        }
+
+    }
+
+
+    .CTAContainer {
+
+		@include flex-container(row, nowrap, flex-end, center);
+		gap: 15px;
+		width: 100%;
+	}
+
+}
