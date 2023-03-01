@@ -244,6 +244,13 @@ const CreateTemplate = (
             // if the value of the current field is empty
             // let the user know by highlighting the field
             // using error state
+
+            // but first, exclude fiche target item fields
+            // cause they're nullable
+            if(itemType.includes("fiches") && ficheTargetItemTypes.includes(fieldName)) {
+                return
+            }
+            // proceed
             if(isEmpty(formData[fieldName].value) && formData[fieldName].conf.required) {
                 formData[fieldName].isInErrorState = true
                 validated = false
@@ -256,7 +263,7 @@ const CreateTemplate = (
             validateField(fieldName)
         }
 
-        if(itemType == "fiches" && isFicheTargetItemEmpty()) {
+        if(itemType.includes("fiches") && isFicheTargetItemEmpty()) {
             formData["ilot_id"].isInErrorState = true
             validated = false
         }
@@ -273,7 +280,10 @@ const CreateTemplate = (
             setValidationError(true)
             refresh()
             return
-        } else setValidationError(false)
+        } else {
+            setValidationError(false)
+            refresh()
+        }
         // POST the form data to the appropriate API endpoint
         // if our form submission was successful
 
@@ -353,6 +363,8 @@ const CreateTemplate = (
 
     const handleTitleChange = (newTitle: string) => updateField("nom", newTitle.trim())
 
+    const getTitle = () => formData ? formData.nom.value : ""
+
     // render
 
     return (
@@ -366,6 +378,7 @@ const CreateTemplate = (
                         className={styles.titleInput}
                         placeholder={getTitlePlaceHolder()}
                         onChange={handleTitleChange}
+                        currentValue={getTitle()}
                         isInErrorState={formData?.nom.isInErrorState}
                     />
                     <div className={styles.itemTypeContainer}>
@@ -409,11 +422,13 @@ const CreateTemplate = (
                         <></>
                     }
                 </VerticalScrollBar>
-                <Button
-                    icon={faFloppyDisk}
-                    onClick={handleSubmit}>
-                    Créer
-                </Button>
+                <div className={styles.submitButtonContainer}>
+                    <Button
+                        icon={faFloppyDisk}
+                        onClick={handleSubmit}>
+                        Créer
+                    </Button>
+                </div>
             </section>
         </main>
     )

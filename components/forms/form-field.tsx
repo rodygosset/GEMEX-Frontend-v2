@@ -95,10 +95,24 @@ const FormField = (
                     />
                 )
             case "timeDelta":
+                // for fiches systematiques
+                // make sure rappel is always smaller than periodicite
+                const getMax = () => {
+                    if(fieldName == "rappel" && typeof formData["periodicite"] !== "undefined") {
+                        return formData["periodicite"].value
+                    }
+                }
+                const getMin = () => {
+                    if(fieldName == "periodicite" && typeof formData["rappel"] !== "undefined") {
+                        return formData["rappel"].value
+                    }
+                }
                 return (
                     <TimeDeltaInput 
                         name={fieldName}
                         value={formData[fieldName].value} 
+                        max={getMax()}
+                        min={getMin()}
                         onChange={handleChange} 
                         isInErrorState={formData[fieldName].isInErrorState}
                     />

@@ -48,17 +48,20 @@ const NumericField = (
     // account for min and / or max being possibly undefined (not provided)
 
     const isInBounds = (val: number) => {
-        if(typeof min == "undefined" && typeof max == "undefined") return true
-        else if(typeof min != "undefined" && typeof max != "undefined" && 
+        // in case ther's no min and no max
+        if(typeof min === "undefined" && typeof max === "undefined") return true
+        // in case both were provided
+        else if(typeof min !== "undefined" && typeof max !== "undefined" && 
                 val >= min && val <= max) return true
-        else if(typeof min != "undefined" && val >= min) return true
-        else if(typeof max != "undefined" && val <= max) return true
+        // in case one was provided
+        else if(typeof min !== "undefined" && typeof max === "undefined" && val >= min) return true
+        else if(typeof max !== "undefined" && typeof min === "undefined" && val <= max) return true
         return false
     }
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
-        if(!e.target.value) setN(0)
+        if(!e.target.value) setN(min ? min : 0)
         if(!isNumeric(e.target.value)) return
         const newN = Number(e.target.value)
         if(!isInBounds(newN)) return
@@ -83,14 +86,14 @@ const NumericField = (
 
     // don't increase if we've reached the max value
     const handleIncrease = () => {
-        if(typeof max != "undefined" && n + 1 > max) return
+        if(typeof max !== "undefined" && n + 1 > max) return
         setN(n + 1)
     }
 
 
     // don't decrease if we've reached the min value
     const handleDecrease = () => {
-        if(typeof min != "undefined" && n - 1 < min) return
+        if(typeof min !== "undefined" && n - 1 < min) return
         setN(n - 1)
     }
 

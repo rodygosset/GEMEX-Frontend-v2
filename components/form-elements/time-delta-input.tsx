@@ -17,6 +17,8 @@ import { secondsInDay, secondsInMonth, secondsInWeek } from "date-fns";
 interface Props {
     name: string;
     value?: number;
+    max?: number;
+    min?: number;
     isInErrorState?: boolean;
     onChange?: (newValue: number) => void;
 }
@@ -35,6 +37,8 @@ const TimeDeltaInput = (
     {
         name,
         value,
+        max,
+        min,
         isInErrorState,
         onChange
     }: Props
@@ -60,6 +64,20 @@ const TimeDeltaInput = (
         if(onChange) onChange(delta)
     }, [delta])
 
+    // make sure delta is never greated than the provided max value
+
+    useEffect(() => {
+        if(!max) return
+        if(delta > max) setDelta(max) 
+    }, [max])
+
+    // nor lesser than the provided min values
+
+    useEffect(() => {
+        if(!min) return
+        if(delta < min) setDelta(min) 
+    }, [min])
+
     // get unit option from unit value
 
     const getUnitOption = (unitValue: TimeDeltaUnit) => {
@@ -79,8 +97,7 @@ const TimeDeltaInput = (
 
     // convert from seconds to TimeDeltaUnit values
 
-    const getValueForUnit = () => {
-        let val = delta
+    const getValueForUnit = (val: number) => {
         switch(unit.value) {
             case "days":
                 val /= secondsInDay
@@ -97,10 +114,10 @@ const TimeDeltaInput = (
         return Math.round(val)
     }
 
-    const [unitValue, setUnitValue] = useState(getValueForUnit())
+    const [unitValue, setUnitValue] = useState(getValueForUnit(delta))
 
     useEffect(() => {
-        setUnitValue(getValueForUnit())
+        setUnitValue(getValueForUnit(delta))
     }, [delta, unit])
 
     // handlers
@@ -120,6 +137,8 @@ const TimeDeltaInput = (
             default:
                 break
         }
+        // make sure we don't set a delta greater than max
+        // if(max && newDelta > max) return
         setDelta(newDelta)
     }
 
@@ -131,7 +150,7 @@ const TimeDeltaInput = (
         if(!unitOption) return
         // when found, update the state variable
         setUnit(getUnitOption(newValue))
-        handleChange(getValueForUnit())
+        handleChange(getValueForUnit(delta))
     }
 
     // utils
@@ -156,7 +175,8 @@ const TimeDeltaInput = (
                 <NumericField
                     value={unitValue}
                     onChange={handleChange}
-                    min={1}
+                    min={min ? getValueForUnit(min) : 1}
+                    max={max ? getValueForUnit(max) : undefined}
                     embedded
                 />
                 <VerticalSeperator/>

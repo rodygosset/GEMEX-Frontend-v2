@@ -145,7 +145,7 @@
 
 		.contentScrollContainer {
 			// make sure it never overflows from the body
-            max-height: calc(100vh - calc($nav-bar-height + 280px));
+            max-height: calc(100vh - calc($nav-bar-height + 280px + 100px));
 			@include flex-container(column, nowrap, flex-start, stretch);
 			gap: 30px;
 
@@ -165,8 +165,10 @@
 			}
 		}
 
-		button {
-			margin: auto;
+		.submitButtonContainer {
+			@include flex-container(row, nowrap, center, center);
+			width: 100%;
+			padding: 30px;
 		}
     }
 

@@ -42,7 +42,10 @@ const FicheTargetSelect = (
     }
 
     useEffect(() => {
-        if(value == null || value == undefined) return
+        if(value == null || value == undefined) {
+            setSelectedItemLabel("")
+            return
+        }
         // get the label for the current item 
         // & account for errors by making sure we got back a string
         getLabel(currentItemType, value)
