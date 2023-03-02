@@ -33,7 +33,11 @@ const ViewTemplate = (
 
     const getItemTypeLabel = () => {
         const label = itemTypes.find(type => type.value == itemType)?.label.slice(0, -1)
-        return itemType.split('_').length > 1 ? toSingular(itemType) : label
+        let itemLabel = itemType.split('_').length > 1 ? toSingular(itemType) : label
+        // account for Fiche items
+        // => add the fiche type
+        if(itemType.includes("fiches")) itemLabel += ` ${itemData["tags"][0]}`
+        return itemLabel
     } 
 
 

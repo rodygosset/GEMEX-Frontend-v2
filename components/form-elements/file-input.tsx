@@ -25,6 +25,9 @@ const FileInput = (
 
     const [fichiers, setFichiers] = useState<Fichier[]>([])
 
+    const isFileLoaded = (fileName: string, fileList: Fichier[]) => fileList.map(f => f.nom).includes(fileName)
+
+
     // value being a list of file names we want to render in cards
     // we need to get info on each file from the API
     // by making an API request
@@ -41,7 +44,13 @@ const FileInput = (
                 {
                     nom: fileName
                 },
-                res => setFichiers((currentList) => [...currentList, ...res.data])
+                res => {
+                    // make sure we don't load the same file twice
+                    setFichiers((currentList) => {
+                        if(isFileLoaded(res.data[0].nom, currentList)) return currentList
+                        return [...currentList, ...res.data]
+                    })
+                }
             )
         }
     }

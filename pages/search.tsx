@@ -212,7 +212,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 
     // manage view mode (list or card)
 
-    const [isListView, setIsListView] = useState<boolean>(false)
+    const [isListView, setIsListView] = useState<boolean>(true)
 
     // utils
 

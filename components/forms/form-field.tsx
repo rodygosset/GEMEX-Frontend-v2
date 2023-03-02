@@ -9,8 +9,6 @@ import Label from "@components/form-elements/label";
 import TextInput from "@components/form-elements/text-input";
 import CheckBox from "@components/form-elements/checkbox";
 import DateInput from "@components/form-elements/date-input";
-import { toDateObject } from "@utils/form-elements/date-input";
-import { DateInputValue } from "@utils/types";
 import TimeDeltaInput from "@components/form-elements/time-delta-input";
 import ItemMultiSelect from "@components/form-elements/multi-select";
 import NumericField from "@components/form-elements/numeric-field";
@@ -150,7 +148,6 @@ const FormField = (
                 // in case we're dealing with a fiche item
                 // instead of a select
                 // render a FicheTargetSelect component
-                console.log("started here")
                 if(itemType.includes("fiches")) {
 
                     // get the correct item type for the target item
@@ -185,7 +182,6 @@ const FormField = (
                         />
                     )
                 }
-                console.log("got here")
             case "itemList":
                 // multi select
                 if(!conf.item || !(conf.item in apiURLs)) { break }

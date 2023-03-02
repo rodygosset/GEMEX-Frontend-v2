@@ -73,7 +73,7 @@ const FicheTargetSelect = (
             attributeName = itemTypetoAttributeName(targetItemType)
             // if targetItemType is itemType, set the id
             // otherwise set field to null
-            onChange(attributeName, targetItemType == itemType ? id : null)
+            onChange(attributeName, targetItemType == itemType ? id : 0)
         }
     }
 
