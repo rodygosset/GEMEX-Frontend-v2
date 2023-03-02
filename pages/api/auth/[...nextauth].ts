@@ -1,5 +1,5 @@
 import axios from "axios"
-import { apiURL } from "@conf/api/conf"
+import { dockerAPIURL } from "@conf/api/conf"
 import { AuthOptions } from "next-auth"
 import NextAuth from "next-auth/next"
 
@@ -32,18 +32,18 @@ export const authOptions: AuthOptions = {
 
             // send the credentials to the API login endpoint
             
-            const res = await axios.post(`${apiURL}/token/`, formData)
+            const res = await axios.post(`${dockerAPIURL}/token/`, formData)
     
             // If no error and we have the JWT, return the access token
             if (res.status == 200) {
                 // get user data
-                const { data: userData } = await axios.get<User>(`${apiURL}/api/users/me`, {
+                const { data: userData } = await axios.get<User>(`${dockerAPIURL}/api/users/me`, {
                     headers: {
                         Authorization: `bearer ${res.data.access_token}` 
                     }
                 })
                 // get user role
-                const { data: userRole } = await axios.get<UserRole>(`${apiURL}/api/users/roles/id/${userData.role_id}`, {
+                const { data: userRole } = await axios.get<UserRole>(`${dockerAPIURL}/api/users/roles/id/${userData.role_id}`, {
                     headers: {
                         Authorization: `bearer ${res.data.access_token}` 
                     }

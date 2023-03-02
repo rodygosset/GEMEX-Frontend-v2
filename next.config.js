@@ -9,7 +9,8 @@ module.exports = {
   images: {
       domains: [
           "localhost",
-          "vm-dev-gemex.citepro.cite-sciences.fr"
+          "vm-dev-gemex.citepro.cite-sciences.fr",
+          "host.docker.internal"
       ],
   },
   output: 'standalone',

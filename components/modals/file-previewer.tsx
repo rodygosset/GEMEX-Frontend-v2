@@ -1,5 +1,5 @@
 import Button from "@components/button";
-import { apiURL, apiURLs } from "@conf/api/conf";
+import { apiURL, apiURLs, dockerAPIURL } from "@conf/api/conf";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "@styles/components/modals/file-previewer.module.scss"
@@ -68,7 +68,7 @@ const FilePreviewer = (
 
     // utils
 
-    const getFileURL = () => `${apiURL}${apiURLs["fichiers"]}${fileName}`
+    const getFileURL = () => `${dockerAPIURL}${apiURLs["fichiers"]}${fileName}`
 
     // handle download button click
 

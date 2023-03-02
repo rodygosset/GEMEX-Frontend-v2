@@ -1,6 +1,6 @@
 import { MySession } from "@conf/utility-types"
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios"
-import { apiURL, apiURLs } from "conf/api/conf"
+import { dockerAPIURL, apiURLs } from "conf/api/conf"
 
 
 export interface SSRAPIRequestArgs<T,U> {
@@ -34,7 +34,7 @@ const SSRmakeAPIRequest = async <T, U>(
     }: SSRAPIRequestArgs<T,U>
 ) => {
 
-    const baseURL = `${apiURL}${apiURLs[itemType]}${additionalPath ? additionalPath : ""}`;
+    const baseURL = `${dockerAPIURL}${apiURLs[itemType]}${additionalPath ? additionalPath : ""}`;
 
     if(!session) { 
         return

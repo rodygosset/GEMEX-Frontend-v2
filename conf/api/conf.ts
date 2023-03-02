@@ -7,6 +7,8 @@ const prodServerURL = localhostURL
 
 export const apiURL = process.env.NODE_ENV == "production" ? prodServerURL : localhostURL
 
+export const dockerAPIURL = "http://host.docker.internal:8000"
+
 
 interface APIURLsType {
     [item: string]: string
