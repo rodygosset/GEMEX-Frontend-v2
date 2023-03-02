@@ -11,5 +11,6 @@ module.exports = {
           "localhost",
           "vm-dev-gemex.citepro.cite-sciences.fr"
       ],
-  }
+  },
+  output: 'standalone',
 }

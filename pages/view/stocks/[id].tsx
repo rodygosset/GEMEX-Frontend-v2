@@ -72,6 +72,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     // make the API request
 
     let is404 = false
+    let isError = false
 
     const data = await SSRmakeAPIRequest<Stock, Stock>({
         session: session as MySession,
@@ -82,9 +83,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
         onFailure: error => {
             if(axios.isAxiosError(error) && error.response?.status == 404) {
                 is404 = true
+            } else {
+                isError = true
             }
         }
     })
+
+    if(isError) return { props: { data: null } }
 
     // in case the provided stock_id doesn't exist in the database
 

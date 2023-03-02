@@ -2,7 +2,8 @@
 
 
 const localhostURL = "http://localhost:8000"
-const prodServerURL = "http://vm-dev-gemex.citepro.cite-sciences.fr:8000"
+const prodServerURL = localhostURL
+// const prodServerURL = "http://vm-dev-gemex.citepro.cite-sciences.fr:8000"
 
 export const apiURL = process.env.NODE_ENV == "production" ? prodServerURL : localhostURL
 

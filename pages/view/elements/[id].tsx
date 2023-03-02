@@ -85,6 +85,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     let is404 = false
     let is401 = false
+    let isError = false
 
     const data = await SSRmakeAPIRequest<Element, Element>({
         session: session as MySession,
@@ -96,11 +97,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
             if(isAuthError(error)) is401 = true
             else if(axios.isAxiosError(error) && error.response?.status == 404) {
                 is404 = true
+            } else {
+                isError = true
             }
         }
     })
 
-    if(is401) return { props: { data: null, extra: null } }
+    if(is401 || isError) return { props: { data: null, extra: null } }
 
     // in case the provided exposition_id doesn't exist in the database
 
