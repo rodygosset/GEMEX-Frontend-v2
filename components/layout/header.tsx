@@ -11,6 +11,8 @@ import CreateButton from "./header/create-button"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
 import { MySession } from "@conf/utility-types"
+import { useContext } from "react"
+import { Context } from "@utils/context"
 
 
 interface NavLink {
@@ -32,10 +34,16 @@ const Header = () => {
 
     const hiddenHeaderRoutes = [
         "/login",
-        "/404"
+        "/404",
+        "/401"
     ]
 
-    const shouldShowHeader = () => !hiddenHeaderRoutes.includes(router.pathname)
+    const { navHistory } = useContext(Context)
+
+    const shouldShowHeader = () => (
+        !hiddenHeaderRoutes.includes(router.pathname) &&
+        navHistory[navHistory.length - 1] != "/401"
+    )
 
     
     const navLinks: NavLink[] = [

@@ -1,4 +1,4 @@
-import { APPROVED_STATUS_ID, DONE_STATUS_ID, Fiche, INIT_STATUS_ID, REQUEST_STATUS_ID } from "@conf/api/data-types/fiche"
+import { FicheSystematique } from "@conf/api/data-types/fiche"
 import { MySession } from "@conf/utility-types"
 import { isAuthError } from "@utils/req-utils"
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
@@ -10,24 +10,26 @@ import Head from "next/head"
 import { authOptions } from "pages/api/auth/[...nextauth]"
 import My401Template from "pages/page-templates/401-template"
 import EditTemplate from "pages/page-templates/edit-template"
-import { useEffect } from "react"
 
 
-// this page displays information about a given Fiche object
+// this page displays information about a given Fiche Systematique object
 // the data is retrieved in getServerSideProps
 
-const itemType = "fiches"
+const itemType = "fiches_systematiques"
 
 interface Props {
-    data: Fiche | null;
+    data: FicheSystematique | null;
 }
 
-const EditFiche: NextPage<Props> = (
+
+
+const EditFicheSystematique: NextPage<Props> = (
     {
         data
     }
 ) => {
 
+    
     const session = useSession()
     
     const user = (session.data as MySession | null)?.user
@@ -37,64 +39,32 @@ const EditFiche: NextPage<Props> = (
     
     // determine whether the user is authorized to edit the current item
 
-    const userHasRequiredPermissions = () => userRole && userRole.permissions.includes(itemType) ? true : false
+    const userHasRequiredPermissions = () => userRole && userRole.permissions.includes("systematiques") ? true : false
 
     const userIsOwner = () => data && user && data.auteur_id == user.id ? true : false
     const userIsManager = () => userRole && userRole.permissions.includes("manage") ? true : false
-    const userWasAssignedTask = () => data && user && data.user_en_charge_id == user.id ? true : false
-    
-    const userCanEditFiche = () => userHasRequiredPermissions() && (userIsOwner() || userIsManager() || userWasAssignedTask())
 
-    const allowEdit = () => (
-        // don't allow approved task reports (Fiches) to be edited
-        data?.status_id != APPROVED_STATUS_ID &&
-        // otherwise make sure the user has something to do with the task report
-        userCanEditFiche() &&
-        // only allow the owner or a manager to edit a fiche that's still
-        // in request status
-        (data?.status_id == REQUEST_STATUS_ID ? (userIsManager() || userIsOwner()) : true)
-    )
+    const userCanEditFiche = () => userHasRequiredPermissions() && (userIsOwner() || userIsManager())
 
-    // determine which fields to disable
-    // depending on the Fiche status, the user's role
-    // & the user's relation to the Fiche (author, assignee)
-
-    const getExcludedFields = () => {
-        if(!user || !userRole || !data) return []
-        // editable fields are limited only for specific fiche status'
-        const limitedEditStatus = [INIT_STATUS_ID, DONE_STATUS_ID]
-        // if the user didn't create the Fiche & isn't a manager
-        if(limitedEditStatus.includes(data.status_id) && !userIsOwner() && !userIsManager()) {
-            // then the user was assigned the task
-            // so only allow them to edit the "remarque" & "date_fin" fields
-            const allowedFields = ["remarque", "date_fin"]
-            // to do that, exclude all the other fields
-            return Object.keys(data).filter(field => !allowedFields.includes(field))
-        }
-        return []
-    }
-
-    const getErrorMessage = () => `Vous n'avez pas les droits pour modifier la fiche "${data?.nom}"`
+    const getErrorMessage = () => `Vous n'avez pas les droits pour modifier la fiche systématique "${data?.nom}"`
 
 
     // render
 
     return (
-        user && userRole && data && allowEdit() ?
+        data && userCanEditFiche() ?
         <>
             <Head>
-				<title>Modifier {data.nom} (Fiche)</title>
-				<meta name="description" content={`Modifier la fiche ${data.nom}`} />
+				<title>Modifier {data.nom} (Fiche Systématique)</title>
+				<meta name="description" content={`Modifier la fiche systématique ${data.nom}`} />
 			</Head>
             <EditTemplate
                 itemType={itemType}
                 defaultValues={data}
-                excluded={getExcludedFields()}
             />
         </>
         :
-        // in case the user isn't allowed to edit the task report
-        user && userRole && data && !allowEdit() ?
+        data && !userCanEditFiche() ?
         <My401Template errorMessage={getErrorMessage()} />
         :
         // if we couldn't retrive the data
@@ -126,7 +96,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     let is404 = false
     let is401 = false
 
-    const data = await SSRmakeAPIRequest<Fiche, Fiche>({
+    const data = await SSRmakeAPIRequest<FicheSystematique, FicheSystematique>({
         session: session as MySession,
         verb: "get",
         itemType: itemType,
@@ -159,4 +129,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
 }
 
-export default EditFiche
+export default EditFicheSystematique

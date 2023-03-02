@@ -1,0 +1,30 @@
+@import "@styles/base/_reset.scss";
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+.container {
+    @include full-size-col;
+    gap: 30px;
+    padding: 30px 7%;
+
+    .illustrationContainer {
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        aspect-ratio: 1.226;
+    }
+
+    h1 {
+        @include header-1-regular;
+        background: linear-gradient(135deg, #2962FF 0%, #AA00FA 77.4%);
+        background-clip: text;
+        color: transparent;
+
+    }
+
+    p {
+        @include text-xl-regular;
+        color: $primary-600;
+    }
+}

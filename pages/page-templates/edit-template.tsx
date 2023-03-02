@@ -61,7 +61,7 @@ const EditTemplate = (
         // load the form fields for the current item type
         // also make sure not to include excluded fields in the form
         let fields = (
-            Object.entries<FormElement>(createFormConf[getFormItemType()])
+            Object.entries<FormElement>(createFormConf[itemType])
             .filter(([field]) => !getExcludedFields().includes(field))
             // don't include a field unless it's in defaultValues
             .filter(([field]) => field in defaultValues)
@@ -150,6 +150,13 @@ const EditTemplate = (
     const makeAPIRequest = useAPIRequest()
 
     // make sure no required field is left empty
+    
+
+    const defaultValidationErrorMessage = "Remplissez les champs requis avant de soumettre le formulaire"
+
+    const [validationErrorMessage, setValidationErrorMessage] = useState("")
+
+    const getValidationErrorMessage = () => !isEmpty(validationErrorMessage) ? validationErrorMessage : defaultValidationErrorMessage
 
     const isEmpty = (value: any) => {
         if(typeof value == "string") return !value
@@ -180,7 +187,7 @@ const EditTemplate = (
 
     const [validationError, setValidationError] = useState(false)
 
-    const validateFormData = () => {
+    const validateFormData = async () => {
         if(!formData) return false
         let validated = true
 
@@ -212,16 +219,37 @@ const EditTemplate = (
             validated = false
         }
 
+        // make sure the new item title isn't taken already
+
+        if("new_nom" in buildSubmitData()) {
+            await makeAPIRequest<any[], void>(
+                "post",
+                itemType,
+                "search/",
+                {
+                    nom: formData["nom"].value
+                },
+                res => {
+                    // if there is an item with this title
+                    if(res.data.length == 0) return
+                    // invalidate the form & let the user know
+                    formData["nom"].isInErrorState = true
+                    validated = false
+                    setValidationErrorMessage(`Le nom '${formData["nom"].value}' est déjà pris`)
+                }
+            )
+        }
+
         return validated
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const submitData = buildSubmitData()
         // console.log("submit data ==> ")
         // console.log(submitData)
         // return
         // console.log("is validated ? => ", validateFormData())
-        if(!validateFormData()) {
+        if(!(await validateFormData())) {
             setValidationError(true)
             refresh()
             return
@@ -237,7 +265,7 @@ const EditTemplate = (
             if(res.status == 200) {
                 // redirect the user to the view page
                 // for the new item that's been create
-                const getItemType = () => getFormItemType().replace('_', '/')
+                const getItemType = () => itemType.replace('_', '/')
                 router.push(`/view/${getItemType()}/${res.data.id}`)
             }
         }
@@ -246,7 +274,7 @@ const EditTemplate = (
 
         makeAPIRequest(
             "put",
-            getFormItemType(),
+            itemType,
             defaultValues["nom"],
             submitData,
             handleSuccess
@@ -258,12 +286,16 @@ const EditTemplate = (
 
     const getItemTypeLabel = () => {
         const label = itemTypes.find(type => type.value == itemType)?.label.slice(0, -1)
-        return itemType.split('_').length > 1 ? toSingular(itemType) : label
+        let itemLabel = itemType.split('_').length > 1 ? toSingular(itemType) : label
+        // account for Fiche items
+        // => add the fiche type
+        if(itemType.includes("fiches")) itemLabel = `Fiche ${defaultValues["tags"][0]}`
+        return itemLabel
     } 
 
 
     const getClassName = () => {
-        if(itemType == "fiches") {
+        if(itemType.includes("fiches")) {
             // change the color depending on the fiche type
             switch(getFicheType()) {
                 case "relance":
@@ -283,10 +315,6 @@ const EditTemplate = (
     const getTitlePlaceHolder = () => {
         if(!(itemType in createFormConf)) return
         return createFormConf[itemType].nom.label
-    }
-
-    const getFormItemType = () =>  {
-        return itemType == "fiches" && getFicheType() == "systématique" ? "fiches_systematiques" : itemType 
     }
 
     // for fiche items
@@ -327,29 +355,25 @@ const EditTemplate = (
             </div>
             <section>
                 <div id={styles.itemTitle} className={getClassName()}>
-                    <TextInput 
-                        className={styles.titleInput}
-                        placeholder={getTitlePlaceHolder()}
-                        onChange={handleTitleChange}
-                        currentValue={formData ? formData.nom.value : ""}
-                        isInErrorState={formData?.nom.isInErrorState}
-                    />
+                    {
+                        formData && formData.nom ?
+                        <TextInput 
+                            className={styles.titleInput}
+                            placeholder={getTitlePlaceHolder()}
+                            onChange={handleTitleChange}
+                            defaultValue={formData.nom.value}
+                            isInErrorState={formData.nom.isInErrorState}
+                        />
+                        :
+                        <h1>{defaultValues.nom}</h1>
+                    }
                     <div className={styles.itemTypeContainer}>
-                        <p>
-                            { getItemTypeLabel() } 
-                            &nbsp;
-                            {
-                                itemType == "fiches" ?
-                                capitalizeEachWord(getFicheType())
-                                :
-                                <></>
-                            }
-                        </p>
+                        <p>{ getItemTypeLabel() }</p>
                     </div>
                     {
                         validationError ?
                         <p className={styles.formErrorMessage}>
-                            Remplissez les champs requis avant de soumettre le formulaire...
+                            { getValidationErrorMessage() }
                         </p>
                         :
                         <></>
@@ -360,7 +384,7 @@ const EditTemplate = (
                     {
                         formData ?
                         <CreateForm
-                            itemType={getFormItemType()}
+                            itemType={itemType}
                             formData={formData}
                             onChange={updateField}
                             onSubmit={handleSubmit}

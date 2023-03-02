@@ -1,6 +1,6 @@
 import Button from "@components/button"
 import { faHome } from "@fortawesome/free-solid-svg-icons"
-import styles from "@styles/pages/404.module.scss"
+import styles from "@styles/page-templates/error-page-template.module.scss"
 
 import Image from "next/image"
 import Link from "next/link"

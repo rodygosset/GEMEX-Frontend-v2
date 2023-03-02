@@ -56,6 +56,11 @@
 
 			@include flex-container(column, nowrap, flex-start, flex-start);
 			gap: 20px;
+
+			h1 {
+				@include header-3-semibold;
+				color: $primary;
+			}
 			
 			.titleInput {
                 @include header-3-semibold;

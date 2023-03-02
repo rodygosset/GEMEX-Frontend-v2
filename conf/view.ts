@@ -243,11 +243,11 @@ export const viewConf: ViewConf = {
     },
     fiches_systematiques: {
         nom: { ...textAttribute, fullWidth: true },
-        auteur_id: { ...itemAttribute, type: "users", icon: faUser, label: "Auteur de la fiche" },
-        user_en_charge_id: { ...itemAttribute, type: "users", icon: faUser, label: "Utilisateur en charge" },
         ilot_id: { ...itemAttribute, type: "ilots", label: "Îlot" },
         exposition_id: { ...itemAttribute, type: "expositions", label: "Exposition" },
         element_id: { ...itemAttribute, type: "elements", label: "Élément" },
+        auteur_id: { ...itemAttribute, type: "users", icon: faUser, label: "Auteur de la fiche" },
+        user_en_charge_id: { ...itemAttribute, type: "users", icon: faUser, label: "Utilisateur en charge" },
         description: textAreaAttribute,
         informations: textAreaAttribute,
         tags: { ...itemListAttribute, item: "tags", label: "Tags" },

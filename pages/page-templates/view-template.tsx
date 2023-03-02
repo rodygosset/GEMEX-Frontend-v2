@@ -36,7 +36,7 @@ const ViewTemplate = (
         let itemLabel = itemType.split('_').length > 1 ? toSingular(itemType) : label
         // account for Fiche items
         // => add the fiche type
-        if(itemType.includes("fiches")) itemLabel += ` ${itemData["tags"][0]}`
+        if(itemType.includes("fiches")) itemLabel = `Fiche ${itemData["tags"][0]}`
         return itemLabel
     } 
 
