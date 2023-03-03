@@ -10,7 +10,8 @@ module.exports = {
       domains: [
           "localhost",
           "vm-dev-gemex.citepro.cite-sciences.fr",
-          "host.docker.internal"
+          "host.docker.internal",
+          "vm-gemex.citepro.cite-sciences.fr"
       ],
   },
   output: 'standalone',
