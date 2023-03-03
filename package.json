@@ -23,7 +23,8 @@
     "react-pdf": "^6.2.2",
     "react-portal": "^4.2.2",
     "react-select": "^5.7.0",
-    "sass": "^1.57.1"
+    "sass": "^1.57.1",
+    "sharp": "^0.31.3"
   },
   "devDependencies": {
     "@types/node": "18.11.18",
