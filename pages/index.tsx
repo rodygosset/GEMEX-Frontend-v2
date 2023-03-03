@@ -4,10 +4,13 @@ import styles from '@styles/pages/home.module.scss'
 import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import SearchBar from '@components/form-elements/search-bar'
+import { MySession } from '@conf/utility-types'
 
 const Home: NextPage = () => {
 
-	const { data: session, status } = useSession()
+	const { data, status } = useSession()
+
+	const session = data as MySession | null
 
 	// @ts-ignore
 	useEffect(() => console.log(session?.user?.username, status), [session])

@@ -68,7 +68,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     // retrieve the session, containing the user's auth token
 
-    const session = await unstable_getServerSession(context.req, context.res, authOptions)
+    const session = (await unstable_getServerSession(context.req, context.res, authOptions)) as MySession | null
 
     // return empty props if we don't have an auth token
     // because if means we have no way to retrieve the data
@@ -82,7 +82,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     let isError = false
 
     const data = await SSRmakeAPIRequest<Constituent, Constituent>({
-        session: session as MySession,
+        session: session,
         verb: "get",
         itemType: itemType,
         additionalPath: `id/${constituentId}`, 
@@ -107,13 +107,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     // retrieving the extra data we need to display
 
     const element = await getExtraSSRData(
-        session as MySession, 
+        session, 
         "elements", 
         (data as Constituent).element_id
     ) 
 
     const article = await getExtraSSRData(
-        session as MySession, 
+        session, 
         "articles", 
         (data as Constituent).article_id
     ) 

@@ -20,7 +20,7 @@ const RouteGard = ({ children }: Props) => {
 
     const { navHistory } = useContext(Context)
 
-    const session = data as MySession
+    const session = data as MySession | null
 
     useEffect(() => {
         authCheck(router.asPath)
@@ -69,7 +69,7 @@ const RouteGard = ({ children }: Props) => {
             // try to get data from an authenticated API route
             // using our session access token
             axios.get(`${apiURL}/hello/`, {
-                headers: { Authorization: `bearer ${session.access_token}` }
+                headers: { Authorization: `bearer ${session?.access_token}` }
             })
             // if the request succeeds
             // show the current page

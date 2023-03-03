@@ -78,7 +78,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     // retrieve the session, containing the user's auth token
 
-    const session = await unstable_getServerSession(context.req, context.res, authOptions)
+    const session = (await unstable_getServerSession(context.req, context.res, authOptions)) as MySession | null
 
     // return empty props if we don't have an auth token
     // because if means we have no way to retrieve the data
@@ -92,7 +92,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     let isError = false
 
     const data = await SSRmakeAPIRequest<FicheSystematique, FicheSystematique>({
-        session: session as MySession,
+        session: session,
         verb: "get",
         itemType: itemType,
         additionalPath: `id/${ficheId}`, 
@@ -116,37 +116,37 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     // retrieving the extra data we need to display
 
     const auteur = await getExtraSSRData(
-        session as MySession, 
+        session, 
         "users", 
         (data as FicheSystematique).auteur_id
     )
 
     const ilot = data?.ilot_id ? await getExtraSSRData(
-        session as MySession, 
+        session, 
         "ilots", 
         (data as FicheSystematique).ilot_id
     ) : null
 
     const exposition = data?.exposition_id ? await getExtraSSRData(
-        session as MySession, 
+        session, 
         "expositions", 
         (data as FicheSystematique).exposition_id
     ) : null
 
     const element = data?.element_id ? await getExtraSSRData(
-        session as MySession, 
+        session, 
         "elements", 
         (data as FicheSystematique).element_id
     ) : null
 
     const nature = await getExtraSSRData(
-        session as MySession, 
+        session, 
         "natures_operations", 
         (data as FicheSystematique).nature_id
     )
 
     const user_en_charge = await getExtraSSRData(
-        session as MySession, 
+        session, 
         "users", 
         (data as FicheSystematique).user_en_charge_id
     )

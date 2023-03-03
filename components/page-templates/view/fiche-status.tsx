@@ -37,9 +37,11 @@ const FicheStatus = (
 
     // determine which permissions the user has
 
-    const { user, userRole } = useSession().data as MySession
+    const session = useSession().data as MySession | null
+    const user = session?.user
+    const userRole = session?.userRole
 
-    const userIsManager = userRole.permissions.includes("manage")
+    const userIsManager = userRole && userRole.permissions.includes("manage") ? true : false
 
     // utils
 
@@ -60,9 +62,12 @@ const FicheStatus = (
     // => is he the author, in charge of the work to be done or a manager
 
     const userIsInvolved = (
-        userIsManager ||
-        ficheData.auteur_id == user.id ||
-        ficheData.user_en_charge_id == user.id
+        user && userRole &&
+        (
+            userIsManager ||
+            ficheData.auteur_id == user.id ||
+            ficheData.user_en_charge_id == user.id
+        )
     )
 
     const shouldAllowAcceptOrClose = () => status.id == REQUEST_STATUS_ID && userIsManager

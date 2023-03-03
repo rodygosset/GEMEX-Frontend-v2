@@ -44,9 +44,12 @@ const ActionButtons = (
 
     // determine which permissions the user has
 
-    const { user, userRole } = useSession().data as MySession
+    const session = useSession().data as MySession | null
+    const user = session?.user
+    const userRole = session?.userRole
 
     useEffect(() => {
+        if(!userRole) return
         setHasFicheCreationPrivileges(userRole.permissions.includes("fiches"))
         setHasHistoryPrivileges(userRole.permissions.includes("historique"))
         setHasItemPrivileges(userRole.permissions.includes(itemTypesPermissions[itemType]))
@@ -55,10 +58,10 @@ const ActionButtons = (
 
     useEffect(() => {
         setShowActionButtons(
-            shouldShowFicheCreationButton() ||
+            (shouldShowFicheCreationButton() ||
             shouldShowHistoryButton() ||
             shouldShowEditButton() ||
-            shouldShowDeleteButton()
+            shouldShowDeleteButton()) ? true : false
         )
     }, [hasFicheCreationPrivileges, 
         hasHistoryPrivileges, 
@@ -153,9 +156,12 @@ const ActionButtons = (
     const userCanEditFicheItem = () => {
         let ficheData = itemData as Fiche
         return (
-            userRole.permissions.includes("manage") ||
-            ficheData.auteur_id == user.id ||
-            ficheData.user_en_charge_id == user.id
+            user && userRole &&
+            (
+                userRole.permissions.includes("manage") ||
+                ficheData.auteur_id == user.id ||
+                ficheData.user_en_charge_id == user.id
+            )
         ) && ficheData.status_id != APPROVED_STATUS_ID
     }
 
@@ -177,6 +183,7 @@ const ActionButtons = (
     const userCanDeleteFicheItem = () => {
         let ficheData = itemData as Fiche
         return (
+            user && userRole &&
             ficheData.auteur_id == user.id &&
             (
                 ficheData.status_id != APPROVED_STATUS_ID ||
@@ -199,6 +206,7 @@ const ActionButtons = (
 
     const shouldShowAcknowledgeButton = () => {
         return (
+            userRole &&
             itemType == "fiches" &&
             (itemData as Fiche).tags.includes("Panne déclarée") &&
             userRole.permissions.includes("manage")

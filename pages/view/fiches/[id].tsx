@@ -83,7 +83,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     // retrieve the session, containing the user's auth token
 
-    const session = await unstable_getServerSession(context.req, context.res, authOptions)
+    const session = (await unstable_getServerSession(context.req, context.res, authOptions)) as MySession | null
 
     // return empty props if we don't have an auth token
     // because if means we have no way to retrieve the data
@@ -97,7 +97,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     let isError = false
 
     const data = await SSRmakeAPIRequest<Fiche, Fiche>({
-        session: session as MySession,
+        session: session,
         verb: "get",
         itemType: itemType,
         additionalPath: `id/${ficheId}`, 
@@ -122,49 +122,49 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     // retrieving the extra data we need to display
 
     const auteur = await getExtraSSRData(
-        session as MySession, 
+        session, 
         "users", 
         (data as Fiche).auteur_id
     )
 
     const ilot = data?.ilot_id ? await getExtraSSRData(
-        session as MySession, 
+        session, 
         "ilots", 
         (data as Fiche).ilot_id
     ) : null
 
     const exposition = data?.exposition_id ? await getExtraSSRData(
-        session as MySession, 
+        session, 
         "expositions", 
         (data as Fiche).exposition_id
     ) : null
 
     const element = data?.element_id ? await getExtraSSRData(
-        session as MySession, 
+        session, 
         "elements", 
         (data as Fiche).element_id
     ) : null
 
     const type = await getExtraSSRData(
-        session as MySession, 
+        session, 
         "types_operations", 
         (data as Fiche).type_id
     ) 
 
     const nature = await getExtraSSRData(
-        session as MySession, 
+        session, 
         "natures_operations", 
         (data as Fiche).nature_id
     )
 
     const user_en_charge = await getExtraSSRData(
-        session as MySession, 
+        session, 
         "users", 
         (data as Fiche).user_en_charge_id
     )
 
     const fiche_status = await getExtraSSRData(
-        session as MySession, 
+        session, 
         "fiches_status", 
         (data as Fiche).status_id
     )

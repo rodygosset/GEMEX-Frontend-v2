@@ -25,7 +25,7 @@ const useAPIRequest = () => {
 
     const { data, status } = useSession()
 
-    const session = (data as MySession)
+    const session = (data as MySession | null)
 
     const makeAPIRequest = <T, U>(
         verb: "get" | "post" | "put" | "delete",
@@ -71,7 +71,7 @@ const useAPIRequest = () => {
 
         let reqConfig: AxiosRequestConfig = {
             headers: {
-                Authorization: `bearer ${session.access_token}`
+                Authorization: `bearer ${session?.access_token}`
             }
         }
 

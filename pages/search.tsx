@@ -412,14 +412,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     // retrieve the session, with the user's auth token
 
-    const session = await unstable_getServerSession(context.req, context.res, authOptions)
+    const session = (await unstable_getServerSession(context.req, context.res, authOptions)) as MySession | null
 
     if(session == null) return emptyProps
 
     // make the request to the API
 
     const results = await SSRmakeAPIRequest<any[], any[]>({
-        session: session as MySession,
+        session: session,
         verb: "post",
         itemType: itemType,
         additionalPath: `search/?skip=0&max=${resultsPerPage}`, // get page 1
@@ -429,7 +429,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     // get the meta-data for the search results
 
-    const metaData = await SSRGetMetaData(itemType, results ? results : [], session as MySession)
+    const metaData = await SSRGetMetaData(itemType, results ? results : [], session)
 
     // pass the result as props
 

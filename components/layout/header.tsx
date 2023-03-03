@@ -28,7 +28,7 @@ const Header = () => {
 
     const session = useSession()
 
-    const user = (session.data as MySession)?.user
+    const user = (session.data as MySession | null)?.user
 
     // don't show the nav bar on specific routes
 
