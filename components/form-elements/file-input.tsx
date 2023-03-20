@@ -197,6 +197,7 @@ const FileInput = (
                             <Button
                                 icon={faLaptop}
                                 role="tertiary"
+                                type="button"
                                 onClick={handleUploadClick}>
                                 <input 
                                     type="file" 
@@ -211,6 +212,7 @@ const FileInput = (
                             <Button
                                 icon={faCloud}
                                 role="tertiary"
+                                type="button"
                                 onClick={() => setShowFilePicker(true)}>
                                 Choisir un fichier dans GEMEX
                             </Button>
