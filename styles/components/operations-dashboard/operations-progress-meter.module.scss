@@ -1,0 +1,82 @@
+
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/components/button.module.scss";
+
+
+$progress-bar-height: 15px;
+$progress-bar-gradient: linear-gradient(90deg, #3378FF 0%, rgba(85, 51, 255, 0.6) 100%);
+
+#operationsProgressMeter {
+
+    @include flex-container(column, nowrap, center, center);
+    gap: 15px;
+
+
+    .sectionTitle {
+        @include flex-container(row, nowrap, space-between, center);
+        gap: 15px;
+        width: 100%;
+
+        h4, p {
+            @include text-md-medium;
+            color: $black-400;
+        }
+
+        p span {
+            color: $black;
+        }
+    }
+
+    .progressBar {
+
+        width: 100%;
+        color: transparent;
+        background: #fff;
+        height: $progress-bar-height;
+        border-radius: $progress-bar-height;
+
+        div {
+            border-radius: $progress-bar-height;
+            background: $progress-bar-gradient;
+            height: 100%;
+            transition: all .5s ease-in-out;
+        }
+    }
+
+    .links {
+
+        @include flex-container(row, nowrap, flex-start, center);
+        gap: 30px;
+        width: 100%;
+
+        a {
+            @extend .button;
+            @extend .active;
+            @extend .animateOnHover;
+            @extend .bigBorderRadius;
+            @extend .withPadding;
+
+
+            &.status1 {
+                @include make-tertiary-button($warning, $warning-600, $warning-100);
+            }
+
+            &.status2 {
+                @include make-tertiary-button($primary, $primary-600, $primary-100);
+            }
+
+            &.status3 {
+                @include make-tertiary-button($secondary, $secondary-600, $secondary-100);
+            }
+
+            &.status4 {
+                @include make-tertiary-button($success, $success-600, $success-100);
+            }
+        }
+
+
+    }
+
+}

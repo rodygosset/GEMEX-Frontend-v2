@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import SearchBar from '@components/form-elements/search-bar'
 import { MySession } from '@conf/utility-types'
+import OperationsProgressMeter from '@components/operations-dashboard/operations-progress-meter'
 
 const Home: NextPage = () => {
 
@@ -29,7 +30,7 @@ const Home: NextPage = () => {
 				<SearchBar/>
 			</section>
 			<section id={styles.infoContainer}>
-				{/* TODO */}
+				<OperationsProgressMeter />
 			</section>
 		</main>
 	)

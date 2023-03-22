@@ -1,11 +1,16 @@
 import { faBox, faBoxOpen, faFile, faFileAlt, faLandmark, faLayerGroup, faMonument, faPuzzlePiece, faUser, IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { formatItemName, toSingular } from "@utils/general";
+import { toSingular } from "@utils/general";
 import { SelectOption } from "@utils/react-select/types";
 
 
 export const defaultSearchItem = "elements"
 
 // type & const definitions for the search filters component
+
+
+export interface SearchResultsCount {
+    nb_results: number;
+}
 
 export interface SearchResultsMetaData {
     [attr: string]: {

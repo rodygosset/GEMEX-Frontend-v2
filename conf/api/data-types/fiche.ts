@@ -1,13 +1,50 @@
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { faCheck, faCheckDouble, faMessage, faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-export const REQUEST_STATUS_ID: number = 1
-export const INIT_STATUS_ID: number = 2
-export const DONE_STATUS_ID: number = 3 
-export const APPROVED_STATUS_ID: number = 4
+import colors from "@styles/abstracts/_colors.module.scss"
+
+export type FicheStatusId = 1 | 2 | 3 | 4;
+
+export const REQUEST_STATUS_ID = 1
+export const INIT_STATUS_ID = 2
+export const DONE_STATUS_ID = 3 
+export const APPROVED_STATUS_ID = 4
 
 export interface FicheStatus {
-    id: number;
+    id: FicheStatusId;
     nom: string;
 }
+
+
+export interface FicheStatusConfObj {
+    id: FicheStatusId;
+    color: string;
+    icon: IconProp;
+}
+
+export const ficheStatusConf: FicheStatusConfObj[] = [
+    {
+        id: 1,
+        color: colors.warning,
+        icon: faMessage
+    },
+    {
+        id: 2,
+        color: colors.primary,
+        icon: faSpinner
+    },
+    {
+        id: 3,
+        color: colors.secondary,
+        icon: faCheck
+    },
+    {
+        id: 4,
+        color: colors.success,
+        icon: faCheckDouble
+    }
+]
+
 
 
 export interface Fiche {
