@@ -1,0 +1,21 @@
+
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+.noResult {
+    @include flex-container(column, nowrap, center, center);
+    gap: 15px;
+    width: 100%;
+
+    .illustrationContainer {
+        position: relative;
+        width: 90px;
+        height: 90px;
+    }
+
+    p {
+        @include text-md-medium;
+        color: $primary-400;
+    }
+}

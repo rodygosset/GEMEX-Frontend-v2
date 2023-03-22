@@ -1,0 +1,18 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+
+.container {
+
+
+    @include flex-container(column, nowrap, center, center);
+    gap: 15px;
+    width: 100%;
+
+    ul {
+        @include reset-list;
+        @include flex-container(column, nowrap, flex-start);
+        width: 100%;
+    }
+}

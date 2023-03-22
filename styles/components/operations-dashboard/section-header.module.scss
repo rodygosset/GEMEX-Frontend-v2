@@ -1,0 +1,39 @@
+
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/components/button.module.scss";
+
+.sectionHeader {
+    @include flex-container(row, nowrap, space-between, center);
+    gap: 15px;
+    width: 100%;
+    height: fit-content;
+
+    h4 {
+        @include text-md-medium;
+        color: $black-400;
+    }
+
+    p {
+        @include flex-container(row, nowrap, space-between, center);
+        gap: 15px;
+        margin: 0;
+
+        span {
+            @include text-md-medium;
+            color: $black-400;
+        }
+        
+        a {
+            @extend .button;
+            @extend .active;
+            @extend .animateOnHover;
+            @extend .bigBorderRadius;
+            @extend .withPadding;
+
+
+            @include make-tertiary-button($primary, $primary-600, $primary-100);
+        }
+    }
+}

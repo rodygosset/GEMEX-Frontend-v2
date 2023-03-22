@@ -1,0 +1,52 @@
+
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/components/button.module.scss";
+
+li.card {
+    width: 100%;
+
+    a {
+        @include flex-container(row, nowrap, space-between, center);
+        width: 100%;
+        gap: 15px;
+        padding: 10px 20px;
+        border-bottom: 1px solid $primary-100;
+
+        transition: all 200ms ease-in-out;
+
+        span {
+            @include text-md-medium;
+
+            &.label {
+                @include text-overflow-ellipsis;
+                max-width: 180px;
+                color: $success;
+            }
+
+            &.date {
+                @include flex-container(row, nowrap, center, center);
+                gap: 10px;
+                color: $primary;
+            }
+        }
+    }
+
+    &:hover a {
+        cursor: pointer;
+        background: $primary-100;
+    }
+
+    &:first-child a {
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+    }
+
+    &:last-child a {
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        border: none;
+    }
+
+}

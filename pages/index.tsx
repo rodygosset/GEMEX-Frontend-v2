@@ -7,6 +7,7 @@ import SearchBar from '@components/form-elements/search-bar'
 import { MySession } from '@conf/utility-types'
 import OperationsProgressMeter from '@components/operations-dashboard/operations-progress-meter'
 import UpcomingPeriodicTasksOverview from '@components/operations-dashboard/upcoming-periodic-tasks-overview'
+import UnassignedPeriodicTasksOverview from '@components/operations-dashboard/unassigned-periodic-tasks-overview'
 
 const Home: NextPage = () => {
 
@@ -38,7 +39,13 @@ const Home: NextPage = () => {
 			</section>
 			<section id={styles.infoContainer}>
 				<OperationsProgressMeter />
-				<UpcomingPeriodicTasksOverview refreshTrigger={refreshTrigger} />
+				<div className={styles.horizontalContainer}>
+					<UpcomingPeriodicTasksOverview refreshTrigger={refreshTrigger} />
+					<UnassignedPeriodicTasksOverview 
+						refresh={refresh}
+						refreshTrigger={refreshTrigger} 
+					/>
+				</div>
 			</section>
 		</main>
 	)

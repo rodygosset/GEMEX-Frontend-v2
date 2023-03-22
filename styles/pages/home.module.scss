@@ -42,6 +42,13 @@
 		@include flex-container(column, nowrap, flex-start, stretch);
 		gap: 30px;
 
+		.horizontalContainer {
+			@include flex-container(row, nowrap, flex-start, flex-start);
+			gap: 30px;
+
+		}
+
+
 	}
 
 }

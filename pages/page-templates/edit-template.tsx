@@ -8,7 +8,7 @@ import useAPIRequest from "@hook/useAPIRequest"
 import styles from "@styles/page-templates/create-template.module.scss"
 import { capitalizeEachWord, toSingular } from "@utils/general"
 import { DynamicObject } from "@utils/types"
-import { AxiosResponse } from "axios"
+import { AxiosResponse, isAxiosError } from "axios"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import CreateForm from "@components/forms/create-form"
@@ -220,22 +220,28 @@ const EditTemplate = (
         }
 
         // make sure the new item title isn't taken already
+        // => expect a 404 when trying to get
 
         if("new_nom" in buildSubmitData()) {
-            await makeAPIRequest<any[], void>(
-                "post",
+            await makeAPIRequest<any, void>(
+                "get",
                 itemType,
-                "search/",
-                {
-                    nom: formData["nom"].value
-                },
+                formData["nom"].value,
+                undefined,
                 res => {
                     // if there is an item with this title
-                    if(res.data.length == 0) return
                     // invalidate the form & let the user know
                     formData["nom"].isInErrorState = true
                     validated = false
                     setValidationErrorMessage(`Le nom '${formData["nom"].value}' est déjà pris`)
+                },
+                err => {
+                    // log the error if it was anything but a 404
+                    if(!isAxiosError(err) || err.response?.status != 404) {
+                        console.log(err)
+                        return
+                    }
+                    // if it was a 404, everything's good
                 }
             )
         }
