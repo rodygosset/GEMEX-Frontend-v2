@@ -503,6 +503,7 @@ export const searchQueryParams: StringArrayObj = {
         'numero_di',
         'validation',
         'user_en_charge_id',
+        'status_id',
         'is_active',
         'tags',
         'annee_creation',

@@ -1,8 +1,6 @@
-import { defaultSearchItem, searchConf, SearchFilters, SearchParam, searchQueryParams, SearchResultsMetaData } from "@conf/api/search";
+import { defaultSearchItem, searchConf, SearchFilters, SearchParam, searchQueryParams } from "@conf/api/search";
 import { ParsedUrlQuery } from "querystring";
 import { DateInputValue, DynamicObject } from "@utils/types";
-import { apiURLs } from "@conf/api/conf";
-import { AxiosResponse } from "axios";
 
 // convert the URL query string into an object 
 // that contains valid search params for our API
