@@ -12,7 +12,8 @@
 
 	#searchSection {
 		
-		@include full-size-col;
+		@include flex-container(column, nowrap, center, center);
+		padding: 60px 0;
 		gap: 40px;
 		
 		#greeting {
@@ -37,8 +38,10 @@
 	}
 
 	#infoContainer {
-		height: 100%;
-		width: 100%;
+		flex: 1;
+		@include flex-container(column, nowrap, flex-start, stretch);
+		gap: 30px;
+
 	}
 
 }

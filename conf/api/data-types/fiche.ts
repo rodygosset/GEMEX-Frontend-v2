@@ -94,6 +94,12 @@ export interface FicheSystematique {
     modifications: string;
 }
 
+export interface UpcomingTask {
+    label: string;
+    date: Date;
+    fiche_id: number;
+}
+
 export interface HistoriqueFicheSystematique {
     id: number;
     fiche_id: number;
