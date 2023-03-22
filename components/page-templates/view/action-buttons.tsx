@@ -1,8 +1,9 @@
 
 import Button from "@components/button";
 import DeleteDialog from "@components/modals/delete-dialog";
+import PeriodicTaskHistoryModal from "@components/modals/periodic-task-history-modal";
 import { itemTypesPermissions } from "@conf/api/conf";
-import { APPROVED_STATUS_ID, Fiche } from "@conf/api/data-types/fiche";
+import { APPROVED_STATUS_ID, Fiche, FicheSystematique } from "@conf/api/data-types/fiche";
 import { MySession } from "@conf/utility-types";
 import { faClockRotateLeft, faFileLines, faHeartBroken, faPenToSquare, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import useAPIRequest from "@hook/useAPIRequest";
@@ -78,10 +79,10 @@ const ActionButtons = (
     const handleCreateFicheClick = () => router.push(getCreateFicheLink())
 
     // Fiche Systématique History button
+    
+    const [showHistoryModal, setShowHistoryModal] = useState(false)
 
-    const handleHistoryClick = () => {
-        // todo
-    }
+    const handleHistoryClick = () => setShowHistoryModal(true)
 
     // edit current item
 
@@ -287,14 +288,21 @@ const ActionButtons = (
                 :
                 <></>
             }
+            <DeleteDialog 
+                isVisible={showDeleteModal}
+                closeDialog={() => setShowDeleteModal(false)}
+                itemType={itemType}
+                itemTitle={itemData.nom}
+            />
             {
-                // delete dialog
-                <DeleteDialog 
-                    isVisible={showDeleteModal}
-                    closeDialog={() => setShowDeleteModal(false)}
-                    itemType={itemType}
-                    itemTitle={itemData.nom}
+                shouldShowHistoryButton() ?
+                <PeriodicTaskHistoryModal 
+                    isVisible={showHistoryModal}
+                    closeModal={() => setShowHistoryModal(false)}
+                    task={itemData as FicheSystematique}
                 />
+                :
+                <></>
             }
             </div> 
             : 

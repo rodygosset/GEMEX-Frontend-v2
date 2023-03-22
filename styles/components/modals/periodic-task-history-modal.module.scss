@@ -1,0 +1,48 @@
+
+@import "@styles/base/_reset.scss";
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+
+.modal {
+
+    @include flex-container(column, nowrap, center, center);
+    gap: 30px;
+    padding: 40px;
+    border-radius: 15px;
+    background: $white;
+
+    h3 {
+        @include header-3-semibold;
+        color: $success;
+        max-width: 250px;
+    }
+    
+    .headerCaption {
+
+        @include flex-container(row, nowrap, center, center);
+        gap: 10px;
+
+        p {
+            @include flex-container(row, nowrap, center, center);
+            gap: 10px;
+            @include text-md-regular;
+            color: $success-400;
+
+            span {
+                @include text-overflow-ellipsis;
+                max-width: 150px;
+            }
+        }
+
+        .dot {
+            width: 5px;
+            height: 5px;
+            color: $success-400;
+        }
+
+    }
+
+
+}
