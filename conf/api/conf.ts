@@ -4,11 +4,13 @@
 const localhostURL = "http://localhost:8000"
 const prodServerURL = "http://vm-gemex.citepro.cite-sciences.fr:8000"
 
-// export const apiURL = process.env.NODE_ENV == "production" ? prodServerURL : localhostURL
-export const apiURL = prodServerURL
+export const apiURL = process.env.NODE_ENV == "production" ? prodServerURL : localhostURL
+// export const apiURL = prodServerURL
 
 // export const dockerAPIURL = "http://host.docker.internal:8000"
-export const dockerAPIURL = prodServerURL
+// export const dockerAPIURL = prodServerURL
+export const dockerAPIURL = localhostURL
+
 
 interface APIURLsType {
     [item: string]: string

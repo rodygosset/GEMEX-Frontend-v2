@@ -1,0 +1,64 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+
+.card {
+
+
+    @include flex-container(column, nowrap, flex-start, flex-start);
+    gap: 10px;
+    padding: 10px 20px;
+    z-index: 1;
+
+    background: $white;
+    border-radius: 10px;
+    box-shadow: 0px 30px 90px $success-200;
+    width: 250px;
+    min-width: 250px;
+
+    h4 {
+        @include text-md-regular;
+        @include flex-container(row, nowrap, flex-start, center);
+        gap: 10px;
+        color: $success;
+
+        svg {
+            width: 14px;
+            height: 14px;
+        }
+    }
+
+    p {
+        @include text-sm-medium;
+        color: $black-600;
+        width: 100%;
+
+        &.userName {
+            color: $success-600;
+        }
+
+        &.infoMessage {
+            font-weight: $font-weight-semibold;
+            color: $primary;
+        }
+    }
+
+
+    &.todo {
+
+        box-shadow: 0px 30px 90px $primary-200;
+
+        h4 {
+            color: $primary;
+        }
+
+        p {
+
+            &.userName {
+                color: $primary-600;
+            }
+        }
+    }
+
+}

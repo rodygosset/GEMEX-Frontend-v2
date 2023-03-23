@@ -31,6 +31,7 @@ interface Props {
     bigPadding?: boolean;
     showLocaleDate?: boolean;
     minDate?: Date;
+    maxDate?: Date;
     onChange: (newValue: Date) => void;
     onFormatChange?: (newFormat: DateFormat) => void;
 }
@@ -90,6 +91,7 @@ const DateInput = (
         bigPadding = true,
         showLocaleDate = false,
         minDate,
+        maxDate,
         onChange,
         onFormatChange
     }: Props
@@ -149,6 +151,13 @@ const DateInput = (
         if(value < minDate) handleDateChange(minDate)
     }, [minDate])
 
+    // update current date when max date changes
+
+    useEffect(() => {
+        if(!value || !maxDate) return
+        if(value > maxDate) handleDateChange(maxDate)
+    }, [maxDate])
+
     // handlers 
 
     const handleDateChange = (newValue: Date | null) => {
@@ -195,6 +204,7 @@ const DateInput = (
                     dateFormat={dateFormat.value}
                     locale={fr}
                     minDate={minDate}
+                    maxDate={maxDate}
                     // @ts-ignore
                     customInput={<CustomInput showLocaleDate={showLocaleDate} />}
                 />

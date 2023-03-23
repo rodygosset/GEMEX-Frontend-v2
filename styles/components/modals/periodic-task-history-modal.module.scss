@@ -10,13 +10,17 @@
     @include flex-container(column, nowrap, center, center);
     gap: 30px;
     padding: 40px;
-    border-radius: 15px;
+    border-radius: 20px;
     background: $white;
+
+    max-height: 90vh;
+    max-width: 90vw;
 
     h3 {
         @include header-3-semibold;
+        text-align: center;
         color: $success;
-        max-width: 250px;
+        width: 100%;
     }
     
     .headerCaption {
@@ -28,7 +32,7 @@
             @include flex-container(row, nowrap, center, center);
             gap: 10px;
             @include text-md-regular;
-            color: $success-400;
+            color: $success-600;
 
             span {
                 @include text-overflow-ellipsis;
@@ -39,7 +43,35 @@
         .dot {
             width: 5px;
             height: 5px;
-            color: $success-400;
+            color: $success-600;
+        }
+
+    }
+
+
+    ul {
+        @include reset-list;
+        @include flex-container(row, nowrap, flex-start, center);
+        gap: 30px;
+        padding: 30px 15px;
+
+        width: 100%;
+        height: 100%;
+        overflow: scroll;
+
+        position: relative;
+
+        .timeline {
+            z-index: 0;
+            color: transparent;
+            height: 20px;
+            position: absolute;
+            top: calc(50% - 10px);
+            left: 0px;
+            right: 0px;
+            border-radius: 30px;
+
+            background: $success-600;
         }
 
     }
