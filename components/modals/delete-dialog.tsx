@@ -8,9 +8,11 @@ import ModalContainer from "./modal-container";
 
 interface Props {
     isVisible: boolean;
+    isMulti?: boolean;
     closeDialog: () => void;
     itemType: string;
     itemTitle: string;
+    itemIDList?: string[];
     onSuccess?: () => void;
     goBackOnSuccess?: boolean;
 }
@@ -18,9 +20,11 @@ interface Props {
 const DeleteDialog = (
     {
         isVisible,
+        isMulti,
         closeDialog,
         itemType,
         itemTitle,
+        itemIDList,
         onSuccess,
         goBackOnSuccess = true
     }: Props
@@ -51,23 +55,37 @@ const DeleteDialog = (
 
     const makeAPIRequest = useAPIRequest()
 
-    const handleDelete = () => {
-        // make a DELETE request to our API
-        makeAPIRequest(
+    const makeDeleteRequest = (itemID: string) => {
+        return makeAPIRequest(
             "delete",
             itemType,
-            itemTitle,
-            undefined,
-            // on success
-            () => {
-                // close both modals
-                handleCancellation()
-                // if a success handler was provided
-                if(onSuccess) onSuccess()
-                // go to the previous URL
-                if(goBackOnSuccess) goBack()
-            }
+            `${itemID}`,
+            undefined
         )
+    }
+
+    const handleDeleteSuccess = () => {
+        // on success
+        // close both modals
+        handleCancellation()
+        // if a success handler was provided
+        if(onSuccess) onSuccess()
+        // go to the previous URL
+        if(goBackOnSuccess) goBack()
+    }
+
+    const handleDelete = async () => {
+
+        if(isMulti && itemIDList) {
+            for(const itemID of itemIDList) {
+                await makeDeleteRequest(itemID)
+            }
+            handleDeleteSuccess()
+        }
+        else {
+            // make a single DELETE request to our API
+            makeDeleteRequest(itemTitle)?.then(handleDeleteSuccess)
+        }
     }
 
     // utils

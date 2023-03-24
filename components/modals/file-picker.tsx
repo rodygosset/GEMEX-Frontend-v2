@@ -4,7 +4,7 @@ import SearchBar from "@components/form-elements/search-bar";
 import LoadingIndicator from "@components/utils/loading-indicator";
 import VerticalScrollBar from "@components/utils/vertical-scrollbar";
 import { Fichier } from "@conf/api/data-types/fichier";
-import { faList, faTableCellsLarge } from "@fortawesome/free-solid-svg-icons";
+import { faList, faTableCellsLarge, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styles from "@styles/components/modals/file-picker.module.scss"
 import { useEffect, useState } from "react";
 import ModalContainer from "./modal-container";
@@ -13,16 +13,19 @@ import useAPIRequest from "@hook/useAPIRequest";
 import { useSession } from "next-auth/react";
 import { MySession } from "@conf/utility-types";
 import { DynamicObject } from "@utils/types";
+import DeleteDialog from "./delete-dialog";
 
 interface Props {
     isVisible: boolean;
-    onSelect: (fileName: string) => void;
+    isExplorer?: boolean;
+    onSelect?: (fileName: string) => void;
     closeModal: () => void;
 }
 
 const FilePicker = (
     {
         isVisible,
+        isExplorer,
         onSelect,
         closeModal
     }: Props
@@ -35,9 +38,11 @@ const FilePicker = (
 
     // state
 
-    const [selectedFileName, setSelectedFileName] = useState("")
+    const [selectedFiles, setSelectedFiles] = useState<string[]>([""])
 
-    const isSelected = (fileName: string) => selectedFileName == fileName
+    const isSelected = (fileName: string) => {
+        return isExplorer ? selectedFiles.includes(fileName) : selectedFiles[0] == fileName
+    }
 
     // search & results state variables
 
@@ -65,7 +70,7 @@ const FilePicker = (
 
         // clear selection
 
-        setSelectedFileName("")
+        setSelectedFiles([""])
 
         const getSearchParams = () => {
             let searchParams: DynamicObject = {}
@@ -94,10 +99,16 @@ const FilePicker = (
     const handleSearchInputChange = (newQ: string) => setSearchQ(newQ)
 
     const handleSelect = () => {
-        onSelect(selectedFileName)
-        setSelectedFileName("")
+        if(onSelect) onSelect(selectedFiles[0])
+        setSelectedFiles([""])
         closeModal()
     }
+
+    // handle file deletion in explorer
+
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+
+    const handleDeleteClick = () => setShowDeleteDialog(true)
 
     // utils
 
@@ -128,8 +139,20 @@ const FilePicker = (
     }
 
     const toggleSelection = (fileName: string) => {
-        if(fileName == selectedFileName) setSelectedFileName("")
-        else setSelectedFileName(fileName)
+        if(isExplorer) {
+            // allow multiple selection
+            // de-select the file if it's already selected
+            if(selectedFiles.includes(fileName)) {
+                setSelectedFiles(selectedFiles.filter(f => f != fileName))
+            } else {
+                // add it to the list otherwise
+                setSelectedFiles([...selectedFiles, fileName])
+            }
+            return
+        }
+        // same here, but single selection
+        if(fileName == selectedFiles[0]) setSelectedFiles([""])
+        else setSelectedFiles([fileName])
     }
 
     // render
@@ -137,7 +160,12 @@ const FilePicker = (
     return (
         <ModalContainer isVisible={isVisible}>
             <section className={styles.modal}>
-                <h4>Sélectionner un fichier</h4>
+                {
+                    isExplorer ?
+                    <h4>Explorer les fichiers</h4>
+                    :
+                    <h4>Sélectionner un fichier</h4>
+                }
                 <SearchBar
                     fullWidth
                     hideCTA
@@ -160,6 +188,20 @@ const FilePicker = (
                             onClick={() => setIsAllCategory(true)}>
                             Tous les fichiers
                         </Button>
+                        {
+                            isExplorer && selectedFiles.length > 1 && !isAllCategory ?
+                            <Button
+                                icon={faTrashAlt}
+                                className={getFileCategoryButtonClassName(true)}
+                                role="secondary"
+                                status="danger"
+                                bigPadding
+                                onClick={handleDeleteClick}>
+                                Supprimer ({ selectedFiles.length - 1 })
+                            </Button>
+                            :
+                            <></>
+                        }
                     </div>
                     <div className={styles.buttonGroup}>
                         <Button
@@ -232,20 +274,38 @@ const FilePicker = (
                         <p>Ré-essayer en changeant les paramètres de recherche</p>
                     </div>
                 }
-                <div className={styles.CTAContainer}>
+                {
+                    isExplorer ?
                     <Button
                         role="secondary"
                         animateOnHover={false}
                         onClick={closeModal}>
-                        Annuler
+                        Fermer
                     </Button>
-                    <Button
-                        active={selectedFileName != ""}
-                        onClick={handleSelect}>
-                        Sélectionner
-                    </Button>
-                </div>
+                    :
+                    <div className={styles.CTAContainer}>
+                        <Button
+                            role="secondary"
+                            animateOnHover={false}
+                            onClick={closeModal}>
+                            Annuler
+                        </Button>
+                        <Button
+                            active={selectedFiles[0] != ""}
+                            onClick={handleSelect}>
+                            Sélectionner
+                        </Button>
+                    </div>
+                }
             </section>
+            <DeleteDialog 
+                isVisible={showDeleteDialog}
+                closeDialog={() => setShowDeleteDialog(false)}
+                itemType={"fichiers"}
+                itemTitle={selectedFiles.length - 1 > 1 ? `${selectedFiles.length - 1} fichiers` : selectedFiles[1]}
+                isMulti
+                itemIDList={selectedFiles.slice(1)}
+            />
         </ModalContainer>
     )
 }

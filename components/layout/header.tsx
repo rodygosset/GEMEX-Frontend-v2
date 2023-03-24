@@ -11,8 +11,9 @@ import CreateButton from "./header/create-button"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
 import { MySession } from "@conf/utility-types"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { Context } from "@utils/context"
+import FilePicker from "@components/modals/file-picker"
 
 
 interface NavLink {
@@ -45,12 +46,16 @@ const Header = () => {
         navHistory[navHistory.length - 1] != "/401"
     )
 
+    // manage file explorer
+
+    const [showFileExplorer, setShowFileExplorer] = useState(false)
+
     
     const navLinks: NavLink[] = [
         {
             icon: faFolderOpen,
             text: "Mes fichiers",
-            onClick: () => {}
+            onClick: () => setShowFileExplorer(true)
         },
         {
             icon: faFileLines,
@@ -65,49 +70,58 @@ const Header = () => {
         }
     ]
 
+    // render
+
     return (
         shouldShowHeader() ?
 
-        <header className={styles.header}>
-            <Link href="/" className={styles.logoContainer}> 
-                <FontAwesomeIcon icon={faGem} />
-                GEMEX
-            </Link>
-            <nav>
-                <ul>
-                    {
-                        navLinks.map(({icon, text, link, onClick}, index) => {
-                            return (
-                                <li key={index}>
-                                    {
-                                        text == "Create" ?
-                                        <CreateButton/>
-                                        :
-                                        <Button
-                                            icon={icon}
-                                            role="tertiary"
-                                            onClick={onClick}>
+        <>
+            <header className={styles.header}>
+                <Link href="/" className={styles.logoContainer}> 
+                    <FontAwesomeIcon icon={faGem} />
+                    GEMEX
+                </Link>
+                <nav>
+                    <ul>
+                        {
+                            navLinks.map(({icon, text, link, onClick}, index) => {
+                                return (
+                                    <li key={index}>
                                         {
-                                            link ?
-                                            <Link href={link}>{text}</Link>
+                                            text == "Create" ?
+                                            <CreateButton/>
                                             :
-                                            text
+                                            <Button
+                                                icon={icon}
+                                                role="tertiary"
+                                                onClick={onClick}>
+                                            {
+                                                link ?
+                                                <Link href={link}>{text}</Link>
+                                                :
+                                                text
+                                            }
+                                            </Button>
                                         }
-                                        </Button>
-                                    }
-                                </li>
-                            )
-                        })
-                    }
-                    <li>
-                        <UserCard/>
-                    </li>
-                    <li>
-                        <LogOutButton/>
-                    </li>
-                </ul>
-            </nav>
-        </header>
+                                    </li>
+                                )
+                            })
+                        }
+                        <li>
+                            <UserCard/>
+                        </li>
+                        <li>
+                            <LogOutButton/>
+                        </li>
+                    </ul>
+                </nav>
+            </header>
+            <FilePicker 
+                isVisible={showFileExplorer}
+                closeModal={() => setShowFileExplorer(false)}
+                isExplorer
+            />
+        </>
         
         :
         
