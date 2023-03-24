@@ -360,30 +360,37 @@ const EditTemplate = (
                 <GoBackButton className={getClassName()}/>
             </div>
             <section>
-                <div id={styles.itemTitle} className={getClassName()}>
-                    {
-                        formData && formData.nom ?
-                        <TextInput 
-                            className={styles.titleInput}
-                            placeholder={getTitlePlaceHolder()}
-                            onChange={handleTitleChange}
-                            defaultValue={formData.nom.value}
-                            isInErrorState={formData.nom.isInErrorState}
-                        />
-                        :
-                        <h1>{defaultValues.nom}</h1>
-                    }
-                    <div className={styles.itemTypeContainer}>
-                        <p>{ getItemTypeLabel() }</p>
+                <div className={styles.header}>
+                    <div id={styles.itemTitle} className={getClassName()}>
+                        {
+                            formData && formData.nom ?
+                            <TextInput 
+                                className={styles.titleInput}
+                                placeholder={getTitlePlaceHolder()}
+                                onChange={handleTitleChange}
+                                defaultValue={formData.nom.value}
+                                isInErrorState={formData.nom.isInErrorState}
+                            />
+                            :
+                            <h1>{defaultValues.nom}</h1>
+                        }
+                        <div className={styles.itemTypeContainer}>
+                            <p>{ getItemTypeLabel() }</p>
+                        </div>
+                        {
+                            validationError ?
+                            <p className={styles.formErrorMessage}>
+                                { getValidationErrorMessage() }
+                            </p>
+                            :
+                            <></>
+                        }
                     </div>
-                    {
-                        validationError ?
-                        <p className={styles.formErrorMessage}>
-                            { getValidationErrorMessage() }
-                        </p>
-                        :
-                        <></>
-                    }
+                    <Button
+                        icon={faFloppyDisk}
+                        onClick={handleSubmit}>
+                        Sauver
+                    </Button>
                 </div>
                 <HorizontalSeperator/>
                 <VerticalScrollBar className={styles.contentScrollContainer}>
@@ -399,13 +406,6 @@ const EditTemplate = (
                         <></>
                     }
                 </VerticalScrollBar>
-                <div className={styles.submitButtonContainer}>
-                    <Button
-                        icon={faFloppyDisk}
-                        onClick={handleSubmit}>
-                        Sauver
-                    </Button>
-                </div>
             </section>
         </main>
     )

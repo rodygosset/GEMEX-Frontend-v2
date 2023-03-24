@@ -386,38 +386,45 @@ const CreateTemplate = (
                 <GoBackButton className={getClassName()}/>
             </div>
             <section>
-                <div id={styles.itemTitle} className={getClassName()}>
-                    <TextInput 
-                        className={styles.titleInput}
-                        placeholder={getTitlePlaceHolder()}
-                        onChange={handleTitleChange}
-                        isInErrorState={formData?.nom.isInErrorState}
-                    />
-                    <div className={styles.itemTypeContainer}>
-                        <p>{ getItemTypeLabel() }</p>
+                <div className={styles.header}>
+                    <div id={styles.itemTitle} className={getClassName()}>
+                        <TextInput 
+                            className={styles.titleInput}
+                            placeholder={getTitlePlaceHolder()}
+                            onChange={handleTitleChange}
+                            isInErrorState={formData?.nom.isInErrorState}
+                        />
+                        <div className={styles.itemTypeContainer}>
+                            <p>{ getItemTypeLabel() }</p>
+                            {
+                                itemType == "fiches" ?
+                                <Select
+                                    name="Type de fiche"
+                                    customStyles={customSelectStyles}
+                                    options={getFicheTypeOptions()}
+                                    value={ficheType}
+                                    defaultValue={ficheTypeOptions[0].value}
+                                    onChange={setFicheType}
+                                    isSearchable={false}
+                                />
+                                :
+                                <></>
+                            }
+                        </div>
                         {
-                            itemType == "fiches" ?
-                            <Select
-                                name="Type de fiche"
-                                customStyles={customSelectStyles}
-                                options={getFicheTypeOptions()}
-                                value={ficheType}
-                                defaultValue={ficheTypeOptions[0].value}
-                                onChange={setFicheType}
-                                isSearchable={false}
-                            />
+                            validationError ?
+                            <p className={styles.formErrorMessage}>
+                                Remplissez les champs requis avant de soumettre le formulaire...
+                            </p>
                             :
                             <></>
                         }
                     </div>
-                    {
-                        validationError ?
-                        <p className={styles.formErrorMessage}>
-                            Remplissez les champs requis avant de soumettre le formulaire...
-                        </p>
-                        :
-                        <></>
-                    }
+                    <Button
+                        icon={faFloppyDisk}
+                        onClick={handleSubmit}>
+                        Créer
+                    </Button>
                 </div>
                 <HorizontalSeperator/>
                 <VerticalScrollBar className={styles.contentScrollContainer}>
@@ -434,13 +441,6 @@ const CreateTemplate = (
                         <></>
                     }
                 </VerticalScrollBar>
-                <div className={styles.submitButtonContainer}>
-                    <Button
-                        icon={faFloppyDisk}
-                        onClick={handleSubmit}>
-                        Créer
-                    </Button>
-                </div>
             </section>
         </main>
     )

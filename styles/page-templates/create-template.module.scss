@@ -52,105 +52,111 @@
 		flex: 1;
 		height: 100%;
 
-		#itemTitle {
-
-			@include flex-container(column, nowrap, flex-start, flex-start);
+		.header {
+			@include flex-container(row, nowrap, space-between, center);
 			gap: 20px;
+		
+			#itemTitle {
 
-			h1 {
-				@include header-3-semibold;
-				color: $primary;
-			}
-			
-			.titleInput {
-                @include header-3-semibold;
-                padding: 20px;
-            }
+				@include flex-container(column, nowrap, flex-start, flex-start);
+				gap: 20px;
 	
-            .itemTypeContainer {
-                @include flex-container(row, nowrap, flex-start, center);
-			    gap: 15px;
-             
-                p {
-                    @include text-md-medium;
-                    color: $primary-600;
-                }
-            }
-
-			&.relance {
-				.titleInput {
-                    background: $warning-100;
-					color: $warning;
-
-                    &::placeholder {
-                        color: $warning-400;
-                    }
+				h1 {
+					@include header-3-semibold;
+					color: $primary;
 				}
-
-                .itemTypeContainer {
-                    p {
-                        color: $warning-600;
-                    }
-                    div {
-                        color: $warning !important;
-                    }
-                }
-
-			}
-
-			&.panne {
+				
 				.titleInput {
-                    background: $error-100;
+					@include header-3-semibold;
+					padding: 20px;
+				}
+		
+				.itemTypeContainer {
+					@include flex-container(row, nowrap, flex-start, center);
+					gap: 15px;
+				 
+					p {
+						@include text-md-medium;
+						color: $primary-600;
+					}
+				}
+	
+				&.relance {
+					.titleInput {
+						background: $warning-100;
+						color: $warning;
+	
+						&::placeholder {
+							color: $warning-400;
+						}
+					}
+	
+					.itemTypeContainer {
+						p {
+							color: $warning-600;
+						}
+						div {
+							color: $warning !important;
+						}
+					}
+	
+				}
+	
+				&.panne {
+					.titleInput {
+						background: $error-100;
+						color: $error;
+	
+						&::placeholder {
+							color: $error-400;
+						}
+					}
+	
+					.itemTypeContainer {
+						p {
+							color: $error-600;
+						}
+						div {
+							color: $error !important;
+						}
+					}
+	
+				}
+	
+				&.systematique {
+					.titleInput {
+						background: $success-100;
+						color: $success;
+	
+						&::placeholder {
+							color: $success-400;
+						}
+					}
+	
+					.itemTypeContainer {
+						p {
+							color: $success-600;
+						}
+	
+						div {
+							color: $success !important;
+						}
+					}
+	
+				}
+	
+				.formErrorMessage {
+					@include text-md-medium;
 					color: $error;
-
-                    &::placeholder {
-                        color: $error-400;
-                    }
 				}
-
-                .itemTypeContainer {
-                    p {
-                        color: $error-600;
-                    }
-                    div {
-                        color: $error !important;
-                    }
-                }
-
+	
 			}
-
-			&.systematique {
-				.titleInput {
-                    background: $success-100;
-					color: $success;
-
-                    &::placeholder {
-                        color: $success-400;
-                    }
-				}
-
-                .itemTypeContainer {
-                    p {
-                        color: $success-600;
-                    }
-
-                    div {
-                        color: $success !important;
-                    }
-                }
-
-			}
-
-			.formErrorMessage {
-				@include text-md-medium;
-				color: $error;
-			}
-
+		
 		}
 
 		.contentScrollContainer {
 			// make sure it never overflows from the body
-            max-height: calc(100vh - calc($nav-bar-height + 280px + 100px));
+            max-height: calc(100vh - calc($nav-bar-height + 280px));
 			@include flex-container(column, nowrap, flex-start, stretch);
 			gap: 30px;
 
@@ -184,12 +190,6 @@
 
 				}
 			}
-		}
-
-		.submitButtonContainer {
-			@include flex-container(row, nowrap, center, center);
-			width: 100%;
-			padding: 30px;
 		}
     }
 
