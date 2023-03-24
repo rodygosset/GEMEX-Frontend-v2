@@ -8,13 +8,13 @@
 #container {
 	@include flex-container(column, nowrap, flex-start, stretch);
 	padding: $nav-bar-height + 20px 7% $nav-bar-height;
-	gap: 40px;
+	gap: 30px;
 
 	#searchSection {
 		
 		@include flex-container(column, nowrap, center, center);
-		padding: 60px 0;
-		gap: 40px;
+		padding: 30px 0;
+		gap: 30px;
 		
 		#greeting {
 
