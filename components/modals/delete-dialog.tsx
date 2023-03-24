@@ -11,6 +11,7 @@ interface Props {
     closeDialog: () => void;
     itemType: string;
     itemTitle: string;
+    onSuccess?: () => void;
     goBackOnSuccess?: boolean;
 }
 
@@ -20,6 +21,7 @@ const DeleteDialog = (
         closeDialog,
         itemType,
         itemTitle,
+        onSuccess,
         goBackOnSuccess = true
     }: Props
 ) => {
@@ -60,6 +62,8 @@ const DeleteDialog = (
             () => {
                 // close both modals
                 handleCancellation()
+                // if a success handler was provided
+                if(onSuccess) onSuccess()
                 // go to the previous URL
                 if(goBackOnSuccess) goBack()
             }

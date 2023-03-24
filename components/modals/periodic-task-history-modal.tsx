@@ -9,7 +9,7 @@ import { faBox, faCircle, faClockRotateLeft, faMonument } from "@fortawesome/fre
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAPIRequest from "@hook/useAPIRequest";
 import styles from "@styles/components/modals/periodic-task-history-modal.module.scss"
-import { itemTypetoAttributeName, toISO } from "@utils/general";
+import { dateOptions, itemTypetoAttributeName, toISO } from "@utils/general";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -132,16 +132,48 @@ const PeriodicTaskHistoryModal = (
         return latestDate
     }
 
+    const getDayBefore = (date: Date) => {
+        const dayBefore = new Date(date)
+        dayBefore.setDate(dayBefore.getDate() - 1)
+        return dayBefore
+    } 
+
+
+    // helper used to make sure there isn't already a task fulfillment item 
+    // for today's date, in which case we don't allow the user
+    // to see the task fulfillment form
+
+    const latestTaskFulfillmentIsTomorrow = () => {
+        const latestDate = getLatestTaskFulfillmentDate()
+        if(!latestDate) return false
+
+        const tomorrow = new Date()
+        tomorrow.setDate(tomorrow.getDate() + 1)
+        return (
+            latestDate.getDate() == tomorrow.getDate() &&
+            latestDate.getMonth() == tomorrow.getMonth() &&
+            latestDate.getFullYear() == tomorrow.getFullYear() 
+        )
+    }
+
+    // helper to check whether a task fulfillment item is the latest one
+
+    const isLatest = (date: Date) =>{
+        const latestDate = getLatestTaskFulfillmentDate()
+        if(!latestDate) return false
+        return toISO(date) == toISO(getDayBefore(latestDate))
+    } 
+
     // keep the timeline full width
 
     const [timelineWidh, setTimelineWidh] = useState(0)
 
     useEffect(() => {
 
-        // adapt the size of the timeline
+        // compute the size of the timeline
 
-        let width = 15 * 2 + (taskHistory.length) * 250 + (taskHistory.length - 1) * 30
-        width += currentUserIsInCharge() ? 250 + 30 : 0
+        let width = 15 * 2 + (taskHistory.length) * 275 + (taskHistory.length - 1) * 30
+        width += currentUserIsInCharge() && !latestTaskFulfillmentIsTomorrow() ? 275 + 30 : 0
         setTimelineWidh(width)
         
     }, [taskHistory])
@@ -171,12 +203,13 @@ const PeriodicTaskHistoryModal = (
                         // if there are history items to show
                         // or if we can show the task fulfillment form   
                         currentUserIsInCharge() || taskHistory.length > 0 ?
-                        <ul>
+                        <ul className="scroll">
                             <div className={styles.timeline} style={{ width: `${timelineWidh}px` }}>timeline</div>
                         {
                             // only allow the user who was assigned the current task
                             // to see the task fulfillment form 
-                            currentUserIsInCharge() ?
+                            // & only if the latest fulfillment isn't today
+                            currentUserIsInCharge() && !latestTaskFulfillmentIsTomorrow() ?
                             <PeriodicTaskHistoryItemCard
                                 isTodo
                                 date={toISO(new Date(task.date_prochaine))}
@@ -193,9 +226,13 @@ const PeriodicTaskHistoryModal = (
                             taskHistory.map((taskHistoryItem, index) => (
                                 <PeriodicTaskHistoryItemCard 
                                     key={`${taskHistoryItem.id}_${index}`}
+                                    id={taskHistoryItem.id}
+                                    currentUserIsAuthor={taskHistoryItem.user_id == user.id}
                                     date={taskHistoryItem.date}
                                     user_id={taskHistoryItem.user_id}
                                     commentaire={taskHistoryItem.commentaire} 
+                                    isLatest={isLatest(new Date(taskHistoryItem.date))}
+                                    refresh={refresh}
                                 />
                             ))
                         }

@@ -65,12 +65,6 @@ const PeriodicTaskFulfillmentModal = (
 
     }
 
-    const getTomorrowDate = () => {
-        const today = new Date()
-        today.setDate(today.getDate() + 1)
-        return today
-    }
-
     // render
 
     return (
@@ -84,7 +78,7 @@ const PeriodicTaskFulfillmentModal = (
                         onChange={setDate}
                         value={date}
                         minDate={notBefore}
-                        maxDate={getTomorrowDate()}
+                        maxDate={new Date()}
                         showLocaleDate
                     />
                     <TextInput

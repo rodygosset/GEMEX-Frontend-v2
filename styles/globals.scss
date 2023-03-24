@@ -34,7 +34,7 @@ a {
 	font-family: $main-font;
 }
 
-*::-webkit-scrollbar {
+*:not(.scroll)::-webkit-scrollbar {
 	display: none;
 }
 

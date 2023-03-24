@@ -61,7 +61,7 @@ const UpcomingPeriodicTasksOverview = (
                 const taskList: UpcomingTask[] = res.data.filter(fiche => !fiche.tags.includes(TO_BE_ASSIGNED_TAG))
                     .map(fiche => ({
                         label: fiche.nom,
-                        date: new Date(fiche.date_creation),
+                        date: new Date(fiche.date_prochaine),
                         fiche_id: fiche.id
                     }))
                 setUpcomingTasks(taskList)
