@@ -267,23 +267,30 @@ const FicheTargetSelectModal = (
                     searchResults.length > 0 && !isLoading ?
                     <>
                         <h3>Résultats de recherche ({ nbResults })</h3>
-                        <div className={styles.viewModeContainer}>
-                            <Button
-                                className={getViewModeButtonClassName(false)}
-                                icon={faTableCellsLarge}
-                                role="tertiary"
-                                bigPadding
-                                onClick={() => setIsListView(false)}>
-                                Cartes
-                            </Button>
-                            <Button
-                                className={getViewModeButtonClassName(true)}
-                                icon={faList}
-                                role="tertiary"
-                                bigPadding
-                                onClick={() => setIsListView(true)}>
-                                Liste
-                            </Button>
+                        <div className={styles.buttonsContainer}>
+                            <Pagination
+                                currentPageNb={currentPageNb}
+                                totalPagesNb={totalPagesNb}
+                                setPageNb={setCurrentPageNb}
+                            />
+                            <div className={styles.viewModeContainer}>
+                                <Button
+                                    className={getViewModeButtonClassName(false)}
+                                    icon={faTableCellsLarge}
+                                    role="tertiary"
+                                    bigPadding
+                                    onClick={() => setIsListView(false)}>
+                                    Cartes
+                                </Button>
+                                <Button
+                                    className={getViewModeButtonClassName(true)}
+                                    icon={faList}
+                                    role="tertiary"
+                                    bigPadding
+                                    onClick={() => setIsListView(true)}>
+                                    Liste
+                                </Button>
+                            </div>
                         </div>
                         <VerticalScrollBar className={styles.scrollContainer}>
                             <ul 
@@ -307,11 +314,6 @@ const FicheTargetSelectModal = (
                             }
                             </ul>
                         </VerticalScrollBar>
-                        <Pagination
-                            currentPageNb={currentPageNb}
-                            totalPagesNb={totalPagesNb}
-                            setPageNb={setCurrentPageNb}
-                        />
                     </>
                     :
                     // while loading

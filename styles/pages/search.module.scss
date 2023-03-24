@@ -30,26 +30,34 @@
 				width: 100%;
 			}
 
-			.viewModeContainer {
-				@include flex-container(row, nowrap, flex-start, center);
+			.buttonsContainer {
+
+				@include flex-container(row, nowrap, space-between, center);
 				gap: 10px;
 
-				button {
-					border: 2px solid $primary-100;
-
-					&:hover {
-						border: none;
+				.viewModeContainer {
+					@include flex-container(row, nowrap, flex-start, center);
+					gap: 10px;
+	
+					button {
+						border: 2px solid $primary-100;
+	
+						&:hover {
+							border: none;
+						}
+	
+						&.selected {
+							border: none;
+							background: $primary-100;
+						}
 					}
 
-					&.selected {
-						border: none;
-						background: $primary-100;
-					}
 				}
+
 			}
 
 			.scrollContainer {
-				height: calc(100vh - 4 * calc($nav-bar-height + 25px) - calc(50px + 60px))
+				height: calc(100vh - 3 * calc($nav-bar-height + 20px) - calc(50px + 60px))
 			}
 
 			#searchResults {
