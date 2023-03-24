@@ -64,7 +64,7 @@ const UnassignedPeriodicTasksOverview = (
                 // needed by the card components
                 const taskList: UpcomingTask[] = res.data.map(fiche => ({
                         label: fiche.nom,
-                        date: new Date(fiche.date_creation),
+                        date: new Date(fiche.date_prochaine),
                         fiche_id: fiche.id
                     }))
                 setUnassignedTasks(taskList)

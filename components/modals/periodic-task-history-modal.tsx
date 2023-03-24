@@ -1,6 +1,7 @@
 import Button from "@components/button";
 import PeriodicTaskHistoryItemCard from "@components/cards/perdiodic-task-history-item-card";
 import NoResult from "@components/operations-dashboard/ui-components/no-result";
+import { TO_BE_ASSIGNED_TAG } from "@conf/api/conf";
 import { FicheSystematique, HistoriqueFicheSystematique } from "@conf/api/data-types/fiche";
 import { searchItemIcons } from "@conf/api/search";
 import { MySession } from "@conf/utility-types";
@@ -164,6 +165,10 @@ const PeriodicTaskHistoryModal = (
         return toISO(date) == toISO(getDayBefore(latestDate))
     } 
 
+    // determine whether the form should be visible
+
+    const shouldShowForm = () => currentUserIsInCharge() as boolean && !latestTaskFulfillmentIsTomorrow() && !task.tags.includes(TO_BE_ASSIGNED_TAG)
+
     // keep the timeline full width
 
     const [timelineWidh, setTimelineWidh] = useState(0)
@@ -173,7 +178,7 @@ const PeriodicTaskHistoryModal = (
         // compute the size of the timeline
 
         let width = 15 * 2 + (taskHistory.length) * 275 + (taskHistory.length - 1) * 30
-        width += currentUserIsInCharge() && !latestTaskFulfillmentIsTomorrow() ? 275 + 30 : 0
+        width += shouldShowForm() ? 275 + 30 : 0
         setTimelineWidh(width)
         
     }, [taskHistory])
@@ -209,7 +214,7 @@ const PeriodicTaskHistoryModal = (
                             // only allow the user who was assigned the current task
                             // to see the task fulfillment form 
                             // & only if the latest fulfillment isn't today
-                            currentUserIsInCharge() && !latestTaskFulfillmentIsTomorrow() ?
+                            shouldShowForm() ?
                             <PeriodicTaskHistoryItemCard
                                 isTodo
                                 date={toISO(new Date(task.date_prochaine))}
