@@ -82,7 +82,7 @@ const Header = () => {
                     GEMEX
                 </Link>
                 <nav>
-                    <ul>
+                    <ul className={styles.navList}>
                         {
                             navLinks.map(({icon, text, link, onClick}, index) => {
                                 return (

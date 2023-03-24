@@ -28,7 +28,7 @@
 
     nav {
 
-        ul {
+        ul.avList {
             @include reset-list;
             @include flex-container(row, nowrap, flex-start, center);
             gap: 30px;
