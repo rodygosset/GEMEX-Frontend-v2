@@ -54,11 +54,9 @@ const ItemMultiSelect = (
             setOptions(res.data.map(item => {
                 // if our options are users
                 // display their full name
-                let optionLabel: string
+                let optionLabel: string = item[mainAttr]
                 if(mainAttr == 'username') {
                     optionLabel = capitalizeEachWord(item['prenom'] + ' ' + item['nom'])
-                } else {
-                    optionLabel = capitalizeEachWord(item[mainAttr])
                 }
                 return { value: item.id, label: optionLabel }
             }))

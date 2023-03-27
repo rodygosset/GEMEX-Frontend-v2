@@ -82,7 +82,6 @@ const UnassignedPeriodicTasksOverview = (
         if(!user) return ''
         const query = new URLSearchParams({
             item: "fiches_systematiques",
-            auteur_id: `${user.id}`,
             tags: `${TO_BE_ASSIGNED_TAG}`,
             is_active: "true"
         })

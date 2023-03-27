@@ -1,5 +1,5 @@
 
-import { faFileCirclePlus, faFileLines, faFolderOpen, faGem } from "@fortawesome/free-solid-svg-icons"
+import { faFileCirclePlus, faFileLines, faFolderOpen, faGem, faUsers } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/layout/header.module.scss"
 import { useRouter } from "next/router"
@@ -11,7 +11,7 @@ import CreateButton from "./header/create-button"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
 import { MySession } from "@conf/utility-types"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Context } from "@utils/context"
 import FilePicker from "@components/modals/file-picker"
 
@@ -30,6 +30,7 @@ const Header = () => {
     const session = useSession()
 
     const user = (session.data as MySession | null)?.user
+    const userRole = (session.data as MySession | null)?.userRole
 
     // don't show the nav bar on specific routes
 
@@ -50,8 +51,24 @@ const Header = () => {
 
     const [showFileExplorer, setShowFileExplorer] = useState(false)
 
+    // link to be displayed in the nav
+
+    const shouldShowManageLink = () => (
+        userRole && userRole.permissions.includes("manage") &&
+        !router.pathname.includes("user-management-dashboard")
+    )
+
+
+    const manageUsersLink: NavLink = {
+        icon: faUsers,
+        text: "Utilisateurs",
+        link: `/user-management-dashboard`,
+        onClick: () => {}
+    }
     
     const navLinks: NavLink[] = [
+        // only show the link the the user management page if the user's a manager
+        ... shouldShowManageLink() ? [manageUsersLink] : [],
         {
             icon: faFolderOpen,
             text: "Mes fichiers",
@@ -69,7 +86,6 @@ const Header = () => {
             onClick: () => {}
         }
     ]
-
     // render
 
     return (

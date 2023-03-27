@@ -80,7 +80,7 @@ const UpcomingPeriodicTasksOverview = (
         if(!user) return ''
         const query = new URLSearchParams({
             item: "fiches_systematiques",
-            auteur_id: `${user.id}`,
+            user_en_charge_id: `${user.id}`,
             is_active: "true"
         })
         return `/search?${query}`
