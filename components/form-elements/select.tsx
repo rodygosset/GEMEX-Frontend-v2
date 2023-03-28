@@ -40,7 +40,7 @@ const stateMessagesStyle = (base: CSSObjectWithLabel) => ({
 export const selectStyles: StylesConfig = {
     container: (base, state) => ({
         ...base,
-        width: state.isMulti ? "100%" : "150px",
+        width: state.isMulti ? "100% !important" : "150px",
     }),
     control: (base, state) => ({
         ...base,
@@ -88,6 +88,10 @@ export const selectStyles: StylesConfig = {
         "&:hover": {
             color: colors["primary"]
         }
+    }),
+    menuPortal: base => ({
+        ...base,
+        zIndex: 600
     }),
     menu: base => ({
         ...base,

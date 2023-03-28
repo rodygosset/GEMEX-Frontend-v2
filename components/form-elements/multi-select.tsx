@@ -3,6 +3,7 @@ import { capitalizeEachWord } from "@utils/general";
 import { SelectOption } from "@utils/react-select/types";
 import { AxiosError, AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
+import { StylesConfig } from "react-select";
 import Select from "./select";
 
 
@@ -10,6 +11,8 @@ interface Props {
     name: string;
     itemType: string;
     selected: string[];
+    fullWidth?: boolean;
+    customStyles?: StylesConfig;
     onChange: (newVal: string[]) => void;
 }
 
@@ -18,6 +21,8 @@ const ItemMultiSelect = (
         name,
         itemType,
         selected,
+        fullWidth,
+        customStyles,
         onChange
     }: Props
 ) => {
@@ -92,6 +97,7 @@ const ItemMultiSelect = (
             onChange={onChange}
             isMulti
             large
+            customStyles={customStyles}
         />
     )
 

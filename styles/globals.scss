@@ -23,7 +23,7 @@ html, body, div#__next {
 	padding: 0;
 	margin: 0;
 	font-family: $main-font;
-	overflow: scroll;
+	overflow: initial !important;
 	scrollbar-width: initial;
 	-ms-overflow-style: initial;
 }
