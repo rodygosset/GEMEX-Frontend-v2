@@ -177,6 +177,16 @@ export const searchConf: SearchConf = {
             "email"
         ]
     },
+    roles: {
+        url: "/api/users/roles/search/",
+        defaultSearchParam: "titre",
+        searchParams: {
+            titre: textSearchParam,
+            permissions: textSearchParam,
+            suppression: textSearchParam
+        },
+        searchResultFields: []
+    },
     fichiers: {
         url: "/api/fichiers/search/",
         defaultSearchParam: "nom",

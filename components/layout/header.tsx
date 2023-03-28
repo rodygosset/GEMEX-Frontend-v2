@@ -62,8 +62,8 @@ const Header = () => {
     const manageUsersLink: NavLink = {
         icon: faUsers,
         text: "Utilisateurs",
-        link: `/user-management-dashboard`,
-        onClick: () => {}
+        link: "/user-management-dashboard",
+        onClick: () => router.push("/user-management-dashboard")
     }
     
     const navLinks: NavLink[] = [

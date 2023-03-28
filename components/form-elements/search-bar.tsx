@@ -11,6 +11,7 @@ import { DynamicObject } from "@utils/types"
 import SearchFilters from "@components/search-filters"
 
 interface Props {
+    className?: string;
     defaultValue?: string;
     itemType?: string;
     hiddenItemTypes?: string[];
@@ -27,6 +28,7 @@ interface Props {
 
 const SearchBar = (
     {
+        className,
         defaultValue,
         itemType = defaultSearchItem,
         hiddenItemTypes,
@@ -142,8 +144,11 @@ const SearchBar = (
         }
     }
 
-    const getClassName = () => {
-        return fullWidth ? styles.fullWidth : ''
+    const getClassNames = () => {
+        let classNames = "" 
+        classNames += fullWidth ? styles.fullWidth : ''
+        classNames += className ? ' ' + className : ''
+        return classNames
     }
 
     // manage search filters visibility
@@ -167,7 +172,7 @@ const SearchBar = (
         <form 
             name="search-bar"
             id={styles.searchBarContainer} 
-            className={getClassName()}
+            className={getClassNames()}
             onSubmit={() => handleSubmit}>
             <FontAwesomeIcon className={styles.icon} icon={faSearch}/>
             <input 

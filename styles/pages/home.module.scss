@@ -7,7 +7,7 @@
 
 #container {
 	@include flex-container(column, nowrap, flex-start, stretch);
-	padding: $nav-bar-height + 20px 7% $nav-bar-height;
+	padding: 20px 7% $nav-bar-height;
 	gap: 30px;
 
 	#searchSection {
