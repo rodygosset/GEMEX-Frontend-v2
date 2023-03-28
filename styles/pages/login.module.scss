@@ -6,6 +6,8 @@
 #container {
     @include flex-container(row, nowrap);
     align-items: flex-start;
+    width: 100vw !important;
+    height: 100vh !important;
 
     #loginForm {
         @include full-size-col;
