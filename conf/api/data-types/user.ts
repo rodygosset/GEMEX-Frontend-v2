@@ -12,6 +12,24 @@ export interface User {
     is_active: boolean
 }
 
+export interface UserCreate {
+    username: string;
+    prenom: string;
+    nom: string;
+    hashed_password: string;
+    role_id: number;
+    groups: string[];
+}
+
+export interface UserUpdate {
+    username?: string;
+    prenom?: string;
+    nom?: string;
+    role_id?: number;
+    groups?: string[];
+    is_active?: boolean;
+}
+
 export interface UserRole {
     titre: string,
     permissions: string,

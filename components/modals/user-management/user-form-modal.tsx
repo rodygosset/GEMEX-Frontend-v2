@@ -1,4 +1,4 @@
-import { User, UserRole } from "@conf/api/data-types/user";
+import { User, UserCreate, UserRole, UserUpdate } from "@conf/api/data-types/user";
 import ModalContainer from "../modal-container";
 import styles from "@styles/components/modals/user-management/user-form-modal.module.scss"
 import Button from "@components/button";
@@ -14,18 +14,23 @@ import FieldContainer from "@components/form-elements/field-container";
 import Label from "@components/form-elements/label";
 import ItemMultiSelect from "@components/form-elements/multi-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CheckBox from "@components/form-elements/checkbox";
 
 interface Props {
     isVisible: boolean;
     closeModal: () => void;
+    // if data is undefined, it means we're creating a new user
     data?: User;
+    // trigger a refresh on form submission
+    refresh: () => void;
 }
 
 const UserFormModal = (
     {
         isVisible,
         closeModal,
-        data
+        data,
+        refresh
     }: Props
 ) => {
 
@@ -36,11 +41,27 @@ const UserFormModal = (
 
     const [username, setUsername] = useState("")
 
+    const [hashedPassword, setHashedPassword] = useState("")
+
     const [roleId, setRoleId] = useState<number>(0)
 
     const [selectedRole, setSelectedRole] = useState<UserRole>()
 
     const [groups, setGroups] = useState<string[]>([])
+
+    const [isActive, setIsActive] = useState(true)
+
+    // if data is defined, load it into the form
+
+    useEffect(() => {
+        if(!data) return
+        setFirstName(data.prenom)
+        setLastName(data.nom)
+        setUsername(data.username)
+        setRoleId(data.role_id)
+        setGroups(data.groups)
+        setIsActive(data.is_active)
+    }, [data])
 
     // role options
 
@@ -79,13 +100,65 @@ const UserFormModal = (
 
     // handlers
 
-    const handleSubmit = (e: SubmitEvent) => {
-        e.preventDefault()
-        closeModal()
+    // make a request to our backend API
+    // to create a new user if data is undefined
+    // or to update an existing user if data is defined
+
+    const postNewUser = () => {
+
+        // bringing the data together
+        const newUser: UserCreate = {
+            prenom: firstName,
+            nom: lastName,
+            username,
+            role_id: roleId,
+            groups,
+            hashed_password: hashedPassword
+        }
+
+        
+        // code to make the request
+        return makeAPIRequest<User, void>(
+            "post",
+            "users",
+            undefined,
+            newUser
+        )
     }
 
+    const updateUser = () => {
+        if(!data) return
+        // start with bringing the data together
+        // don't include fields that haven't been changed
+        // and don't include the password field at all
 
-    const handleCancellation = () => closeModal
+        const updatedUser: UserUpdate = {
+            prenom: firstName !== data.prenom ? firstName : undefined,
+            nom: lastName !== data.nom ? lastName : undefined,
+            username: username !== data.username ? username : undefined,
+            role_id: roleId !== data.role_id ? roleId : undefined,
+            groups: groups !== data.groups ? groups : undefined,
+            is_active: isActive !== data.is_active ? isActive : undefined
+        }
+
+        // make the request
+    
+        return makeAPIRequest<User, void>(
+            "put",
+            "users",
+            `id/${data.id}`,
+            updatedUser
+        )
+    }
+
+    const handleSubmit = async (e: SubmitEvent) => {
+        e.preventDefault()
+        // code to make the request
+        if(data) await updateUser()
+        else await postNewUser()
+        closeModal()
+        refresh()
+    }
 
     // render
 
@@ -162,6 +235,24 @@ const UserFormModal = (
                         />
                     </FieldContainer>
                 </div>
+                {
+                    // only show the password field if we're creating a new user
+                    !data ?
+                    <FieldContainer fullWidth>
+                        <Label>Matricule</Label>
+                        <TextInput
+                            name="password"
+                            placeholder="123456"
+                            currentValue={hashedPassword}
+                            onChange={newVal => setHashedPassword(newVal)}
+                            fullWidth
+                            bigPadding
+                            required
+                        />
+                    </FieldContainer>
+                    :
+                    <></>
+                }
                 <div className={styles.row} style={{ alignItems: "flex-start" }}>
                     <div className={styles.col}>
                         <h4>Permissions</h4>
@@ -204,22 +295,55 @@ const UserFormModal = (
                         }
                     </div>
                 </div>
-                <FieldContainer fullWidth>
-                    <Label><FontAwesomeIcon icon={faUsers}/>&nbsp; Groupes</Label>
-                    <ItemMultiSelect
-                        name="groupes"
-                        itemType="groups"
-                        selected={groups}
-                        customStyles={{
-                            container: base => ({
-                                ...base,
-                                maxWidth: "540px",
-                                width: "100% !important"
-                            })
-                        }}
-                        onChange={newVal => setGroups(newVal)}
-                    />
-                </FieldContainer>
+                {
+                    // if we're updating an existing user
+                    // show the is_active field next to the groups field
+                    data ?
+                    <div className={styles.row}>
+                        <FieldContainer fullWidth>
+                            <Label><FontAwesomeIcon icon={faUsers}/>&nbsp; Groupes</Label>
+                            <ItemMultiSelect
+                                name="groupes"
+                                itemType="groups"
+                                selected={groups}
+                                customStyles={{
+                                    container: base => ({
+                                        ...base,
+                                        maxWidth: "540px",
+                                        width: "100% !important"
+                                    })
+                                }}
+                                onChange={newVal => setGroups(newVal)}
+                            />
+                        </FieldContainer>
+                        <FieldContainer>
+                            <Label>Actif</Label>
+                            <CheckBox
+                                value={isActive}
+                                onChange={newVal => setIsActive(newVal)}
+                            />
+                        </FieldContainer>
+                    </div>
+                    :
+                    // otherwise, only show the groups field
+                    <FieldContainer fullWidth>
+                        <Label><FontAwesomeIcon icon={faUsers}/>&nbsp; Groupes</Label>
+                        <ItemMultiSelect
+                            name="groupes"
+                            itemType="groups"
+                            selected={groups}
+                            customStyles={{
+                                container: base => ({
+                                    ...base,
+                                    maxWidth: "540px",
+                                    width: "100% !important"
+                                })
+                            }}
+                            onChange={newVal => setGroups(newVal)}
+                        />
+                    </FieldContainer>
+                }
+
                 <div className={styles.row}>
                     <Button
                         fullWidth

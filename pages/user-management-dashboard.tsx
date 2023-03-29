@@ -7,7 +7,6 @@ import { faList, faShieldHalved, faTableCellsLarge, faUserPlus, faUsers, faUserS
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAPIRequest from "@hook/useAPIRequest";
 import styles from "@styles/pages/user-management-dashboard.module.scss"
-import { toSingular } from "@utils/general";
 import { useRef, useState } from "react"
 
 interface CategoryType {
@@ -50,6 +49,12 @@ const UserManagementDashboard = () => {
     ]
 
     // state
+
+    // trigger refresh of the search results
+
+    const [refreshTrigger, setRefreshTrigger] = useState(false)
+
+    const refresh = () => setRefreshTrigger(!refreshTrigger)
 
     // keep track of which category is selected
 
@@ -182,6 +187,7 @@ const UserManagementDashboard = () => {
             <UserFormModal
                 isVisible={showUserCreateForm}
                 closeModal={() => setShowUserCreateForm(false)}
+                refresh={refresh}
             />
         </>
     )

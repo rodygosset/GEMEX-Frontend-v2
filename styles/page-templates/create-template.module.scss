@@ -7,7 +7,7 @@
 #container {
 
     @include flex-container(row, nowrap, flex-start, flex-start);
-	padding: $nav-bar-height + 20px 7% $nav-bar-height;
+	padding: 20px 7% $nav-bar-height;
 	gap: 60px;
 
 
