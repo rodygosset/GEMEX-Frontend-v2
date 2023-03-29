@@ -95,6 +95,16 @@ const UserFormModal = (
 
     }, [isVisible])
 
+    // clear the selected role when the role options change
+    // and reset the role id
+
+    useEffect(() => {
+
+        setSelectedRole(undefined)
+        setRoleId(0)
+
+    }, [roleOptions])
+
     // dynamically get the info about the selected role
 
     useEffect(() => {
