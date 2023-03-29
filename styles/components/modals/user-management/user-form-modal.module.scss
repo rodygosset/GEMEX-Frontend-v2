@@ -103,4 +103,10 @@
             }
         }
     }
+
+    p.error {
+        @include text-md-regular;
+        color: $error;
+        width: 100%;
+    }
 }

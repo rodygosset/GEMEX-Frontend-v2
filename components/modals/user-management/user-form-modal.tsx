@@ -35,8 +35,6 @@ const UserFormModal = (
 ) => {
 
     // form data
-    
-    // if data is defined, load it into the form
 
     const [firstName, setFirstName] = useState(data?.prenom || "")
     const [lastName, setLastName] = useState(data?.nom || "")
@@ -56,6 +54,21 @@ const UserFormModal = (
 
     const [errorFields, setErrorFields] = useState<string[]>([])
 
+    // if data is defined, load it into the form
+
+    useEffect(() => {
+        if(!data) {
+            resetFields()
+            return
+        }
+        setFirstName(data.prenom)
+        setLastName(data.nom)
+        setUsername(data.username)
+        setRoleId(data.role_id)
+        setGroups(data.groups)
+        setIsActive(data.is_active)
+    }, [data])
+
     // role options
 
     const [roleOptions, setRoleOptions] = useState<SelectOption[]>([])
@@ -66,15 +79,21 @@ const UserFormModal = (
 
     useEffect(() => {
 
+        if(!isVisible) return
+
         makeAPIRequest<UserRole[], void>(
             "get",
             "roles",
             undefined,
             undefined,
-            res => setRoleOptions(res.data.map(role => ({ label: capitalizeFirstLetter(role.titre), value: role.id })))
+            res => setRoleOptions(res.data.map(role => ({ 
+                label: capitalizeFirstLetter(role.titre), 
+                value: role.id 
+            // don't include the admin role
+            })).filter(role => role.value !== 1))
         )
 
-    }, [])
+    }, [isVisible])
 
     // dynamically get the info about the selected role
 
@@ -144,7 +163,22 @@ const UserFormModal = (
         )
     }
 
+    const resetFields = () => {
+        setFirstName("")
+        setLastName("")
+        setUsername("")
+        setHashedPassword("")
+        setRoleId(0)
+        setGroups([])
+        setIsActive(true)
+        setErrorFields([])
+        setSelectedRole(undefined)
+    }
+
     // validate form data
+
+    const [validationError, setValidationError] = useState(false)
+    const [errorMessage, setErrorMessage] = useState("")
 
     // make sure no required field is left empty
 
@@ -157,6 +191,10 @@ const UserFormModal = (
 
         let validated = true
         const newErrorFields: string[] = []
+
+        // default error message
+
+        setErrorMessage("Remplissez les champs requis avant de soumettre le formulaire...")
 
         if(isEmpty(firstName)) {
             newErrorFields.push("firstName")
@@ -181,19 +219,22 @@ const UserFormModal = (
             validated = false
         }
 
-        // if we're creating a new user, make sure the username is not already taken
-        if(!data) {
-            const user = await makeAPIRequest<User, void>(
+        if(!newErrorFields.includes("username")) {
+            // if we're creating a new user, make sure the username is not already taken
+            // if we're updating an existing user, make sure the username is not already taken by another user
+            const user = await makeAPIRequest<User, User | undefined>(
                 "get",
                 "users",
                 username,
                 undefined,
-                undefined,
-                err => console.log(err)
+                res => res.data,
+                () => undefined
             )
-            if(user) {
+            // @ts-ignore
+            if(user && !data || (data && data.username !== user.username)) {
                 newErrorFields.push("username")
                 validated = false
+                setErrorMessage("Ce nom d'utilisateur est déjà pris...")
             }
         }
 
@@ -205,9 +246,13 @@ const UserFormModal = (
 
     const handleSubmit = async (e: SubmitEvent) => {
         e.preventDefault()
-        if(!validateForm()) 
+        if(!(await validateForm())) {
+            setValidationError(true)
+            return
+        }
         if(data) await updateUser()
         else await postNewUser()
+        resetFields()
         closeModal()
         refresh()
     }
@@ -244,6 +289,7 @@ const UserFormModal = (
                                     placeholder="Jean"
                                     bigPadding
                                     required
+                                    isInErrorState={errorFields.includes("firstName")}
                                     onChange={newVal => setFirstName(newVal)}
                                 />
                             </FieldContainer>
@@ -257,6 +303,7 @@ const UserFormModal = (
                                     placeholder="Dupont"
                                     bigPadding
                                     required
+                                    isInErrorState={errorFields.includes("lastName")}
                                     onChange={newVal => setLastName(newVal)}
                                 />
                             </FieldContainer>
@@ -273,6 +320,7 @@ const UserFormModal = (
                             onChange={newVal => setUsername(newVal)}
                             fullWidth
                             bigPadding
+                            isInErrorState={errorFields.includes("username")}
                             required
                         />
                     </FieldContainer>
@@ -283,6 +331,7 @@ const UserFormModal = (
                             options={roleOptions}
                             value={roleId}
                             required
+                            isInErrorState={errorFields.includes("roleId")}
                             onChange={newVal => setRoleId(newVal)}
                         />
                     </FieldContainer>
@@ -299,6 +348,7 @@ const UserFormModal = (
                             onChange={newVal => setHashedPassword(newVal)}
                             fullWidth
                             bigPadding
+                            isInErrorState={errorFields.includes("hashedPassword")}
                             required
                         />
                     </FieldContainer>
@@ -395,7 +445,12 @@ const UserFormModal = (
                         />
                     </FieldContainer>
                 }
-
+                {
+                    validationError ?
+                    <p className={styles.error}>{ errorMessage }</p>
+                    :
+                    <></>
+                }
                 <div className={styles.row}>
                     <Button
                         fullWidth
