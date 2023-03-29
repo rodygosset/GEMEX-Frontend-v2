@@ -3,7 +3,7 @@ import TextInput from "@components/form-elements/text-input"
 import GoBackButton from "@components/go-back-button"
 import HorizontalSeperator from "@components/utils/horizontal-seperator"
 import VerticalScrollBar from "@components/utils/vertical-scrollbar"
-import { itemTypes } from "@conf/api/search"
+import { itemTypes, searchQueryParams } from "@conf/api/search"
 import { createFormConf, FormElement, FormFieldsObj } from "@conf/create"
 import useAPIRequest from "@hook/useAPIRequest"
 import styles from "@styles/page-templates/create-template.module.scss"
@@ -249,11 +249,17 @@ const CreateTemplate = (
 
     // validate the form before submitting it
 
+    const [errorMessage, setErrorMessage] = useState<string>("")
+
     const [validationError, setValidationError] = useState(false)
 
-    const validateFormData = () => {
+    const validateFormData = async () => {
         if(!formData) return false
         let validated = true
+
+        // default error message
+
+        setErrorMessage("Remplissez les champs requis avant de soumettre le formulaire...")
 
         const validateField = (fieldName: string) => {
             // if the value of the current field is empty
@@ -283,15 +289,33 @@ const CreateTemplate = (
             validated = false
         }
 
+        // make sure the nom field is unique
+
+        const item = await makeAPIRequest<any, any>(
+            "get",
+            itemType,
+            formData["nom"].value,
+            undefined,
+            res => res.data,
+            () => undefined
+        )
+        // if we get an item back
+        // it means the nom field is not unique
+        if(item) {
+            formData["nom"].isInErrorState = true
+            validated = false
+            setErrorMessage("Un élément avec ce nom existe déjà...")
+        }
+
         return validated
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const submitData = buildSubmitData()
         // console.log("submit data ==> ")
         // console.log(submitData)
         // console.log("is validated ? => ", validateFormData())
-        if(!validateFormData()) {
+        if(!(await validateFormData())) {
             setValidationError(true)
             refresh()
             return
@@ -414,7 +438,7 @@ const CreateTemplate = (
                         {
                             validationError ?
                             <p className={styles.formErrorMessage}>
-                                Remplissez les champs requis avant de soumettre le formulaire...
+                                { errorMessage }
                             </p>
                             :
                             <></>

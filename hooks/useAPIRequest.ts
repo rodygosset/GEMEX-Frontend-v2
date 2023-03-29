@@ -53,7 +53,6 @@ const useAPIRequest = () => {
                         useLogOut()
                     } else if(error.response.status == 404 && showPageOn404) {
                         // redirect to the 404 page
-                        // todo: make 404 page
                         router.push('/404')
                     }
                 }

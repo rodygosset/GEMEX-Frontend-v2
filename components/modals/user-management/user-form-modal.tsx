@@ -53,6 +53,9 @@ const UserFormModal = (
 
     const [isActive, setIsActive] = useState<boolean>(data?.is_active || true)
 
+
+    const [errorFields, setErrorFields] = useState<string[]>([])
+
     // role options
 
     const [roleOptions, setRoleOptions] = useState<SelectOption[]>([])
@@ -141,9 +144,68 @@ const UserFormModal = (
         )
     }
 
+    // validate form data
+
+    // make sure no required field is left empty
+
+    const isEmpty = (value: any) => {
+        if(typeof value == "string") return !value
+        return typeof value == "undefined" || value == null
+    }
+
+    const validateForm = async () => {
+
+        let validated = true
+        const newErrorFields: string[] = []
+
+        if(isEmpty(firstName)) {
+            newErrorFields.push("firstName")
+            validated = false
+        }
+        if(isEmpty(lastName)) {
+            newErrorFields.push("lastName")
+            validated = false
+        }
+        if(isEmpty(username)) {
+            newErrorFields.push("username")
+            validated = false
+        }
+        if(roleId <= 0) {
+            newErrorFields.push("roleId")
+            validated = false
+        }
+
+        // if we're creating a new user, make sure the password is not empty
+        if(!data && isEmpty(hashedPassword)) {
+            newErrorFields.push("hashedPassword")
+            validated = false
+        }
+
+        // if we're creating a new user, make sure the username is not already taken
+        if(!data) {
+            const user = await makeAPIRequest<User, void>(
+                "get",
+                "users",
+                username,
+                undefined,
+                undefined,
+                err => console.log(err)
+            )
+            if(user) {
+                newErrorFields.push("username")
+                validated = false
+            }
+        }
+
+        setErrorFields(newErrorFields)
+
+        return validated
+        
+    }
+
     const handleSubmit = async (e: SubmitEvent) => {
         e.preventDefault()
-        // code to make the request
+        if(!validateForm()) 
         if(data) await updateUser()
         else await postNewUser()
         closeModal()
