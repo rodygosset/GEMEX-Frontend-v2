@@ -14,6 +14,12 @@ body {
 	background: rgba($primary, 0.05);
 }
 
+.scroll {
+	overflow: initial !important;
+	scrollbar-width: initial;
+	-ms-overflow-style: initial;
+}
+
 html, body, div#__next {
 	@extend .scroll;
 	min-height: 100vh;
@@ -23,9 +29,9 @@ html, body, div#__next {
 	padding: 0;
 	margin: 0;
 	font-family: $main-font;
-	overflow: initial !important;
-	scrollbar-width: initial;
-	-ms-overflow-style: initial;
+	// overflow: initial !important;
+	// scrollbar-width: initial;
+	// -ms-overflow-style: initial;
 }
 
 a {

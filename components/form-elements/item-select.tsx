@@ -7,26 +7,25 @@ import { StylesConfig } from "react-select";
 import Select from "./select";
 import colors from "@styles/abstracts/_colors.module.scss"
 
+
 interface Props {
     name: string;
     itemType: string;
-    selected: string[];
-    fullWidth?: boolean;
+    selected: number;
     customStyles?: StylesConfig;
     bigPadding?: boolean;
-    row?: boolean;
-    onChange: (newVal: string[]) => void;
+    fullWidth?: boolean;
+    onChange: (newVal: number) => void;
 }
 
-const ItemMultiSelect = (
+const ItemSelect = (
     {
         name,
         itemType,
         selected,
-        fullWidth,
         customStyles,
         bigPadding,
-        row,
+        fullWidth,
         onChange
     }: Props
 ) => {
@@ -99,14 +98,11 @@ const ItemMultiSelect = (
             isLoading={isLoading}
             value={selected}
             onChange={onChange}
-            isMulti
-            large={!fullWidth}
+            fullWidth={fullWidth}
             bigPadding={bigPadding}
             customStyles={customStyles}
-            row={row}
         />
     )
-
 }
 
-export default ItemMultiSelect
+export default ItemSelect

@@ -21,6 +21,9 @@ interface Props {
     required?: boolean;
     hidden?: boolean;
     large?: boolean;
+    fullWidth?: boolean;
+    bigPadding?: boolean;
+    row?: boolean;
     customStyles?: StylesConfig;
     isInErrorState?: boolean;
     onChange?: OnSelectHandler;
@@ -40,7 +43,7 @@ const stateMessagesStyle = (base: CSSObjectWithLabel) => ({
 export const selectStyles: StylesConfig = {
     container: (base, state) => ({
         ...base,
-        width: state.isMulti ? "100% !important" : "150px",
+        width: state.isMulti ? "100%" : "150px"
     }),
     control: (base, state) => ({
         ...base,
@@ -149,6 +152,9 @@ const Select = (
         required = false,
         hidden = false,
         large,
+        fullWidth,
+        bigPadding,
+        row,
         customStyles,
         isInErrorState,
         onChange
@@ -222,14 +228,33 @@ const Select = (
     const getClassNames = () => {
         let classNames = ''
         classNames += large ? styles.large : ''
+        classNames += fullWidth ? ' ' + styles.fullWidth : ''
         classNames += isInErrorState ? ' ' + styles.error : ''
         return classNames
     }
 
+    const bigPaddingStyles: StylesConfig = {
+        control: (base, state) => ({
+            ...(typeof selectStyles.control !== "undefined" ? selectStyles.control(base, state) : {}),
+            padding: "7px 10px"
+        })
+    }
 
+    const rowStyles: StylesConfig = {
+        valueContainer: (base, state) => ({
+            ...(typeof selectStyles.valueContainer !== "undefined" ? selectStyles.valueContainer(base, state) : {}),
+            flexWrap: "nowrap",
+            flexShrink: 0
+        })
+    }
     // include customStyles if it was provided
     
-    const getStyles = () => customStyles ? { ...selectStyles, ...customStyles } : selectStyles
+    const getStyles = () => {
+        let baseStyles = customStyles ? { ...selectStyles, ...customStyles } : selectStyles
+        baseStyles = row ? { ...baseStyles, ...rowStyles } : baseStyles
+        baseStyles = bigPadding ? { ...baseStyles, ...bigPaddingStyles } : baseStyles
+        return baseStyles
+    }
 
     // replace the dropdown indicator with a caret or a chevron
     // depending on whether this is a simple or multi select

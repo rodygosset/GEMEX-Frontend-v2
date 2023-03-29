@@ -216,7 +216,6 @@ const RoleFormModal = (
                         value={permissions}
                         onChange={newVal => setPermissions(newVal)}
                         isMulti
-                        large
                     />
                 </FieldContainer>
                 <FieldContainer fullWidth>
@@ -227,7 +226,6 @@ const RoleFormModal = (
                         value={suppression}
                         onChange={newVal => setSuppression(newVal)}
                         isMulti
-                        large
                     />
                 </FieldContainer>
                 {

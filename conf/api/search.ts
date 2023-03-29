@@ -182,8 +182,8 @@ export const searchConf: SearchConf = {
         defaultSearchParam: "titre",
         searchParams: {
             titre: textSearchParam,
-            permissions: textSearchParam,
-            suppression: textSearchParam
+            permissions: { ...itemListSearchParam, label: "Permission" },
+            suppression: { ...itemListSearchParam, label: "Suppression" }
         },
         searchResultFields: []
     },

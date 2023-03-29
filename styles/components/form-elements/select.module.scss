@@ -8,6 +8,10 @@
     width: $input-width !important;
 }
 
+.fullWidth {
+    width: 100% !important;
+}
+
 .error {
     @include error-state;
     border-radius: 5px;
