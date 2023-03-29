@@ -1,5 +1,6 @@
 import Button from "@components/button";
 import SearchBar from "@components/form-elements/search-bar";
+import RoleFormModal from "@components/modals/user-management/role-form-modal";
 import UserFormModal from "@components/modals/user-management/user-form-modal";
 import Pagination from "@components/pagination";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -87,6 +88,8 @@ const UserManagementDashboard = () => {
     // manage modals 
 
     const [showUserCreateForm, setShowUserCreateForm] = useState(false)
+
+    const [showRoleCreateForm, setShowRoleCreateForm] = useState(false)
 
     // handlers
 
@@ -176,7 +179,10 @@ const UserManagementDashboard = () => {
                                 <Button
                                     icon={selectedCategory.createIcon}
                                     bigPadding
-                                    onClick={() => setShowUserCreateForm(true)}>
+                                    onClick={() => {
+                                        if(selectedCategory.itemType == "users") setShowUserCreateForm(true)
+                                        else setShowRoleCreateForm(true)
+                                    }}>
                                     Créer un { selectedCategory.labelSingular }
                                 </Button>
                             </div>
@@ -187,6 +193,11 @@ const UserManagementDashboard = () => {
             <UserFormModal
                 isVisible={showUserCreateForm}
                 closeModal={() => setShowUserCreateForm(false)}
+                refresh={refresh}
+            />
+            <RoleFormModal
+                isVisible={showRoleCreateForm}
+                closeModal={() => setShowRoleCreateForm(false)}
                 refresh={refresh}
             />
         </>

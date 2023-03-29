@@ -35,33 +35,23 @@ const UserFormModal = (
 ) => {
 
     // form data
+    
+    // if data is defined, load it into the form
 
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
+    const [firstName, setFirstName] = useState(data?.prenom || "")
+    const [lastName, setLastName] = useState(data?.nom || "")
 
-    const [username, setUsername] = useState("")
+    const [username, setUsername] = useState(data?.username || "")
 
     const [hashedPassword, setHashedPassword] = useState("")
 
-    const [roleId, setRoleId] = useState<number>(0)
+    const [roleId, setRoleId] = useState<number>(data?.role_id || 0)
 
     const [selectedRole, setSelectedRole] = useState<UserRole>()
 
-    const [groups, setGroups] = useState<string[]>([])
+    const [groups, setGroups] = useState<string[]>(data?.groups || [])
 
-    const [isActive, setIsActive] = useState(true)
-
-    // if data is defined, load it into the form
-
-    useEffect(() => {
-        if(!data) return
-        setFirstName(data.prenom)
-        setLastName(data.nom)
-        setUsername(data.username)
-        setRoleId(data.role_id)
-        setGroups(data.groups)
-        setIsActive(data.is_active)
-    }, [data])
+    const [isActive, setIsActive] = useState<boolean>(data?.is_active || true)
 
     // role options
 
@@ -146,7 +136,7 @@ const UserFormModal = (
         return makeAPIRequest<User, void>(
             "put",
             "users",
-            `id/${data.id}`,
+            data.username,
             updatedUser
         )
     }

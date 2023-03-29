@@ -37,6 +37,42 @@ export interface UserRole {
     id: number
 }
 
+export interface UserRoleCreate {
+    titre: string,
+    permissions: string,
+    suppression: string,
+}
+
+export interface UserRoleUpdate {
+    titre?: string,
+    permissions?: string,
+    suppression?: string,
+}
+
+export const permissionList = [
+    "manage",
+    "request",
+    "ilots",
+    "expositions",
+    "elements",
+    "stocks",
+    "fiches",
+    "systematiques",
+    "historique",
+    "users"
+]
+
+export const suppressionList = [
+    "ilots",
+    "expositions",
+    "elements",
+    "stocks",
+    "fiches",
+    "systematiques",
+    "historique",
+    "users"
+]
+
 export interface UserGroup {
     nom: string,
     id: number

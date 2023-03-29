@@ -40,9 +40,16 @@
             min-height: 100px;
         }
 
+        svg {
+            width: 3rem;
+            height: 3rem;
+            color: $primary;
+        }
+
         .fieldsContainer {
             @include flex-container(column, nowrap, center, flex-start);
             gap: 15px;
+            width: 100%;
 
             .nameInputContainer {
                 @include flex-container(row, nowrap, flex-start, center);
