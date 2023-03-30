@@ -7,6 +7,7 @@ import GroupFormModal from "@components/modals/user-management/group-form-modal"
 import RoleFormModal from "@components/modals/user-management/role-form-modal";
 import UserFormModal from "@components/modals/user-management/user-form-modal";
 import Pagination from "@components/pagination";
+import LoadingIndicator from "@components/utils/loading-indicator";
 import { apiURLs } from "@conf/api/conf";
 import { permissionList, suppressionList } from "@conf/api/data-types/user";
 import { searchConf } from "@conf/api/search";
@@ -26,6 +27,8 @@ import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useContext, useEffect, useRef, useState } from "react"
 import { authOptions } from "./api/auth/[...nextauth]";
+import Image from "next/image";
+import UserCard from "@components/cards/user-management-dashboard/user-card";
 
 
 const resultsPerPage = 30
@@ -306,6 +309,12 @@ const UserManagementDashboard = (
         return ''
     }
 
+    const getResultsContainerClassNames = () => {
+        let classNames = styles.results
+        classNames += isListView ? ' ' + styles.listView :  ''
+        return classNames
+    }
+
     // keep nav history up to date
 
     const { navHistory, setNavHistory } = useContext(Context)
@@ -333,7 +342,7 @@ const UserManagementDashboard = (
                     <p>Créez, recherchez, mettez à jour ou effacez les informations des utilisateurs de GEMEX</p>
                 </div>
                 <div className={styles.sectionContainer}>
-                    <ul>
+                    <ul className={styles.categories}>
                     {
                         categories.map((category, index) => {
                             const { label, icon } = category
@@ -350,7 +359,7 @@ const UserManagementDashboard = (
                         })
                     }
                     </ul>
-                    <section>
+                    <section className="scroll">
                         <div className={styles.searchForm}>
                             <div className={styles.row + " scroll"}>
                                 <SearchBar 
@@ -414,30 +423,40 @@ const UserManagementDashboard = (
                             }
                             </div>
                             <div className={styles.row}>
-                                <div className={styles.viewModeContainer}>
-                                    <Button
-                                        className={getViewModeButtonClassName(false)}
-                                        icon={faTableCellsLarge}
-                                        role="tertiary"
-                                        bigPadding
-                                        onClick={() => setIsListView(false)}>
-                                        Cartes
-                                    </Button>
-                                    <Button
-                                        className={getViewModeButtonClassName(true)}
-                                        icon={faList}
-                                        role="tertiary"
-                                        bigPadding
-                                        onClick={() => setIsListView(true)}>
-                                        Liste
-                                    </Button>
-                                </div>
-                                <Pagination
-                                    currentPageNb={currentPageNb}
-                                    totalPagesNb={totalPagesNb}
-                                    setPageNb={setCurrentPageNb}
-                                />
+                                {
+                                    // if there are search results
+                                    // display the view mode buttons
+                                    searchResults.length > 0 ?
+                                    <>
+                                        <div className={styles.viewModeContainer}>
+                                            <Button
+                                                className={getViewModeButtonClassName(false)}
+                                                icon={faTableCellsLarge}
+                                                role="tertiary"
+                                                bigPadding
+                                                onClick={() => setIsListView(false)}>
+                                                Cartes
+                                            </Button>
+                                            <Button
+                                                className={getViewModeButtonClassName(true)}
+                                                icon={faList}
+                                                role="tertiary"
+                                                bigPadding
+                                                onClick={() => setIsListView(true)}>
+                                                Liste
+                                            </Button>
+                                        </div>
+                                        <Pagination
+                                            currentPageNb={currentPageNb}
+                                            totalPagesNb={totalPagesNb}
+                                            setPageNb={setCurrentPageNb}
+                                        />
+                                    </>
+                                    :
+                                    <></>
+                                }
                                 <Button
+                                    className={searchResults.length < 1 ? styles.createButton : ''}
                                     icon={selectedCategory.createIcon}
                                     bigPadding
                                     onClick={() => {
@@ -457,6 +476,53 @@ const UserManagementDashboard = (
                                 </Button>
                             </div>
                         </div> 
+                        {
+                            // don't display any content
+                            // if there aren't no search results
+                            searchResults.length > 0 && !isLoading ?
+                            <ul className={getResultsContainerClassNames()}>
+                            {
+                                searchResults.map((item, index) => (
+                                    <UserCard
+                                        key={`${item._id}_${index}`}
+                                        data={item}
+                                        listView={isListView}
+                                        onClick={() => {}}
+                                    />
+                                ))
+                                    
+                            }
+                            </ul>
+                            :
+                            // while loading
+                            // display a loading indicator
+                            isLoading ?
+                            <div className={styles.loadingIndicatorContainer}>
+                                <LoadingIndicator/>
+                                <h4>Chargement...</h4>
+                            </div>
+                            :
+                            // if there aren't any results
+                            // display the corresponding illustration
+                            // & a message for the user
+                            <div className={styles.noResultsMessageContainer}>
+                            <div className={styles.illustrationContainer}>
+                                <Image 
+                                    quality={100}
+                                    src={'/images/no-results-illustration.svg'} 
+                                    alt={"Aucun résultat."} 
+                                    priority
+                                    fill
+                                    style={{ 
+                                        objectFit: "contain", 
+                                        top: "auto"
+                                    }}
+                                />
+                            </div>
+                            <h1>Aucun résultat...</h1>
+                            <p>Ré-essayer en changeant les paramètres de recherche</p>
+                        </div>
+                        }
                     </section>
                 </div>
             </main>

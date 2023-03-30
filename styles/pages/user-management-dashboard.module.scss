@@ -32,10 +32,14 @@
         flex: 1;
         gap: 30px;
 
-        ul {
+        ul.categories {
             @include reset-list;
             @include flex-container(column, nowrap, flex-start, flex-start);
             height: 100%;
+
+            position: sticky;
+            top: $nav-bar-height;
+            background: #f4f7ff;
 
             li {
                 @extend .button;
@@ -61,13 +65,18 @@
         }
 
         section {
-            @include flex-container(column, nowrap, flex-start, flex-start);
+            @include flex-container(column, nowrap, flex-start, center);
             flex: 1;
+            gap: 15px;
 
             .searchForm {
                 @include flex-container(column, nowrap, flex-start, flex-start);
                 width: 100%;
                 gap: 15px;
+                position: sticky;
+                top: $nav-bar-height;
+                background: #f4f7ff;
+                z-index: 100;
 
                 .row {
                     @include flex-container(row, nowrap, space-between, center);
@@ -98,8 +107,81 @@
                         }
     
                     }
+
+                    .createButton {
+                        margin-left: auto;
+                    }
                 }
 
+            }
+
+            ul.results {
+                @include reset-list;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                justify-items: center;
+                align-items: start;
+                flex: 1;
+                gap: 30px;
+                height: 100%;
+                width: 100%;
+
+                &.listView {
+                    border-radius: 10px;
+                    @include flex-container(column, nowrap, flex-start, stretch);
+                    gap: 0px;
+                
+                    & li:first-child {
+                        border-radius: 5px 5px 0px 0px;
+                    }
+        
+                    & li:last-child {
+                        border-radius: 0px 0px 5px 5px;
+                        border: none;
+                    }
+                
+                }
+            }
+
+            .loadingIndicatorContainer {
+                @include flex-container(column, nowrap, center, center);
+                height: 100%;
+        
+                gap: 60px;
+        
+                h4 {
+                    @include header-4-regular;
+                    color: $primary;
+                }
+        
+            }
+        
+        
+            .noResultsMessageContainer {
+        
+                @include flex-container(column, nowrap, center, center);
+                gap: 30px;
+                height: 100%;
+        
+                .illustrationContainer {
+                    position: relative;
+                    width: 100%;
+                    max-width: 500px;
+                    aspect-ratio: 1.226;
+                }
+        
+        
+                h1 {
+                    @include header-2-regular;
+                    color: $primary;
+                    text-align: center;
+                }
+        
+                p {
+                    @include text-md-regular;
+                    color: $primary-600;
+                    text-align: center;
+                }
             }
         }
 
