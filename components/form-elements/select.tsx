@@ -186,10 +186,10 @@ const Select = (
     const [selected, setSelected] = useState<SelectOption | SelectOption[]>()
 
     useEffect(() => {
-        if(typeof defaultValue !== "undefined") {
+        if(typeof defaultValue !== "undefined" && !isLoading) {
             setSelected(getOptionFromValue(defaultValue))
         }
-    }, [])
+    }, [defaultValue, isLoading, options])
 
     useEffect(() => {
         if(typeof value !== "undefined") {

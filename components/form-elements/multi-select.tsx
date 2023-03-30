@@ -10,6 +10,7 @@ import colors from "@styles/abstracts/_colors.module.scss"
 interface Props {
     name: string;
     itemType: string;
+    defaultValue?: string[];
     selected: string[];
     fullWidth?: boolean;
     customStyles?: StylesConfig;
@@ -22,6 +23,7 @@ const ItemMultiSelect = (
     {
         name,
         itemType,
+        defaultValue,
         selected,
         fullWidth,
         customStyles,
@@ -97,6 +99,7 @@ const ItemMultiSelect = (
             name={name}
             options={options}
             isLoading={isLoading}
+            defaultValue={defaultValue}
             value={selected}
             onChange={onChange}
             isMulti

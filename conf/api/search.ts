@@ -411,7 +411,16 @@ export const searchQueryParams: StringArrayObj = {
         'prenom',
         'nom',
         'email',
-        'role_id'
+        'role_id',
+        'groups'
+    ],
+    roles: [
+        'titre',
+        'permissions',
+        'suppression'
+    ],
+    groups: [
+        'nom'
     ],
     fichiers: [
         'nom',

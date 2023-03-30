@@ -11,6 +11,7 @@ import colors from "@styles/abstracts/_colors.module.scss"
 interface Props {
     name: string;
     itemType: string;
+    defaultValue?: number;
     selected: number;
     customStyles?: StylesConfig;
     bigPadding?: boolean;
@@ -22,6 +23,7 @@ const ItemSelect = (
     {
         name,
         itemType,
+        defaultValue,
         selected,
         customStyles,
         bigPadding,
@@ -59,7 +61,7 @@ const ItemSelect = (
             else if('nom' in res.data[0]) { mainAttr = 'nom' }
             else { mainAttr = 'id' }
 
-            setOptions(res.data.map(item => {
+            const selectOptions = res.data.map(item => {
                 // if our options are users
                 // display their full name
                 let optionLabel: string = item[mainAttr]
@@ -67,7 +69,9 @@ const ItemSelect = (
                     optionLabel = capitalizeEachWord(item['prenom'] + ' ' + item['nom'])
                 }
                 return { value: item.id, label: optionLabel }
-            }))
+            })
+
+            setOptions([ { value: 0, label: "Sélectionner..." }, ...selectOptions ])
         }
 
         // in case there was an error with our request
@@ -96,6 +100,7 @@ const ItemSelect = (
             name={name}
             options={options}
             isLoading={isLoading}
+            defaultValue={defaultValue}
             value={selected}
             onChange={onChange}
             fullWidth={fullWidth}

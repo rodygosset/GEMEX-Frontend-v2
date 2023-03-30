@@ -1,6 +1,7 @@
 import { defaultSearchItem, searchConf, SearchFilters, SearchParam, searchQueryParams } from "@conf/api/search";
 import { ParsedUrlQuery } from "querystring";
 import { DateInputValue, DynamicObject } from "@utils/types";
+import { apiURLs } from "@conf/api/conf";
 
 // convert the URL query string into an object 
 // that contains valid search params for our API
@@ -29,6 +30,9 @@ export const parseURLQuery = (query: ParsedUrlQuery): [string, DynamicObject] =>
         if(param in searchConf[itemType].searchParams && searchConf[itemType].searchParams[param].type == 'itemList' &&
             typeof query[param] == 'string') {
             searchParams[param] = [ query[param]?.toString() ]
+        } else if(param in searchConf[itemType].searchParams && searchConf[itemType].searchParams[param].type in apiURLs) {
+            // otherwise, just add the key/value pair to the search params
+            searchParams[param] = Number(query[param])
         } else {
             // otherwise, just add the key/value pair to the search params
             searchParams[param] = query[param]
