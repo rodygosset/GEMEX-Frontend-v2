@@ -22,7 +22,7 @@ export interface UserCreate {
 }
 
 export interface UserUpdate {
-    username?: string;
+    new_username?: string;
     prenom?: string;
     nom?: string;
     role_id?: number;
@@ -75,7 +75,16 @@ export const suppressionList = [
 
 export interface UserGroup {
     nom: string,
+    users: string[],
     id: number
+}
+
+export interface UserGroupCreate {
+    nom: string;
+}
+
+export interface UserGroupUpdate {
+    new_nom: string;
 }
 
 export const getUserFullName = (user: User) => user.prenom + ' ' + user.nom

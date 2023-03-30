@@ -187,6 +187,14 @@ export const searchConf: SearchConf = {
         },
         searchResultFields: []
     },
+    groups: {
+        url: "/api/users/groups/search/",
+        defaultSearchParam: "nom",
+        searchParams: {
+            nom: textSearchParam,
+        },
+        searchResultFields: []
+    },
     fichiers: {
         url: "/api/fichiers/search/",
         defaultSearchParam: "nom",

@@ -3,6 +3,7 @@ import ItemSelect from "@components/form-elements/item-select";
 import ItemMultiSelect from "@components/form-elements/multi-select";
 import SearchBar from "@components/form-elements/search-bar";
 import Select from "@components/form-elements/select";
+import GroupFormModal from "@components/modals/user-management/group-form-modal";
 import RoleFormModal from "@components/modals/user-management/role-form-modal";
 import UserFormModal from "@components/modals/user-management/user-form-modal";
 import Pagination from "@components/pagination";
@@ -10,11 +11,12 @@ import { apiURLs } from "@conf/api/conf";
 import { permissionList, suppressionList } from "@conf/api/data-types/user";
 import { searchConf } from "@conf/api/search";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faList, faShieldHalved, faTableCellsLarge, faUserPlus, faUsers, faUserShield } from "@fortawesome/free-solid-svg-icons";
+import { faList, faShieldHalved, faTableCellsLarge, faUserGroup, faUserPlus, faUsers, faUserShield } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAPIRequest from "@hook/useAPIRequest";
 import styles from "@styles/pages/user-management-dashboard.module.scss"
 import { capitalizeFirstLetter } from "@utils/general";
+import { SelectOption } from "@utils/react-select/types";
 import { useEffect, useRef, useState } from "react"
 
 interface CategoryType {
@@ -25,12 +27,18 @@ interface CategoryType {
     createIcon: IconProp;
     searchParams: string[];
     searchParamsData: {
-        [key: string]: any;
+        [key: string]: SelectOption[];
     };
 }
 
 interface SearchParamsType {
     [key: string]: any;
+}
+
+interface Props {
+    itemType: "roles" | "users" | "groups";
+    initSearchParams: SearchParamsType;
+    results: any[];
 }
 
 
@@ -65,6 +73,15 @@ const UserManagementDashboard = () => {
                 permissions: permissionList.map(p => ({label: capitalizeFirstLetter(p), value: p})),
                 suppression: suppressionList.map(s => ({label: capitalizeFirstLetter(s), value: s}))
             }
+        },
+        {
+            label: "Groupes",
+            labelSingular: "groupe",
+            itemType: "groups",
+            icon: faUserGroup,
+            createIcon: faUserGroup,
+            searchParams: [],
+            searchParamsData: {}
         }
     ]
 
@@ -132,6 +149,8 @@ const UserManagementDashboard = () => {
     const [showUserCreateForm, setShowUserCreateForm] = useState(false)
 
     const [showRoleCreateForm, setShowRoleCreateForm] = useState(false)
+
+    const [showGroupCreateForm, setShowGroupCreateForm] = useState(false)
 
     // handlers
 
@@ -237,10 +256,8 @@ const UserManagementDashboard = () => {
                                                     name={param}
                                                     itemType={conf.type as string}
                                                     selected={searchParams[param]}
-                                                    fullWidth
                                                     bigPadding
                                                     onChange={(newVal: any) => handleSearchParamChange(param, newVal)}
-                                                    
                                                 />
                                             )
                                                 
@@ -277,8 +294,17 @@ const UserManagementDashboard = () => {
                                     icon={selectedCategory.createIcon}
                                     bigPadding
                                     onClick={() => {
-                                        if(selectedCategory.itemType == "users") setShowUserCreateForm(true)
-                                        else setShowRoleCreateForm(true)
+                                        switch(selectedCategory.itemType) {
+                                            case "users":
+                                                setShowUserCreateForm(true)
+                                                break
+                                            case "roles":
+                                                setShowRoleCreateForm(true)
+                                                break
+                                            case "groups":
+                                                setShowGroupCreateForm(true)
+                                                break
+                                        }
                                     }}>
                                     Créer un { selectedCategory.labelSingular }
                                 </Button>
@@ -295,6 +321,11 @@ const UserManagementDashboard = () => {
             <RoleFormModal
                 isVisible={showRoleCreateForm}
                 closeModal={() => setShowRoleCreateForm(false)}
+                refresh={refresh}
+            />
+            <GroupFormModal
+                isVisible={showGroupCreateForm}
+                closeModal={() => setShowGroupCreateForm(false)}
                 refresh={refresh}
             />
         </>

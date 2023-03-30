@@ -43,7 +43,8 @@ const stateMessagesStyle = (base: CSSObjectWithLabel) => ({
 export const selectStyles: StylesConfig = {
     container: (base, state) => ({
         ...base,
-        width: state.isMulti ? "100%" : "150px"
+        width: state.isMulti ? "100%" : "150px",
+        minWidth: "150px"
     }),
     control: (base, state) => ({
         ...base,

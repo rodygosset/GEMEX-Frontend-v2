@@ -79,7 +79,7 @@ const RoleFormModal = (
         }
 
         // make the request to the API
-        return makeAPIRequest<UserRoleCreate, UserRole>(
+        return makeAPIRequest<UserRoleCreate, UserRoleCreate>(
             "post",
             "roles",
             undefined,
