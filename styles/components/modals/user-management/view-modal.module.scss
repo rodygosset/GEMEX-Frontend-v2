@@ -1,0 +1,167 @@
+@import "@styles/base/_reset.scss";
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/components/button.module.scss";
+
+.modal {
+
+    @include flex-container(column, nowrap, center, center);
+    gap: 20px;
+    padding: 30px;
+    max-width: 90vw;
+    min-width: 500px;
+    max-height: 90vh;
+    background: $white;
+    border-radius: 15px;
+    box-shadow: 0px 30px 60px $primary-100;
+
+    overflow: auto !important;
+	scrollbar-width: initial;
+	-ms-overflow-style: initial;
+
+    .buttonsContainer {
+        @include flex-container(row, nowrap, space-between, center);
+        width: 100%;
+        gap: 20px;
+    
+        button {
+            border: 2px solid $primary-100;
+    
+            &:hover {
+                border: none;
+            }
+    
+            &.selected {
+                border: none;
+                background: $primary-100;
+            }
+        }
+    }
+
+    
+    .row {
+        @include flex-container(row, nowrap, flex-start, center);
+        width: 100%;
+        gap: 20px;
+    }
+
+    .header {
+
+        @extend .row;
+        
+
+        .illustrationContainer {
+            position: relative;
+            min-width: 100px;
+            min-height: 100px;
+        }
+
+        svg {
+            width: 3rem;
+            height: 3rem;
+            color: $primary;
+        }
+
+        .textInfo {
+            @include flex-container(column, nowrap, center, flex-start);
+            gap: 5px;
+
+            h2 {
+                @include header-2-semibold;
+                color: $primary;
+            }
+
+            p {
+                @include text-md-regular;
+                color: $primary;
+
+                &.faded {
+                    color: $primary-400;
+                }
+
+                &.userRoleInfo {
+                    @extend .faded;
+                    @include flex-container(row, nowrap, flex-start, center);
+                    gap: 10px;
+
+                    svg {
+                        width: 5px;
+                        height: 5px;
+                        color: $primary-400;
+                    }
+                }
+            }
+        }
+
+    }
+
+    .col {
+        @include flex-container(column, nowrap, flex-start, flex-start);
+        width: 100%;
+        gap: 20px;
+    }
+
+    .userGroupInfo {
+        @extend .row;
+
+        p {
+            @include text-md-medium;
+            color: $primary-400;
+
+        
+            &.label {
+                @extend .row;
+                gap: 10px;
+                width: fit-content;
+                color: $primary;
+
+                svg {
+                    width: 14px;
+                    height: 14px;
+                    color: $primary;
+                }
+            }
+        }
+    }
+
+    .userRoleInfoList {
+        @extend .row;
+        align-items: flex-start;
+
+        .col {
+            h4 {
+                @include text-md-medium;
+                color: $primary;
+            }
+    
+            ul {
+                @include reset-list;
+                @include flex-container(row, wrap, flex-start, flex-start);
+                width: 100%;
+                gap: 15px;
+                max-width: 260px;
+    
+                li {
+                    @extend .button;
+                    @extend .active;
+                    @extend .withPadding;
+    
+                    @include make-tertiary-button($primary, $primary-600, $primary-100);
+                    background: $primary-100 !important;
+    
+                    &:hover {
+                        cursor: default;
+                    }
+                }
+            }
+    
+            p {
+                @include text-md-regular;
+                color: $primary-400;
+            }
+        }
+    }
+
+
+}

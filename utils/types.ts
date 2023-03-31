@@ -27,3 +27,17 @@ export interface TimeDeltaObj {
     days?: number;
     hours?: number;
 }
+
+
+export interface UserManagementCardProps<T> {
+    data: T;
+    listView: boolean;
+    onClick: () => void;
+}
+
+export interface UserManagementViewModalProps<T> {
+    data?: T;
+    isVisible: boolean;
+    closeModal: () => void; 
+    refresh: () => void;
+}

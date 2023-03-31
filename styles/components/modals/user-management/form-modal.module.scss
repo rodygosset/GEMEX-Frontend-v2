@@ -100,6 +100,10 @@
 
                 @include make-tertiary-button($primary, $primary-600, $primary-100);
                 background: $primary-100 !important;
+
+                &:hover {
+                    cursor: default;
+                }
             }
         }
     }

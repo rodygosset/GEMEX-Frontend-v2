@@ -169,7 +169,8 @@ export const searchConf: SearchConf = {
             prenom: { ...textSearchParam, label: "Prénom" },
             nom: textSearchParam,
             role_id: { ...itemSearchParam, type: "roles", label: "Rôle" },
-            groups: { ...itemListSearchParam, item: "groups", label: "Groupes" }
+            groups: { ...itemListSearchParam, item: "groups", label: "Groupes" },
+            is_active: { ...booleanSearchParam, label: "Actif" }
         },
         searchResultFields: [
             "prenom", 

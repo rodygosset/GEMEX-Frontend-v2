@@ -16,6 +16,8 @@ interface Props {
     customStyles?: StylesConfig;
     bigPadding?: boolean;
     fullWidth?: boolean;
+    required?: boolean;
+    isInErrorState?: boolean;
     onChange: (newVal: number) => void;
 }
 
@@ -28,6 +30,8 @@ const ItemSelect = (
         customStyles,
         bigPadding,
         fullWidth,
+        required,
+        isInErrorState,
         onChange
     }: Props
 ) => {
@@ -91,7 +95,7 @@ const ItemSelect = (
             handleReqFailure,
         )
 
-    }, [])
+    }, [])    
 
     // render
 
@@ -106,6 +110,8 @@ const ItemSelect = (
             fullWidth={fullWidth}
             bigPadding={bigPadding}
             customStyles={customStyles}
+            required={required}
+            isInErrorState={isInErrorState}
         />
     )
 }

@@ -1,5 +1,5 @@
 import ModalContainer from "../modal-container"
-import styles from "@styles/components/modals/user-management/user-form-modal.module.scss" 
+import styles from "@styles/components/modals/user-management/form-modal.module.scss" 
 import { permissionList, suppressionList, UserRole, UserRoleCreate, UserRoleUpdate } from "@conf/api/data-types/user";
 import { useEffect, useState } from "react";
 import { SelectOption } from "@utils/react-select/types";
@@ -49,9 +49,8 @@ const RoleFormModal = (
         setTitre(data.titre)
         setPermissions(data.permissions.split(","))
         setSuppression(data.suppression.split(","))
-    }, [data])
-
-
+    }, [data, isVisible])
+    
     // permission options
 
     const permissionOptions: SelectOption[] = permissionList.map(permission => ({ 
@@ -180,6 +179,32 @@ const RoleFormModal = (
         refresh()
     }
 
+    // utils
+
+    // get the value of an option from its label
+    // and vice versa
+    // this is needed because the Select component
+
+    const getOptionValue = (optionLabel: string, options: SelectOption[]) => {
+        const option = options.find(opt => opt.label == optionLabel)
+        if(!option) return ""
+        return option.value as string
+    }
+
+    const getOptionValueForEach = (optionLabels: string[], options: SelectOption[]) => {
+        return optionLabels.map(label => getOptionValue(label, options))
+    }
+
+    const getValueForOption = (optionValue: string, options: SelectOption[]) => {
+        const option = options.find(opt => opt.value == optionValue)
+        if(!option) return ""
+        return option.label as string
+    }
+
+    const getValueForOptionForEach = (optionValues: string[], options: SelectOption[]) => {
+        return optionValues.map(value => getValueForOption(value, options))
+    }
+
     // render
 
     return (
@@ -213,8 +238,9 @@ const RoleFormModal = (
                     <Select
                         name="permissions"
                         options={permissionOptions}
-                        value={permissions}
-                        onChange={newVal => setPermissions(newVal)}
+                        defaultValue={getValueForOptionForEach(permissions, permissionOptions)}
+                        value={getValueForOptionForEach(permissions, permissionOptions)}
+                        onChange={newVal => setPermissions(getOptionValueForEach(newVal, permissionOptions))}
                         isMulti
                     />
                 </FieldContainer>
@@ -223,8 +249,9 @@ const RoleFormModal = (
                     <Select
                         name="suppression"
                         options={suppressionOptions}
-                        value={suppression}
-                        onChange={newVal => setSuppression(newVal)}
+                        defaultValue={getValueForOptionForEach(suppression, suppressionOptions)}
+                        value={getValueForOptionForEach(suppression, suppressionOptions)}
+                        onChange={newVal => setSuppression(getOptionValueForEach(newVal, suppressionOptions))}
                         isMulti
                     />
                 </FieldContainer>

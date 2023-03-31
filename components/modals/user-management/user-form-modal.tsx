@@ -1,6 +1,6 @@
 import { User, UserCreate, UserRole, UserUpdate } from "@conf/api/data-types/user";
 import ModalContainer from "../modal-container";
-import styles from "@styles/components/modals/user-management/user-form-modal.module.scss"
+import styles from "@styles/components/modals/user-management/form-modal.module.scss"
 import Button from "@components/button";
 import { faFloppyDisk, faUsers } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
@@ -45,6 +45,8 @@ const UserFormModal = (
 
     const [roleId, setRoleId] = useState<number>(data?.role_id || 0)
 
+    const [rolesLoading, setRolesLoading] = useState(true)
+
     const [selectedRole, setSelectedRole] = useState<UserRole>()
 
     const [groups, setGroups] = useState<string[]>(data?.groups || [])
@@ -67,7 +69,7 @@ const UserFormModal = (
         setRoleId(data.role_id)
         setGroups(data.groups)
         setIsActive(data.is_active)
-    }, [data])
+    }, [data, isVisible])
 
     // role options
 
@@ -86,11 +88,14 @@ const UserFormModal = (
             "roles",
             undefined,
             undefined,
-            res => setRoleOptions(res.data.map(role => ({ 
-                label: capitalizeFirstLetter(role.titre), 
-                value: role.id 
-            // don't include the admin role
-            })).filter(role => role.value !== 1))
+            res => {
+                setRoleOptions(res.data.map(role => ({ 
+                    label: capitalizeFirstLetter(role.titre), 
+                    value: role.id 
+                // don't include the admin role
+                })).filter(role => role.value !== 1))
+                setRolesLoading(false)
+            }
         )
 
     }, [isVisible])
@@ -99,6 +104,10 @@ const UserFormModal = (
     // and reset the role id
 
     useEffect(() => {
+
+        // don't clear the selected role if the role id is still valid
+
+        if(roleOptions.find(option => option.value === roleId) !== undefined) return
 
         setSelectedRole(undefined)
         setRoleId(0)
@@ -157,7 +166,7 @@ const UserFormModal = (
         const updatedUser: UserUpdate = {
             prenom: firstName !== data.prenom ? firstName : undefined,
             nom: lastName !== data.nom ? lastName : undefined,
-            username: username !== data.username ? username : undefined,
+            new_username: username !== data.username ? username : undefined,
             role_id: roleId !== data.role_id ? roleId : undefined,
             groups: groups !== data.groups ? groups : undefined,
             is_active: isActive !== data.is_active ? isActive : undefined
@@ -267,6 +276,11 @@ const UserFormModal = (
         refresh()
     }
 
+    const handleCancel = () => {
+        resetFields()
+        closeModal()
+    }
+
     // render
 
     return (
@@ -339,6 +353,8 @@ const UserFormModal = (
                         <Select
                             name="role"
                             options={roleOptions}
+                            isLoading={rolesLoading}
+                            defaultValue={roleId}
                             value={roleId}
                             required
                             isInErrorState={errorFields.includes("roleId")}
@@ -465,7 +481,7 @@ const UserFormModal = (
                     <Button
                         fullWidth
                         role="secondary"
-                        onClick={closeModal}>
+                        onClick={handleCancel}>
                         Annuler
                     </Button>
                     <Button

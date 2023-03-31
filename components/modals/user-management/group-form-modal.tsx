@@ -1,6 +1,6 @@
 import { UserGroup, UserGroupCreate, UserGroupUpdate } from "@conf/api/data-types/user";
 import ModalContainer from "../modal-container"
-import styles from "@styles/components/modals/user-management/user-form-modal.module.scss"
+import styles from "@styles/components/modals/user-management/form-modal.module.scss"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFloppyDisk, faUserGroup } from "@fortawesome/free-solid-svg-icons";
 import FieldContainer from "@components/form-elements/field-container";
@@ -102,7 +102,7 @@ const GroupFormModal = (
                 () => undefined
             )
             // @ts-ignore
-            if(group && !data || (data && data.nom !== group.nom)) {
+            if(group && !data || (data && group && data.nom !== group.nom)) {
                 validated = false
                 setErrorMessage("Un rôle avec ce titre existe déjà...")
             }

@@ -4,6 +4,8 @@
 @import "@styles/abstracts/_variables.scss";
 
 .card {
+ 
+    
     @include flex-container(row, nowrap, center, center);
     gap: 20px;
     padding: 20px 30px;
@@ -15,35 +17,10 @@
 
     transition: all 200ms ease-in-out;
 
-    .group {
-        @include flex-container(row, nowrap, flex-start, center);
-        gap: 20px;
-    }
-
-    .mainContent {
-        @extend .group;
-        flex: 1;
-    }
-
-    .illustrationContainer {
-        position: relative;
-        width: 48px;
-        height: 48px;
-
-        .imageHover {
-            display: none;
-        }
-
-    }
-
-    &:hover {
-        .imageHover {
-            display: initial;
-        }
-
-        .image {
-            display: none;
-        }
+    svg {
+        color: $primary;
+        width: 30px;
+        height: 30px;
     }
 
     .textContent {
@@ -79,6 +56,10 @@
         box-shadow: 0px 30px 60px $primary-400;
         transform: scale(1.1);
 
+        svg {
+            color: $white;
+        }
+
         h4 {
             color: $white;
         }
@@ -95,10 +76,6 @@
             }
         }
 
-    }
-
-    .listContent {
-        display: none;
     }
 
     &.listView {
@@ -120,41 +97,6 @@
             flex: 1;
         }
 
-
-        .listContent {
-            @extend .group;
-            flex: 1;
-            
-            span {
-                @include text-md-regular;
-            }
-
-            .label {
-                color: $primary-400;
-            }
-
-            .value {
-                color: $primary;
-            }
-        
-        }
-
-        &:hover {
-
-            .listContent {
-                span {
-                    color: $white;
-                }
-
-                .label {
-                    color: $white-400;
-                }
-
-                .value {
-                    color: $white;
-                }
-            }
-        }
     }
 
 }
