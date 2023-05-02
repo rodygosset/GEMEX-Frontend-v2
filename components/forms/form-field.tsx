@@ -33,7 +33,7 @@ const FormField = (
     
 
     const isHidden = () => (
-        ["expositions", "elements"].includes(formData[fieldName].conf.type) &&
+        formData[fieldName].conf.type == "expositions" &&
         itemType.includes("fiches")
     )
 
@@ -60,7 +60,7 @@ const FormField = (
         const handleDateChange = (newValue: Date) => onChange(fieldName, toISO(newValue))
 
         const handleChange = (value: any) => onChange(fieldName, value)
-        
+
         // render
 
         switch(conf.type) {
@@ -144,7 +144,7 @@ const FormField = (
                         minDate={getMinDate()}
                     />
                 )
-            case "ilots":
+            case "elements":
                 // in case we're dealing with a fiche item
                 // instead of a select
                 // render a FicheTargetSelect component
@@ -155,7 +155,6 @@ const FormField = (
                     const getCurrentItemType = () => {
                         if(formData["element_id"].value) return "elements"
                         if(formData["exposition_id"].value) return "expositions"
-                        if(formData["ilot_id"].value) return "ilots"
                         return "elements"
                     }
 
@@ -196,7 +195,7 @@ const FormField = (
             default: 
                 // don't render a select if the item type is incorrect
                 // or if we're dealing with a fiche item 
-                // & the current field is the task's target (ilot, expo or element)
+                // & the current field is the task's target (expo or element)
                 if(!(conf.type in apiURLs) ||
                     (
                         ["expositions", "elements"].includes(conf.type) &&

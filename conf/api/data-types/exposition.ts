@@ -2,7 +2,6 @@
 export interface Exposition {
     id: number;
     nom: string;
-    ilot_id: number;
     annee: number;
     regie_id: number;
     commentaire: string;

@@ -61,7 +61,6 @@ const FicheTargetSelect = (
     // & clear the other form that have to do with the fiche's target item
 
     const targetItemTypes = [
-        "ilots",
         "expositions",
         "elements"
     ]

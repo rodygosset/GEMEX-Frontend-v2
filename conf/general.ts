@@ -17,12 +17,6 @@ export const creatableItemsList: CreatableItem[] = [
         permission: 'fiches',
     },
     {
-        value: 'ilots',
-        label: 'Ilôt',
-        icon: faLandmark,
-        permission: 'ilots',
-    },
-    {
         value: 'expositions',
         label: 'Exposition',
         icon: faMonument,
@@ -34,12 +28,6 @@ export const creatableItemsList: CreatableItem[] = [
         icon: faBox,
         permission: 'elements',
     }
-    // {
-    //     value: 'article',
-    //     label: 'Article',
-    //     icon: faBox,
-    //     permission: 'stocks',
-    // }
 
 ]
 
@@ -49,8 +37,6 @@ export const itemNames = {
     roles: "Rôles",
     groups: "Groupes",
     fichiers: "Fichers",
-    localisations_ilots: "Localisations Îlots",
-    ilots: "Îlots",
     notifications: "Notifications",
     regies: "Régies",
     expositions: "Expositions",

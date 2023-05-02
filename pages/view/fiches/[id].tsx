@@ -19,7 +19,6 @@ interface Props {
     data: Fiche | null;
     extra: {
         auteur: string;
-        ilot: string;
         exposition: string;
         element: string;
         type: string;
@@ -127,12 +126,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
         (data as Fiche).auteur_id
     )
 
-    const ilot = data?.ilot_id ? await getExtraSSRData(
-        session, 
-        "ilots", 
-        (data as Fiche).ilot_id
-    ) : null
-
     const exposition = data?.exposition_id ? await getExtraSSRData(
         session, 
         "expositions", 
@@ -177,7 +170,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
             data: data ? data : null,
             extra: {
                 auteur: auteur ? auteur : "Erreur",
-                ilot: ilot ? ilot : "Erreur",
                 exposition: exposition ? exposition : "Erreur",
                 element: element ? element : "Erreur",
                 type: type ? type : "Erreur",

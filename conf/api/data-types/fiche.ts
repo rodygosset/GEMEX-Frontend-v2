@@ -51,7 +51,6 @@ export interface Fiche {
     id: number;
     nom: string;
     auteur_id: number;
-    ilot_id: number;
     exposition_id: number;
     element_id: number;
     date_debut: string;
@@ -75,7 +74,6 @@ export interface FicheSystematique {
     id: number;
     nom: string;
     auteur_id: number;
-    ilot_id: number;
     exposition_id: number;
     element_id: number;
     nature_id: number;

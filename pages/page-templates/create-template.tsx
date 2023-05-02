@@ -3,7 +3,7 @@ import TextInput from "@components/form-elements/text-input"
 import GoBackButton from "@components/go-back-button"
 import HorizontalSeperator from "@components/utils/horizontal-seperator"
 import VerticalScrollBar from "@components/utils/vertical-scrollbar"
-import { itemTypes, searchQueryParams } from "@conf/api/search"
+import { itemTypes } from "@conf/api/search"
 import { createFormConf, FormElement, FormFieldsObj } from "@conf/create"
 import useAPIRequest from "@hook/useAPIRequest"
 import styles from "@styles/page-templates/create-template.module.scss"
@@ -228,7 +228,6 @@ const CreateTemplate = (
     }
 
     const ficheTargetItemTypes = [
-        "ilot_id",
         "exposition_id",
         "element_id"
     ]
@@ -285,7 +284,7 @@ const CreateTemplate = (
         }
 
         if(itemType.includes("fiches") && isFicheTargetItemEmpty()) {
-            formData["ilot_id"].isInErrorState = true
+            formData["element_id"].isInErrorState = true
             validated = false
         }
 

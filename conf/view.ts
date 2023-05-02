@@ -1,10 +1,9 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faBox, faBoxOpen, faCalendar, faClipboard, faComment, faFile, faFlag, faHashtag, faHeadset, faHourglass, faHourglassHalf, faLandmark, faLink, faList, faLocationDot, faMonument, faPersonDigging, faPowerOff, faPuzzlePiece, faRepeat, faTag, faTimeline, faTruck, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBox, faBoxOpen, faCalendar, faClipboard, faComment, faFile, faFlag, faHashtag, faHeadset, faHourglassHalf, faLandmark, faLink, faList, faLocationDot, faMonument, faPersonDigging, faPowerOff, faPuzzlePiece, faRepeat, faTag, faTimeline, faTruck, faUser } from "@fortawesome/free-solid-svg-icons";
 import { SearchParam } from "./api/search";
 
 
 export const viewableItemTypes = [
-    "ilots",
     "expositions",
     "stocks",
     "articles",
@@ -104,18 +103,6 @@ export const viewConf: ViewConf = {
     fichiers: {
         file: { ...fileAttribute, label: "Fichier" }
     },
-    localisations_ilots: {
-        nom: textAttribute,
-        ilots: { ...linkAttribute, searchParam: "localisation_id" }
-    },
-    ilots: {
-        nom: textAttribute,
-        numero: { ...textAttribute, label: "Numéro"},
-        fichiers: fileAttribute,
-        expositions: { ...linkAttribute, icon: faMonument, label: "Expositions", searchParam: "ilot_id" },
-        localisation_id: { ...itemAttribute, type: "localisations_ilots", icon: faLocationDot, label: "Localisation" },
-        date_creation: { ...dateAttribute, label: "Date de création"},
-    },
     regies: {
         nom: textAttribute,
         expositions: { ...linkAttribute, searchParam: "regie_id" }
@@ -125,7 +112,6 @@ export const viewConf: ViewConf = {
         annee: { ...numberAttribute, defaultValue:  new Date().getFullYear(), label: "Année" },
         commentaire: textAreaAttribute,
         date_creation: { ...dateAttribute, label: "Créée le" },
-        ilot_id: { ...itemAttribute, type: "ilots", icon: faLandmark, label: "Îlot" },
         regie_id: { ...itemAttribute, type: "regies", icon: faHeadset, label: "Régie" },
         fichiers: fileAttribute,
         elements: { ...linkAttribute, searchParam: "exposition_id", icon: faBox, label: "Éléments" },
@@ -222,7 +208,6 @@ export const viewConf: ViewConf = {
     },
     fiches: {
         nom: { ...textAttribute, fullWidth: true },
-        ilot_id: { ...itemAttribute, type: "ilots", icon: faLandmark,label: "Îlot" },
         exposition_id: { ...itemAttribute, type: "expositions", icon: faMonument, label: "Exposition" },
         element_id: { ...itemAttribute, type: "elements", icon: faBox, label: "Élément" },
         auteur_id: { ...itemAttribute, type: "users", icon: faUser, label: "Auteur de la fiche" },
@@ -243,7 +228,6 @@ export const viewConf: ViewConf = {
     },
     fiches_systematiques: {
         nom: { ...textAttribute, fullWidth: true },
-        ilot_id: { ...itemAttribute, type: "ilots", label: "Îlot" },
         exposition_id: { ...itemAttribute, type: "expositions", label: "Exposition" },
         element_id: { ...itemAttribute, type: "elements", label: "Élément" },
         auteur_id: { ...itemAttribute, type: "users", icon: faUser, label: "Auteur de la fiche" },

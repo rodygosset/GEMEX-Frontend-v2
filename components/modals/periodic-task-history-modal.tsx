@@ -74,11 +74,7 @@ const PeriodicTaskHistoryModal = (
         let targetItemId = 0
         let targetItemType = ""
 
-        if(task.ilot_id != null) {
-            targetItemType = "ilots"
-            targetItemId = task.ilot_id
-        }
-        else if(task.exposition_id != null) {
+        if(task.exposition_id != null) {
             targetItemType = "expositions"
             targetItemId = task.exposition_id
         }

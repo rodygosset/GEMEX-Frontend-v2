@@ -164,7 +164,6 @@ const EditTemplate = (
     }
 
     const ficheTargetItemTypes = [
-        "ilot_id",
         "exposition_id",
         "element_id"
     ]
@@ -215,7 +214,7 @@ const EditTemplate = (
         }
 
         if(itemType.includes("fiches") && isFicheTargetItemEmpty()) {
-            formData["ilot_id"].isInErrorState = true
+            formData["element_id"].isInErrorState = true
             validated = false
         }
 

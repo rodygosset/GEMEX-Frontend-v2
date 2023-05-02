@@ -52,7 +52,6 @@ export interface UserRoleUpdate {
 export const permissionList = [
     "manage",
     "request",
-    "ilots",
     "expositions",
     "elements",
     "stocks",
@@ -63,7 +62,6 @@ export const permissionList = [
 ]
 
 export const suppressionList = [
-    "ilots",
     "expositions",
     "elements",
     "stocks",

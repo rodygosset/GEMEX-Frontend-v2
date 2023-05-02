@@ -1,4 +1,4 @@
-import { faBox, faBoxOpen, faFile, faFileAlt, faLandmark, faLayerGroup, faMonument, faPuzzlePiece, faUser, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { faBox, faBoxOpen, faFile, faFileAlt, faLayerGroup, faMonument, faPuzzlePiece, faUser, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { toSingular } from "@utils/general";
 import { SelectOption } from "@utils/react-select/types";
 
@@ -48,10 +48,6 @@ export const itemTypes: SelectOption<string>[] = [
         label: 'Fiches Systématiques'
     },
     {
-        value: 'ilots',
-        label: 'Ilôts'
-    },
-    {
         value: 'expositions',
         label: 'Expositions'
     },
@@ -84,7 +80,6 @@ export interface SearchItemIconConf {
 export const searchItemIcons: SearchItemIconConf = {
     users: faUser,
     fichiers: faFile,
-    ilots: faLandmark,
     expositions: faMonument,
     articles: faBoxOpen,
     historiques_stocks: faFileAlt,
@@ -202,33 +197,17 @@ export const searchConf: SearchConf = {
         searchParams: {
             nom: textSearchParam,
             user_id: { ...itemSearchParam, type: "users", label: "Auteur du fichier" },
-            ilot_id: { ...itemSearchParam, type: "ilots", label: "Îlot" },
             exposition_id: { ...itemSearchParam, type: "expositions", label: "Exposition" },
             article_id: { ...itemSearchParam, type: "articles", label: "Article" },
             element_id: { ...itemSearchParam, type: "elements", label: "Élément" }
         },
         searchResultFields: []
     },
-    ilots: {
-        url: "/api/ilots/search/",
-        defaultSearchParam: "nom",
-        searchParams: {
-            numero: { ...textSearchParam, label: "Numéro"},
-            nom: textSearchParam,
-            localisation_id: { ...itemSearchParam, type: "localisations_ilots", label: "Localisation" },
-            date_creation: { ...dateSearchParam, label: "Date de création" }
-        },
-        searchResultFields: [
-            "numero",
-            "localisation_id"
-        ]
-    },
     expositions: {
         url: "/api/expositions/search/",
         defaultSearchParam: "nom",
         searchParams: {
             nom: textSearchParam,
-            ilot_id: { ...itemSearchParam, type: "ilots", label: "Îlot" },
             regie_id: { ...itemSearchParam, type: "regies", label: "Régie" },
             annee: { ...numberSearchParam, defaultValue:  new Date().getFullYear(), label: "Année" },
             date_creation: { ...dateSearchParam, label: "Date de création" },
@@ -328,7 +307,6 @@ export const searchConf: SearchConf = {
         searchParams: {
             nom: { ...textSearchParam, label: "Titre" },
             auteur_id: { ...itemSearchParam, type: "users", label: "Auteur de la fiche" },
-            ilot_id: { ...itemSearchParam, type: "ilots", label: "Îlot" },
             exposition_id: { ...itemSearchParam, type: "expositions", label: "Exposition" },
             element_id: { ...itemSearchParam, type: "elements", label: "Élément" },
             date_debut: { ...dateSearchParam, label: "Date de début" },
@@ -348,7 +326,6 @@ export const searchConf: SearchConf = {
         },
         searchResultFields: [
             "user_en_charge_id",
-            "ilot_id",
             "exposition_id",
             "element_id"
         ]
@@ -359,7 +336,6 @@ export const searchConf: SearchConf = {
         searchParams: {
             nom: { ...textSearchParam, label: "Titre" },
             auteur_id: { ...itemSearchParam, type: "users", label: "Auteur de la fiche" },
-            ilot_id: { ...itemSearchParam, type: "ilots", label: "Îlot" },
             exposition_id: { ...itemSearchParam, type: "expositions", label: "Exposition" },
             element_id: { ...itemSearchParam, type: "elements", label: "Élément" },
             nature_id: { ...itemSearchParam, type: "natures_operations", label: "Nature de l'opération" },
@@ -379,7 +355,6 @@ export const searchConf: SearchConf = {
         },
         searchResultFields: [
             "user_en_charge_id",
-            "ilot_id",
             "exposition_id",
             "element_id"
         ]
@@ -426,22 +401,12 @@ export const searchQueryParams: StringArrayObj = {
     fichiers: [
         'nom',
         'user_id',
-        'ilot_id',
         'exposition_id',
         'article_id',
         'element_id'
     ],
-    ilots: [
-        'numero',
-        'nom',
-        'localisation_id',
-        'annee_creation',
-        'mois_creation',
-        'jour_creation'
-    ],
     expositions:  [
         'nom',
-        'ilot_id',
         'regie_id',
         'annee',
         'annee_creation',
@@ -517,7 +482,6 @@ export const searchQueryParams: StringArrayObj = {
     fiches: [
         'nom',
         'auteur_id',
-        'ilot_id',
         'exposition_id',
         'element_id',
         'annee_debut',
@@ -544,7 +508,6 @@ export const searchQueryParams: StringArrayObj = {
     fiches_systematiques: [
         'nom',
         'auteur_id',
-        'ilot_id',
         'exposition_id',
         'element_id',
         'nature_id',

@@ -25,7 +25,7 @@ interface Props {
 }
 
 // this modal is used to allow the user to choose an item
-// which is either a "ilot", an expo or an element
+// which is either an expo or an element
 // using the features fond on the search page
 // it is used in the fiches creation & edit pages
 

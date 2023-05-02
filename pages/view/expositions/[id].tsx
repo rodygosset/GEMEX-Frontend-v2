@@ -18,7 +18,6 @@ const itemType = "expositions"
 interface Props {
     data: Exposition | null;
     extra: {
-        ilot: string;
         regie: string;
     } | null;
 }
@@ -106,12 +105,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     // retrieving the extra data we need to display
 
-    const ilot = await getExtraSSRData(
-        session, 
-        "ilots", 
-        (data as Exposition).ilot_id
-    )
-
     const regie = await getExtraSSRData(
         session, 
         "regies", 
@@ -125,7 +118,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
         props: {
             data: data ? data : null,
             extra: {
-                ilot: ilot ? ilot : "Erreur",
                 regie: regie ? regie : "Erreur"
             }
         }

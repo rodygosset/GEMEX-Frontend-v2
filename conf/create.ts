@@ -89,22 +89,12 @@ export const createFormConf: CreateFormConf = {
         permissions: { ...textFormElement },
         suppression: { ...textFormElement }
     },
-    localisations_ilots: {
-        nom: { ...textFormElement, label: "Titre" }
-    },
-    ilots: {
-        nom: { ...textFormElement, label: "Titre", required: true },
-        numero: { ...textFormElement, label: "Numéro" },
-        fichiers: fileFormElement,
-        localisation_id: { ...itemFormElement, type: "localisations_ilots", label: "Localisation"}
-    },
     regies: {
         nom: { ...textFormElement, label: "Titre", required: true }
     },
     expositions: {
         nom: { ...textFormElement, label: "Titre", required: true },
         commentaire: textAreaFormElement,
-        ilot_id: { ...itemFormElement, type: "ilots", label: "Îlot" },
         regie_id: { ...itemFormElement, type: "regies", label: "Régie" },
         fichiers: fileFormElement,
         annee: { ...numberFormElement, defaultValue:  new Date().getFullYear() },
@@ -177,7 +167,6 @@ export const createFormConf: CreateFormConf = {
     },
     fiches: {
         nom: { ...textFormElement, label: "Titre de la fiche", required: true },
-        ilot_id: { ...itemFormElement, type: "ilots", label: "Élément / Exposition", defaultValue: null, required: false },
         exposition_id: { ...itemFormElement, type: "expositions", label: "Exposition", defaultValue: null, required: false },
         element_id: { ...itemFormElement, type: "elements", label: "Élément", defaultValue: null, required: false },
         numero_di: { ...textFormElement, label: "Numéro de la DI" },
@@ -195,7 +184,6 @@ export const createFormConf: CreateFormConf = {
     },
     fiches_systematiques: {
         nom: { ...textFormElement, label: "Titre de la fiche", required: true },
-        ilot_id: { ...itemFormElement, type: "ilots", label: "Élément / Exposition", defaultValue: null },
         exposition_id: { ...itemFormElement, type: "expositions", label: "Exposition", defaultValue: null },
         element_id: { ...itemFormElement, type: "elements", label: "Élément", defaultValue: null },
         description: textAreaFormElement,

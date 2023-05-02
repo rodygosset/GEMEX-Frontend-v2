@@ -133,7 +133,6 @@ const ActionButtons = (
     //   to use as the subject of a Fiche item
 
     const ficheItemTypes = [
-        "ilots",
         "expositions",
         "elements"
     ]
