@@ -1,34 +1,32 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# GEMEX App
 
-## Getting Started
+This repository contains the frontend code for the app.
 
-First, run the development server:
+## Description
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+GEMEX App is a web-based tool designed to track maintenance and repair operations at the Cité des sciences expo center in Paris. It helps the maintenance and operations team by allowing technicians to report problems, track their progress, and evaluate the state of the exhibitions. This information is crucial for organizing work and improving the visitors' experience.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## UI Prototype
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+You can find the Figma prototype for this app [here](https://www.figma.com/proto/JHeE72f3idTJfVuQvvCs3B/GEMEX-v2?page-id=0%3A1&node-id=8-1461&viewport=4051%2C-1609%2C0.42&scaling=min-zoom&starting-point-node-id=8%3A1461).  
+It showcases the user interface and provides a visual representation of the app's features.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Technologies Used
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+The frontend is built with the following technologies:
 
-## Learn More
+- Next.js / React JS
+- NextAuth.js
+- HTML5 / CSS3 / SCSS
+- JavaScript
 
-To learn more about Next.js, take a look at the following resources:
+## Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Allows technicians to create and edit different types of records (operations, malfunctions, etc.) to inform the team of operations within the museum.
+- Provides a list and search functionality for elements (Expositions, Expo Elements, Records, etc.) to access information about them.
+- Displays ongoing operations to keep track of tasks that need to be performed.
+- Enables exporting information about different elements in PDF format for sharing or use in other software.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Thank you for checking out this repository! If you have any questions or want to discuss potential opportunities, feel free to reach out!
