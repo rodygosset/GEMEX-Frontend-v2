@@ -5,8 +5,7 @@ import PeriodicTaskHistoryModal from "@components/modals/periodic-task-history-m
 import { itemTypesPermissions } from "@conf/api/conf";
 import { APPROVED_STATUS_ID, Fiche, FicheSystematique } from "@conf/api/data-types/fiche";
 import { MySession } from "@conf/utility-types";
-import { faClockRotateLeft, faFileLines, faHeartBroken, faPenToSquare, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import useAPIRequest from "@hook/useAPIRequest";
+import { faClockRotateLeft, faFileLines, faPenToSquare, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styles from "@styles/page-templates/view/action-buttons.module.scss"
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -100,30 +99,6 @@ const ActionButtons = (
 
     const handleDeleteClick = () => setShowDeleteModal(true)
 
-    // in case of a "Fiche panne" / malfunction report
-    // that hasn't been acknowledged yet
-    // mark it as acknowledged by making an API request
-
-    const makeAPIRequest = useAPIRequest()
-
-    const refresh = () => router.push(router.asPath)
-
-    const handleAcknowledgeMalfunctionClick = () => {
-        // make a PUT request to the API to remove the "Panne déclarée" tag
-        // and then refresh the page
-        const tags = (itemData as Fiche).tags
-        if(tags.includes("Panne déclarée")) tags.splice(tags.indexOf("Panne déclarée"), 1)
-        makeAPIRequest<Fiche, void>(
-            "put",
-            "fiches",
-            itemData.nom,
-            {
-                tags: tags
-            },
-            () => refresh()
-        )
-    }
-
 
     // logic used to determine which buttons to show
 
@@ -199,20 +174,6 @@ const ActionButtons = (
         )
     }
 
-    // only show the "acknowledge malfunction" button if
-    // - the current item is a Fiche object
-    // - it has the "Panne déclarée" tag (malfunction declared)
-    // - the user is a manager
-
-    const shouldShowAcknowledgeButton = () => {
-        return (
-            userRole &&
-            itemType == "fiches" &&
-            (itemData as Fiche).tags.includes("Panne déclarée") &&
-            userRole.permissions.includes("manage")
-        )
-    }
-
     // render
 
     return (
@@ -257,19 +218,6 @@ const ActionButtons = (
                     <Link href={getEditLink()}>
                         Modifier
                     </Link>
-                </Button>
-                :
-                <></>
-            }
-            {
-                // determine whether the button should be visible
-                shouldShowAcknowledgeButton() ?
-                <Button
-                    role="tertiary"
-                    status="danger"
-                    icon={faHeartBroken}
-                    onClick={handleAcknowledgeMalfunctionClick}>
-                    Reconnaître la panne
                 </Button>
                 :
                 <></>

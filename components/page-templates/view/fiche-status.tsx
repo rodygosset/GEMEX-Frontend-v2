@@ -29,11 +29,13 @@ const FicheStatus = (
 
     // lifecycle
     // 1. Demande => can be accepted or closed by a group manager only
-    // 2. En cours => can be marked as done ("terminée") 
+    // 2. Ouverte => can be marked as in progress ("en cours")
+    //               by the author or the user in charge of the task
+    // 3. En cours => can be marked as done ("terminée") 
     //                by the author, the user in charge of the task or a manager
-    // 3. Terminée => can be marked as approved ("validée") / invalidated ("en cours") 
+    // 4. Terminée => can be marked as approved ("validée") / invalidated ("en cours") 
     //                by a manager 
-    // 4. Validée => status can't be changed
+    // 5. Validée => status can't be changed
 
     // determine which permissions the user has
 

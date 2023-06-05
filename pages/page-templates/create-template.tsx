@@ -288,22 +288,24 @@ const CreateTemplate = (
             validated = false
         }
 
-        // make sure the nom field is unique
+        // make sure the nom field is unique, except for fiches
 
-        const item = await makeAPIRequest<any, any>(
-            "get",
-            itemType,
-            formData["nom"].value,
-            undefined,
-            res => res.data,
-            () => undefined
-        )
-        // if we get an item back
-        // it means the nom field is not unique
-        if(item) {
-            formData["nom"].isInErrorState = true
-            validated = false
-            setErrorMessage("Un élément avec ce nom existe déjà...")
+        if(!itemType.includes("fiches")) {
+            const item = await makeAPIRequest<any, any>(
+                "get",
+                itemType,
+                formData["nom"].value,
+                undefined,
+                res => res.data,
+                () => undefined
+            )
+            // if we get an item back
+            // it means the nom field is not unique
+            if(item) {
+                formData["nom"].isInErrorState = true
+                validated = false
+                setErrorMessage("Un élément avec ce nom existe déjà...")
+            }
         }
 
         return validated
