@@ -62,6 +62,7 @@ export const permissionList = [
 ]
 
 export const suppressionList = [
+    "manage",
     "expositions",
     "elements",
     "stocks",
