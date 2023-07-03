@@ -26,7 +26,7 @@ const RouteGard = ({ children }: Props) => {
 
     useEffect(() => {
 
-        console.log("session", session)
+        console.log("session", status)
 
         // when the component mounts, run authCheck
         authCheck(router.asPath)
