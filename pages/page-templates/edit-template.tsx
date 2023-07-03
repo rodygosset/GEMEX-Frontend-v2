@@ -291,16 +291,16 @@ const EditTemplate = (
 
     const getItemTypeLabel = () => {
         const label = itemTypes.find(type => type.value == itemType)?.label.slice(0, -1)
-        let itemLabel = itemType.split('_').length > 1 ? toSingular(itemType) : label
+        let itemLabel = itemType?.split('_').length > 1 ? toSingular(itemType) : label || ""
         // account for Fiche items
         // => add the fiche type
-        if(itemType.includes("fiches")) itemLabel = `Fiche ${defaultValues["tags"][0]}`
+        if(itemType && itemType.includes("fiches")) itemLabel = `Fiche ${defaultValues["tags"][0]}`
         return itemLabel
     } 
 
 
     const getClassName = () => {
-        if(itemType.includes("fiches")) {
+        if(itemType?.includes("fiches")) {
             // change the color depending on the fiche type
             switch(getFicheType()) {
                 case "relance":
@@ -319,14 +319,14 @@ const EditTemplate = (
 
     const getTitlePlaceHolder = () => {
         if(!(itemType in createFormConf)) return
-        return createFormConf[itemType].nom.label
+        return createFormConf[itemType]?.nom.label
     }
 
     // for fiche items
     // the fiche type is the first element of the tags array
     
     const getFicheType = () => {
-        if(!itemType.includes("fiches")) return ""
+        if(!itemType || !itemType.includes("fiches")) return ""
         return (defaultValues["tags"][0] as string).toLowerCase()
     }
 
@@ -337,7 +337,7 @@ const EditTemplate = (
     // include it in the return value
 
     const getExcludedFields = () => {
-        if(!itemType.includes("fiches")) {
+        if(!itemType || !itemType.includes("fiches")) {
             return excluded ? excluded : []
         }
         const excludedFields = itemType.includes("fiches") ? fichesEditConf[getFicheType()].excludedFields : []
@@ -371,7 +371,7 @@ const EditTemplate = (
                                 isInErrorState={formData.nom.isInErrorState}
                             />
                             :
-                            <h1>{defaultValues.nom}</h1>
+                            <h1>{defaultValues?.nom || ""}</h1>
                         }
                         <div className={styles.itemTypeContainer}>
                             <p>{ getItemTypeLabel() }</p>

@@ -353,7 +353,7 @@ const CreateTemplate = (
 
     const getItemTypeLabel = () => {
         const label = itemTypes.find(type => type.value == itemType)?.label.slice(0, -1)
-        return itemType.split('_').length > 1 ? toSingular(itemType) : label
+        return itemType?.split('_').length > 1 ? toSingular(itemType) : label || ""
     } 
 
 
@@ -391,7 +391,7 @@ const CreateTemplate = (
     // include it in the return value
 
     const getHiddenFields = () => {
-        if(!itemType.includes("fiches")) return 
+        if(!itemType || !itemType.includes("fiches")) return 
         const hiddenFields = itemType.includes("fiches") ? fichesCreateConf[ficheType].hiddenFields : []
         return hidden ? [...hidden, ...hiddenFields] : hiddenFields
     }

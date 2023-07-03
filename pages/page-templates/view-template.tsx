@@ -33,10 +33,10 @@ const ViewTemplate = (
 
     const getItemTypeLabel = () => {
         const label = itemTypes.find(type => type.value == itemType)?.label.slice(0, -1)
-        let itemLabel = itemType.split('_').length > 1 ? toSingular(itemType) : label
+        let itemLabel = itemType?.split('_').length > 1 ? toSingular(itemType) : label || ""
         // account for Fiche items
         // => add the fiche type
-        if(itemType.includes("fiches")) itemLabel = `Fiche ${itemData["tags"][0]}`
+        if(itemType?.includes("fiches")) itemLabel = `Fiche ${itemData["tags"][0]}`
         return itemLabel
     } 
 
@@ -59,7 +59,7 @@ const ViewTemplate = (
         }
     }
 
-    const itemTypeHasFiles = () => "fichiers" in itemData
+    const itemTypeHasFiles = () => itemData && "fichiers" in itemData
     
     // render
 
