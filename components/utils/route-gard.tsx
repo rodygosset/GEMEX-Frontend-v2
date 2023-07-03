@@ -7,6 +7,8 @@ import { useRouter } from "next/router"
 import { useContext, useEffect, useState } from "react"
 import { isAuthError } from "utils/req-utils";
 
+import styles from "@styles/page-templates/error-page-template.module.scss"
+import Image from "next/image";
 
 interface Props {
     children: any;
@@ -75,6 +77,7 @@ const RouteGard = ({ children }: Props) => {
             // show the current page
             .then(res => {
                 if(res.status == 200) setAuthorized(true)
+                else console.log(res)
             })
             // if the api returns an auth error, redirect to login page
             .catch(error => {
@@ -86,12 +89,32 @@ const RouteGard = ({ children }: Props) => {
                     // sign out
                     // indicating to the login page which url to go back to 
                     signOut({ callbackUrl: `/login?${query}` })
-                }
+                } else console.log(error)
             })
         }
     }
 
-    return (authorized && children)
+    // while the auth check is running, show a placeholder
+
+    return authorized ? children : (
+        <main className={styles.container}>
+            <div className={styles.illustrationContainer}>
+                <Image 
+                    quality={100}
+                    src={'/images/security-illustration.svg'} 
+                    alt={"Vérification de la session utilisateur.."} 
+                    priority
+                    fill
+                    style={{ 
+                        objectFit: "contain", 
+                        top: "auto"
+                    }}
+                />
+            </div>
+            <h1>Chargement</h1>
+            <p>Vérification de la session utilisateur...</p>
+        </main>
+    )
 }
 
 export default RouteGard
