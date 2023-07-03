@@ -25,15 +25,17 @@ const RouteGard = ({ children }: Props) => {
     const session = data as MySession | null
 
     useEffect(() => {
+
+        console.log("session", session)
+
+        // when the component mounts, run authCheck
         authCheck(router.asPath)
         
         const hideContent = () => setAuthorized(false)
 
         // when the route change beings, hide the page
         // also, clear the search params
-        router.events.on('routeChangeStart', () => {
-            hideContent()
-        })
+        router.events.on('routeChangeStart', hideContent)
 
         // run authCheck when the route change is complete
 
