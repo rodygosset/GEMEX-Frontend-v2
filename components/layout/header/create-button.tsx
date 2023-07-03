@@ -77,7 +77,14 @@ const CreateButton = () => {
         }
     }
 
-    document.addEventListener('mousedown', closeIfClickOutside)
+    useEffect(() => {
+
+        document.addEventListener('mousedown', closeIfClickOutside)
+    
+        return () => {
+            document.removeEventListener('mousedown', closeIfClickOutside)
+        }
+    }, [])
 
     // render
 

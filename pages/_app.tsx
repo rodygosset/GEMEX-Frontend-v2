@@ -5,7 +5,6 @@ import '@fortawesome/fontawesome-svg-core/styles.css'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { SessionProvider } from 'next-auth/react'
-import RouteGard from '@components/utils/route-gard'
 import Header from '@components/layout/header'
 import { useEffect, useMemo, useState } from 'react'
 import { Context, SearchParamsType } from '@utils/context'
@@ -46,10 +45,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 					<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"/>
 					<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png"/>
 				</Head>
-				<RouteGard>
-					<Header/>
-					<Component {...pageProps} />
-				</RouteGard>
+				<Header/>
+				<Component {...pageProps} />
 			</Context.Provider>
 		</SessionProvider>
 	)

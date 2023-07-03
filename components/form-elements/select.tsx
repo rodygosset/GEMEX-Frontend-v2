@@ -277,7 +277,7 @@ const Select = (
             isSearchable={isSearchable}
             isMulti={isMulti}
             isLoading={isLoading}
-            menuPortalTarget={document.body}
+            menuPortalTarget={typeof document !== "undefined" ? document.body : null}
             value={selected}
             form={form}
             name={name}
