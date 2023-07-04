@@ -1,5 +1,5 @@
 
-import { faFileCirclePlus, faFileLines, faFolderOpen, faGem, faUsers } from "@fortawesome/free-solid-svg-icons"
+import { faChartSimple, faFileCirclePlus, faFileLines, faFolderOpen, faGem, faUsers } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/layout/header.module.scss"
 import { useRouter } from "next/router"
@@ -58,6 +58,11 @@ const Header = () => {
         !router.pathname.includes("user-management-dashboard")
     )
 
+    const shouldShouldAvailabilityRatioModuleLink = () => (
+        userRole && userRole.permissions.includes("manage") &&
+        !router.pathname.includes("availability-ratio")
+    )
+
 
     const manageUsersLink: NavLink = {
         icon: faUsers,
@@ -65,10 +70,19 @@ const Header = () => {
         link: "/user-management-dashboard",
         onClick: () => router.push("/user-management-dashboard")
     }
+
+    const availabilityRationModuleLink: NavLink = {
+        icon: faChartSimple,
+        text: "Taux de disponibilité",
+        link: "/availability-ratio",
+        onClick: () => router.push("/availability-ratio")
+    }
     
     const navLinks: NavLink[] = [
-        // only show the link the the user management page if the user's a manager
+        // only show the link to the user management page if the user's a manager
         ... shouldShowManageLink() ? [manageUsersLink] : [],
+        // only show the link to the availability ratio module if the user's a manager
+        // ... shouldShouldAvailabilityRatioModuleLink() ? [availabilityRationModuleLink] : [],
         {
             icon: faFolderOpen,
             text: "Mes fichiers",

@@ -9,7 +9,9 @@ import Header from '@components/layout/header'
 import { useEffect, useMemo, useState } from 'react'
 import { Context, SearchParamsType } from '@utils/context'
 import { useRouter } from 'next/router'
-import RouteChangeIndicator from '@components/utils/route-change-indicator'
+import { AnimatePresence } from 'framer-motion'
+import PageTransition from '@components/utils/page-transition'
+import nProgress from 'nprogress'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
@@ -30,9 +32,27 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 		setNavHistory 
 	}), [searchParams, navHistory])
 
-	// keep nav history updated
 
 	const router = useRouter()
+
+	useEffect(() => {
+		// set up nprogress
+
+		const progressStart = () => nProgress.start()
+		const progressDone = () => nProgress.done()
+		
+		router.events.on('routeChangeStart', progressStart)
+		router.events.on('routeChangeComplete', progressDone)
+		router.events.on('routeChangeError', progressDone)
+
+		return () => {
+			router.events.off('routeChangeStart', progressStart)
+			router.events.off('routeChangeComplete', progressDone)
+			router.events.off('routeChangeError', progressDone)
+		}
+	}, [router])
+
+	// keep nav history updated
 
 	useEffect(() => setNavHistory([...navHistory, router.asPath]), [router.asPath])
 
@@ -45,11 +65,12 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 					<link rel="apple-touch-icon" sizes="180x180" href="/favicon/favicon-180x180.png" />
 					<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"/>
 					<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png"/>
+					<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" />
 				</Head>
-				<RouteChangeIndicator>	
+				<PageTransition>
 					<Header/>
 					<Component {...pageProps} />
-				</RouteChangeIndicator>
+				</PageTransition>
 			</Context.Provider>
 		</SessionProvider>
 	)

@@ -1,10 +1,9 @@
 import { MySession } from "@conf/utility-types"
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios"
 import { apiURL, apiURLs } from "conf/api/conf"
-import { useSession } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import { isAuthError } from "utils/req-utils"
-import useLogOut from "./useLogOut";
 
 
 export type APIRequestFunction = <T, U = T>(
@@ -40,7 +39,7 @@ const useAPIRequest = () => {
         const baseURL = `${apiURL}${apiURLs[itemType]}${additionalPath ? additionalPath : ""}`;
 
         if(status != "authenticated") { 
-            useLogOut() 
+            signOut({ callbackUrl: router.asPath })
             return 
         }
 
@@ -50,7 +49,7 @@ const useAPIRequest = () => {
                     // in case the user's token has expired
                     // log out
                     if(isAuthError(error)) {
-                        useLogOut()
+                        signOut({ callbackUrl: router.asPath })
                     } else if(error.response.status == 404 && showPageOn404) {
                         // redirect to the 404 page
                         router.push('/404')

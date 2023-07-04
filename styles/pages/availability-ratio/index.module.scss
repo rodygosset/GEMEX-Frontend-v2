@@ -3,9 +3,9 @@
 @import "@styles/abstracts/_colors.module.scss";
 @import "@styles/abstracts/_variables.scss";
 
-main#container {
-	@include flex-container(column, nowrap, center, center);
+#container {
+	@include flex-container(column, nowrap, flex-start, stretch);
+	padding: 20px 7% $nav-bar-height;
+	gap: 30px;
 
-	width: 100vw;
-	height: 100vh !important;
 }
