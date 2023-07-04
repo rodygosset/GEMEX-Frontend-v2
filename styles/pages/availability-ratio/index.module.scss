@@ -4,8 +4,39 @@
 @import "@styles/abstracts/_variables.scss";
 
 #container {
-	@include flex-container(column, nowrap, flex-start, stretch);
+	@include flex-container(row, nowrap, center, center);
 	padding: 20px 7% $nav-bar-height;
-	gap: 30px;
+	gap: 60px;
+
+
+	section {
+
+		@include flex-container(column, nowrap, flex-start, stretch);
+		gap: 15px;
+
+		h1 {
+			@include hero-text-regular;
+			color: $primary;
+		}
+
+		p {
+			@include text-md-regular;
+			color: $primary-400;
+			margin-bottom: 15px;
+		}
+
+		.buttonsContainer {
+			@include flex-container(row, nowrap, flex-start, stretch);
+			gap: 15px;
+		}
+
+	}
+
+	.illustrationContainer {
+		position: relative;
+		width: 100%;
+        max-width: 360px;
+		aspect-ratio: 1.193;
+	}
 
 }
