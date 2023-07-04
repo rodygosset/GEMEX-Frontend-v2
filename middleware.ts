@@ -15,12 +15,17 @@ export default withAuth({
 		async authorized({ token }) {
 			// try to get data from an authenticated API route
             // using our session access token
-			const response = await fetch(`${apiURL}/hello/`, {
-				headers: { Authorization: `bearer ${token?.access_token}` }
-			})
-            // if the request succeeds
-            // show the current page
-            return response.status == 200
+			try {
+				const response = await fetch(`${apiURL}/hello/`, {
+					headers: { Authorization: `bearer ${token?.access_token}` }
+				})
+				// if the request succeeds
+				// show the current page
+				return response.status == 200
+			} catch (error) {
+				console.log("Error while sending a request to the API", error)
+				return false
+			}
 		}
 	}
 })
