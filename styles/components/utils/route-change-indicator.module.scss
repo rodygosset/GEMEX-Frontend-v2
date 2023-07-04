@@ -1,0 +1,11 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/abstracts/_variables.scss";
+
+main#container {
+	@include flex-container(column, nowrap, center, center);
+
+	width: 100vw;
+	height: 100vh !important;
+}

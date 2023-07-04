@@ -9,6 +9,7 @@ import Header from '@components/layout/header'
 import { useEffect, useMemo, useState } from 'react'
 import { Context, SearchParamsType } from '@utils/context'
 import { useRouter } from 'next/router'
+import RouteChangeIndicator from '@components/utils/route-change-indicator'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
@@ -45,8 +46,10 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 					<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"/>
 					<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png"/>
 				</Head>
-				<Header/>
-				<Component {...pageProps} />
+				<RouteChangeIndicator>	
+					<Header/>
+					<Component {...pageProps} />
+				</RouteChangeIndicator>
 			</Context.Provider>
 		</SessionProvider>
 	)
