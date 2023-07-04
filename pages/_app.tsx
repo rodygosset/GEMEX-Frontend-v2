@@ -65,7 +65,6 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 					<link rel="apple-touch-icon" sizes="180x180" href="/favicon/favicon-180x180.png" />
 					<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"/>
 					<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png"/>
-					<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" />
 				</Head>
 				<PageTransition>
 					<Header/>

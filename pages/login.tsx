@@ -8,7 +8,7 @@ import { NextPage } from "next"
 import Head from "next/head"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { FormEvent, FormEventHandler, useState } from "react"
+import { FormEvent, FormEventHandler, useEffect, useState } from "react"
 
 import { signIn, useSession } from "next-auth/react"
 import Button from "@components/button"
@@ -18,19 +18,19 @@ const Login: NextPage = () => {
 
     const router = useRouter()
 
-    let returnUrl = router.query.returnUrl?.toString() || '/';
-
-    // if the return url is /login, change it to the home page
-    if(returnUrl == "/login") { returnUrl = '/' }
-
+    const callbackUrl = router.query.callbackUrl?.toString() || '/';
 
     // if the user's already authenticated, redirect to returnUrl
 
     const { status } = useSession()
 
-    if(status == "authenticated") {
-        router.push(returnUrl)
-    }
+    useEffect(() => {
+
+        if(status == "authenticated") {
+            router.push(callbackUrl)
+        }
+
+    }, [status])
 
     // state
 
@@ -51,7 +51,7 @@ const Login: NextPage = () => {
         ).then((response) => {
             if(!response) return
             const { ok } = response
-            ok ? router.push(returnUrl) : setSignInFailed(true)
+            if(!ok) setSignInFailed(true)
         })
     }
 

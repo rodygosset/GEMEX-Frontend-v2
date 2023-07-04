@@ -13,11 +13,12 @@ export default withAuth({
 	},
 	callbacks: {
 		async authorized({ token }) {
+			if(!token) return false
 			// try to get data from an authenticated API route
             // using our session access token
 			try {
 				const response = await fetch(`${apiURL}/hello/`, {
-					headers: { Authorization: `bearer ${token?.access_token}` }
+					headers: { Authorization: `bearer ${token.access_token}` }
 				})
 				// if the request succeeds
 				// show the current page
