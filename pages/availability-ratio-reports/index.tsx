@@ -1,8 +1,10 @@
 
 import Button from "@components/button"
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons"
-import styles from "@styles/pages/availability-ratio/index.module.scss"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import styles from "@styles/pages/availability-ratio-reports/index.module.scss"
 import Image from "next/image"
+import Link from "next/link"
 
 const Index = () => {
 
@@ -28,19 +30,21 @@ const Index = () => {
             <section>
                 <h1>Taux de disponibilité</h1>
                 <p>Calculer, exporter et sauvegarder des rapports de taux de disponibilité du musée sur des périodes spécifiques.</p>
-                <div className={styles.buttonsContainer}>
-                    <Button
-                        icon={faArrowLeft}
-                        role="secondary"
-                        onClick={() => {}}>
-                            Rapports précédents
-                    </Button>
-                    <Button
-                        icon={faArrowRight}
-                        role="primary"
-                        onClick={() => {}}>
-                            Nouveau rapport
-                    </Button>
+                <div className={styles.links}>
+                    <Link
+                        className={styles.secondaryLink}
+                        href="/availability-ratio-reports/previous"
+                        passHref>
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                        <span>Rapports précédents</span>
+                    </Link>
+                    <Link
+                        className={styles.primaryLink}
+                        href="/availability-ratio-reports/create"
+                        passHref>
+                            <FontAwesomeIcon icon={faArrowRight} />
+                            <span>Nouveau rapport</span>
+                    </Link>
                 </div>
             </section>
         </main>

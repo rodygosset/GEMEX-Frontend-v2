@@ -2,11 +2,16 @@
 @import "@styles/base/_typography.module.scss";
 @import "@styles/abstracts/_colors.module.scss";
 @import "@styles/abstracts/_variables.scss";
+@import "@styles/components/button.module.scss";
 
 #container {
 	@include flex-container(row, nowrap, center, center);
 	padding: 20px 7% $nav-bar-height;
 	gap: 60px;
+
+	@media (max-width: $bp-lg) {
+		@include flex-container(column, nowrap, center, flex-start);
+	}
 
 
 	section {
@@ -25,9 +30,25 @@
 			margin-bottom: 15px;
 		}
 
-		.buttonsContainer {
+		.links {
 			@include flex-container(row, nowrap, flex-start, stretch);
 			gap: 15px;
+
+			.primaryLink, .secondaryLink {
+
+				@extend .button;
+				@extend .active;
+				@extend .animateOnHover;
+				@extend .withPadding;
+			}
+
+			.primaryLink {
+				@extend .primary;
+			}
+
+			.secondaryLink {
+				@extend .secondary;
+			}
 		}
 
 	}
@@ -35,6 +56,7 @@
 	.illustrationContainer {
 		position: relative;
 		width: 100%;
+		min-width: 200px;
         max-width: 360px;
 		aspect-ratio: 1.193;
 	}

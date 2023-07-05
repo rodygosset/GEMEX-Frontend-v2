@@ -1,0 +1,47 @@
+@import "@styles/base/_reset.scss";
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/abstracts/_variables.scss";
+@import "@styles/components/go-back-button.module.scss";
+
+#container {
+    @include flex-container(column, nowrap, flex-start, stretch);
+    padding: 20px 7% $nav-bar-height;
+    gap: 30px;
+
+    .header {
+        @include flex-container(row, nowrap, flex-start, center);
+        width: 100%;
+        gap: 30px;
+
+        div {
+            @include flex-container(column, nowrap, flex-start, flex-start);
+            gap: 10px;
+
+            h2 {
+                @include header-2-medium;
+                color: $primary;
+            }
+
+            p {
+                @include flex-container(row, nowrap, flex-start, center);
+                margin: 0;
+                padding: 0;
+                gap: 10px;
+
+                span {
+                    @include text-sm-medium;
+                    color: $primary-400;
+                }
+
+                svg {
+                    height: 3px;
+                    width: 3px;
+                    color: $primary-400;
+                }
+            }
+        }
+    }
+
+}

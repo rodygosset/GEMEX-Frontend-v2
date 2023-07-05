@@ -41,3 +41,9 @@ export interface UserManagementViewModalProps<T> {
     closeModal: () => void; 
     refresh: () => void;
 }
+
+
+export interface DateRange {
+    startDate: Date;
+    endDate: Date;
+}

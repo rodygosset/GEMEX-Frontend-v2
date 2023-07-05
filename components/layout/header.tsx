@@ -60,7 +60,7 @@ const Header = () => {
 
     const shouldShouldAvailabilityRatioModuleLink = () => (
         userRole && userRole.permissions.includes("manage") &&
-        !router.pathname.includes("availability-ratio")
+        !router.pathname.includes("availability-ratio-reports")
     )
 
 
@@ -74,8 +74,8 @@ const Header = () => {
     const availabilityRationModuleLink: NavLink = {
         icon: faChartSimple,
         text: "Taux de disponibilité",
-        link: "/availability-ratio",
-        onClick: () => router.push("/availability-ratio")
+        link: "/availability-ratio-reports",
+        onClick: () => router.push("/availability-ratio-reports")
     }
     
     const navLinks: NavLink[] = [

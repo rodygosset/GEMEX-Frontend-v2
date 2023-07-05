@@ -4,8 +4,8 @@ import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { SelectOption } from "@utils/react-select/types"
 import { useEffect, useState } from "react"
-import { getDatePickerProps, toDateObject } from "@utils/form-elements/date-input"
-import { DateFormat, DateInputValue } from "@utils/types"
+import { getDatePickerProps } from "@utils/form-elements/date-input"
+import { DateFormat } from "@utils/types"
 import React from "react"
 import { CustomInput } from "./date-input-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -82,12 +82,27 @@ export const embeddedSelectStyles: StylesConfig = {
 }
 
 
+// conf
+
+export const formatOptions: SelectOption<DateFormat>[] = [
+    { value: 'yyyy', label: 'Année' },
+    { value: 'MM/yyyy', label: 'Mois' },
+    { value: 'dd/MM/yyyy', label: 'Date' }
+]
+
+// get format option from DateFormat value
+export const getFormatOption = (value?: DateFormat) => {
+    let option = formatOptions.find(option => option.value == value)
+    return option ? option : formatOptions[0]
+}
+
+
 const DateInput = (
     {
         name,
         value,
         strict = true,
-        format,
+        format = "MM/yyyy",
         bigPadding = true,
         showLocaleDate = false,
         minDate,
@@ -97,25 +112,11 @@ const DateInput = (
     }: Props
 ) => {
 
-    // conf
-
-    const formatOptions: SelectOption<DateFormat>[] = [
-        { value: 'yyyy', label: 'Année' },
-        { value: 'MM/yyyy', label: 'Mois' },
-        { value: 'dd/MM/yyyy', label: 'Date' }
-    ]
-
     // state
 
     const [date, setDate] = useState(value ? value : new Date())
     
     // keep track of the current date format (only useful when strict mode if off)
-    
-    // get format option from DateFormat value
-    const getFormatOption = (value?: DateFormat) => {
-        let option = formatOptions.find(option => option.value == value)
-        return option ? option : formatOptions[0]
-    }
 
     // holds the SelectOption for the current format
     // if strict mode is off, load the provided format (if there is one)

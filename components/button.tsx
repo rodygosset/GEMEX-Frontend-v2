@@ -64,10 +64,7 @@ const Button = ({
         if(active) onClick(event)
     }
 
-    return (
-        hidden ? 
-        <></>
-        :
+    return !hidden ? (
         <button
             ref={ref}
             className={getClassNames()}
@@ -78,7 +75,7 @@ const Button = ({
             { icon && <FontAwesomeIcon icon={icon} /> }
             { children }
         </button>
-    )
+    ) : <></>
 }
 
 export default React.forwardRef<HTMLButtonElement, Props>(Button)

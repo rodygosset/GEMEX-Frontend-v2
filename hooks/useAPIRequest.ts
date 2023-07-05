@@ -37,6 +37,7 @@ const useAPIRequest = () => {
         showPageOn404?: boolean
     ) => {
         const baseURL = `${apiURL}${apiURLs[itemType]}${additionalPath ? additionalPath : ""}`;
+        // const baseURL = `/api/forward?route=${apiURLs[itemType]}${additionalPath ? additionalPath : ""}`;
 
         if(status != "authenticated") { 
             signOut({ callbackUrl: router.asPath })
