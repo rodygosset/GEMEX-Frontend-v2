@@ -1,9 +1,10 @@
 
-import DateRangeStep from "@components/availability-reports/date-range-step"
+import DateRangeStep from "@components/availability-ratio-reports/date-range-step"
+import ExpoGroupsStep from "@components/availability-ratio-reports/expo-groups-step"
 import { faChevronLeft, faCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/pages/availability-ratio-reports/create.module.scss"
-import { DateRange } from "@utils/types"
+import { DateRange, ExpoGroupCreate } from "@utils/types"
 import { useRouter } from "next/router"
 import { useState } from "react"
 
@@ -27,6 +28,8 @@ const CreateReport = () => {
         endDate: new Date(new Date(new Date().setDate(1)).setMonth(new Date().getMonth() + 1))
     })
 
+    const [expoGroups, setExpoGroups] = useState<ExpoGroupCreate[]>([])
+
     // handlers
 
     const router = useRouter()
@@ -45,6 +48,14 @@ const CreateReport = () => {
                     <DateRangeStep 
                         dateRange={dateRange}
                         onChange={setDateRange}
+                        onNextStep={() => setCurrentStep(currentStep + 1)}
+                    />
+                )
+            case 1:
+                return (
+                    <ExpoGroupsStep
+                        expoGroups={expoGroups}
+                        onChange={setExpoGroups}
                         onNextStep={() => setCurrentStep(currentStep + 1)}
                     />
                 )

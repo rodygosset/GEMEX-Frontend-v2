@@ -8,6 +8,7 @@
 	@include flex-container(row, nowrap, center, center);
 	padding: 20px 7% $nav-bar-height;
 	gap: 60px;
+	height: calc(100vh - $nav-bar-height);
 
 	@media (max-width: $bp-lg) {
 		@include flex-container(column, nowrap, center, flex-start);

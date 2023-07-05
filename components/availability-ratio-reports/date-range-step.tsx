@@ -1,6 +1,6 @@
 import { DateFormat, DateRange } from "@utils/types"
 
-import styles from "@styles/components/availability-reports/date-range-step.module.scss"
+import styles from "@styles/components/availability-ratio-reports/date-range-step.module.scss"
 import Image from "next/image"
 import { useState } from "react"
 import DateInput from "@components/form-elements/date-input"
@@ -22,14 +22,6 @@ const DateRangeStep = (
         onNextStep
     }: Props
 ) => {
-
-    // keep track of the current year
-
-    const [currentYear] = useState((new Date()).getFullYear())
-
-    // state
-
-    const [format, setFormat] = useState<DateFormat>("MM/yyyy")
 
     // handlers
 

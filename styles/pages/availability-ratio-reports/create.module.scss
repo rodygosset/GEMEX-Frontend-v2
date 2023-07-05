@@ -6,9 +6,12 @@
 @import "@styles/components/go-back-button.module.scss";
 
 #container {
-    @include flex-container(column, nowrap, flex-start, stretch);
+    @include flex-container(column, nowrap, flex-start, center);
     padding: 20px 7% $nav-bar-height;
     gap: 30px;
+
+    height: calc(100vh - $nav-bar-height);
+
 
     .header {
         @include flex-container(row, nowrap, flex-start, center);

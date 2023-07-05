@@ -1,0 +1,35 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+.container {
+
+    @include flex-container(row, nowrap, center, center);
+    gap: 60px;
+    height: 100%;
+
+    .content {
+        @include flex-container(column, nowrap, flex-start, flex-start);
+        gap: 30px;
+        width: 100%;
+    
+        h3 {
+            @include header-2-medium;
+            color: $primary;
+        }
+    
+        p {
+            @include text-md-medium;
+            color: $primary-600;
+        }
+    }
+
+    .illustrationContainer {
+        position: relative;
+        min-width: 200px;
+        max-width: 470px;
+        width: 100%;
+        aspect-ratio: 4.7 / 3;
+    }
+
+}

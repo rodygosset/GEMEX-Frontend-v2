@@ -25,8 +25,6 @@ html, body, div#__next {
 	@extend .scroll;
 	min-height: 100vh;
 	min-width: 100vw;
-	height: 100vh;
-	width: fit-content;
 	padding: 0;
 	margin: 0;
 	font-family: $main-font;
@@ -55,6 +53,6 @@ div#__next {
 
 	& main {
 		width: 100%;
-		height: calc(100vh - $nav-bar-height);
+		// height: calc(100vh - $nav-bar-height);
 	}
 }
