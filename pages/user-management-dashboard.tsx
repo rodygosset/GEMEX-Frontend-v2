@@ -24,7 +24,7 @@ import { parseURLQuery } from "@utils/search-utils";
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request";
 import { AxiosResponse } from "axios";
 import { GetServerSideProps } from "next";
-import { unstable_getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { useContext, useEffect, useRef, useState } from "react"
 import { authOptions } from "./api/auth/[...nextauth]";
 import Image from "next/image";
@@ -659,7 +659,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     // retrieve the session, with the user's auth token
 
-    const session = (await unstable_getServerSession(context.req, context.res, authOptions)) as MySession | null
+    const session = (await getServerSession(context.req, context.res, authOptions)) as MySession | null
 
     if(session == null) return emptyProps
 

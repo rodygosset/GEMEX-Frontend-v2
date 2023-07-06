@@ -4,7 +4,7 @@ import { isAuthError } from "@utils/req-utils"
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
 import axios from "axios"
 import { GetServerSideProps, NextPage } from "next"
-import { unstable_getServerSession } from "next-auth"
+import { getServerSession } from "next-auth"
 import { useSession } from "next-auth/react"
 import Head from "next/head"
 import { authOptions } from "pages/api/auth/[...nextauth]"
@@ -84,7 +84,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     // retrieve the session, containing the user's auth token
 
-    const session = (await unstable_getServerSession(context.req, context.res, authOptions)) as MySession | null 
+    const session = (await getServerSession(context.req, context.res, authOptions)) as MySession | null 
 
     // return empty props if we don't have an auth token
     // because if means we have no way to retrieve the data

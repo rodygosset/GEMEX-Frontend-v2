@@ -1,12 +1,18 @@
 @import "@styles/base/_mixins.scss";
 @import "@styles/base/_typography.module.scss";
 @import "@styles/abstracts/_colors.module.scss";
+@import "@styles/abstracts/_variables.scss";
 
 .container {
 
     @include flex-container(row, nowrap, center, center);
     gap: 60px;
     height: 100%;
+
+    @media (max-width: $bp-lg) {
+        @include flex-container(column-reverse, nowrap, center, flex-start);
+        height: fit-content;
+    }
 
     .content {
         @include flex-container(column, nowrap, flex-start, flex-start);

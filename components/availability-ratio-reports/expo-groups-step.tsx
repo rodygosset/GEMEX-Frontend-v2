@@ -4,6 +4,7 @@ import Image from "next/image"
 import styles from "@styles/components/availability-ratio-reports/expo-groups-step.module.scss"
 import Button from "@components/button"
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons"
+import ExpoGroupForm from "@components/forms/expo-group-form"
 
 
 interface Props {
@@ -27,6 +28,11 @@ const ExpoGroupsStep = (
             <div className={styles.content}>
                 <h3>Sélectionner et regrouper les expositions</h3>
                 <p>Choisir les expositions et les groupes d’expositions pour lesquels le taux de disponibilité sera calculé.</p>
+                
+                <ExpoGroupForm 
+                    onSubmit={expoGroup => onChange([...expoGroups, expoGroup])} 
+                />
+
                 <Button
                     onClick={onNextStep}
                     icon={faArrowRight}>

@@ -18,7 +18,7 @@ import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
 import { DynamicObject } from "@utils/types"
 import { AxiosResponse } from "axios"
 import { GetServerSideProps, NextPage } from "next"
-import { unstable_getServerSession } from "next-auth"
+import { getServerSession } from "next-auth"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { useContext, useEffect, useRef, useState } from "react"
@@ -414,7 +414,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     // retrieve the session, with the user's auth token
 
-    const session = (await unstable_getServerSession(context.req, context.res, authOptions)) as MySession | null
+    const session = (await getServerSession(context.req, context.res, authOptions)) as MySession | null
 
     if(session == null) return emptyProps
 
