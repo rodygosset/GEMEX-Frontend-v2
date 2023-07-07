@@ -82,7 +82,7 @@ const Header = () => {
         // only show the link to the user management page if the user's a manager
         ... shouldShowManageLink() ? [manageUsersLink] : [],
         // only show the link to the availability ratio module if the user's a manager
-        ... shouldShouldAvailabilityRatioModuleLink() ? [availabilityRationModuleLink] : [],
+        // ... shouldShouldAvailabilityRatioModuleLink() ? [availabilityRationModuleLink] : [],
         {
             icon: faFolderOpen,
             text: "Mes fichiers",
