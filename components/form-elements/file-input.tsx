@@ -8,6 +8,8 @@ import { faCloud, faLaptop } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import GenericModalDialog from "@components/modals/generic-modal-dialog";
 import FilePicker from "@components/modals/file-picker";
+import { useSession } from "next-auth/react";
+import { MySession } from "@conf/utility-types";
 
 interface Props {
     value: string[];
@@ -34,10 +36,16 @@ const FileInput = (
 
     const makeAPIRequest = useAPIRequest()
 
+    const { data, status } = useSession()
+
+    const session = (data as MySession | null)
+
     const getFiles = () => {
+        if(!session) return
         setFichiers([])
         for(const fileName of value) {
             makeAPIRequest<Fichier[], void>(
+                session,
                 "post",
                 "fichiers",
                 "search/",
@@ -57,7 +65,7 @@ const FileInput = (
 
     // keep fichiers up to date with value
 
-    useEffect(() => getFiles(), [value])
+    useEffect(() => getFiles(), [value, session])
 
     // manage local file upload
 
@@ -94,7 +102,7 @@ const FileInput = (
     // upload the file selected by the user
 
     const uploadLocalFile = () => {
-        if(!localFile) return
+        if(!localFile || !session) return
         // we need to create a form data object
         // so we can upload the file over HTTP to our API
         const formData = new FormData()
@@ -103,6 +111,7 @@ const FileInput = (
         // upload
 
         makeAPIRequest<Fichier, void>(
+            session,
             "post", 
             "fichiers", 
             undefined, 

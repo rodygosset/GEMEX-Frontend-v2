@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { StylesConfig } from "react-select";
 import Select from "./select";
 import colors from "@styles/abstracts/_colors.module.scss"
+import { useSession } from "next-auth/react";
+import { MySession } from "@conf/utility-types";
 
 
 interface Props {
@@ -47,7 +49,14 @@ const ItemSelect = (
 
     const makeAPIRequest = useAPIRequest()
 
+    const { data, status } = useSession()
+
+    const session = (data as MySession | null)
+
+
     useEffect(() => {
+
+        if(!session) return
 
         // start with making a request to the API
 
@@ -87,6 +96,7 @@ const ItemSelect = (
         // make our API request
 
         makeAPIRequest(
+            session,
             "get",
             itemType,
             undefined,
@@ -95,7 +105,7 @@ const ItemSelect = (
             handleReqFailure,
         )
 
-    }, [])    
+    }, [session])    
 
     // render
 

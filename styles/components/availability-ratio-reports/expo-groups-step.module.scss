@@ -5,13 +5,23 @@
 
 .container {
 
-    @include flex-container(row, nowrap, center, center);
+    @include flex-container(row, nowrap, center, flex-start);
+    padding-top: 30px;
     gap: 60px;
     height: 100%;
 
+    overflow: scroll;
+
     @media (max-width: $bp-lg) {
-        @include flex-container(column-reverse, nowrap, center, flex-start);
+        @include flex-container(column-reverse, nowrap, flex-start, flex-start);
         height: fit-content;
+        padding: 30px;
+
+        div.stickyWrapper {
+            position: static;
+            top: auto;
+            @include flex-container(row, nowrap, center, center);
+        }
     }
 
     .content {
@@ -19,23 +29,50 @@
         gap: 30px;
         width: 100%;
     
-        h3 {
+        & > h3 {
             @include header-2-medium;
             color: $primary;
         }
     
-        p {
+        & > p {
             @include text-md-medium;
             color: $primary-600;
+
+            &.noGroupMessage {
+                color: $secondary;
+            }
+        }
+
+        & > ul {
+            @include reset-list;
+            @include flex-container(column, nowrap, flex-start, flex-start);
+            gap: 15px;
+            width: 100%;
+        }
+
+        .buttonsContainer {
+            @include flex-container(row, nowrap, flex-end, center);
+            gap: 15px;
+            width: 100%;
+
+            .previousButton {
+                border: 1px solid $primary-100;
+            }
         }
     }
 
-    .illustrationContainer {
-        position: relative;
-        min-width: 200px;
-        max-width: 470px;
+    .stickyWrapper {
+        position: sticky;
+        top: 30px;
         width: 100%;
-        aspect-ratio: 4.7 / 3;
+        
+        .illustrationContainer {
+            position: relative;
+            min-width: 200px;
+            max-width: 470px;
+            width: 100%;
+            aspect-ratio: 4.7 / 3;
+        }
     }
 
 }

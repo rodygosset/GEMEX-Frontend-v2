@@ -68,6 +68,8 @@ const FilePicker = (
 
     useEffect(() => {
 
+        if(!session.data) return
+
         // clear selection
 
         setSelectedFiles([""])
@@ -83,6 +85,7 @@ const FilePicker = (
         // make the request
 
         makeAPIRequest<Fichier[], void>(
+            session.data as MySession,
             "post",
             "fichiers",
             "search/",
@@ -92,7 +95,7 @@ const FilePicker = (
         
 
 
-    }, [searchQ, isAllCategory])
+    }, [searchQ, isAllCategory, session])
 
     // handlers
 

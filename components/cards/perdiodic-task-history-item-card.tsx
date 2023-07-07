@@ -4,11 +4,13 @@ import DeleteDialog from "@components/modals/delete-dialog";
 import PeriodicTaskFulfillmentModal from "@components/modals/periodic-task-fulfillment-modal";
 import { FicheSystematique } from "@conf/api/data-types/fiche";
 import { getUserFullName, User } from "@conf/api/data-types/user";
+import { MySession } from "@conf/utility-types";
 import { faCalendarDays, faCheck, faFloppyDisk, faHourglassHalf, faPenToSquare, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAPIRequest from "@hook/useAPIRequest";
 import styles from "@styles/components/cards/periodic-taks-history-item-card.module.scss"
 import { capitalizeFirstLetter, dateOptions } from "@utils/general";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -49,9 +51,14 @@ const PeriodicTaskHistoryItemCard = (
 
     const makeAPIRequest = useAPIRequest()
 
-    useEffect(() => {
+    const { data, status } = useSession()
 
+    const session = (data as MySession | null)
+
+    useEffect(() => {
+        if (!session) return
         makeAPIRequest<User, void>(
+            session,
             "get",
             "users",
             `id/${user_id}`,
@@ -59,7 +66,7 @@ const PeriodicTaskHistoryItemCard = (
             res => setUser(res.data)
         )
 
-    }, [user_id])
+    }, [user_id, session])
 
     // fulfillment form logic
 
@@ -89,8 +96,10 @@ const PeriodicTaskHistoryItemCard = (
     // when the user saves the changes
 
     const handleSaveClick = () => {
+        if (!session || !id) return
         // make a PUT request to our API
         makeAPIRequest<{ commentaire: string }, void>(
+            session,
             "put",
             "historiques_fiches_systematiques",
             `${id}`,

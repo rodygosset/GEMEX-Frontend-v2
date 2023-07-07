@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 
 import styles from "@styles/components/forms/expo-group-form.module.scss"
 import Button from "@components/button";
+import { useSession } from "next-auth/react";
+import { MySession } from "@conf/utility-types";
 
 
 interface Props {
@@ -28,6 +30,10 @@ const ExpoGroupForm = (
 
     const makeAPIRequest = useAPIRequest()
 
+    const { data, status } = useSession()
+
+    const session = (data as MySession | null)
+
     // state
 
     const [nom, setNom] = useState(expoGroup?.nom || "")
@@ -35,11 +41,16 @@ const ExpoGroupForm = (
     
     // manage select options
 
-    const [expositions, setExpositions] = useState<SelectOption[]>([])
+    const [expositions, setExpositions] = useState<SelectOption<number>[]>([])
+
+    // fetch expositions for the select
 
     useEffect(() => {
 
+        if (!session) return
+
         makeAPIRequest<Exposition[], void>(
+            session,
             "get",
             "expositions",
             undefined,
@@ -50,38 +61,32 @@ const ExpoGroupForm = (
             })))
         )
 
-    }, [])
-
+    }, [session])
 
     // handlers
 
-
-    // utils
-
-    const getNomsExpositions = async (expos: { exposition_id: number }[]) => {
-        // for each expo, make a request to the API to get the name
-
-        return await Promise.all(expos.map(async expo => {
-            let response
-            try {
-                response = await makeAPIRequest<Exposition, Exposition>(
-                    "get",
-                    "expositions",
-                    `id/${expo.exposition_id}`,
-                    undefined,
-                    res => res.data
-                )
-            } catch (error) {
-                console.error(error)
-                return ""
-            }
-            // if the request was successful, return the name
-            // @ts-ignore
-            return response?.nom || ""
+    const handleSelectChange = (selectedOptions: string[]) => {
+        setSelectedExpositions(selectedOptions.map(option => {
+            const exposition = expositions.find(expo => expo.label === option)
+            return exposition ? {
+                id: exposition.value,
+                nom: exposition.label
+            } : { id: 0, nom: "" }
         }))
     }
 
+    // when the form is submitted, call the onSubmit prop with the form data
+    // & clear the form + close it
 
+    const handleSubmit = () => {
+        onSubmit({
+            nom,
+            expositions: selectedExpositions
+        })
+        setNom("")
+        setSelectedExpositions([])
+        onClose()
+    }
 
     // render
 
@@ -93,7 +98,8 @@ const ExpoGroupForm = (
                 <Label>Nom du groupe</Label>
                 <TextInput
                     name="nom"
-                    defaultValue={nom}
+                    placeholder="Permanent, Temporaire, etc."
+                    currentValue={nom}   
                     onChange={setNom}
                     fullWidth
                 />
@@ -104,7 +110,8 @@ const ExpoGroupForm = (
                     name="expositions"
                     isMulti
                     options={expositions}
-                    onChange={setSelectedExpositions}
+                    value={selectedExpositions.map(expo => expo.nom)}
+                    onChange={handleSelectChange}
                     fullWidth
                 />
             </FieldContainer>
@@ -117,13 +124,12 @@ const ExpoGroupForm = (
                     Annuler
                 </Button>
                 <Button
-                    onClick={() => onSubmit({
-                        nom,
-                        expositions: selectedExpositions
-                    })}
+                    onClick={handleSubmit}
                     fullWidth
                 >
-                    Ajouter
+                {
+                    expoGroup ? "Modifier" : "Ajouter"
+                }
                 </Button>
             </div>
 

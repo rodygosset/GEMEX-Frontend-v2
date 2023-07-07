@@ -1,9 +1,11 @@
 import Button from "@components/button"
 import FicheTargetSelectModal from "@components/modals/fiche-target-select-modal"
 import { itemTypes } from "@conf/api/search"
+import { MySession } from "@conf/utility-types"
 import useAPIRequest from "@hook/useAPIRequest"
 import styles from "@styles/page-templates/create/fiche-target-select.module.scss"
 import { itemTypetoAttributeName, toSingular } from "@utils/general"
+import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 
 interface Props {
@@ -31,8 +33,13 @@ const FicheTargetSelect = (
 
     const makeAPIRequest = useAPIRequest()
 
+    const session = (useSession().data as MySession | null)
+
     const getLabel = async (itemType: string, id: number) => {
+        if(!session) return
+
         return makeAPIRequest<any, string>(
+            session,
             "get",
             itemType,
             `id/${id}`,

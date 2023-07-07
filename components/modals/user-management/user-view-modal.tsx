@@ -37,9 +37,10 @@ const UserViewModal = (
     const makeAPIRequest = useAPIRequest()
 
     useEffect(() => {
-        if(!data) return
+        if(!data || !session.data) return
 
         makeAPIRequest<UserRole, void>(
+            session.data as MySession,
             "get",
             "roles",
             `id/${data.role_id}`,
@@ -62,9 +63,10 @@ const UserViewModal = (
     // when the user clicks on the "mark as active/inactive" button
 
     const handleUpdateIsActive = () => {
-        if(!data) return
+        if(!data || !session.data) return
 
         makeAPIRequest<User, void>(
+            session.data as MySession,
             "put",
             "users",
             data.username,

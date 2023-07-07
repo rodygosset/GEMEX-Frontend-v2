@@ -6,6 +6,8 @@ import { SelectOption } from "@utils/react-select/types";
 import { AxiosError, AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import FilterWrapper from "./filter-wrapper";
+import { MySession } from "@conf/utility-types";
+import { useSession } from "next-auth/react";
 
 
 const MultiSelectFilter = (
@@ -27,11 +29,16 @@ const MultiSelectFilter = (
     // Fetch the data from the API 
     // & convert it into a list of options
 
+    
+    const { conf } = filter
+
     const makeAPIRequest = useAPIRequest()
+
+    const session = useSession().data as MySession | null
 
     useEffect(() => {
 
-        if(!conf.item) return
+        if(!conf.item || !session) return
 
         // start with making a request to the API
 
@@ -69,6 +76,7 @@ const MultiSelectFilter = (
         // make our API request
 
         makeAPIRequest(
+            session,
             "get",
             conf.item,
             undefined,
@@ -77,7 +85,7 @@ const MultiSelectFilter = (
             handleReqFailure,
         )
 
-    }, [])
+    }, [session, conf.item])
 
     // handlers
 
@@ -86,7 +94,6 @@ const MultiSelectFilter = (
         onChange(name, optionValue)
     }
 
-    const { conf } = filter
 
     return (
         <FilterWrapper

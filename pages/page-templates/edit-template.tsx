@@ -187,7 +187,7 @@ const EditTemplate = (
     const [validationError, setValidationError] = useState(false)
 
     const validateFormData = async () => {
-        if(!formData) return false
+        if(!formData || !session.data) return false
         let validated = true
 
         const validateField = (fieldName: string) => {
@@ -223,6 +223,7 @@ const EditTemplate = (
 
         if("new_nom" in buildSubmitData()) {
             await makeAPIRequest<any, void>(
+                session.data as MySession,
                 "get",
                 itemType,
                 formData["nom"].value,
@@ -249,6 +250,7 @@ const EditTemplate = (
     }
 
     const handleSubmit = async () => {
+        if(!session.data) return
         const submitData = buildSubmitData()
         // console.log("submit data ==> ")
         // console.log(submitData)
@@ -278,6 +280,7 @@ const EditTemplate = (
         // PUT the data
 
         makeAPIRequest(
+            session.data as MySession,
             "put",
             itemType,
             defaultValues["nom"],

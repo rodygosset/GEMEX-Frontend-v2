@@ -15,4 +15,15 @@ module.exports = {
       ],
   },
   output: 'standalone',
+  rewrites() {
+    return {
+      fallback: [
+        {
+          source: '/:path*',
+          destination: '/404',
+          locale: false,
+        },
+      ],
+    }
+  }
 }

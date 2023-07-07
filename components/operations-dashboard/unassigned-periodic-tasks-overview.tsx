@@ -50,6 +50,7 @@ const UnassignedPeriodicTasksOverview = (
         // as the current user
 
         makeAPIRequest<FicheSystematique[], void>(
+            session,
             "post", 
             "fiches_systematiques",
             `search/?max=${MAX_NB_ITEMS}`,

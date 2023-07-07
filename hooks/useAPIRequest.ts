@@ -22,11 +22,8 @@ const useAPIRequest = () => {
 
     const router = useRouter()
 
-    const { data, status } = useSession()
-
-    const session = (data as MySession | null)
-
     const makeAPIRequest = <T, U>(
+        session: MySession,
         verb: "get" | "post" | "put" | "delete",
         itemType: string, 
         additionalPath?: string,
@@ -39,7 +36,7 @@ const useAPIRequest = () => {
         const baseURL = `${apiURL}${apiURLs[itemType]}${additionalPath ? additionalPath : ""}`;
         // const baseURL = `/api/forward?route=${apiURLs[itemType]}${additionalPath ? additionalPath : ""}`;
 
-        if(status != "authenticated") { 
+        if(status == "unauthenticated") { 
             signOut({ callbackUrl: router.asPath })
             return 
         }
@@ -70,7 +67,7 @@ const useAPIRequest = () => {
 
         let reqConfig: AxiosRequestConfig = {
             headers: {
-                Authorization: `bearer ${session?.access_token}`
+                Authorization: `bearer ${session.access_token}`
             }
         }
 

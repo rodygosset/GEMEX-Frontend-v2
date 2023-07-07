@@ -12,6 +12,8 @@
 
     height: calc(100vh - $nav-bar-height);
 
+    overflow: visible;
+
 
     .header {
         @include flex-container(row, nowrap, flex-start, center);
@@ -34,7 +36,7 @@
                 gap: 10px;
 
                 span {
-                    @include text-sm-medium;
+                    @include text-md-medium;
                     color: $primary-400;
                 }
 

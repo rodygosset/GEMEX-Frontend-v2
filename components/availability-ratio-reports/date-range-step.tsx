@@ -8,6 +8,17 @@ import FieldContainer from "@components/form-elements/field-container"
 import Label from "@components/form-elements/label"
 import Button from "@components/button"
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons"
+import Select from "@components/form-elements/select"
+import { SelectOption } from "@utils/react-select/types"
+
+
+// format options
+
+const formatOptions: SelectOption[] = [
+    { value: "dd/MM/yyyy", label: "Date"},
+    { value: "MM/yyyy", label: "Mois" },
+    { value: "yyyy", label: "Année" }
+]
 
 interface Props {
     dateRange: DateRange;
@@ -22,6 +33,11 @@ const DateRangeStep = (
         onNextStep
     }: Props
 ) => {
+
+
+    // state
+
+    const [format, setFormat] = useState<DateFormat>("MM/yyyy")
 
     // handlers
 
@@ -64,13 +80,23 @@ const DateRangeStep = (
                     onSubmit={e => e.preventDefault()} 
                     className={styles.fieldsContainer}>
                     <FieldContainer>
+                        <Label>Unité de temps</Label>
+                        <Select
+                            name="date-format"
+                            value={format}
+                            onChange={format => setFormat(format as DateFormat)}
+                            options={formatOptions}
+                            bigPadding
+                        />
+                    </FieldContainer>
+                    <FieldContainer>
                         <Label>Début</Label>
                         <DateInput
                             name="start-date"
                             value={dateRange.startDate}
                             onChange={handleStartDateChange}
-                            strict={false}
-                            
+                            // strict={false}
+                            format={format}
                         />
                     </FieldContainer>
                     
@@ -81,8 +107,8 @@ const DateRangeStep = (
                             value={dateRange.endDate}
                             onChange={handleEndDateChange}
                             minDate={dateRange.startDate}
-                            strict={false}
-                            
+                            // strict={false}
+                            format={format}
                         />
                     </FieldContainer>
                 </form>

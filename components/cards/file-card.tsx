@@ -8,6 +8,8 @@ import { destructFileName, FileInfo } from "@utils/fichiers";
 import FilePreviewer from "@components/modals/file-previewer";
 import Button from "@components/button";
 import { faFolderOpen, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { useSession } from "next-auth/react";
+import { MySession } from "@conf/utility-types";
 
 interface Props {
     file: Fichier;
@@ -37,10 +39,18 @@ const FileCard = (
 
     const [fileInfo, setFileInfo] = useState<FileInfo>()
 
+    // get session data
+
+    const { data, status } = useSession()
+
+    const session = (data as MySession | null)
+
     const makeAPIRequest = useAPIRequest()
 
     const getOwner = () => {
+        if(!session) return
         makeAPIRequest<User, void>(
+            session,
             "get",
             "users",
             `id/${file.user_id}`,
@@ -49,7 +59,7 @@ const FileCard = (
         )
     }
 
-    useEffect(() => getOwner(), [file])
+    useEffect(() => getOwner(), [file, session])
 
     // once we've got the data we need
     // extract useful info from the file name

@@ -12,6 +12,8 @@ import TextInput from "@components/form-elements/text-input";
 import Button from "@components/button";
 import Select from "@components/form-elements/select";
 import useAPIRequest from "@hook/useAPIRequest";
+import { useSession } from "next-auth/react";
+import { MySession } from "@conf/utility-types";
 
 
 interface Props {
@@ -69,7 +71,14 @@ const RoleFormModal = (
 
     const makeAPIRequest = useAPIRequest()
 
+    const { data: sessionData, status } = useSession()
+
+    const session = (sessionData as MySession | null)
+
     const postNewRole = () => {
+
+        if(!session) return
+
         // start with bringing the data together
         const newRole: UserRoleCreate = {
             titre,
@@ -79,6 +88,7 @@ const RoleFormModal = (
 
         // make the request to the API
         return makeAPIRequest<UserRoleCreate, UserRoleCreate>(
+            session,
             "post",
             "roles",
             undefined,
@@ -87,7 +97,7 @@ const RoleFormModal = (
     }
 
     const updateRole = () => {
-        if(!data) return
+        if(!data || !session) return
         // start with bringing the data together
         const permissionsString = permissions.join(",")
         const suppressionString = suppression.join(",")
@@ -100,6 +110,7 @@ const RoleFormModal = (
         
         // make the request to the API
         return makeAPIRequest<UserRoleUpdate, UserRole>(
+            session,
             "put",
             "roles",
             data.titre,
@@ -128,6 +139,9 @@ const RoleFormModal = (
     }
 
     const validateForm = async () => {
+
+        if(!session) return false
+
         let validated = true
         const newErrorFields: string[] = []
     
@@ -145,6 +159,7 @@ const RoleFormModal = (
             // if we're updating a role, make sure the title is unique, but not the current one
 
             const role = await makeAPIRequest<UserRole, UserRole | undefined>(
+                session,
                 "get",
                 "roles",
                 titre,

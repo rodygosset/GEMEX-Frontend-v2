@@ -1,0 +1,46 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+li.container {
+
+    @include flex-container(column, nowrap, flex-start);
+    gap: 15px;
+
+    width: 100%;
+    padding: 15px;
+
+    border: 1px solid $primary-100;
+    border-radius: 10px;
+
+
+    h4 {
+        @include header-4-medium;
+        color: $primary;
+    }
+
+    ul {
+        @include reset-list;
+        @include flex-container(row, wrap, flex-start, flex-start);
+        gap: 15px;
+
+        li {
+            @include text-sm-medium;
+            color: $primary-600;
+        }
+    }
+
+    .buttonsContainer {
+        @include flex-container(row, nowrap, flex-end, center);
+        gap: 15px;
+
+        .deleteButton {
+            border: 1px solid $error-100;
+        }
+    }
+
+}
+
+.formContainer {
+    width: 100%;
+}

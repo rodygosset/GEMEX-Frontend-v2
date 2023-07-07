@@ -45,6 +45,7 @@ const OperationsProgressMeter = () => {
         // total number of operation reports (Fiches)
 
         makeAPIRequest<SearchResultsCount, void>(
+            session,
             "post", 
             "fiches",
             "search/nb",
@@ -58,6 +59,7 @@ const OperationsProgressMeter = () => {
     
 
         makeAPIRequest<FicheStatus[], void>(
+            session,
             "get",
             "fiches_status",
             undefined,
@@ -68,6 +70,7 @@ const OperationsProgressMeter = () => {
         // get the number of operation reports (Fiches) for each status type
 
         makeAPIRequest<SearchResultsCount, void>(
+            session,
             "post", 
             "fiches",
             "search/nb",
@@ -80,6 +83,7 @@ const OperationsProgressMeter = () => {
         )
 
         makeAPIRequest<SearchResultsCount, void>(
+            session,
             "post", 
             "fiches",
             "search/nb",
@@ -92,6 +96,7 @@ const OperationsProgressMeter = () => {
         )
 
         makeAPIRequest<SearchResultsCount, void>(
+            session,
             "post", 
             "fiches",
             "search/nb",

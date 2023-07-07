@@ -1,9 +1,11 @@
 import { UserRole } from "@conf/api/data-types/user"
+import { MySession } from "@conf/utility-types"
 import { faUserGroup } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import useAPIRequest from "@hook/useAPIRequest"
 import styles from "@styles/components/cards/user-management-dashboard/prop-card.module.scss"
 import { UserManagementCardProps } from "@utils/types"
+import { useSession } from "next-auth/react"
 import { MouseEvent, useEffect, useState } from "react"
 
 
@@ -23,11 +25,16 @@ const RoleCard = (
 
     const makeAPIRequest = useAPIRequest()
 
+    const { data: sessionData, status } = useSession()
+
+    const session = (sessionData as MySession | null)
+
     useEffect(() => {
 
-        if(!data.id) return
+        if(!data.id || !session) return
             
         makeAPIRequest<{ nb_results: number }, void>(
+            session,
             "post",
             "users",
             `search/nb`,

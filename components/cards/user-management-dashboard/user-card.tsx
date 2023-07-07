@@ -5,6 +5,8 @@ import { capitalizeFirstLetter } from "@utils/general";
 import { MouseEvent, useEffect, useState } from "react"
 import Image from "next/image";
 import { UserManagementCardProps } from "@utils/types";
+import { useSession } from "next-auth/react";
+import { MySession } from "@conf/utility-types";
 
 
 const UserCard = (
@@ -23,11 +25,16 @@ const UserCard = (
 
     const makeAPIRequest = useAPIRequest()
 
+    const { data: sessionData, status } = useSession()
+
+    const session = (sessionData as MySession | null)
+
     useEffect(() => {
 
-        if(!data.role_id) return
+        if(!data.role_id || !session) return
 
         makeAPIRequest<UserRole, void>(
+            session,
             "get",
             "roles",
             `id/${data.role_id}`,

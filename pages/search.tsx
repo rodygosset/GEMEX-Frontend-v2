@@ -25,6 +25,7 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { authOptions } from "./api/auth/[...nextauth]"
 
 import Image from "next/image"
+import { useSession } from "next-auth/react"
 
 interface Props {
     queryItemType: string;
@@ -108,14 +109,18 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
     // when the search results change
     // fetch corresponding meta-data
 
+    const session = useSession().data as MySession | null
+
     const getMetaData = useGetMetaData()
 
     useEffect(() => {
-        getMetaData(itemType, searchResults).then(metaData => {
+        if(!session) return
+
+        getMetaData(session, itemType, searchResults).then(metaData => {
             if(metaData) setMetaData(metaData)
             else setMetaData({})
         })
-    }, [searchResults])
+    }, [searchResults, session])
 
     // useEffect(() => console.log(metaData), [metaData])
 
@@ -140,9 +145,12 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
     // & compute the total number of pages
 
     const getNbResults = () => {
+        if(!session) return
+
         // make a request to our API to get the number of search results
         // & divide that by the number of results per page 
         makeAPIRequest<{nb_results: number}, void>(
+            session,
             "post", 
             itemType,
             "search/nb",
@@ -152,7 +160,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         )
     }
 
-    useEffect(getNbResults, [searchResults])
+    useEffect(getNbResults, [searchResults, session])
 
     useEffect(() => setTotalPagesNb(Math.ceil(nbResults / resultsPerPage)), [nbResults])
 
@@ -168,6 +176,8 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
     // & when the item type or the search params are updated
 
     useEffect(() => {
+
+        if(!session) return
 
         // let the user know we're fetching data
 
@@ -191,6 +201,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         }
 
         makeAPIRequest<any[], void>(
+            session,
             "post", 
             itemType,
             `search/?skip=${(currentPageNb - 1) * resultsPerPage}&max=${resultsPerPage}`,
@@ -200,7 +211,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
             reqController.current.signal
         )
 
-    }, [itemType, searchParams, currentPageNb])
+    }, [itemType, searchParams, currentPageNb, session])
 
     // manage search filters visibility
 

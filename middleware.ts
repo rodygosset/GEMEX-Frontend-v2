@@ -42,6 +42,6 @@ export const config = {
 		* - favicon.ico (favicon file)
 		* - public (other static files)
 		*/
-		'/((?!api|_next/static|_next/image|favicon.ico|favicon/|images/).*)',
+		'/((?!api|_next/static|_next/image|favicon.ico|favicon/|images/|404).*)',
 	],
 }

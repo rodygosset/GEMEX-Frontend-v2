@@ -91,7 +91,10 @@ const FicheStatus = (
     const refresh = () => router.push(router.asPath)
 
     const updateStatus = (statusId: number) => {
+        if(!session) return
+        
         makeAPIRequest(
+            session,
             "put",
             "fiches",
             ficheData.nom,

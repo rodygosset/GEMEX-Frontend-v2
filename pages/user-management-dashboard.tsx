@@ -38,6 +38,7 @@ import UserGroupViewModal from "@components/modals/user-management/group-view-mo
 import FieldContainer from "@components/form-elements/field-container";
 import Label from "@components/form-elements/label";
 import CheckBox from "@components/form-elements/checkbox";
+import { useSession } from "next-auth/react";
 
 
 const resultsPerPage = 30
@@ -209,6 +210,8 @@ const UserManagementDashboard = (
     // flatten the permissions & suppression arrays to string
     // separated by commas
 
+    const session = useSession().data as MySession | null
+
     const parseSearchParams = () => {
         const params = {...searchParams}
         // delete key/value pair from search params if value is empty
@@ -234,9 +237,13 @@ const UserManagementDashboard = (
     // & compute the total number of pages
 
     const getNbResults = () => {
+
+        if(!session) return
+
         // make a request to our API to get the number of search results
         // & divide that by the number of results per page 
         makeAPIRequest<{nb_results: number}, void>(
+            session,
             "post", 
             selectedCategory.itemType,
             "search/nb",
@@ -246,7 +253,7 @@ const UserManagementDashboard = (
         )
     }
 
-    useEffect(getNbResults, [searchResults])
+    useEffect(getNbResults, [searchResults, session])
 
     useEffect(() => setTotalPagesNb(Math.ceil(nbResults / resultsPerPage)), [nbResults])
 
@@ -262,6 +269,8 @@ const UserManagementDashboard = (
     // & when the item type or the search params are updated
 
     useEffect(() => {
+
+        if(!session) return
 
         // let the user know we're fetching data
 
@@ -285,6 +294,7 @@ const UserManagementDashboard = (
         }
 
         makeAPIRequest<any[], void>(
+            session,
             "post", 
             selectedCategory.itemType,
             `search/?skip=${(currentPageNb - 1) * resultsPerPage}&max=${resultsPerPage}`,
@@ -294,7 +304,7 @@ const UserManagementDashboard = (
             reqController.current.signal
         )
 
-    }, [selectedCategory, searchQ, searchParams, currentPageNb, refreshTrigger])
+    }, [selectedCategory, searchQ, searchParams, currentPageNb, refreshTrigger, session])
 
     // manage view mode (list or card)
 

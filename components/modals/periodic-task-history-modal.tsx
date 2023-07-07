@@ -69,6 +69,8 @@ const PeriodicTaskHistoryModal = (
 
     useEffect(() => {
 
+        if(!session) return
+
         // determine the item type and the id of the task's target item
 
         let targetItemId = 0
@@ -95,6 +97,7 @@ const PeriodicTaskHistoryModal = (
         // get its name
 
         makeAPIRequest<any, void>(
+            session,
             "get",
             targetItemType,
             `id/${targetItemId}`,
@@ -105,6 +108,7 @@ const PeriodicTaskHistoryModal = (
         // get the task history items from the API
 
         makeAPIRequest<HistoriqueFicheSystematique[], void>(
+            session,
             "post",
             "historiques_fiches_systematiques",
             "search/",
@@ -114,7 +118,7 @@ const PeriodicTaskHistoryModal = (
             res => setTaskHistory(res.data.sort((a, b) => sortDate(a.date, b.date)).reverse())
         )
 
-    }, [refreshTrigger])
+    }, [refreshTrigger, session])
 
     // utils
 

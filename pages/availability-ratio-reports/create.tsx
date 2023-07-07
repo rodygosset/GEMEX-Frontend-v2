@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/pages/availability-ratio-reports/create.module.scss"
 import { DateRange, ExpoGroupCreate } from "@utils/types"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 
 const steps = [
@@ -29,6 +29,10 @@ const CreateReport = () => {
     })
 
     const [expoGroups, setExpoGroups] = useState<ExpoGroupCreate[]>([])
+
+    useEffect(() => {
+        console.log("expo groups changed", expoGroups)
+    }, [expoGroups])
 
     // handlers
 

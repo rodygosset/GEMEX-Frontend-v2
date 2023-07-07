@@ -16,6 +16,8 @@ import { resultsPerPage } from "pages/search";
 import SearchResultCard from "@components/cards/search-result-card";
 import { faList, faTableCellsLarge } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { MySession } from "@conf/utility-types";
 
 
 interface Props {
@@ -92,12 +94,15 @@ const FicheTargetSelectModal = (
 
     const getMetaData = useGetMetaData()
 
+    const session = useSession().data as MySession | null
+
     useEffect(() => {
-        getMetaData(itemType, searchResults).then(metaData => {
+        if(!session) return
+        getMetaData(session, itemType, searchResults).then(metaData => {
             if(metaData) setMetaData(metaData)
             else setMetaData({})
         })
-    }, [searchResults])
+    }, [searchResults, session])
 
     // handlers
 
@@ -133,9 +138,11 @@ const FicheTargetSelectModal = (
     // & compute the total number of pages
 
     const getNbResults = () => {
+        if(!session) return
         // make a request to our API to get the number of search results
         // & divide that by the number of results per page 
         makeAPIRequest<{nb_results: number}, void>(
+            session,
             "post", 
             itemType,
             "search/nb",
@@ -161,6 +168,8 @@ const FicheTargetSelectModal = (
     // & when the item type or the search params are updated
 
     useEffect(() => {
+
+        if(!session) return
 
         // make sure nothing is selected when we reload the search results
 
@@ -188,6 +197,7 @@ const FicheTargetSelectModal = (
         }
 
         makeAPIRequest<any[], void>(
+            session,
             "post", 
             itemType,
             `search/?skip=${(currentPageNb - 1) * resultsPerPage}&max=${resultsPerPage}`,
@@ -197,7 +207,7 @@ const FicheTargetSelectModal = (
             reqController.current.signal
         )
 
-    }, [itemType, searchParams, currentPageNb])
+    }, [itemType, searchParams, currentPageNb, session])
 
 
 

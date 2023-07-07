@@ -50,5 +50,5 @@ export interface DateRange {
 
 export interface ExpoGroupCreate {
     nom: string;
-    expositions: { exposition_id: number }[];
+    expositions: { nom: string, id: number }[];
 }

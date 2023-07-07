@@ -1,7 +1,9 @@
 import Select from "@components/form-elements/select";
 import { getUserFullName } from "@conf/api/data-types/user";
+import { MySession } from "@conf/utility-types";
 import useAPIRequest from "@hook/useAPIRequest";
 import { SelectOption } from "@utils/react-select/types";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 
@@ -33,9 +35,14 @@ const ItemSelectField = (
 
     const makeAPIRequest = useAPIRequest()
 
+    const session = useSession().data as MySession | null
+
     useEffect(() => {
         
+        if (!session) return
+
         makeAPIRequest<any[], void>(
+            session,
             "get",
             itemType,
             undefined,
@@ -48,7 +55,7 @@ const ItemSelectField = (
             }))
         )
 
-    }, [itemType])
+    }, [itemType, session])
 
     // render
 

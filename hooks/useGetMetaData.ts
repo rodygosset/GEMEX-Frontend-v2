@@ -2,6 +2,7 @@ import { apiURLs } from "@conf/api/conf"
 import { searchConf, SearchResultsMetaData } from "@conf/api/search"
 import { AxiosResponse } from "axios"
 import useAPIRequest from "./useAPIRequest"
+import { MySession } from "@conf/utility-types"
 
 
 // The following hook gets relevant meta-data for each search result item
@@ -21,7 +22,7 @@ export const useGetMetaData = () => {
     // so the user must set local state 
     // when the Promise returned by this function resolves
 
-    const getSearchResultsMetaData = async (itemType: string, searchResults: any[]) => {
+    const getSearchResultsMetaData = async (session: MySession,itemType: string, searchResults: any[]) => {
 
         // go through the search results array
         // and get the meta-data for each item
@@ -89,6 +90,7 @@ export const useGetMetaData = () => {
                 
                 // make the request
                 const metaData = await makeAPIRequest(
+                    session,
                     "get",
                     searchConf[itemType].searchParams[field].type,
                     `id/${value}`,

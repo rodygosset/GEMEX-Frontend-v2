@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import FileCard from "@components/cards/file-card";
 import useAPIRequest from "@hook/useAPIRequest";
 import { itemTypetoAttributeName } from "@utils/general";
+import { MySession } from "@conf/utility-types";
+import { useSession } from "next-auth/react";
 
 
 interface Props {
@@ -27,8 +29,13 @@ const ViewFiles = (
 
     const makeAPIRequest = useAPIRequest()
 
+    const session = useSession().data as MySession | null
+
     const getFiles = () => {
+        if (!session) return
+
         makeAPIRequest<Fichier[], void>(
+            session,
             "post",
             "fichiers",
             "search/",

@@ -48,6 +48,7 @@ const PeriodicTaskCard = (
         if(!user) return
 
         makeAPIRequest<FicheSystematique[], void>(
+            session,
             "put", 
             "fiches_systematiques",
             task.label,

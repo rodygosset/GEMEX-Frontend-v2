@@ -2,7 +2,7 @@ import styles from "@styles/components/form-elements/select.module.scss"
 import colors from "@styles/abstracts/_colors.module.scss"
 import typography from "@styles/base/_typography.module.scss"
 import { SelectOption } from "@utils/react-select/types";
-import { ComponentType, useEffect, useState } from "react";
+import { ComponentType, useEffect, useId, useState } from "react";
 import ReactSelect, { components, CSSObjectWithLabel, DropdownIndicatorProps, StylesConfig } from "react-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCaretUp, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
@@ -271,6 +271,7 @@ const Select = (
         <></>
         :
         <ReactSelect
+            instanceId={useId()}
             className={getClassNames()}
             options={options}
             styles={getStyles()}

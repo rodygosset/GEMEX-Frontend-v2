@@ -219,6 +219,7 @@ const CreateTemplate = (
     // submit logic
 
     const makeAPIRequest = useAPIRequest()
+    
 
     // make sure no required field is left empty
 
@@ -253,7 +254,7 @@ const CreateTemplate = (
     const [validationError, setValidationError] = useState(false)
 
     const validateFormData = async () => {
-        if(!formData) return false
+        if(!formData || !session.data) return false
         let validated = true
 
         // default error message
@@ -292,6 +293,7 @@ const CreateTemplate = (
 
         if(!itemType.includes("fiches")) {
             const item = await makeAPIRequest<any, any>(
+                session.data as MySession,
                 "get",
                 itemType,
                 formData["nom"].value,
@@ -312,6 +314,8 @@ const CreateTemplate = (
     }
 
     const handleSubmit = async () => {
+        if(!session.data) return
+
         const submitData = buildSubmitData()
         // console.log("submit data ==> ")
         // console.log(submitData)
@@ -340,6 +344,7 @@ const CreateTemplate = (
         // POST the data
 
         makeAPIRequest(
+            session.data as MySession,
             "post",
             getFormItemType(),
             undefined,

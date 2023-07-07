@@ -15,6 +15,8 @@ import Label from "@components/form-elements/label";
 import ItemMultiSelect from "@components/form-elements/multi-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CheckBox from "@components/form-elements/checkbox";
+import { useSession } from "next-auth/react";
+import { MySession } from "@conf/utility-types";
 
 interface Props {
     isVisible: boolean;
@@ -79,11 +81,16 @@ const UserFormModal = (
 
     const makeAPIRequest = useAPIRequest()
 
+    const { data: sessionData, status } = useSession()
+
+    const session = (sessionData as MySession | null)
+
     useEffect(() => {
 
-        if(!isVisible) return
+        if(!isVisible || !session) return
 
         makeAPIRequest<UserRole[], void>(
+            session,
             "get",
             "roles",
             undefined,
@@ -98,7 +105,7 @@ const UserFormModal = (
             }
         )
 
-    }, [isVisible])
+    }, [isVisible, session])
 
     // clear the selected role when the role options change
     // and reset the role id
@@ -118,9 +125,10 @@ const UserFormModal = (
 
     useEffect(() => {
 
-        if(roleId <= 0) return
+        if(roleId <= 0 || !session) return
         
         makeAPIRequest<UserRole, void>(
+            session,
             "get",
             "roles",
             `id/${roleId}`,
@@ -137,6 +145,8 @@ const UserFormModal = (
 
     const postNewUser = () => {
 
+        if(!session) return
+
         // bringing the data together
         const newUser: UserCreate = {
             prenom: firstName,
@@ -150,6 +160,7 @@ const UserFormModal = (
         
         // code to make the request
         return makeAPIRequest<User, void>(
+            session,
             "post",
             "users",
             undefined,
@@ -158,7 +169,7 @@ const UserFormModal = (
     }
 
     const updateUser = () => {
-        if(!data) return
+        if(!data || !session) return
         // start with bringing the data together
         // don't include fields that haven't been changed
         // and don't include the password field at all
@@ -175,6 +186,7 @@ const UserFormModal = (
         // make the request
     
         return makeAPIRequest<User, void>(
+            session,
             "put",
             "users",
             data.username,
@@ -207,6 +219,8 @@ const UserFormModal = (
     }
 
     const validateForm = async () => {
+
+        if(!session) return
 
         let validated = true
         const newErrorFields: string[] = []
@@ -242,6 +256,7 @@ const UserFormModal = (
             // if we're creating a new user, make sure the username is not already taken
             // if we're updating an existing user, make sure the username is not already taken by another user
             const user = await makeAPIRequest<User, User | undefined>(
+                session,
                 "get",
                 "users",
                 username,

@@ -9,6 +9,8 @@ import styles from "@styles/components/modals/periodic-task-fulfillment-modal.mo
 import { toISO } from "@utils/general";
 import { useState } from "react";
 import ModalContainer from "./modal-container";
+import { useSession } from "next-auth/react";
+import { MySession } from "@conf/utility-types";
 
 interface Props {
     isVisible: boolean;
@@ -42,9 +44,16 @@ const PeriodicTaskFulfillmentModal = (
 
     const makeAPIRequest = useAPIRequest()
 
+    const { data, status } = useSession()
+
+    const session = (data as MySession | null)
+
     const handleSubmit = () => {
 
+        if (!session) return
+
         makeAPIRequest<HistoriqueFicheSystematique, void>(
+            session,
             "post",
             "historiques_fiches_systematiques",
             undefined,

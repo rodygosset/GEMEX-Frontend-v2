@@ -5,6 +5,8 @@ import { Context } from "@utils/context";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import ModalContainer from "./modal-container";
+import { MySession } from "@conf/utility-types";
+import { useSession } from "next-auth/react";
 
 interface Props {
     isVisible: boolean;
@@ -55,8 +57,14 @@ const DeleteDialog = (
 
     const makeAPIRequest = useAPIRequest()
 
+    const { data, status } = useSession()
+
+    const session = (data as MySession | null)
+
     const makeDeleteRequest = (itemID: string) => {
+        if (!session) return
         return makeAPIRequest(
+            session,
             "delete",
             itemType,
             `${itemID}`,

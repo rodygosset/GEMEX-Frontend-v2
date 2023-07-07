@@ -9,6 +9,8 @@ import TextInput from "@components/form-elements/text-input";
 import { useEffect, useState } from "react";
 import useAPIRequest from "@hook/useAPIRequest";
 import Button from "@components/button";
+import { MySession } from "@conf/utility-types";
+import { useSession } from "next-auth/react";
 
 interface Props {
     isVisible: boolean;
@@ -46,10 +48,18 @@ const GroupFormModal = (
 
     const makeAPIRequest = useAPIRequest()
 
+    const { data: sessionData, status } = useSession()
+
+    const session = (sessionData as MySession | null)
+
     const postNewGroup = () => {
+
+        if(!session) return
+
         // make a request to create a new group
 
         return makeAPIRequest<UserGroupCreate, UserGroupCreate>(
+            session,
             "post",
             "groups",
             undefined,
@@ -58,11 +68,12 @@ const GroupFormModal = (
     }
 
     const updateGroup = () => {
-        if(!data) return
+        if(!data || !session) return
 
         // make a request to update a group
 
         return makeAPIRequest<UserGroupUpdate, UserGroupUpdate>(
+            session,
             "put",
             "groups",
             data.nom,
@@ -79,6 +90,8 @@ const GroupFormModal = (
 
 
     const validateForm = async () => {
+        if(!session) return false
+
         let validated = true
     
         // default error message
@@ -94,6 +107,7 @@ const GroupFormModal = (
             // if we're updating a group, make sure the nom is unique, but not the current one
 
             const group = await makeAPIRequest<UserGroup, UserGroup | undefined>(
+                session,
                 "get",
                 "groups",
                 nom,
