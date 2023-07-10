@@ -59,7 +59,7 @@ const Header = () => {
     )
 
     const shouldShouldAvailabilityRatioModuleLink = () => (
-        userRole && userRole.permissions.includes("manage") &&
+        userRole && userRole.permissions.includes("rapports") &&
         !router.pathname.includes("availability-ratio-reports")
     )
 
