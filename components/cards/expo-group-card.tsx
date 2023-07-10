@@ -1,10 +1,10 @@
-import { ExpoGroupCreate } from "@utils/types";
 
 import styles from "@styles/components/cards/expo-group-card.module.scss"
 import { useState } from "react";
 import ExpoGroupForm from "@components/forms/expo-group-form";
 import Button from "@components/button";
 import VerticalSeperator from "@components/utils/vertical-seperator";
+import { ExpoGroupCreate } from "@conf/api/data-types/rapport";
 
 
 interface Props {
