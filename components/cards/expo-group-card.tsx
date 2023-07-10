@@ -1,6 +1,6 @@
 
 import styles from "@styles/components/cards/expo-group-card.module.scss"
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import ExpoGroupForm from "@components/forms/expo-group-form";
 import Button from "@components/button";
 import VerticalSeperator from "@components/utils/vertical-seperator";
@@ -8,14 +8,20 @@ import { ExpoGroupCreate } from "@conf/api/data-types/rapport";
 
 
 interface Props {
-    expoGroup: ExpoGroupCreate
-    onChange: (expoGroup: ExpoGroupCreate) => void
-    onDelete: () => void
+    expoGroup: ExpoGroupCreate;
+    selectMode?: boolean;
+    isSelected?: boolean;
+    onToggleSelect?: () => void;
+    onChange?: (expoGroup: ExpoGroupCreate) => void;
+    onDelete?: () => void;
 }
 
 const ExpoGroupCard = (
     {
         expoGroup,
+        selectMode,
+        isSelected,
+        onToggleSelect,
         onChange,
         onDelete
     }: Props
@@ -26,39 +32,54 @@ const ExpoGroupCard = (
     const [isEditing, setIsEditing] = useState(false)
 
 
+    // utils
+
+    const getClassNames = () => {
+        let classNames = styles.container
+        classNames += selectMode ? ` ${styles.selectMode}` : ""
+        classNames += isSelected ? ` ${styles.selected}` : ""
+        return classNames
+    }
+
     // render
 
-    return !isEditing ? (
-        <li className={styles.container}>
+    return !isEditing || !onChange ? (
+        <li className={getClassNames()} onClick={onToggleSelect}>
             <h4>{expoGroup.nom}</h4>
             <ul>
                 {expoGroup.expositions.map((expo, index) => (
-                    <>
-                        <li key={expo.id}>{expo.nom}</li>
+                    <Fragment key={expo.id}>
+                        <li>{expo.nom}</li>
                         {
                             index < expoGroup.expositions.length - 1 ?
-                            <VerticalSeperator /> : <></>
+                            <hr className={styles.verticalSeparator} /> : <></>
                         }
-                    </>
+                    </Fragment>
                     
                 ))}
             </ul>
 
             <div className={styles.buttonsContainer}>
-                <Button
-                    role="tertiary"
-                    className={styles.deleteButton}
-                    status="danger"
-                    fullWidth
-                    onClick={onDelete}>
-                    Supprimer
-                </Button>
-                <Button
-                    role="secondary"
-                    fullWidth
-                    onClick={() => setIsEditing(true)}>
-                    Modifier
-                </Button>
+                {
+                    !selectMode && onDelete && onChange ?
+                    <>
+                        <Button
+                            role="tertiary"
+                            className={styles.deleteButton}
+                            status="danger"
+                            fullWidth
+                            onClick={onDelete}>
+                            Supprimer
+                        </Button>
+                        <Button
+                            role="secondary"
+                            fullWidth
+                            onClick={() => setIsEditing(true)}>
+                            Modifier
+                        </Button>
+                    </>
+                    : <></>
+                }
 
             </div>
         </li>

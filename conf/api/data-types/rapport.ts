@@ -17,14 +17,15 @@ export interface RapportCreate {
 
 
 export interface TauxSemaine {
-    date_debut: Date;
-    date_fin: Date;
-    taux: number;
+    date_debut: string;
+    date_fin: string;
+    taux: string;
     id: number;
 }
 
 export interface ExpoRapport {
     exposition_id: number;
+    nom: string;
     groupe_id: number;
     taux: number;
     taux_semaine: TauxSemaine[];
@@ -41,8 +42,8 @@ export interface ExpoGroup {
 }
 
 export interface RapportTauxDisponibilite {
-    date_debut: Date;
-    date_fin: Date;
+    date_debut: string;
+    date_fin: string;
     taux: number;
     taux_semaine: TauxSemaine[];
     groupes_expositions: ExpoGroup[];
