@@ -5,13 +5,13 @@ import TextInput from "@components/form-elements/text-input";
 import { Exposition } from "@conf/api/data-types/exposition";
 import useAPIRequest from "@hook/useAPIRequest";
 import { SelectOption } from "@utils/react-select/types";
-import { ExpoGroupCreate } from "@utils/types"
 import { useEffect, useState } from "react";
 
 import styles from "@styles/components/forms/expo-group-form.module.scss"
 import Button from "@components/button";
 import { useSession } from "next-auth/react";
 import { MySession } from "@conf/utility-types";
+import { ExpoGroupCreate } from "@conf/api/data-types/rapport";
 
 
 interface Props {
