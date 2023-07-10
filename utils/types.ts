@@ -47,8 +47,3 @@ export interface DateRange {
     startDate: Date;
     endDate: Date;
 }
-
-export interface ExpoGroupCreate {
-    nom: string;
-    expositions: { nom: string, id: number }[];
-}

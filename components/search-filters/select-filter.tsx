@@ -37,7 +37,7 @@ const SelectFilter = (
 
     useEffect(() => {
 
-        if(!conf.item || !session) return
+        if(!conf.type || !session) return
 
         // start with making a request to the API
 

@@ -40,7 +40,8 @@ export const apiURLs: APIURLsType = {
     fiches_status: "/api/fiches/status/",
     fiches: "/api/fiches/",
     fiches_systematiques: "/api/fiches/systematiques/",
-    historiques_fiches_systematiques: "/api/fiches/systematiques/historique/"
+    historiques_fiches_systematiques: "/api/fiches/systematiques/historique/",
+    rapports: "/api/rapports_taux_disponibilite/"
 }
 
 

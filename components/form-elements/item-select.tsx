@@ -5,7 +5,6 @@ import { AxiosError, AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import { StylesConfig } from "react-select";
 import Select from "./select";
-import colors from "@styles/abstracts/_colors.module.scss"
 import { useSession } from "next-auth/react";
 import { MySession } from "@conf/utility-types";
 
@@ -49,9 +48,7 @@ const ItemSelect = (
 
     const makeAPIRequest = useAPIRequest()
 
-    const { data, status } = useSession()
-
-    const session = (data as MySession | null)
+    const session = useSession().data as MySession | null
 
 
     useEffect(() => {

@@ -57,9 +57,7 @@ const DeleteDialog = (
 
     const makeAPIRequest = useAPIRequest()
 
-    const { data, status } = useSession()
-
-    const session = (data as MySession | null)
+    const session = useSession().data as MySession | null
 
     const makeDeleteRequest = (itemID: string) => {
         if (!session) return

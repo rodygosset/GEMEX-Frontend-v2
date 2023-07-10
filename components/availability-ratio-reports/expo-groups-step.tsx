@@ -1,4 +1,4 @@
-import { ExpoGroupCreate } from "@utils/types"
+import { DateRange } from "@utils/types"
 import Image from "next/image"
 
 import styles from "@styles/components/availability-ratio-reports/expo-groups-step.module.scss"
@@ -7,10 +7,12 @@ import { faArrowRight, faArrowRotateLeft, faPlus } from "@fortawesome/free-solid
 import ExpoGroupForm from "@components/forms/expo-group-form"
 import ExpoGroupCard from "@components/cards/expo-group-card"
 import { useState } from "react"
+import { ExpoGroupCreate } from "@conf/api/data-types/rapport"
 
 
 interface Props {
     expoGroups: ExpoGroupCreate[]
+    dateRange: DateRange
     onChange: (expoGroups: ExpoGroupCreate[]) => void
     onNextStep: () => void
 }
@@ -18,6 +20,7 @@ interface Props {
 const ExpoGroupsStep = (
     {
         expoGroups,
+        dateRange,
         onChange,
         onNextStep
     }: Props
@@ -33,15 +36,15 @@ const ExpoGroupsStep = (
         <section className={styles.container}>
             <div className={styles.content}>
                 <h3>Sélectionner et regrouper les expositions</h3>
-                <p>Choisir les expositions et les groupes d’expositions pour lesquels le taux de disponibilité sera calculé.</p>
-                
+                <p>Choisir les expositions et les groupes d’expositions pour lesquels le taux de disponibilité sera calculé.</p>                
+
                 {
                     expoGroups.length > 0 ? 
                     <ul>
                         {expoGroups.map((expoGroup, index) => (
                             <ExpoGroupCard
                                 // combine nom & id to make a unique key 
-                                key={`${expoGroup.nom}-${index}`}
+                                key={`${expoGroup.nom}-${index}-${expoGroup.expositions.map(expo => expo.id).join("-")}`}
                                 expoGroup={expoGroup}
                                 onChange={expoGroup => {
                                     const index = expoGroups.findIndex(group => group.nom === expoGroup.nom)
@@ -54,7 +57,7 @@ const ExpoGroupsStep = (
                         ))}
                     </ul> 
                     :
-                    <p className={styles.noGroupMessage}>Aucun groupe d'expositions sélectionné.</p>
+                    <p className={styles.accentColorMessage}>Aucun groupe d'expositions sélectionné.</p>
                 }
 
                 {
@@ -86,13 +89,16 @@ const ExpoGroupsStep = (
                     </div> 
                     : <></>
                 }
-
+                
                 {
                     expoGroups.length == 0 ?
                     <p>Créez au minimum un groupe d'exposition avant de pouvoir générer un rapport.</p>
                     : <></>
                 }
+
+                <p className={styles.accentColorMessage}>La période sélectionnée est du {dateRange.startDate.toLocaleDateString()} au {dateRange.endDate.toLocaleDateString()}.</p>
                 
+
                 <Button
                     active={expoGroups.length > 0}
                     onClick={onNextStep}

@@ -1,12 +1,16 @@
 
 import DateRangeStep from "@components/availability-ratio-reports/date-range-step"
 import ExpoGroupsStep from "@components/availability-ratio-reports/expo-groups-step"
+import { MySession } from "@conf/utility-types"
 import { faChevronLeft, faCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import useAPIRequest from "@hook/useAPIRequest"
 import styles from "@styles/pages/availability-ratio-reports/create.module.scss"
-import { DateRange, ExpoGroupCreate } from "@utils/types"
+import { ExpoGroupCreate, RapportCreate, RapportTauxDisponibilite } from "@conf/api/data-types/rapport"
+import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import { DateRange } from "@utils/types"
 
 
 const steps = [
@@ -30,9 +34,80 @@ const CreateReport = () => {
 
     const [expoGroups, setExpoGroups] = useState<ExpoGroupCreate[]>([])
 
+    const [report, setReport] = useState<RapportTauxDisponibilite | null>(null)
+
+    // effects
+
+    const makeAPIRequest = useAPIRequest()
+
+    const session = useSession().data as MySession | null
+
     useEffect(() => {
-        console.log("expo groups changed", expoGroups)
-    }, [expoGroups])
+
+        if(currentStep !== 2 || !session || report !== null) return
+
+        // when the user reaches the last step, we send the data to the server
+
+        // reformat the data to match the API's documentation
+
+        const requestBody: RapportCreate = {
+            date_debut: dateRange.startDate.toISOString().split("T")[0],
+            date_fin: dateRange.endDate.toISOString().split("T")[0],
+            groupes_expositions: expoGroups.map(expoGroup => ({
+                nom: expoGroup.nom,
+                expositions: expoGroup.expositions.map(expo => ({
+                    exposition_id: expo.id
+                }))
+            }))
+        }
+
+        makeAPIRequest<RapportTauxDisponibilite, void>(
+            session,
+            "post",
+            "rapports",
+            undefined,
+            requestBody,
+            // the response is the initial report object
+            res => setReport(res.data)
+        )
+
+    }, [currentStep, session])
+
+    // console log the report when it changes
+
+    useEffect(() => {
+        if(!report) return
+
+        // if the taux is null, hit the "done" API endpoint until it returns true
+        // then update the report object by making a GET request to the API
+
+        if(report.taux !== null || !session) return
+
+        const interval = setInterval(() => {
+            makeAPIRequest<{ done: boolean }, void>(
+                session,
+                "get",
+                "rapports",
+                `id/${report.id}/done`,
+                undefined,
+                res => {
+                    if(res.data.done) {
+                        clearInterval(interval)
+                        makeAPIRequest<RapportTauxDisponibilite, void>(
+                            session,
+                            "get",
+                            "rapports",
+                            `id/${report.id}`,
+                            undefined,
+                            res => setReport(res.data)
+                        )
+                    }
+                }
+            )
+        }, 1000)
+
+        return () => clearInterval(interval)
+    }, [report, session])
 
     // handlers
 
@@ -59,6 +134,7 @@ const CreateReport = () => {
                 return (
                     <ExpoGroupsStep
                         expoGroups={expoGroups}
+                        dateRange={dateRange}
                         onChange={setExpoGroups}
                         onNextStep={() => setCurrentStep(currentStep + 1)}
                     />
@@ -73,11 +149,14 @@ const CreateReport = () => {
     return (
         <main id={styles.container}>
             <section className={styles.header}>
-                <button
-                    className={styles.goBackButton}
-                    onClick={handleGoBack}>
-                    <FontAwesomeIcon icon={faChevronLeft}/>
-                </button>
+                {
+                    currentStep !== 2 ?
+                    <button
+                        className={styles.goBackButton}
+                        onClick={handleGoBack}>
+                        <FontAwesomeIcon icon={faChevronLeft}/>
+                    </button> : <></>
+                }
                 <div>
                     <h2>Nouveau rapport</h2>
                     <p>
