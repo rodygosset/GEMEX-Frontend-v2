@@ -1,8 +1,12 @@
-import { RapportTauxDisponibilite } from "@conf/api/data-types/rapport";
+import { RapportTauxDisponibilite, rapportToCSV } from "@conf/api/data-types/rapport";
 import Image from "next/image";
 
 import styles from "@styles/components/availability-ratio-reports/results-step.module.scss";
 import LoadingIndicator from "@components/utils/loading-indicator";
+import { useEffect } from "react";
+import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faDownload } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
     report: RapportTauxDisponibilite | null
@@ -31,6 +35,12 @@ const ResultsStep = (
         }
     }
 
+    const getLinkToCSV = () => {
+        if(!report || report.taux === null) return ""
+        const csv = "data:text/csv;charset=utf-8," + rapportToCSV(report)
+        return encodeURI(csv)
+    }
+
     // render
 
     return report !== null && report.taux !== null ? (
@@ -45,6 +55,23 @@ const ResultsStep = (
                     <p className={getRatioClassNames()}>
                     {getAvailabilityRatio().toFixed(2)}%
                     </p>
+                </div>
+                <div className={styles.buttonsContainer}>
+                    <Link 
+                        className={styles.secondary}
+                        passHref
+                        href="/availability-ratio-reports">
+                            <FontAwesomeIcon icon={faArrowLeft} />
+                        <span>Accueil</span>
+                    </Link>
+                    <Link
+                        className={styles.primary}
+                        passHref
+                        download={`rapport-${toLocaleDateString(report.date_debut)}-${toLocaleDateString(report.date_fin)}.csv`}
+                        href={getLinkToCSV()}>
+                        <FontAwesomeIcon icon={faDownload} />
+                        <span>Télécharger le rapport</span>
+                    </Link>
                 </div>
             </div>
             <div className={styles.stickyWrapper}>

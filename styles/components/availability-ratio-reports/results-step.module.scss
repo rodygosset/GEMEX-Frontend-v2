@@ -2,6 +2,7 @@
 @import "@styles/base/_typography.module.scss";
 @import "@styles/abstracts/_colors.module.scss";
 @import "@styles/abstracts/_variables.scss";
+@import "@styles/components/button.module.scss";
 
 .container {
 
@@ -67,13 +68,25 @@
         }
 
         .buttonsContainer {
-            @include flex-container(row, nowrap, flex-end, center);
+            @include flex-container(row, nowrap, flex-start, center);
             gap: 15px;
             width: 100%;
 
-            .previousButton {
-                border: 1px solid $primary-100;
+            a {
+                @extend .button;
+                @extend .active;
+                @extend .withPadding;
+                @extend .animateOnHover;
+
+                &.primary {
+                    @extend .primary;
+                }
+
+                &.secondary {
+                    @extend .secondary;
+                }
             }
+            
         }
     }
 
@@ -82,7 +95,7 @@
         top: 30px;
         width: 100%;
         
-        .illustrationContainer {
+        .illustrationContainer {  
             position: relative;
             min-width: 200px;
             max-width: 460px;
