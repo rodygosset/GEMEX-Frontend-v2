@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faDownload } from "@fortawesome/free-solid-svg-icons";
+import BarChart from "@components/charts/bar-chart";
 
 interface Props {
     report: RapportTauxDisponibilite | null
@@ -55,6 +56,13 @@ const ResultsStep = (
                     <p className={getRatioClassNames()}>
                     {getAvailabilityRatio().toFixed(2)}%
                     </p>
+                </div>
+                <div className={styles.chartContainer}>  
+                    <BarChart
+                        data={report.groupes_expositions.map(group => group.taux)}
+                        labels={report.groupes_expositions.map(group => group.nom)}
+                        label="Taux de disponibilité par groupe d'expositions"
+                    />
                 </div>
                 <div className={styles.buttonsContainer}>
                     <Link 
