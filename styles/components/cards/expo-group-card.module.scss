@@ -52,7 +52,7 @@ li.container {
 
         &:hover {
             cursor: pointer;
-            @extend .selected;
+            background: $primary-100;
         }
 
         &.selected {
