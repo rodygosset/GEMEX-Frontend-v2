@@ -8,7 +8,6 @@ import useAPIRequest from "@hook/useAPIRequest";
 import { useSession } from "next-auth/react";
 import { MySession } from "@conf/utility-types";
 import ExpoGroupCard from "@components/cards/expo-group-card";
-import HorizontalSeperator from "@components/utils/horizontal-seperator";
 import Image from "next/image";
 
 interface Props {
@@ -49,7 +48,7 @@ const PreviousExpoGroupsPickerModal = (
             "rapports",
             "?max=3",
             undefined,
-            res => setReports(res.data)
+            res => setReports(res.data.reverse())
         )
 
     }, [session])
@@ -66,7 +65,7 @@ const PreviousExpoGroupsPickerModal = (
     const handleSubmit = () => {
         onChange([...expoGroups, ...selectedExpoGroups.map(group => ({
             nom: group.nom,
-            expositions: group.expositions.map(expo => ({id: expo.id, nom: expo.nom}))
+            expositions: group.expositions.map(expo => ({id: expo.exposition_id, nom: expo.nom}))
             }))
         ])
         closeModal()

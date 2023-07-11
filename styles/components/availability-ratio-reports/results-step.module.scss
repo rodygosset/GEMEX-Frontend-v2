@@ -29,26 +29,41 @@
         @include flex-container(column, nowrap, flex-start, flex-start);
         gap: 30px;
         width: 100%;
-    
-        & > h3 {
-            @include header-2-medium;
-            color: $primary;
-        }
-    
-        & > p {
-            @include text-md-medium;
-            color: $primary-600;
 
-            &.accentColorMessage {
-                color: $secondary;
-            }
-        }
-
-        & > ul {
-            @include reset-list;
+        .header {
             @include flex-container(column, nowrap, flex-start, flex-start);
             gap: 15px;
             width: 100%;
+        
+            h3 {
+                @include header-2-medium;
+                color: $primary;
+            }
+        
+            p {
+                @include text-md-medium;
+                color: $primary-600;
+            }
+        
+        }
+
+        .globalResult {
+
+            @include flex-container(column, nowrap, flex-start, flex-start);
+            gap: 15px;
+
+            h4 {
+                @include header-4-medium;
+                color: $primary;
+            }
+
+            p {
+                @include header-1-regular;
+                
+                &.high {
+                    color: $success;
+                }
+            }
         }
 
         .buttonsContainer {
@@ -70,10 +85,33 @@
         .illustrationContainer {
             position: relative;
             min-width: 200px;
-            max-width: 470px;
+            max-width: 460px;
             width: 100%;
-            aspect-ratio: 4.7 / 3;
+            aspect-ratio: 4.6 / 3;
         }
+    }
+
+}
+
+.placeholder {
+
+    @include flex-container(column, nowrap, center, center);
+    padding-top: 30px;
+    gap: 60px;
+    height: 100%;
+    width: 100%;
+
+    .content {
+
+        @include flex-container(column, nowrap, center, center);
+        gap: 30px;
+        width: 100%;
+
+        p {
+            @include text-xl-medium;
+            color: $primary-600;
+        }
+
     }
 
 }

@@ -54,12 +54,11 @@ const ExpoGroupsStep = (
                                     key={`${expoGroup.nom}-${index}-${expoGroup.expositions.map(expo => expo.id).join("-")}`}
                                     expoGroup={expoGroup}
                                     onChange={expoGroup => {
-                                        const index = expoGroups.findIndex(group => group.nom === expoGroup.nom)
                                         const newExpoGroups = [...expoGroups]
                                         newExpoGroups[index] = expoGroup    
                                         onChange(newExpoGroups)
                                     }}
-                                    onDelete={() => onChange(expoGroups.filter(group => group.nom !== expoGroup.nom))}
+                                    onDelete={() => onChange(expoGroups.filter((_, i) => i !== index))}
                                 />
                             ))}
                         </ul> 

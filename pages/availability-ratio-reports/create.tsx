@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { DateRange } from "@utils/types"
+import ResultsStep from "@components/availability-ratio-reports/results-step"
 
 
 const steps = [
@@ -137,6 +138,12 @@ const CreateReport = () => {
                         dateRange={dateRange}
                         onChange={setExpoGroups}
                         onNextStep={() => setCurrentStep(currentStep + 1)}
+                    />
+                )
+            case 2:
+                return (
+                    <ResultsStep
+                        report={report}
                     />
                 )
             default:
