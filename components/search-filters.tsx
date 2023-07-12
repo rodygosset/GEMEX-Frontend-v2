@@ -51,6 +51,7 @@ const SearchFilters = (
     // update the search params when the filters change
 
     useEffect(() => {
+        console.log("search filters changed", searchFilters)
         // avoid "can't access property of undefined" errors :(
         if(!searchParams["item"]) return
         // get new URL query

@@ -4,6 +4,7 @@ import { getFormat, toDateObject } from "@utils/form-elements/date-input"
 import { DateInputValue } from "@utils/types"
 import { useState } from "react"
 import FilterWrapper from "./filter-wrapper"
+import { toISO } from "@utils/general"
 
 
 const DateFilter = (
@@ -19,11 +20,17 @@ const DateFilter = (
 
     // state & effects
 
-    const [format, setFormat] = useState(getFormat(filter.value))
+    const [format, setFormat] = useState(getFormat(filter.value, filter.conf.strict))
 
     // handlers
 
     const handleChange = (newValue: Date) => {
+        if(filter.conf.strict) {
+            // directly update the value in the search filters
+            // convert the date to ISO string format: yyyy-MM-dd
+            onChange(name, toISO(newValue))
+            return
+        }
         // actually useful code
         // extract values useful for our API search endpoints
         // from the native JS date object
@@ -46,7 +53,7 @@ const DateFilter = (
     // as the value for date filters stored in the search filters 
     // is of type DateInputValue
     // we must convert it to a Date object before passing it to the DateInput component
-    const getDateValue = () => filter.value ? toDateObject(filter.value) : undefined
+    const getDateValue = () => filter.value ? filter.conf.strict ? new Date(filter.value) :  toDateObject(filter.value) : undefined
 
     // render
 

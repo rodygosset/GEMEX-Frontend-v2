@@ -35,8 +35,9 @@ export const toDateObject = (value: DateInputValue) => {
 
 // get format from DateInputValue
 
-export const getFormat = (value: DateInputValue): DateFormat => {
+export const getFormat = (value: DateInputValue, strict?: boolean): DateFormat => {
     if(!value) return defaultDateFormat
+    if(strict) return "dd/MM/yyyy"
     const { year, month, day } = value
 
     // can't determine format if year isn't provided

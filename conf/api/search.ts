@@ -103,6 +103,7 @@ export interface SearchParam {
     type: string;
     item?: string;
     label?: string;
+    strict?: boolean; // only affects date search params
     defaultValue?: any;
     minValue?: any;
 }
@@ -309,8 +310,8 @@ export const searchConf: SearchConf = {
             auteur_id: { ...itemSearchParam, type: "users", label: "Auteur de la fiche" },
             exposition_id: { ...itemSearchParam, type: "expositions", label: "Exposition" },
             element_id: { ...itemSearchParam, type: "elements", label: "Élément" },
-            date_debut: { ...dateSearchParam, label: "Date de début" },
-            date_fin: { ...dateSearchParam, label: "Date de fin"},
+            date_debut: { ...dateSearchParam, label: "Date de début", strict: true },
+            date_fin: { ...dateSearchParam, label: "Date de fin", strict: true },
             type_id: { ...itemSearchParam, type: "types_operations", label: "Type d'opération" },
             nature_id: { ...itemSearchParam, type: "natures_operations", label: "Nature de l'opération" },
             description: textSearchParam,
