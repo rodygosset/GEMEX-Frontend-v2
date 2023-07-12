@@ -74,6 +74,18 @@
             height: 100%;
         }
 
+        .expoGroupSelectContainer {
+
+            @include flex-container(row, nowrap, space-between, center);
+            width: 100%;
+            gap: 15px;
+
+            h4 {
+                @include header-4-medium;
+                color: $primary;
+            }
+        }
+
         .buttonsContainer {
             @include flex-container(row, nowrap, flex-start, center);
             gap: 15px;

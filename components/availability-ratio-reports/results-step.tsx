@@ -3,11 +3,12 @@ import Image from "next/image";
 
 import styles from "@styles/components/availability-ratio-reports/results-step.module.scss";
 import LoadingIndicator from "@components/utils/loading-indicator";
-import { useEffect } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faDownload } from "@fortawesome/free-solid-svg-icons";
 import BarChart from "@components/charts/bar-chart";
+import Select from "@components/form-elements/select";
+import { useState } from "react";
 
 interface Props {
     report: RapportTauxDisponibilite | null
@@ -18,6 +19,15 @@ const ResultsStep = (
         report
     }: Props
 ) => {
+
+    // state
+
+    const [selectedGroup, setSelectedGroup] = useState<string>()
+
+    const getSelectedGroup = () => {
+        if(!report || !selectedGroup) return
+        return report.groupes_expositions.find(group => group.nom === selectedGroup)
+    }
 
     // utils 
 
@@ -61,9 +71,33 @@ const ResultsStep = (
                     <BarChart
                         data={report.groupes_expositions.map(group => group.taux)}
                         labels={report.groupes_expositions.map(group => group.nom)}
-                        label="Taux de disponibilité par groupe d'expositions"
+                        label="Taux de panne par groupe d'expositions"
                     />
                 </div>
+                <div className={styles.expoGroupSelectContainer}>
+                    <h4>Taux de panne par exposition</h4>
+                    <Select
+                        name="groupes_expositions"
+                        options={report.groupes_expositions.map(group => ({
+                            label: group.nom,
+                            value: group.nom
+                        }))}
+                        value={selectedGroup}
+                        onChange={setSelectedGroup}
+                    />
+                </div>
+                {
+                    report.groupes_expositions.length > 0 && selectedGroup ?
+                    <div className={styles.chartContainer}>  
+                        <BarChart
+                            data={getSelectedGroup()?.expositions.map(expo => expo.taux) || []}
+                            labels={getSelectedGroup()?.expositions.map(expo => expo.nom) || []}
+                            label="Taux de panne par exposition"
+                        />
+                    </div>
+                    : 
+                    <p className={styles.noData}>Aucune donnée disponible</p>
+                }
                 <div className={styles.buttonsContainer}>
                     <Link 
                         className={styles.secondary}
@@ -78,7 +112,7 @@ const ResultsStep = (
                         download={`rapport-${toLocaleDateString(report.date_debut)}-${toLocaleDateString(report.date_fin)}.csv`}
                         href={getLinkToCSV()}>
                         <FontAwesomeIcon icon={faDownload} />
-                        <span>Télécharger le rapport</span>
+                        <span>Télécharger les résultats</span>
                     </Link>
                 </div>
             </div>
