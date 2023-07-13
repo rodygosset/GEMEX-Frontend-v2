@@ -141,15 +141,6 @@ export const toSearchFiltersObject = (itemType: string, searchParams: DynamicObj
 // matching the date param in the search conf for the current item type
 
 const loadDateParam = (param: string, newSearchFilters: SearchFilters, searchParams: DynamicObject) => {
-    // if this is a strict date param
-    if(newSearchFilters[param].conf.strict) {
-        // directly look for the param name in the URL query
-        if(param in searchParams) {
-            newSearchFilters[param].value = searchParams[param]
-            newSearchFilters[param].checked = true
-        }
-        return
-    }
     // param has to be one of those
     const dateParams = [
         // date_smthg => annee_smthg

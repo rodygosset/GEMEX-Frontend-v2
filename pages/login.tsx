@@ -48,7 +48,7 @@ const Login: NextPage = () => {
                 password: password, 
                 redirect: false
             }
-        ).then((response) => {
+        ).then(response => {
             if(!response) return
             const { ok } = response
             if(!ok) setSignInFailed(true)
