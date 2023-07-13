@@ -62,10 +62,6 @@ export const itemTypes: SelectOption<string>[] = [
     {
         value: 'articles',
         label: 'Articles'
-    },
-    {
-        value: 'constituents',
-        label: 'Constituents'
     }
 
 ]
@@ -373,6 +369,19 @@ export const searchConf: SearchConf = {
             "user_id",
             "fiche_id",
             "date"
+        ]
+    },
+    rapports: {
+        url: "/api/rapports_taux_disponibilite/search/",
+        defaultSearchParam: "",
+        searchParams: {
+            date_debut: { ...dateSearchParam, label: "Date de début", strict: true },
+            date_fin: { ...dateSearchParam, label: "Date de fin", strict: true },
+            groupes_expositions: { ...itemListSearchParam, item: "groupes_expositions" },
+        },
+        searchResultFields: [
+            "date_debut",
+            "date_fin"
         ]
     }
 }

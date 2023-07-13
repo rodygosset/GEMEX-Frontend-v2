@@ -33,7 +33,7 @@ const Index = () => {
                 <div className={styles.links}>
                     <Link
                         className={styles.secondaryLink}
-                        href="/availability-ratio-reports/previous"
+                        href="/availability-ratio-reports/search"
                         passHref>
                         <FontAwesomeIcon icon={faArrowLeft} />
                         <span>Rapports précédents</span>

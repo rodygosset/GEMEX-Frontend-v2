@@ -10,7 +10,9 @@ $go-back-button-size: 60px;
     @include flex-container(row, nowrap, center, center);
 
     width: $go-back-button-size;
+    min-width: $go-back-button-size;
     height: $go-back-button-size;
+    min-height: $go-back-button-size;
     border-radius: $go-back-button-size;
 
     background: $primary-100;

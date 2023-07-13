@@ -1,0 +1,158 @@
+@import "@styles/base/_reset.scss";
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/abstracts/_variables.scss";
+@import "@styles/components/button.module.scss";
+@import "@styles/components/go-back-button.module.scss";
+
+#container {
+	@include flex-container(column, nowrap, flex-start, stretch);
+	padding: 20px 7% $nav-bar-height;
+	gap: 30px;
+    min-height: calc(100vh - $nav-bar-height);
+
+    .pageHeader {
+
+
+        @media (max-width: $bp-lg) {
+            
+            .illustrationContainer {
+                display: none;
+            }
+
+            div.pageTitleContainer div.pageTitle h1 {
+                @include header-3-regular;
+            }
+        }
+
+        @include flex-container(row, nowrap, flex-start, flex-start);
+        gap: 60px;
+        position: sticky;
+        top: $nav-bar-height;
+        background: #f4f7ff;
+        z-index: 100;
+
+        @media (max-width: $bp-sm) {
+            @include flex-container(column, nowrap, flex-start, flex-start);
+            gap: 30px;   
+        }
+
+        .illustrationContainer {
+            position: relative;
+            width: 100%;
+            max-width: 180px;
+            aspect-ratio: 1.193;
+        }
+        
+        .pageTitleContainer {
+            @include flex-container(column, nowrap, flex-start, stretch);
+            gap: 30px;
+            width: 100%;
+    
+            .pageTitle {
+                @include flex-container(column, nowrap, flex-start, stretch);
+                gap: 10px;
+                
+                h1 {
+                    @include header-2-regular;
+                    color: $primary;
+                }
+    
+                p {
+                    @include text-md-regular;
+                    color: $primary-400;
+                }
+            }
+    
+            .createReportLink {
+                @extend .button;
+                @extend .withPadding;
+                @extend .animateOnHover;
+                @extend .active;
+                @extend .primary;
+            }
+
+            form.searchForm {
+
+                @include flex-container(row, wrap, flex-start, center);
+                gap: 15px;
+                width: 100%;
+            }
+    
+        }
+    
+    }
+
+    .searchContainer {
+        @include flex-container(column, nowrap, flex-start, stretch);
+        gap: 30px;
+        width: 100%; 
+
+        padding-left: 120px;
+
+        @media (max-width: $bp-sm) {
+            padding-left: 0px;
+        }
+
+        .resultsCount {
+            @include text-md-regular;
+            color: $primary-600;
+        }
+
+        ul.results {
+            @include reset-list;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-auto-rows: minmax(min-content, max-content);
+            justify-items: center;
+            align-items: start;
+            flex: 1;
+            gap: 30px;
+            width: 100%;
+        }
+
+
+        .loadingIndicatorContainer {
+            @include flex-container(column, nowrap, center, center);
+            height: 100%;
+    
+            gap: 60px;
+    
+            h4 {
+                @include header-4-regular;
+                color: $primary;
+            }
+    
+        }
+    
+    
+        .noResultsMessageContainer {
+    
+            @include flex-container(column, nowrap, center, center);
+            gap: 30px;
+            height: 100%;
+    
+            .illustrationContainer {
+                position: relative;
+                width: 100%;
+                max-width: 500px;
+                aspect-ratio: 1.226;
+            }
+    
+    
+            h1 {
+                @include header-2-regular;
+                color: $primary;
+                text-align: center;
+            }
+    
+            p {
+                @include text-md-regular;
+                color: $primary-600;
+                text-align: center;
+            }
+        }
+    }
+
+}

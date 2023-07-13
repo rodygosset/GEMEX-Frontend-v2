@@ -1,0 +1,75 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+@import "@styles/abstracts/_variables.scss";
+
+.card {
+
+    @include flex-container(column, nowrap, center, stretch);
+    gap: 15px;
+    padding: 20px;
+    background: $white-100;
+
+    box-shadow: 0px 30px 90px 0px $primary-200;
+    border-radius: 10px;
+    width: 350px;
+
+    transition: all 200ms ease-in-out;
+    
+    p.header {
+        
+        
+        @include text-md-medium;
+        color: $primary;
+        @include flex-container(row, nowrap, space-between, center);
+        width: 100%;
+
+        span {
+
+            svg {
+                width: 15px;
+                height: 15px;
+                color: $primary;
+            }
+        }
+
+        & > svg {
+            width: 3px;
+            height: 3px;
+            color: $primary;
+        }
+    }
+
+    .ratio {
+
+        @include flex-container(row, nowrap, center, center);
+        gap: 15px;
+        width: 100%;
+
+        hr {
+            // reset hr
+            border: none;
+            height: 1px;
+            width: 100%;
+            background: $primary-100;
+        }
+
+        p.ratioValue {
+            @include header-2-regular;
+            color: $success;
+        }
+    }
+
+    .groupes {
+        @include text-sm-medium;
+        @include text-overflow-ellipsis;
+        color: $primary-400;
+        width: 100%;
+    }
+
+    &:hover {
+        cursor: pointer;
+        transform: scale(1.05);
+    }
+
+}
