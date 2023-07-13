@@ -74,7 +74,7 @@
             height: 100%;
         }
 
-        .expoGroupSelectContainer {
+        .selectSectionHeader {
 
             @include flex-container(row, nowrap, space-between, center);
             width: 100%;
@@ -84,6 +84,18 @@
                 @include header-4-medium;
                 color: $primary;
             }
+        }
+
+        p.noData {
+            @include text-md-medium;
+            color: $primary-400;
+        }
+
+        .failureReports {
+            @include flex-container(column, nowrap, flex-start, stretch);
+            width: 100%;
+
+            @include reset-list;
         }
 
         .buttonsContainer {

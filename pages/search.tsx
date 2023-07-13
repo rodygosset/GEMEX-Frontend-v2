@@ -352,10 +352,10 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                                     id={styles.searchResults} 
                                     className={getResultsContainerClassNames()}>
                                 {
-                                    searchResults.map(item => {
+                                    searchResults.map((item, index) => {
                                         return (
                                             <SearchResultCard
-                                                key={item.nom}
+                                                key={`${itemType}-${index}-search-result-card`}
                                                 itemType={itemType}
                                                 data={item}
                                                 globalMetaData={metaData}

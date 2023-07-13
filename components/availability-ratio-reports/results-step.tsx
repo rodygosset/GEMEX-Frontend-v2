@@ -8,7 +8,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faDownload } from "@fortawesome/free-solid-svg-icons";
 import BarChart from "@components/charts/bar-chart";
 import Select from "@components/form-elements/select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Fiche } from "@conf/api/data-types/fiche";
+import useAPIRequest from "@hook/useAPIRequest";
+import { useSession } from "next-auth/react";
+import { MySession } from "@conf/utility-types";
+import SearchResultCard from "@components/cards/search-result-card";
+import { useGetMetaData } from "@hook/useGetMetaData";
+import { SearchResultsMetaData } from "@conf/api/search";
 
 interface Props {
     report: RapportTauxDisponibilite | null
@@ -23,11 +30,68 @@ const ResultsStep = (
     // state
 
     const [selectedGroup, setSelectedGroup] = useState<string>()
+    const [selectedExpo, setSelectedExpo] = useState<number>()
+
+    const [failureReports, setFailureReports] = useState<Fiche[]>([])
+    const [metaData, setMetaData] = useState<SearchResultsMetaData>({})
 
     const getSelectedGroup = () => {
         if(!report || !selectedGroup) return
         return report.groupes_expositions.find(group => group.nom === selectedGroup)
     }
+
+    const getSelectedExpo = () => {
+        if(!report || !selectedGroup || !selectedExpo) return
+        return getSelectedGroup()?.expositions.find(expo => expo.exposition_id === selectedExpo)
+    }
+
+    // effects
+
+    // get failure reports when selectedExpo changes
+    // by making a request to the API
+
+    const makeAPIRequest = useAPIRequest()
+
+    const session = useSession().data as MySession | null
+
+    useEffect(() => {
+        if(!report || !selectedGroup || !selectedExpo || !session) return
+
+        makeAPIRequest<Fiche[], void>(
+            session,
+            "post",
+            "fiches",
+            "search/",
+            {
+                "exposition_id": selectedExpo,
+                "date_debut": report.date_debut,
+                "date_fin": report.date_fin,
+                "tags": ["Panne"]
+            },
+            res => setFailureReports(res.data)
+        )
+
+    }, [selectedExpo])
+
+    // set selectedExpo to undefined when selectedGroup changes
+
+    useEffect(() => {
+        setSelectedExpo(undefined)
+    }, [selectedGroup])
+
+    // get the metadata for the failure reports when they change
+
+    const getMetaData = useGetMetaData()
+
+    useEffect(() => {
+        if(!session) return
+
+        getMetaData(session, "fiches", failureReports).then(metaData => {
+            if(metaData) setMetaData(metaData)
+            else setMetaData({})
+        })
+    }, [failureReports, session])
+
 
     // utils 
 
@@ -74,7 +138,7 @@ const ResultsStep = (
                         label="Taux de panne par groupe d'expositions"
                     />
                 </div>
-                <div className={styles.expoGroupSelectContainer}>
+                <div className={styles.selectSectionHeader}>
                     <h4>Taux de panne par exposition</h4>
                     <Select
                         name="groupes_expositions"
@@ -88,15 +152,47 @@ const ResultsStep = (
                 </div>
                 {
                     report.groupes_expositions.length > 0 && selectedGroup ?
-                    <div className={styles.chartContainer}>  
-                        <BarChart
-                            data={getSelectedGroup()?.expositions.map(expo => expo.taux) || []}
-                            labels={getSelectedGroup()?.expositions.map(expo => expo.nom) || []}
-                            label="Taux de panne par exposition"
-                        />
-                    </div>
+                    <>
+                        <div className={styles.chartContainer}>  
+                            <BarChart
+                                data={getSelectedGroup()?.expositions.map(expo => expo.taux) || []}
+                                labels={getSelectedGroup()?.expositions.map(expo => expo.nom) || []}
+                                label="Taux de panne par exposition"
+                            />
+                        </div>
+                        <div className={styles.selectSectionHeader}>
+                            <h4>Fiches panne par exposition</h4>
+                            <Select
+                                name="expositions"
+                                options={getSelectedGroup()?.expositions.map(expo => ({
+                                    label: expo.nom,
+                                    value: expo.exposition_id
+                                })) || []}
+                                value={selectedExpo}
+                                onChange={setSelectedExpo}
+                            />
+                        </div>
+                        {
+                            selectedExpo && failureReports.length > 0 ?
+                            <ul className={styles.failureReports}>
+                            {
+                                failureReports.map((failureReport, index) => (
+                                    <SearchResultCard
+                                        key={`failure-report-${index}`}
+                                        itemType={"fiches"}
+                                        data={failureReport}
+                                        globalMetaData={metaData}
+                                        listView
+                                    />
+                                ))
+                            }
+                            </ul>
+                            :
+                            <p className={styles.noData}>Aucune donnée disponible...</p>
+                        }
+                    </>
                     : 
-                    <p className={styles.noData}>Aucune donnée disponible</p>
+                    <p className={styles.noData}>Aucune donnée disponible...</p>
                 }
                 <div className={styles.buttonsContainer}>
                     <Link 
