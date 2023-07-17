@@ -49,9 +49,8 @@ const Login: NextPage = () => {
                 redirect: false
             }
         ).then(response => {
-            if(!response) return
-            const { ok } = response
-            if(!ok) setSignInFailed(true)
+            console.log("response", response)
+            if(!response?.ok) setSignInFailed(true)
         })
     }
 

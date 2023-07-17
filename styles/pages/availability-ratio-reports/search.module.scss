@@ -29,6 +29,7 @@
         @include flex-container(row, nowrap, flex-start, flex-start);
         gap: 60px;
         position: sticky;
+        padding-bottom: 30px;
         top: $nav-bar-height;
         background: #f4f7ff;
         z-index: 100;

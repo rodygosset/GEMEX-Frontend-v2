@@ -24,6 +24,7 @@ import Select from "@components/form-elements/select";
 import { toISO } from "@utils/general";
 import ReportCard from "@components/cards/availability-ratio-reports/report-card";
 import Pagination from "@components/pagination";
+import LoadingIndicator from "@components/utils/loading-indicator";
 
 
 const resultsPerPage = 30
@@ -86,11 +87,26 @@ const Search = (
     useEffect(() => {
         getGroupesExpositions()
     }, [session])
+
+    // make sure we don't update the search params object
+    // until the default search params have been loaded
+
+    const [defaultSearchParamsLoaded, setDefaultSearchParamsLoaded] = useState(false)
     
+    useEffect(() => {
+        if(!defaultSearchParamsLoaded && 
+            JSON.stringify(initSearchParams) == JSON.stringify(searchParams)) {
+                setDefaultSearchParamsLoaded(true)
+        }
+    }, [searchParams])
+            
+
     // when either dateRange or selectdGroupesExpositions change
     // update the search params
 
     useEffect(() => {
+
+        if(!defaultSearchParamsLoaded) return
 
         // if the date range is valid, update the search params
 
@@ -169,7 +185,7 @@ const Search = (
 
     useEffect(() => {
 
-        if(!session) return
+        if(!session || !defaultSearchParamsLoaded) return
 
         // let the user know we're fetching data
 
@@ -285,22 +301,58 @@ const Search = (
                 </div>
             </section>
             <section className={styles.searchContainer}>
-                <p className={styles.resultsCount}>{ nbResults } résultat{ reports.length != 1 ? 's' : '' } au total</p>
-                <Pagination
-                    currentPageNb={currentPageNb}
-                    totalPagesNb={totalPagesNb}
-                    setPageNb={setCurrentPageNb}
-                />
-                <ul className={styles.results}>
-                {
-                    reports.map((report, i) => (
-                        <ReportCard
-                            key={`report-${i}`}
-                            report={report}
-                        />
-                    ))
-                }
-                </ul>
+            {
+                reports.length > 0 && !isLoading ?
+                <>
+                    <p className={styles.resultsCount}>{ nbResults } résultat{ reports.length != 1 ? 's' : '' } au total</p>
+                    <Pagination
+                        currentPageNb={currentPageNb}
+                        totalPagesNb={totalPagesNb}
+                        setPageNb={setCurrentPageNb}
+                    />
+                    <ul className={styles.results}>
+                    {
+                        reports.map((report, i) => (
+                            <ReportCard
+                                key={`report-${i}`}
+                                report={report}
+                            />
+                        ))
+                    }
+                    </ul>
+                </>
+                
+                :
+                    // while loading
+                    // display a loading indicator
+                    isLoading ?
+                    <div className={styles.loadingIndicatorContainer}>
+                        <LoadingIndicator/>
+                        <h4>Chargement...</h4>
+                    </div>
+                    :
+                    // if there aren't any results
+                    // display the corresponding illustration
+                    // & a message for the user
+                    <div className={styles.noResultsMessageContainer}>
+                        <div className={styles.illustrationContainer}>
+                            <Image 
+                                quality={100}
+                                src={'/images/no-results-illustration.svg'} 
+                                alt={"Aucun résultat."} 
+                                priority
+                                fill
+                                style={{ 
+                                    objectFit: "contain", 
+                                    top: "auto"
+                                }}
+                            />
+                        </div>
+                        <h1>Aucun résultat...</h1>
+                        <p>Ré-essayer en changeant les paramètres de recherche</p>
+                    </div>
+
+            }
             </section>
         </main>
     )
