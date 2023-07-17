@@ -16,7 +16,7 @@ import Image from "next/image";
 import styles from "@styles/pages/availability-ratio-reports/search.module.scss"
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import FieldContainer from "@components/form-elements/field-container";
 import Label from "@components/form-elements/label";
 import DateInput from "@components/form-elements/date-input";
@@ -25,6 +25,8 @@ import { toISO } from "@utils/general";
 import ReportCard from "@components/cards/availability-ratio-reports/report-card";
 import Pagination from "@components/pagination";
 import LoadingIndicator from "@components/utils/loading-indicator";
+import FilterWrapper from "@components/search-filters/filter-wrapper";
+import FilterCheckBox from "@components/search-filters/filter-checkbox";
 
 
 const resultsPerPage = 30
@@ -52,15 +54,16 @@ const Search = (
 
     // state
 
-    // trigger refresh of the search results
-
-    const [refreshTrigger, setRefreshTrigger] = useState(false)
-
-    const refresh = () => setRefreshTrigger(!refreshTrigger)
-
     // search params
 
     const [searchParams, setSearchParams] = useState<DynamicObject>(initSearchParams)
+    const [checkedFilters, setCheckedFilters] = useState<string[]>([])
+
+    const toggleFilter = (filter: string) => {
+        if(checkedFilters.includes(filter)) {
+            setCheckedFilters(checkedFilters.filter(f => f !== filter))
+        } else setCheckedFilters([...checkedFilters, filter])
+    }
 
     const [dateRange, setDateRange] = useState<FormDateRange>({})
 
@@ -69,18 +72,13 @@ const Search = (
 
     const getGroupesExpositions = () => {
         if(!session) return
-        makeAPIRequest<RapportTauxDisponibilite[], void>(
+        makeAPIRequest<string[], void>(
             session,
-            "post",
+            "get",
             "rapports",
-            "search/",
+            "groupes_expositions/noms",
             undefined,
-            res => {
-                // get all the groupes_expositions from the reports
-                const groupes = res.data.map(rapport => [...rapport.groupes_expositions.map(groupe => groupe.nom)]).flat()
-                // remove duplicates & set the state
-                setGroupesExpositions(groupes.filter((groupe, index) => groupes.indexOf(groupe) === index))
-            }    
+            res => setGroupesExpositions([...res.data]) 
         )
     }
 
@@ -111,10 +109,13 @@ const Search = (
         // if the date range is valid, update the search params
 
         setSearchParams({
-            ...searchParams,
             ...(
-                dateRange.startDate && dateRange.endDate ?
-                { date_debut: toISO(dateRange.startDate), date_fin: toISO(dateRange.endDate) } : {}
+                dateRange.startDate && checkedFilters.includes("date-debut") ?
+                { date_debut: toISO(dateRange.startDate) } : {}
+            ),
+            ...(
+                dateRange.endDate && checkedFilters.includes("date-fin") ?
+                { date_fin: toISO(dateRange.endDate) } : {}
             ),
             ...(
                 selectedGroupesExpositions.length > 0 ?
@@ -122,7 +123,7 @@ const Search = (
             )
         })
 
-    }, [dateRange, selectedGroupesExpositions])
+    }, [dateRange, selectedGroupesExpositions, checkedFilters])
 
     // console log changes to search params
 
@@ -216,7 +217,7 @@ const Search = (
             reqController.current.signal
         )
 
-    }, [searchParams, currentPageNb, refreshTrigger, session])
+    }, [searchParams, currentPageNb, session])
 
 
     
@@ -267,7 +268,13 @@ const Search = (
                         className={styles.searchForm}
                         onSubmit={e => e.preventDefault()}>
                             <FieldContainer>
-                                <Label htmlFor="date-debut">Période entre le</Label>
+                                <div className={styles.filterCheckboxContainer}>
+                                    <FilterCheckBox 
+                                        value={checkedFilters.includes("date-debut")}
+                                        onChange={() => toggleFilter("date-debut")}
+                                    />
+                                    <Label htmlFor="date-debut">Période entre le</Label>
+                                </div>
                                 <DateInput
                                     name="date-debut"
                                     value={dateRange.startDate}
@@ -276,7 +283,13 @@ const Search = (
                                 />
                             </FieldContainer>
                             <FieldContainer>
-                                <Label htmlFor="date-fin">et le</Label>
+                                <div className={styles.filterCheckboxContainer}>
+                                    <FilterCheckBox
+                                        value={checkedFilters.includes("date-fin")}
+                                        onChange={() => toggleFilter("date-fin")}
+                                    />
+                                    <Label htmlFor="date-fin">et le</Label>
+                                </div>
                                 <DateInput
                                     name="date-fin"
                                     value={dateRange.endDate}

@@ -60,12 +60,43 @@
             border: none;
             height: 1px;
             width: 100%;
-            background: $success-100;
         }
 
-        p.ratioValue {
+        p {
             @include header-2-regular;
-            color: $success;
+        }
+
+        &.high {
+
+            p {
+                color: $success;
+            }
+
+            hr {
+                background: $success-100;
+            }
+        }
+
+        &.medium {
+
+            p {
+                color: $warning;
+            }
+
+            hr {
+                background: $warning-100;
+            }
+        }
+
+        &.low {
+
+            p {
+                color: $error;
+            }
+
+            hr {
+                background: $error-100;
+            }
         }
     }
 

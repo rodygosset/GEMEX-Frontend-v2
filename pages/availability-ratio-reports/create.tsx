@@ -80,7 +80,8 @@ const CreateReport = () => {
         if(!report) return
 
         // if the taux is null, hit the "done" API endpoint until it returns true
-        // then update the report object by making a GET request to the API
+        // // then update the report object by making a GET request to the API
+        // then navigate to the results step page
 
         if(report.taux !== null || !session) return
 
@@ -92,17 +93,9 @@ const CreateReport = () => {
                 `id/${report.id}/done`,
                 undefined,
                 res => {
-                    if(res.data.done) {
-                        clearInterval(interval)
-                        makeAPIRequest<RapportTauxDisponibilite, void>(
-                            session,
-                            "get",
-                            "rapports",
-                            `id/${report.id}`,
-                            undefined,
-                            res => setReport(res.data)
-                        )
-                    }
+                    if(!res.data.done) return 
+                    clearInterval(interval)
+                    router.push(`/availability-ratio-reports/view/${report.id}`)
                 }
             )
         }, 1000)

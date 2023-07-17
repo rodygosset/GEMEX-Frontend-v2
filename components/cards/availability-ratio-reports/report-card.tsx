@@ -12,9 +12,18 @@ interface Props {
 
 const ReportCard = ({ report }: Props) => {
 
-    const router = useRouter()
-
     // utils
+
+    const getRatioClassNames = () => {
+        let ratio = 100 - report.taux
+        if (ratio >= 99) {
+            return styles.high
+        } else if (ratio >= 95) {
+            return styles.medium
+        } else {
+            return styles.low
+        }
+    }
 
     const toLocaleDateString = (date: string) => {
         const dateObj = new Date(date)
@@ -44,9 +53,9 @@ const ReportCard = ({ report }: Props) => {
                         {toLocaleDateString(report.date_fin)}
                     </span>
                 </p>
-                <div className={styles.ratio}>
+                <div className={styles.ratio + " " + getRatioClassNames()}>
                     <hr />
-                    <p className={styles.ratioValue}>{(100 - report.taux).toFixed(2)}%</p>
+                    <p>{(100 - report.taux).toFixed(2)}%</p>
                     <hr />
                 </div>
                 <p className={styles.groupes}>{getGroupes()}</p>

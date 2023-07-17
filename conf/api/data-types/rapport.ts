@@ -55,16 +55,13 @@ export interface RapportTauxDisponibilite {
 export interface RapportTauxDisponibiliteFlat {
     nom: string;
     type: "exposition" | "groupe" | "rapport";
-    date_debut: string;
-    date_fin: string;
-    taux: number;
+    taux: string;
+    [key: string]: string;
 }
 
 export const RapportTauxDisponibiliteFlatHeaders = [
     { id: "nom", title: "Nom" },
     { id: "type", title: "Type" },
-    { id: "date_debut", title: "Date début" },
-    { id: "date_fin", title: "Date fin" },
     { id: "taux", title: "Taux" },
 ];
 
@@ -77,62 +74,30 @@ export const RapportTauxDisponibiliteFlatHeaders = [
 
 export const flattenRapportTauxDisponibilite = (rapport: RapportTauxDisponibilite): RapportTauxDisponibiliteFlat[] => {
     const flat: RapportTauxDisponibiliteFlat[] = []
-    // for each groupe, add a line with the groupe name and ratio
+    // flatten the data for the global report
+    flat.push({
+        nom: "Rapport global",
+        type: "rapport",
+        taux: rapport.taux.toFixed(3),
+        ...rapport.taux_semaine.reduce((acc, week, index) => ({ ...acc, [`taux_semaine_${index}`]: week.taux.toFixed(3) }), {})
+    })
+    // flatten the data for each group
+    // start with the global data for the group
     rapport.groupes_expositions.forEach(groupe => {
         flat.push({
             nom: groupe.nom,
             type: "groupe",
-            date_debut: rapport.date_debut,
-            date_fin: rapport.date_fin,
-            taux: groupe.taux,
+            taux: groupe.taux.toFixed(3),
+            ...groupe.taux_semaine.reduce((acc, week, index) => ({ ...acc, [`taux_semaine_${index}`]: week.taux.toFixed(3) }), {})
         })
-        // for each week in the period, add a line for the groupe
-        groupe.taux_semaine.forEach(semaine => {
+        // then add the data for each exposition in the group
+        groupe.expositions.forEach(exposition => {
             flat.push({
-                nom: groupe.nom,
-                type: "groupe",
-                date_debut: semaine.date_debut,
-                date_fin: semaine.date_fin,
-                taux: semaine.taux,
-            })
-        })
-        // for each exposition, add a line with the exposition name and ratio
-        groupe.expositions.forEach(expo => {
-            flat.push({
-                nom: expo.nom,
+                nom: exposition.nom,
                 type: "exposition",
-                date_debut: rapport.date_debut,
-                date_fin: rapport.date_fin,
-                taux: expo.taux,
+                taux: exposition.taux.toFixed(3),
+                ...exposition.taux_semaine.reduce((acc, week, index) => ({ ...acc, [`taux_semaine_${index}`]: week.taux.toFixed(3) }), {})
             })
-            // for each week in the period, add a line for the exposition
-            expo.taux_semaine.forEach(semaine => {
-                flat.push({
-                    nom: expo.nom,
-                    type: "exposition",
-                    date_debut: semaine.date_debut,
-                    date_fin: semaine.date_fin,
-                    taux: semaine.taux,
-                })
-            })
-        })
-    })
-    // add a line with the global ratio
-    flat.push({
-        nom: "",
-        type: "rapport",
-        date_debut: rapport.date_debut,
-        date_fin: rapport.date_fin,
-        taux: rapport.taux,
-    })
-    // for each week in the period, add a line for the global ratio
-    rapport.taux_semaine.forEach(semaine => {
-        flat.push({
-            nom: "",
-            type: "rapport",
-            date_debut: semaine.date_debut,
-            date_fin: semaine.date_fin,
-            taux: semaine.taux,
         })
     })
     return flat
@@ -146,8 +111,9 @@ export const flattenRapportTauxDisponibilite = (rapport: RapportTauxDisponibilit
  
 export const rapportToCSV = (rapport: RapportTauxDisponibilite): string => {
     const flat = flattenRapportTauxDisponibilite(rapport)
-    const headers = RapportTauxDisponibiliteFlatHeaders.map(h => h.title)
+    const headersConf = [...RapportTauxDisponibiliteFlatHeaders, ...rapport.taux_semaine.map((week, index) => ({ id: `taux_semaine_${index}`, title: `Taux semaine du ${week.date_debut} au ${week.date_fin}` }))]
+    const headers = headersConf.map(header => header.title)
     // @ts-ignore
-    const rows = flat.map(row => RapportTauxDisponibiliteFlatHeaders.map(header => row[header.id]))
+    const rows = flat.map(row => headersConf.map(header => row[header.id]))
     return [headers, ...rows].map(row => row.join(",")).join("\n")
 }

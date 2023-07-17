@@ -45,6 +45,9 @@ const ResultsStep = (
         return getSelectedGroup()?.expositions.find(expo => expo.exposition_id === selectedExpo)
     }
 
+    const [expoGroupsChartLink, setExpoGroupsChartLink] = useState<string>("#")
+    const [exposChartLink, setExposChartLink] = useState<string>("#")
+
     // effects
 
     // get failure reports when selectedExpo changes
@@ -99,8 +102,7 @@ const ResultsStep = (
 
     const getAvailabilityRatio = () => report ? 100 - report.taux : 0
 
-    const getRatioClassNames = () => {
-        let ratio = getAvailabilityRatio()
+    const getRatioClassNames = (ratio: number) => {
         if (ratio >= 99) {
             return styles.high
         } else if (ratio >= 95) {
@@ -125,18 +127,31 @@ const ResultsStep = (
                     <h3>Résultats</h3>
                     <p>Pour la période allant du <strong>{toLocaleDateString(report.date_debut)}</strong> au <strong>{toLocaleDateString(report.date_fin)}</strong></p>
                 </div>
-                <div className={styles.globalResult}>
-                    <h4>Taux de disponibilité global</h4>
-                    <p className={getRatioClassNames()}>
-                    {getAvailabilityRatio().toFixed(2)}%
-                    </p>
-                </div>
+                <ul className={styles.groupResults}>
+                {
+                    report.groupes_expositions.map(group => (
+                        <li>
+                            <h4>{group.nom}</h4>
+                            <p className={getRatioClassNames(100 - group.taux)}>
+                            {(100 - group.taux).toFixed(2)}%
+                            </p>
+                        </li>
+                    ))
+                }
+                </ul>
                 <div className={styles.chartContainer}>  
                     <BarChart
                         data={report.groupes_expositions.map(group => group.taux)}
                         labels={report.groupes_expositions.map(group => group.nom)}
                         label="Taux de panne par groupe d'expositions"
+                        onDownloadLinkReady={setExpoGroupsChartLink}
                     />
+                    <Link 
+                        href={expoGroupsChartLink} 
+                        download={`taux-panne-par-groupe-d-expositions-${report.date_debut}-${report.date_fin}.png`}
+                        passHref>
+                        Télécharger l'image
+                    </Link>
                 </div>
                 <div className={styles.selectSectionHeader}>
                     <h4>Taux de panne par exposition</h4>
@@ -158,7 +173,14 @@ const ResultsStep = (
                                 data={getSelectedGroup()?.expositions.map(expo => expo.taux) || []}
                                 labels={getSelectedGroup()?.expositions.map(expo => expo.nom) || []}
                                 label="Taux de panne par exposition"
+                                onDownloadLinkReady={setExposChartLink}
                             />
+                            <Link
+                                href={exposChartLink} 
+                                download={`taux-panne-par-exposition-${selectedGroup}.png`}
+                                passHref>
+                                Télécharger l'image
+                            </Link>
                         </div>
                         <div className={styles.selectSectionHeader}>
                             <h4>Fiches panne par exposition</h4>

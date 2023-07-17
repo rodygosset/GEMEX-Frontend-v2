@@ -10,6 +10,8 @@ import {
 import { Bar } from "react-chartjs-2";
 
 import colors from "@styles/abstracts/_colors.module.scss";
+import { useEffect, useRef } from 'react';
+import { ChartJSOrUndefined } from 'react-chartjs-2/dist/types';
 
 
 ChartJS.register(
@@ -25,6 +27,7 @@ interface Props {
     label: string;
     data: number[];
     labels: string[];
+    onDownloadLinkReady?: (link: string) => void;
 }
 
 
@@ -32,23 +35,45 @@ const BarChart = (
     {
         label,
         data,
-        labels
+        labels,
+        onDownloadLinkReady
     }: Props
 ) => {
+
+    const chartRef = useRef<ChartJSOrUndefined<"bar">>(null)
+
+    // effects
+
+    useEffect(() => {
+        
+        const link = chartRef.current?.toBase64Image()
+        if(link && onDownloadLinkReady) onDownloadLinkReady(link)
+
+    }, [chartRef.current, onDownloadLinkReady, label, data, labels])
+
 
     // render 
 
     return (
         <Bar 
+            ref={chartRef}
             data={{
-                labels: ["Moyenne", ...labels],
+                labels,
                 datasets: [
                     {
                         label,
-                        data: [data.reduce((a, b) => a + b, 0) / data.length, ...data],
+                        data,
                         backgroundColor: colors["primary-400"],
                     }
                 ]
+            }}
+            options={{
+                animation: {
+                    onComplete: () => {
+                        const link = chartRef.current?.toBase64Image()
+                        if(link && onDownloadLinkReady) onDownloadLinkReady(link)
+                    }
+                }
             }}
                 
         />

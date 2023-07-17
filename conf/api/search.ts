@@ -550,5 +550,10 @@ export const searchQueryParams: StringArrayObj = {
         'annee_date',
         'mois_date',
         'jour_date'
+    ],
+    rapports: [
+        'date_debut',
+        'date_fin',
+        'groupes_expositions'
     ]
 }

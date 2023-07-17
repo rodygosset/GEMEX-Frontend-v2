@@ -79,6 +79,11 @@
                 @include flex-container(row, wrap, flex-start, center);
                 gap: 15px;
                 width: 100%;
+
+                .filterCheckboxContainer {
+                    @include flex-container(row, nowrap, flex-start, center);
+                    gap: 10px;
+                }
             }
     
         }
