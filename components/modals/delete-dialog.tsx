@@ -13,6 +13,7 @@ interface Props {
     isMulti?: boolean;
     closeDialog: () => void;
     itemType: string;
+    customItemID?: string;
     itemTitle: string;
     itemIDList?: string[];
     onSuccess?: () => void;
@@ -25,6 +26,7 @@ const DeleteDialog = (
         isMulti,
         closeDialog,
         itemType,
+        customItemID,
         itemTitle,
         itemIDList,
         onSuccess,
@@ -89,8 +91,9 @@ const DeleteDialog = (
             handleDeleteSuccess()
         }
         else {
+            const itemID = customItemID || itemTitle
             // make a single DELETE request to our API
-            makeDeleteRequest(itemTitle)?.then(handleDeleteSuccess)
+            makeDeleteRequest(itemID)?.then(handleDeleteSuccess)
         }
     }
 

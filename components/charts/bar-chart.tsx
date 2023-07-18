@@ -44,14 +44,6 @@ const BarChart = (
 
     // effects
 
-    useEffect(() => {
-        
-        const link = chartRef.current?.toBase64Image('image/png', 3.0)
-        if(link && onDownloadLinkReady) onDownloadLinkReady(link)
-
-    }, [chartRef.current, onDownloadLinkReady, label, data, labels])
-
-
     // render 
 
     return (

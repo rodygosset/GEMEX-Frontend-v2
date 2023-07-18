@@ -133,6 +133,11 @@
                     @extend .secondary;
                 }
             }
+
+            .deleteButton {
+                margin-left: auto;
+                border: 1px solid $error-100;
+            }
             
         }
     }
