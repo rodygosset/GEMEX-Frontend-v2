@@ -27,7 +27,7 @@ interface Props {
     label: string;
     data: number[];
     labels: string[];
-    onDownloadLinkReady?: (link: string) => void;
+    onDownloadLinkReady: (link: string) => void;
 }
 
 
