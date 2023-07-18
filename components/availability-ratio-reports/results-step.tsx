@@ -16,6 +16,7 @@ import { MySession } from "@conf/utility-types";
 import SearchResultCard from "@components/cards/search-result-card";
 import { useGetMetaData } from "@hook/useGetMetaData";
 import { SearchResultsMetaData } from "@conf/api/search";
+import Button from "@components/button";
 
 interface Props {
     report: RapportTauxDisponibilite | null
@@ -40,13 +41,26 @@ const ResultsStep = (
         return report.groupes_expositions.find(group => group.nom === selectedGroup)
     }
 
-    const getSelectedExpo = () => {
-        if(!report || !selectedGroup || !selectedExpo) return
-        return getSelectedGroup()?.expositions.find(expo => expo.exposition_id === selectedExpo)
-    }
-
     const [expoGroupsChartLink, setExpoGroupsChartLink] = useState<string>("#")
     const [exposChartLink, setExposChartLink] = useState<string>("#")
+
+    // handlers
+
+    const handleGroupChartDownload = () => {
+        if(!report) return
+        const link = document.createElement("a")
+        link.href = expoGroupsChartLink
+        link.download = `taux-panne-par-groupe-d-expositions-${report.date_debut}-${report.date_fin}.png`
+        link.click()
+    }
+
+    const handleExposChartDownload = () => {
+        if(!report) return
+        const link = document.createElement("a")
+        link.href = exposChartLink
+        link.download = `taux-panne-par-expo-groupe-${selectedGroup}-${report.date_debut}-${report.date_fin}.png`
+        link.click()
+    }
 
     // effects
 
@@ -146,12 +160,13 @@ const ResultsStep = (
                         label="Taux de panne par groupe d'expositions"
                         onDownloadLinkReady={setExpoGroupsChartLink}
                     />
-                    <Link 
-                        href={expoGroupsChartLink} 
-                        download={`taux-panne-par-groupe-d-expositions-${report.date_debut}-${report.date_fin}.png`}
-                        passHref>
+                    <Button 
+                        icon={faDownload}
+                        role="secondary"
+                        onClick={handleGroupChartDownload}
+                    >
                         Télécharger l'image
-                    </Link>
+                    </Button>
                 </div>
                 <div className={styles.selectSectionHeader}>
                     <h4>Taux de panne par exposition</h4>
@@ -175,12 +190,13 @@ const ResultsStep = (
                                 label="Taux de panne par exposition"
                                 onDownloadLinkReady={setExposChartLink}
                             />
-                            <Link
-                                href={exposChartLink} 
-                                download={`taux-panne-par-exposition-${selectedGroup}.png`}
-                                passHref>
+                            <Button
+                                icon={faDownload}
+                                role="secondary"
+                                onClick={handleExposChartDownload}
+                            >
                                 Télécharger l'image
-                            </Link>
+                            </Button>
                         </div>
                         <div className={styles.selectSectionHeader}>
                             <h4>Fiches panne par exposition</h4>

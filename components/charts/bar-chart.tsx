@@ -46,7 +46,7 @@ const BarChart = (
 
     useEffect(() => {
         
-        const link = chartRef.current?.toBase64Image()
+        const link = chartRef.current?.toBase64Image('image/png', 3.0)
         if(link && onDownloadLinkReady) onDownloadLinkReady(link)
 
     }, [chartRef.current, onDownloadLinkReady, label, data, labels])
@@ -70,7 +70,7 @@ const BarChart = (
             options={{
                 animation: {
                     onComplete: () => {
-                        const link = chartRef.current?.toBase64Image()
+                        const link = chartRef.current?.toBase64Image('image/png', 3.0)
                         if(link && onDownloadLinkReady) onDownloadLinkReady(link)
                     }
                 }
