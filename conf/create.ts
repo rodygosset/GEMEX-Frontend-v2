@@ -62,6 +62,11 @@ export const dateFormElement: FormElement = {
 export const booleanFormElement: FormElement = { type: "boolean", defaultValue: false }
 
 
+export const expoOpeningPeriodFormElement: FormElement = {
+    type: "expoOpeningPeriod",
+    defaultValue: []
+}
+
 export const fileFormElement: FormElement = {
     type: "file",
     item: "fichiers",
@@ -98,7 +103,8 @@ export const createFormConf: CreateFormConf = {
         regie_id: { ...itemFormElement, type: "regies", label: "Régie" },
         fichiers: fileFormElement,
         annee: { ...numberFormElement, defaultValue:  new Date().getFullYear() },
-        is_active: { ...booleanFormElement, defaultValue: true, label: "En cours" }
+        is_active: { ...booleanFormElement, defaultValue: true, label: "En cours" },
+        periodes_ouverture: { ...expoOpeningPeriodFormElement, label: "Périodes d'ouverture" }
     },
     categories_articles: {
         nom: { ...textFormElement, label: "Titre", required: true }
@@ -173,7 +179,7 @@ export const createFormConf: CreateFormConf = {
         description: textAreaFormElement,
         remarque: textAreaFormElement,
         date_debut: { ...dateFormElement, label: "Date de début" },
-        date_fin: { ...dateFormElement, label: "Date de fin"},
+        date_fin: { ...dateFormElement, label: "Date de fin", defaultValue: null },
         type_id: { ...itemFormElement, type: "types_operations", label: "Type d'opération" },
         nature_id: { ...itemFormElement, type: "natures_operations", label: "Nature de l'opération" },
         validation: booleanFormElement,

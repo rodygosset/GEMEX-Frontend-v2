@@ -12,6 +12,7 @@ import DateInput from "@components/form-elements/date-input";
 import TimeDeltaInput from "@components/form-elements/time-delta-input";
 import ItemMultiSelect from "@components/form-elements/multi-select";
 import NumericField from "@components/form-elements/numeric-field";
+import ExpoOpeningPeriodInput from "@components/form-elements/expo-opening-period-input";
 
 
 interface Props {
@@ -139,6 +140,7 @@ const FormField = (
                         value={getDateValue()} 
                         onChange={handleDateChange}
                         strict={true}
+                        format="dd/MM/yyyy"
                         bigPadding={false}
                         showLocaleDate
                         minDate={getMinDate()}
@@ -189,6 +191,14 @@ const FormField = (
                         name={fieldName}
                         itemType={conf.item}
                         selected={formData[fieldName].value}
+                        onChange={handleChange}
+                    />
+                )
+            case "expoOpeningPeriod": 
+                return (
+                    <ExpoOpeningPeriodInput
+                        name={fieldName}
+                        value={formData[fieldName].value}
                         onChange={handleChange}
                     />
                 )

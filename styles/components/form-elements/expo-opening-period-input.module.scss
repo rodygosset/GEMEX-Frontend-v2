@@ -1,0 +1,53 @@
+@import "@styles/base/_mixins.scss";
+@import "@styles/base/_typography.module.scss";
+@import "@styles/abstracts/_colors.module.scss";
+
+.container {
+    @include flex-container(column, nowrap, flex-start, stretch);
+    gap: 15px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 7px;
+
+    background: $primary-100;
+
+    p.noData {
+        @include text-md-regular;
+        color: $primary-400;   
+    }
+
+    ul {
+        @include reset-list;
+    }
+
+    .buttonsContainer {
+        @include flex-container(row, nowrap, flex-start, center);
+        width: 100%;
+    }
+}
+
+.popoverContainer {
+    
+    @include flex-container(column, nowrap, center, stretch);
+    padding: 20px;
+    border-radius: 7px;
+    background: $white;
+    box-shadow: 0px 30px 60px $primary-400;
+
+    .form {
+        @include flex-container(column, nowrap, flex-start, stretch);
+        gap: 15px;
+        width: 100%;
+
+        h3 {
+            @include text-md-bold;
+            color: $primary;
+        }
+
+        .buttonsContainer {
+            @include flex-container(row, nowrap, space-between, center);
+            width: 100%;
+            gap: 15px;
+        }
+    }
+}

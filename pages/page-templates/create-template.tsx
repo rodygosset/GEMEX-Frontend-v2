@@ -317,8 +317,9 @@ const CreateTemplate = (
         if(!session.data) return
 
         const submitData = buildSubmitData()
-        // console.log("submit data ==> ")
-        // console.log(submitData)
+        console.log("submit data ==> ")
+        console.log(submitData)
+        return
         // console.log("is validated ? => ", validateFormData())
         if(!(await validateFormData())) {
             setValidationError(true)

@@ -114,7 +114,7 @@ const DateInput = (
 
     // state
 
-    const [date, setDate] = useState(value ? value : new Date())
+    const [date, setDate] = useState(value ? value : null)
     
     // keep track of the current date format (only useful when strict mode if off)
 
@@ -125,7 +125,7 @@ const DateInput = (
 
     // update the date value when the format changes
 
-    useEffect(() => onChange(date), [dateFormat])
+    useEffect(() => { date && onChange(date) }, [dateFormat])
 
     // notify parent when local state changes
 
@@ -136,8 +136,8 @@ const DateInput = (
     // update local state when value changes
 
     useEffect(() => {
-        if(!value) return
-        setDate(value)
+        // if(!value) return
+        setDate(value ? value : null)
     }, [value])
 
     useEffect(() => {
@@ -188,7 +188,7 @@ const DateInput = (
         <>
             <input 
                 type="date" 
-                value={date ? date.toLocaleDateString() : undefined}
+                value={date ? date.toLocaleDateString() : ''}
                 onChange={event => handleDateChange(new Date(event.target.value))} 
                 hidden
             />

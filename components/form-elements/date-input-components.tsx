@@ -27,16 +27,19 @@ export const CustomInput = React.forwardRef((
     const getDateString = () => {
 
         const date = new Date(frenchToISO(value))
-        return (
+        return value ? (
             showLocaleDate ? 
             capitalizeEachWord(date.toLocaleDateString('fr-fr', dateOptions))
             :
             value
-        )
+        ) : "Sélectionner une date..."
     }
 
     return (
-        <p className={styles.dateInput} onClick={onClick} ref={ref}>
+        <p 
+            className={styles.dateInput + " " + (!value ? styles.placeholder : "")} 
+            onClick={onClick} 
+            ref={ref}>
             { getDateString() }
         </p>
     )

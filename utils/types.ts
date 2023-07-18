@@ -47,3 +47,8 @@ export interface DateRange {
     startDate: Date;
     endDate: Date;
 }
+
+export interface APIDateRange {
+    date_debut: string;
+    date_fin?: string;
+}
