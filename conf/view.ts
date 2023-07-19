@@ -80,6 +80,11 @@ export const fileAttribute: Attribute = {
     type: "file"
 }
 
+export const expoOpeningPeriodAttribute: Attribute = {
+    icon: faTimeline,
+    type: "expoOpeningPeriod"
+}
+
 export interface ViewConf {
     [propName: string]: { [propName: string]: Attribute | LinkAttribute }
 }
@@ -116,6 +121,7 @@ export const viewConf: ViewConf = {
         fichiers: fileAttribute,
         elements: { ...linkAttribute, searchParam: "exposition_id", icon: faBox, label: "Éléments" },
         is_active: { ...booleanAttribute, defaultValue: true, label: "En cours" },
+        periodes_ouverture: { ...expoOpeningPeriodAttribute, label: "Périodes d'ouverture", fullWidth: true },
     },
     categories_articles: {
         nom: textAttribute,

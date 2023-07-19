@@ -182,7 +182,7 @@ const CreateTemplate = (
 
     useEffect(() => setFormData(getInitFormData()), [itemType, ficheType])
 
-    useEffect(() => console.log(formData), [formData])
+    // useEffect(() => console.log(formData), [formData])
 
     // the following function is passed to form elements 
     // so they can update the value of the field they're rendering
@@ -317,9 +317,9 @@ const CreateTemplate = (
         if(!session.data) return
 
         const submitData = buildSubmitData()
-        console.log("submit data ==> ")
-        console.log(submitData)
-        return
+        // console.log("submit data ==> ")
+        // console.log(submitData)
+        // return
         // console.log("is validated ? => ", validateFormData())
         if(!(await validateFormData())) {
             setValidationError(true)

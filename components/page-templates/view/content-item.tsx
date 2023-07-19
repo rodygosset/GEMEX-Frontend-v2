@@ -11,6 +11,7 @@ import FicheStatus from "./fiche-status";
 import { Fiche } from "@conf/api/data-types/fiche";
 import FilterCheckBox from "@components/search-filters/filter-checkbox";
 import { deltaToString, numberToDelta } from "@utils/form-elements/time-delta-input";
+import ExpoOpeningPeriodsList from "@components/expo-opening-periods-list";
 
 // this component is used in the View page
 // to display each item's attribute according to its type
@@ -38,7 +39,8 @@ const ContentItem = (
     const fullWidthAttributes = [
         "textArea",
         "itemList",
-        "fiches_status"
+        "fiches_status",
+        "expoOpeningPeriod"
     ]
 
     const isFullWidth = fullWidthAttributes.includes(conf.type)
@@ -83,6 +85,8 @@ const ContentItem = (
                 )
             case "fiches_status":
                 return <FicheStatus ficheData={itemData as Fiche} status={data}/>
+            case "expoOpeningPeriod":
+                return <ExpoOpeningPeriodsList value={data}/>
             case "itemList":
                 // list of items
                 // like tags or categories

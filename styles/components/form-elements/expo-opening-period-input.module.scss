@@ -18,6 +18,32 @@
 
     ul {
         @include reset-list;
+        @include flex-container(column, nowrap, flex-start, stretch);
+        gap: 7px;
+
+        li {
+            @include flex-container(row, nowrap, flex-start, center);
+            width: 100%;
+            gap: 7px;
+            padding: 10px 20px;
+            border-radius: 7px;
+
+            background: $primary-100;
+
+            p {
+                @include text-sm-regular;
+                color: $primary-600;
+                width: 100%;
+
+                span {
+                    color: $primary;
+                }
+            }
+
+            button {
+                border: 1px solid $primary-100;
+            }
+        }
     }
 
     .buttonsContainer {

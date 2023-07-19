@@ -23,7 +23,34 @@ const OpeningPeriodForm = (
     }: FormProps
 ) => {
 
+    // state
+
     const [dateRange, setDateRange] = useState(value)
+
+    // effects
+
+    useEffect(() => {
+        setDateRange(value)
+    }, [value])
+
+    // handlers
+
+    const handleSubmit = () => {
+        if(!dateRange) return
+        onSubmit(dateRange)
+        if(!value) setDateRange(undefined)
+    }
+
+    // utils
+
+    const isSubmitActive = () => {
+        if(!value) return dateRange !== undefined
+        return dateRange !== undefined && (
+            dateRange.date_debut !== value.date_debut ||
+            dateRange.date_fin !== value.date_fin
+        )
+    }
+
 
     // render
 
@@ -36,17 +63,27 @@ const OpeningPeriodForm = (
                 onChange={setDateRange}
             />
             <div className={styles.buttonsContainer}>
+                {
+                    value ?
+                    <Button
+                        role="secondary"
+                        fullWidth
+                        onClick={() => onSubmit(value)}>
+                        Annuler
+                    </Button>
+                    :
+                    <Button
+                        role="secondary"
+                        fullWidth
+                        onClick={() => setDateRange(undefined)}
+                        active={dateRange !== undefined}>
+                        Reset
+                    </Button>
+                }
                 <Button
-                    role="secondary"
                     fullWidth
-                    onClick={() => setDateRange(undefined)}
-                    active={dateRange !== undefined}>
-                    Reset
-                </Button>
-                <Button
-                    fullWidth
-                    onClick={() => dateRange && onSubmit(dateRange)}
-                    active={dateRange !== undefined}>
+                    onClick={handleSubmit}
+                    active={isSubmitActive()}>
                 {
                     value ? "Modifier" : "Ajouter"
                 }
@@ -100,33 +137,36 @@ const ExpoOpeningPeriodInput = (
                         <li key={`period-${i}`}>
                         {
                             period.date_fin ?
-                            <p>Du <span>{period.date_debut}</span> au <span>{period.date_fin}</span></p>
+                            <p>Du <span>{new Date(period.date_debut).toLocaleDateString("fr")}</span> au <span>{new Date(period.date_fin).toLocaleDateString("fr")}</span></p>
                             :
-                            <p>À partir du <span>{period.date_debut}</span></p>
+                            <p>À partir du <span>{new Date(period.date_debut).toLocaleDateString("fr")}</span></p>
                         }
-                        <Popover
-                            containerClassName={"react-tiny-popover-container " + styles.popoverContainer}
-                            isOpen={listItemsPopovers[i]}
-                            padding={10}
-                            content={() => (
-                                <OpeningPeriodForm
-                                    name={name}
-                                    value={period}
-                                    onSubmit={newVal => onChange(value.map((p, j) => i === j ? newVal : p))}
-                                />
-                            )}>
-                                <Button
-                                    icon={faEdit}
-                                    role="tertiary"
-                                    onClick={() => setListItemsPopovers(listItemsPopovers.map((p, j) => i === j ? !p : p))}>
-                                </Button>
-                        </Popover>
-                        <Button
-                            icon={faTrash}
-                            role="tertiary"
-                            status="danger"
-                            onClick={() => onChange(value.filter((p, j) => i !== j))}>
-                        </Button>
+                            <Popover
+                                containerClassName={"react-tiny-popover-container " + styles.popoverContainer}
+                                isOpen={listItemsPopovers[i]}
+                                padding={10}
+                                content={() => (
+                                    <OpeningPeriodForm
+                                        name={name}
+                                        value={period}
+                                        onSubmit={newVal => {
+                                            onChange(value.map((p, j) => i === j ? newVal : p))
+                                            setListItemsPopovers(listItemsPopovers.map((p, j) => i === j ? !p : p))
+                                        }}
+                                    />
+                                )}>
+                                    <Button
+                                        icon={faEdit}
+                                        role="tertiary"
+                                        onClick={() => setListItemsPopovers(listItemsPopovers.map((p, j) => i === j ? !p : p))}>
+                                    </Button>
+                            </Popover>
+                            <Button
+                                icon={faTrash}
+                                role="tertiary"
+                                status="danger"
+                                onClick={() => onChange(value.filter((p, j) => i !== j))}>
+                            </Button>
                         </li>
                     ))
                 }
@@ -142,7 +182,10 @@ const ExpoOpeningPeriodInput = (
                     content={() => (
                         <OpeningPeriodForm
                             name={name}
-                            onSubmit={newVal => onChange([...value, newVal])}
+                            onSubmit={newVal => {
+                                onChange([...value, newVal])
+                                setShowPopover(false)
+                            }}
                         />
                     )}>
                         <Button
