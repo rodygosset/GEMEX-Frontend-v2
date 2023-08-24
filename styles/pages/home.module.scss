@@ -5,7 +5,7 @@
 @import "@styles/abstracts/_variables.scss";
 
 
-#container {
+#container {  
 	@include flex-container(column, nowrap, flex-start, stretch);
 	padding: 20px 7% $nav-bar-height;
 	gap: 30px;

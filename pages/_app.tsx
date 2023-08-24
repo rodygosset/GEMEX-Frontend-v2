@@ -1,4 +1,4 @@
-import '../styles/globals.scss'
+import '../styles/globals.css'
 // for date inputs
 import "@styles/components/form-elements/react-datepicker.scss"
 import '@fortawesome/fontawesome-svg-core/styles.css'

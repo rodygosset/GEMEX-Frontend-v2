@@ -1,0 +1,60 @@
+@import "~@fontsource/josefin-sans/latin.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* rem trick */
+
+html {
+	font-size: 62.5%;
+	background: #FFF;
+}
+
+body {
+	font-size: 1.6rem;
+	background: rgba(41, 98, 255, 0.05); 
+}
+
+.scroll {
+	overflow: initial !important;
+	scrollbar-width: initial;
+	-ms-overflow-style: initial;
+}
+
+html, body, div#__next {
+	overflow: initial !important;
+	scrollbar-width: initial;
+	-ms-overflow-style: initial;
+	min-height: 100vh;
+	height: 100vh;
+	min-width: 100vw;
+	width: 100vw;
+	padding: 0;
+	margin: 0;
+	font-family: 'Josefin Sans';
+	/* overflow: initial !important; */
+	/* scrollbar-width: initial; */
+	/* -ms-overflow-style: initial; */
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+* {
+	box-sizing: border-box;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+	font-family: 'Josefin Sans';
+}
+
+*:not(.scroll)::-webkit-scrollbar {
+	display: none;
+}
+
+div#__next main {
+	width: 100%;
+	/* height: calc(100vh - $nav-bar-height); */
+}
