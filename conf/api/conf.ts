@@ -41,7 +41,13 @@ export const apiURLs: APIURLsType = {
     fiches: "/api/fiches/",
     fiches_systematiques: "/api/fiches/systematiques/",
     historiques_fiches_systematiques: "/api/fiches/systematiques/historique/",
-    rapports: "/api/rapports_taux_disponibilite/"
+    rapports: "/api/rapports_taux_disponibilite/",
+    cycles: "/api/qualite/cycles/",
+    mois_cycle: "/api/qualite/cycles/mois/",
+    evaluations: "/api/qualite/evaluations/",
+    domaines: "/api/qualite/domaines/",
+    thematiques: "/api/qualite/thematiques/",
+    questions_thematiques: "/api/qualite/thematiques/questions/"
 }
 
 
@@ -68,5 +74,6 @@ export const itemTypesPermissions: ItemTypesPermissionsType = {
     constituents: "stocks",
     fiches: "fiches",
     fiches_systematiques: "systematiques",
-    historiques_fiches_systematiques: "historique"
+    historiques_fiches_systematiques: "historique",
+    qualite: "qualite"
 }

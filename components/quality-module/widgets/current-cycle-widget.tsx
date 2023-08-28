@@ -23,12 +23,14 @@ const CurrentCycleWidget = (
     return (
         <DashboardWidget
             title={cycle ? getCycleYear(cycle) : "Cycle en cours"}
-            caption="Gérer le cycle d’évaluation en cours"
+            caption="Gérer le cycle en cours"
             link={cycle ? `/quality/cycles/${cycle.id}` : ''}>
                 
             {
                 cycle ?
-                <></>
+                <div className="min-h-[210px]">
+
+                </div>
                 :
                 // show the no results image if there is no current cycle
                 <div className="h-full w-full flex flex-col items-center justify-center gap-4">

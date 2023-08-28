@@ -10,13 +10,13 @@ export interface Evaluation {
     user_id: number;
     element_id: number;
     thematique_id: number;
-    question_note: number;
-    note_a: number;
-    note_b: number;
-    note_c: number;
-    note_d: number;
-    note_e: number;
-    note: number;
+    question_note?: number;
+    note_a?: number;
+    note_b?: number;
+    note_c?: number;
+    note_d?: number;
+    note_e?: number;
+    note?: number;
     reponses: {
         evaluation_id: number;
         question_id: number;
@@ -31,24 +31,24 @@ export interface MoisCycle {
     id: number;
     cycle_id: number;
     mois: number;
-    note: number;
+    note?: number;
     done: boolean;
     thematiques: {
         mois_cycle_id: number;
         thematique_id: number;
-        note: number;
+        note?: number;
         id: number;
     }[];
     expositions: {
         mois_cycle_id: number;
         exposition_id: number;
-        note: number;
+        note?: number;
         id: number;
     }[];
     elements: {
         mois_cycle_id: number;
         element_id: number;
-        note: number;
+        note?: number;
         id: number;
     }[];
     evaluations: Evaluation[];
@@ -56,7 +56,7 @@ export interface MoisCycle {
 
 export interface Cycle {
     id: number;
-    note: number;
+    note?: number;
     date_debut: string;
     date_fin: string;
     mois_cycle: MoisCycle[];

@@ -3,13 +3,14 @@ import styles from "@styles/components/form-elements/date-range-input.module.scs
 import FieldContainer from "./field-container";
 import Label from "./label";
 import DateInput from "./date-input";
-import { APIDateRange } from "@utils/types";
+import { APIDateRange, DateFormat } from "@utils/types";
 import { toISO } from "@utils/general";
 
 interface Props {
     name: string;
     value?: APIDateRange;
     showLocaleDate?: boolean;
+    format?: DateFormat;
     minDate?: Date;
     maxDate?: Date;
     onChange: (newValue: APIDateRange) => void;
@@ -20,6 +21,7 @@ const DateRangeInput = (
         name,
         value,
         showLocaleDate,
+        format = "dd/MM/yyyy",
         minDate,
         maxDate,
         onChange
@@ -38,7 +40,7 @@ const DateRangeInput = (
                     showLocaleDate={showLocaleDate}
                     minDate={minDate}
                     maxDate={maxDate}
-                    format="dd/MM/yyyy"
+                    format={format}
                     onChange={(newValue: Date) => onChange({ ...value, date_debut: toISO(newValue) })}
                 />
             </FieldContainer>
@@ -51,7 +53,7 @@ const DateRangeInput = (
                     showLocaleDate={showLocaleDate}
                     minDate={value ? new Date(value.date_debut) : minDate}
                     maxDate={maxDate}
-                    format="dd/MM/yyyy"
+                    format={format}
                     onChange={(newValue: Date) => value?.date_debut && onChange({ ...value, date_fin: toISO(newValue) })}
                 />
             </FieldContainer>

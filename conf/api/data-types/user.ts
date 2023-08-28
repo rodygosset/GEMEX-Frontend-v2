@@ -59,7 +59,8 @@ export const permissionList = [
     "systematiques",
     "historique",
     "users",
-    "rapports"
+    "rapports",
+    "qualite"
 ]
 
 export const suppressionList = [
@@ -71,7 +72,8 @@ export const suppressionList = [
     "systematiques",
     "historique",
     "users",
-    "rapports"
+    "rapports",
+    "qualite"
 ]
 
 export interface UserGroup {

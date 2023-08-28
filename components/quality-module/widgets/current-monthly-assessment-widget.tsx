@@ -21,7 +21,7 @@ const CurrentMonthlyAssessmentWidget = (
     const getMonthAndYear = (currentMoisCycle: MoisCycle, currentCycleStartDate: Date) => {
         // get the month by adding moisCycle.mois (number of months) to the cycle start date
         const monthStartDate = new Date(currentCycleStartDate)
-        monthStartDate.setMonth(monthStartDate.getMonth() + currentMoisCycle.mois)
+        monthStartDate.setMonth(monthStartDate.getMonth() + currentMoisCycle.mois - 1)
 
         // capitalize the month the first letter of the month
         const month = monthStartDate.toLocaleString('fr-fr', { month: 'long' })
@@ -40,7 +40,16 @@ const CurrentMonthlyAssessmentWidget = (
 
             {
                 moisCycle ?
-                <></>
+                <div className="min-h-[210px] h-full w-full flex flex-col items-center justify-center">
+                    <div className="flex flex-row items-center justify-center w-full gap-16">
+                        <div className={`h-[1px] flex-1 ${ (moisCycle.note || 0) >= 16 ? 'bg-success/20' : ''} ${ (moisCycle.note || 0) >= 15 && (moisCycle.note || 0) < 16 ? 'bg-warning/20' : ''} ${ (moisCycle.note || 0) < 15 ? 'bg-error/20' : ''}`}></div>
+                        <span className={`text-[12rem] ${ (moisCycle.note || 0) >= 16 ? 'text-success' : ''} ${ (moisCycle.note || 0) >= 15 && (moisCycle.note || 0) < 16 ? 'text-warning' : ''} ${ (moisCycle.note || 0) < 15 ? 'text-error' : ''}`}>
+                            { (moisCycle.note || 0) }
+                        </span>
+                        <div className={`h-[1px] flex-1 ${ (moisCycle.note || 0) >= 16 ? 'bg-success/20' : ''} ${ (moisCycle.note || 0) >= 15 && (moisCycle.note || 0) < 16 ? 'bg-warning/20' : ''} ${ (moisCycle.note || 0) < 15 ? 'bg-error/20' : ''}`}></div>
+                    </div>
+                    <p className={`text-md font-normal text-center w-fit ${ (moisCycle.note || 0) >= 16 ? 'text-success/60' : ''} ${ (moisCycle.note || 0) >= 15 && (moisCycle.note || 0) < 16 ? 'text-warning/60' : ''} ${ (moisCycle.note || 0) < 15 ? 'text-error/60' : ''}`}>Moyenne du mois</p>
+                </div>
                 :
                 // show the no results image if there is no ongoing monthly assessment
                 <div className="h-full w-full flex flex-col items-center justify-center gap-4">
