@@ -1,9 +1,9 @@
-import Button from "@components/button";
-import SectionContainer from "@components/layout/quality/section-container";
+
 import SettingsWidget from "@components/quality-module/settings-widget";
 import CurrentCycleWidget from "@components/quality-module/widgets/current-cycle-widget";
 import CurrentMonthlyAssessmentWidget from "@components/quality-module/widgets/current-monthly-assessment-widget";
-import { faArrowRight, faChartPie, faPlus } from "@fortawesome/free-solid-svg-icons";
+import CyclesWidget from "@components/quality-module/widgets/cycles-widget";
+import { faArrowRight, faChartPie } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -32,24 +32,15 @@ const Home: NextPage = () => {
             </div>
             <div className="w-full h-full flex flex-col gap-4">
                 <div className="flex flex-row gap-4 h-[400px]">
-                    <CurrentMonthlyAssessmentWidget />
-                    <CurrentCycleWidget />
+                    <CurrentMonthlyAssessmentWidget 
+                    />
+                    <CurrentCycleWidget 
+                    />
                     <SettingsWidget />
                 </div>
-                <SectionContainer>
-                    <div className="w-full flex flex-row justify-between content-center">
-                        <div className="flex flex-col">
-                            <h3 className="text-xl font-bold text-primary">Cycles passés</h3>
-                            <p className="text-sm font-normal text-primary text-opacity-60">Cycles d’évaluation annuels cloturés</p>
-                        </div>   
-                        <Button
-                            icon={faPlus}
-                            role="secondary"
-                            onClick={() => {}}>
-                            Nouveau cycle
-                        </Button>
-                    </div>
-                </SectionContainer>
+                <CyclesWidget 
+                    cycles={[]}
+                />
             </div>
         </main>
     )

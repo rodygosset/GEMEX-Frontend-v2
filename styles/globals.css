@@ -27,7 +27,7 @@ html, body, div#__next {
 	scrollbar-width: initial;
 	-ms-overflow-style: initial;
 	min-height: 100vh;
-	height: 100vh;
+	height: fit-content;
 	min-width: 100vw;
 	width: 100vw;
 	padding: 0;
@@ -52,6 +52,10 @@ a {
 
 *:not(.scroll)::-webkit-scrollbar {
 	display: none;
+}
+
+div#__next {
+	padding-bottom: 64px;
 }
 
 div#__next main {

@@ -25,7 +25,7 @@ const DashboardWidget = (
 
     return (
         <SectionContainer>
-            <div className="w-full flex flex-row justify-between content-center">
+            <div className="w-full flex flex-row justify-between content-center gap-2">
                 <div className="flex flex-col">
                     <h3 className="text-xl font-bold text-primary">{title}</h3>
                     <p className="text-sm font-normal text-primary text-opacity-60">{caption}</p>
