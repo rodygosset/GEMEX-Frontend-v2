@@ -14,6 +14,7 @@ const CyclesWidget = (
     }: Props
 ) => {
 
+    // render
 
     return (
         <SectionContainer>

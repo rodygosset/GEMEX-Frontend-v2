@@ -13,11 +13,13 @@ const Home: NextPage = () => {
 
     return (
         <main className="flex flex-col px-[7%] gap-y-16">
-            <div className="flex flex-row items-center gap-8">
-                <FontAwesomeIcon icon={faChartPie} className="text-5xl text-primary" />
-                <div className="flex flex-col w-full">
-                    <h1 className="text-2xl text-primary font-semibold h-fit">Taux Qualité</h1>
-                    <p className="text-md text-primary text-opacity-40 tracking-widest">TABLEAU DE BORD</p>
+            <div className="flex flex-row flex-wrap items-center gap-8">
+                <div className="flex flex-row items-center gap-8 flex-1">
+                    <FontAwesomeIcon icon={faChartPie} className="text-5xl text-primary" />
+                    <div className="flex flex-col">
+                        <h1 className="text-2xl text-primary font-semibold h-fit whitespace-nowrap">Taux Qualité</h1>
+                        <p className="text-md text-primary text-opacity-40 tracking-widest whitespace-nowrap">TABLEAU DE BORD</p>
+                    </div>
                 </div>
                 <Link 
                     className="flex flex-row items-center gap-4 w-fit bg-primary bg-opacity-10 rounded-md px-[20px] py-[10px]
@@ -31,7 +33,7 @@ const Home: NextPage = () => {
                 </Link>
             </div>
             <div className="w-full h-full flex flex-col gap-4">
-                <div className="flex flex-row gap-4 h-[400px]">
+                <div className="flex flex-row flex-wrap gap-4 min-h-[400px] min-[1070px]:h-[400px]">
                     <CurrentMonthlyAssessmentWidget 
                     />
                     <CurrentCycleWidget 

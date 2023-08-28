@@ -15,7 +15,7 @@ const SettingsWidget = () => {
             caption="Paramétrer & modifier les thématiques d’évaluation"
             link="/quality/settings">
             
-            <div className="h-full w-full flex flex-col items-center justify-center gap-4">
+            <div className="h-full min-h-[240px] w-full flex flex-col items-center justify-center gap-4">
                 <FontAwesomeIcon icon={faGear} className="text-secondary text-[90px]" />
                 <p className="text-md font-normal text-secondary/60">Gestion & ajustements</p>
             </div>
