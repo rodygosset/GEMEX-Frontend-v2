@@ -10,7 +10,7 @@ import {
 import { Bar } from "react-chartjs-2";
 
 import colors from "@styles/abstracts/_colors.module.scss";
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { ChartJSOrUndefined } from 'react-chartjs-2/dist/types';
 
 

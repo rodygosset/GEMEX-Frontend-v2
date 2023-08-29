@@ -17,7 +17,6 @@
         @include button-styler($main-color, $white);
         
         &.animateOnHover:hover {
-            transform: scale(1.1);
             @include spread-shadow-colored($main-color);
         }
     }
@@ -33,10 +32,7 @@
         @include button-styler($main-color-background, $main-color);
 
         &.animateOnHover:hover {
-            background: $main-color;
-            color: $white;
-            transform: scale(1.1);
-            @include spread-shadow-colored($main-color);
+            background: rgba($main-color, 0.2);
         }
 
     }

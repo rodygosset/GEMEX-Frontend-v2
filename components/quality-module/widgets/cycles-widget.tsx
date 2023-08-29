@@ -56,7 +56,7 @@ const CyclesWidget = (
                                 }}
                             />
                         </div>
-                        <p className="text-md font-normal text-primary/60">Aucun cycle d’évaluation</p>
+                        <p className="text-md font-normal text-primary/60">Aucun cycle d’évaluation passé</p>
                     </div>
 
                 }
