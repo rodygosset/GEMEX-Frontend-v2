@@ -1,17 +1,19 @@
 import Button from "@components/button";
 import DomaineCard from "@components/cards/quality-module/domaine-card";
 import Image from "next/image";
-import GoBackButton from "@components/go-back-button";
 import DomaineFormModal from "@components/modals/quality-module/domaine-form-modal";
 import { Domaine } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
-import { faDownload, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faDownload, faPlus } from "@fortawesome/free-solid-svg-icons";
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request";
 import { GetServerSideProps, NextPage } from "next"
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useAPIRequest from "@hook/useAPIRequest";
+import ThematiqueFormModal from "@components/modals/quality-module/thematique-form-modal";
+import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
     initDomaines: Domaine[];
@@ -27,16 +29,19 @@ const Settings: NextPage<Props> = (
         console.log(initDomaines)
     }, [])
 
-    const router = useRouter()
-
     // state
 
     const [domaines, setDomaines] = useState<Domaine[]>(initDomaines)
+
+    // manage modals & forms
 
     const [domaineModalIsOpen, setDomaineModalIsOpen] = useState<boolean>(false)
     const [domaineEditModalIsOpen, setDomaineEditModalIsOpen] = useState<boolean>(false)
 
     const [domaineEditId, setDomaineEditId] = useState<number | null>(null)
+
+    const [thematiqueModalIsOpen, setThematiqueModalIsOpen] = useState<boolean>(false)
+    const [selectedDomaineId, setSelectedDomaineId] = useState<number>(0)
 
 
     // utils
@@ -44,22 +49,7 @@ const Settings: NextPage<Props> = (
     const makeAPIRequest = useAPIRequest()
     const session = useSession().data as MySession | null
 
-    const refreshDomaines = async () => {
-        if(!session) return
-        
-        makeAPIRequest<Domaine[], void>(
-            session,
-            "get",
-            "domaines",
-            undefined,
-            undefined,
-            res => {
-                setDomaines(res.data)
-            }
-        )
-    }
-
-    const refreshSingleDomaine = async (id: number) => {
+    const refreshSingleDomaine = (id: number) => {
         if(!session) return
 
         makeAPIRequest<Domaine, void>(
@@ -69,24 +59,33 @@ const Settings: NextPage<Props> = (
             `id/${id}`,
             undefined,
             res => {
-                setDomaines(domaines.map(domaine => domaine.id === id ? res.data : domaine))
+                    setDomaines(domaines.map(domaine => domaine.id === id ? res.data : domaine))
             }
         )
-
     }
+
 
     // render 
 
     return (
         <>
             <main className="flex flex-col gap-16 px-[7%] gap-y-16 pt-6">
-                <div className="w-full flex flex-row gap-16 items-center">
-                    <GoBackButton />
+                <div className="w-full flex flex-row flex-wrap gap-16 items-center">
+                    <Link
+                        className="flex flex-row items-center justify-center w-[60px] h-[60px] rounded-full bg-primary/10
+                            group hover:bg-primary hover:shadow-2xl hover:shadow-primary/40 transition duration-300 ease-in-out cursor-pointer
+                        "
+                        href="/quality">
+                        <FontAwesomeIcon 
+                            className="text-primary group-hover:text-white text-md transition duration-300 ease-in-out"
+                            icon={faChevronLeft} 
+                        />
+                    </Link>
                     <div className="flex flex-col flex-1">
                         <h1 className="text-3xl font-medium text-secondary whitespace-nowrap">Domaines d'évaluation</h1>
                         <p className="text-md font-normal text-primary/60 tracking-widest whitespace-nowrap uppercase">Liste des thématiques</p>
                     </div>
-                    <div className="flex flex-row gap-4">
+                    <div className="flex flex-row flex-wrap gap-4">
                         <Button
                             icon={faDownload}
                             role="secondary"
@@ -111,6 +110,10 @@ const Settings: NextPage<Props> = (
                                 onEdit={() => {
                                     setDomaineEditId(domaine.id)
                                     setDomaineEditModalIsOpen(true)
+                                }}
+                                onNewThematique={() => {
+                                    setSelectedDomaineId(domaine.id)
+                                    setThematiqueModalIsOpen(true)
                                 }}
                             />
                         ))
@@ -149,7 +152,12 @@ const Settings: NextPage<Props> = (
                     setDomaines(domaines.map(domaine => domaine.id === d.id ? d : domaine))
                 }}
             />
-
+            <ThematiqueFormModal
+                isOpen={thematiqueModalIsOpen}
+                domaineId={selectedDomaineId}
+                onClose={() => setThematiqueModalIsOpen(false)}
+                onSubmit={() => refreshSingleDomaine(selectedDomaineId)}
+            />
         </>
     )
 }

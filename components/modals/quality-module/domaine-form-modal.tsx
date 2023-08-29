@@ -30,6 +30,8 @@ const DomaineFormModal = (
     const [nom, setNom] = useState<string>(domaine?.nom || "")
     const [description, setDescription] = useState<string>(domaine?.description || "")
 
+    const [errorFields, setErrorFields] = useState<string[]>([])
+
     // keep the form fields up to date with the domaine prop
 
     useEffect(() => {
@@ -54,21 +56,34 @@ const DomaineFormModal = (
 
         if(domaine) {
             // update the domaine if it already exists
+
+            if(nom === domaine.nom && description === domaine.description) {
+                handleClose()
+                return  
+            }
+
+            const data = {
+                ...(nom !== domaine.nom && { new_nom: nom }),
+                ...(description !== domaine.description && { description })
+            }
+
             makeAPIRequest<Domaine, void>(
                 session,
                 "put",
                 "domaines",
                 domaine.nom,
-                {
-                    new_nom: nom,
-                    description
-                },
+                data,
                 res => {
                     onSubmit(res.data)
                     handleClose()
                 }
             )
         } else {
+
+            if(!nom) {
+                setErrorFields([...errorFields, "nom"])
+            }
+
             // make the request to create the domaine if it doesn't exist
 
             makeAPIRequest<Domaine, void>(
@@ -96,9 +111,11 @@ const DomaineFormModal = (
             <form
                 className="flex flex-col gap-8 min-w-[300px] overflow-auto bg-white rounded-2xl p-[32px]"
                 name="domaine-form">
-                <div className="flex flex-row items-center gap-4 w-full">
-                    <h3 className="text-xl font-bold text-primary flex-1">Nouveau domaine d'évaluation</h3>
-                </div>
+                <h3 className="text-xl font-bold text-primary flex-1">
+                {
+                    domaine ? "Modifier le domaine d'évaluation" : "Nouveau domaine d'évaluation"
+                }
+                </h3>
                 <div className="w-full h-[1px] bg-primary/10"></div>
                 <FieldContainer fullWidth>
                     <Label>Nom</Label>
@@ -106,6 +123,7 @@ const DomaineFormModal = (
                         fullWidth
                         placeholder="Fonctionnement, ..."
                         currentValue={nom}
+                        isInErrorState={errorFields.includes("nom")}
                         onChange={n => setNom(n)}
                     />
                 </FieldContainer>
@@ -114,7 +132,7 @@ const DomaineFormModal = (
                     <TextInput
                         isTextArea
                         fullWidth
-                        placeholder="Description du domaine d'évaluation"
+                        placeholder="Description du domaine d'évaluation.."
                         currentValue={description}
                         onChange={d => setDescription(d)}
                     />

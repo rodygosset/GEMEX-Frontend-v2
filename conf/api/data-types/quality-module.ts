@@ -66,6 +66,11 @@ export interface Cycle {
     }[];
 }
 
+export interface QuestionCreate {
+    titre?: string;
+    question: string;
+    optional: boolean;
+}
 
 export interface Thematique {
     id: number;

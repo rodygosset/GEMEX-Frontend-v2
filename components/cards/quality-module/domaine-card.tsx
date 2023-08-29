@@ -6,13 +6,15 @@ import { faEdit, faPlus } from "@fortawesome/free-solid-svg-icons";
 interface Props {
     domaine: Domaine;
     onEdit: () => void;
+    onNewThematique: () => void;
 }
 
 
 const DomaineCard = (
     {
         domaine,
-        onEdit
+        onEdit,
+        onNewThematique
     }: Props
 ) => {
 
@@ -20,12 +22,12 @@ const DomaineCard = (
 
     return (
         <li className="w-full flex flex-col bg-white/10 shadow-2xl shadow-primary/20 p-[32px] rounded-2xl">
-            <div className="flex flex-row gap-4 w-full">
+            <div className="flex flex-row flex-wrap gap-4 w-full">
                 <div className="flex flex-col flex-1">
                     <h3 className="text-xl font-bold text-secondary">{domaine.nom}</h3>
                     <p className="text-md font-normal text-primary/60">{domaine.description}</p>
                 </div>
-                <div className="flex flex-row gap-4">
+                <div className="flex flex-row flex-wrap gap-4">
                     <Button
                         hasBorders
                         icon={faEdit}
@@ -36,7 +38,7 @@ const DomaineCard = (
                     <Button
                         icon={faPlus}
                         role="secondary"
-                        onClick={() => {}}>
+                        onClick={onNewThematique}>
                         Nouvelle thématique
                     </Button>
                 </div>

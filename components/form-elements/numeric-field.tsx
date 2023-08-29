@@ -9,6 +9,7 @@ import { ChangeEvent, KeyboardEventHandler, useEffect, useState } from "react"
 interface Props extends FormFieldProps<number> {
     large?: boolean;
     embedded?: boolean;
+    fullWidth?: boolean;
     min?: number;
     max?: number;
 }
@@ -18,6 +19,7 @@ const NumericField = (
         value,
         large,
         embedded,
+        fullWidth,
         min,
         max,
         onChange
@@ -106,6 +108,7 @@ const NumericField = (
     const getClassNames = () => {
         let classNames = styles.container
         classNames += large ? ' ' + styles.large : ''
+        classNames += fullWidth ? ' ' + styles.fullWidth : ''
         classNames += embedded ? ' ' + styles.embedded : ''
         return classNames
     }
