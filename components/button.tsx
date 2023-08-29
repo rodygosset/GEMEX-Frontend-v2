@@ -17,6 +17,7 @@ interface Props {
     animateOnHover?: boolean;
     hasPadding?: boolean;
     bigPadding?: boolean;
+    hasBorders?: boolean;
     fullWidth?: boolean;
     status?: "progress" | "success" | "danger" | "discouraged";
     bigBorderRadius?: boolean;
@@ -38,6 +39,7 @@ const Button = ({
         animateOnHover = true,
         hasPadding = true, 
         bigPadding, 
+        hasBorders,
         fullWidth,
         status,
         bigBorderRadius,
@@ -54,6 +56,7 @@ const Button = ({
         classNames += (fullWidth ? ' ' + styles.fullWidth : '')
         classNames += ' ' + (role ? styles[role] : styles.primary)
         classNames += (status ? ' ' + styles[status] : '')
+        classNames += (hasBorders ? ' ' + styles.hasBorders : '')
         classNames += (bigBorderRadius ? ' ' + styles.bigBorderRadius : '')
         classNames += className ? ' ' + className : ''
         return classNames

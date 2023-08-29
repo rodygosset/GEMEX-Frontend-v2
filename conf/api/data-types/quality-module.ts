@@ -88,5 +88,6 @@ export interface Thematique {
 export interface Domaine {
     id: number;
     nom: string;
+    description: string;
     thematiques: Thematique[];
 }

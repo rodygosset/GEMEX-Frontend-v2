@@ -160,6 +160,28 @@
         border-radius: 30px;
     }
 
+    &.hasBorders {
+        border: 1px solid $primary-200;
+
+        &.success {
+            border-color: $success-200;
+        }
+
+        &.progress {
+            border-color: $secondary-200;
+        }
+
+        &.danger {
+            border-color: $error-200;
+        }
+
+        &.discouraged {
+            border-color: $black-200;
+        }
+
+
+    }
+
     &.withPadding {
 
         padding: 10px 20px;

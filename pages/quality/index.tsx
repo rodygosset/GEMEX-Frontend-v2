@@ -11,6 +11,7 @@ import SSRmakeAPIRequest from "@utils/ssr-make-api-request";
 import { GetServerSideProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 interface Props {
     cycles: Cycle[];  
@@ -23,6 +24,8 @@ const Home: NextPage<Props> = (
         currentCycleId
     }: Props
 ) => {
+
+    const router = useRouter()
 
 
     // utils
@@ -47,7 +50,7 @@ const Home: NextPage<Props> = (
     // render
 
     return (
-        <main className="flex flex-col px-[7%] gap-y-16">
+        <main className="flex flex-col px-[7%] gap-y-16 pt-6">
             <div className="flex flex-row flex-wrap items-center gap-8">
                 <div className="flex flex-row items-center gap-8 flex-1">
                     <FontAwesomeIcon icon={faChartPie} className="text-5xl text-primary" />
@@ -80,7 +83,7 @@ const Home: NextPage<Props> = (
                 </div>
                 <CyclesWidget 
                     cycles={cycles.filter(cycle => cycle.id !== currentCycleId)}
-                    onRefresh={() => {}}
+                    onRefresh={() => router.replace(router.asPath)}
                 />
             </div>
         </main>
