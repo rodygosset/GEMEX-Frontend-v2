@@ -28,15 +28,15 @@ const NumericField = (
 
     // state & effects
 
-    const [n, setN] = useState<number>(value)
+    // const [n, setN] = useState<number>(value)
 
     // notify the parent when value changes
 
-    useEffect(() => onChange(n), [n])
+    // useEffect(() => onChange(n), [n])
 
     // enforce provided value
 
-    useEffect(() => setN(value), [value])
+    // useEffect(() => setN(value), [value])
 
     // handlers
 
@@ -63,11 +63,11 @@ const NumericField = (
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
-        if(!e.target.value) setN(min ? min : 0)
+        if(!e.target.value) onChange(min ? min : 0)
         if(!isNumeric(e.target.value)) return
         const newN = Number(e.target.value)
         if(!isInBounds(newN)) return
-        setN(newN)
+        onChange(newN)
     }
 
 
@@ -88,15 +88,15 @@ const NumericField = (
 
     // don't increase if we've reached the max value
     const handleIncrease = () => {
-        if(typeof max !== "undefined" && n + 1 > max) return
-        setN(n + 1)
+        if(typeof max !== "undefined" && value + 1 > max) return
+        onChange(value + 1)
     }
 
 
     // don't decrease if we've reached the min value
     const handleDecrease = () => {
-        if(typeof min !== "undefined" && n - 1 < min) return
-        setN(n - 1)
+        if(typeof min !== "undefined" && value - 1 < min) return
+        onChange(value - 1)
     }
 
     // conf
@@ -115,7 +115,7 @@ const NumericField = (
 
     const getSize = () => {
         if(large) return undefined 
-        return Math.min(n.toString().length, maxSize)
+        return Math.min(value.toString().length, maxSize)
     }
 
 

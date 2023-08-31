@@ -49,6 +49,11 @@ const QuestionFormModal = (
         setOptional(false)
     }
 
+    const getUniqueId = () => {
+        // generate random id & return it
+        return Math.floor(Math.random() * 1000)
+    }
+
     // handlers
 
     const handleClose = () => {
@@ -58,6 +63,7 @@ const QuestionFormModal = (
 
     const handleSubmit = () => {
         onSubmit({
+            id: question ? question.id : getUniqueId(),
             titre,
             question: q,
             optional

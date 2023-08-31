@@ -2,18 +2,18 @@ import Button from "@components/button";
 import DomaineCard from "@components/cards/quality-module/domaine-card";
 import Image from "next/image";
 import DomaineFormModal from "@components/modals/quality-module/domaine-form-modal";
-import { Domaine } from "@conf/api/data-types/quality-module";
+import { Domaine, Thematique } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
 import { faChevronLeft, faDownload, faPlus } from "@fortawesome/free-solid-svg-icons";
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request";
 import { GetServerSideProps, NextPage } from "next"
 import { getSession, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useAPIRequest from "@hook/useAPIRequest";
 import ThematiqueFormModal from "@components/modals/quality-module/thematique-form-modal";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import DeleteDialog from "@components/modals/delete-dialog";
 
 interface Props {
     initDomaines: Domaine[];
@@ -42,6 +42,11 @@ const Settings: NextPage<Props> = (
 
     const [thematiqueModalIsOpen, setThematiqueModalIsOpen] = useState<boolean>(false)
     const [selectedDomaineId, setSelectedDomaineId] = useState<number>(0)
+
+    const [thematiqueEditModalIsOpen, setThematiqueEditModalIsOpen] = useState<boolean>(false)
+    const [selectedThematique, setSelectedThematique] = useState<Thematique>()
+
+    const [thematiqueDeleteModalIsOpen, setThematiqueDeleteModalIsOpen] = useState<boolean>(false)
 
 
     // utils
@@ -111,9 +116,22 @@ const Settings: NextPage<Props> = (
                                     setDomaineEditId(domaine.id)
                                     setDomaineEditModalIsOpen(true)
                                 }}
+                                onDelete={() => {
+                                    setDomaines(domaines.filter(d => d.id !== domaine.id))
+                                }}
                                 onNewThematique={() => {
                                     setSelectedDomaineId(domaine.id)
                                     setThematiqueModalIsOpen(true)
+                                }}
+                                onEditThematique={(thematique) => {
+                                    setSelectedDomaineId(domaine.id)
+                                    setSelectedThematique(thematique)
+                                    setThematiqueEditModalIsOpen(true)
+                                }}
+                                onDeleteThematique={(thematique) => {
+                                    setSelectedDomaineId(domaine.id)
+                                    setSelectedThematique(thematique)
+                                    setThematiqueDeleteModalIsOpen(true)
                                 }}
                             />
                         ))
@@ -157,6 +175,20 @@ const Settings: NextPage<Props> = (
                 domaineId={selectedDomaineId}
                 onClose={() => setThematiqueModalIsOpen(false)}
                 onSubmit={() => refreshSingleDomaine(selectedDomaineId)}
+            />
+            <ThematiqueFormModal
+                thematique={selectedThematique}
+                isOpen={thematiqueEditModalIsOpen}
+                domaineId={selectedDomaineId}
+                onClose={() => setThematiqueEditModalIsOpen(false)}
+                onSubmit={() => refreshSingleDomaine(selectedDomaineId)}
+            />
+            <DeleteDialog
+                isVisible={thematiqueDeleteModalIsOpen}
+                closeDialog={() => setThematiqueDeleteModalIsOpen(false)}
+                itemType="thematiques"
+                itemTitle={selectedThematique?.nom || ""}
+                onSuccess={() => refreshSingleDomaine(selectedDomaineId)}
             />
         </>
     )

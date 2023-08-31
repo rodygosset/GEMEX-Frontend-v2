@@ -49,7 +49,7 @@
 
         &.animateOnHover:hover {
             &:not(.bigPadding) {
-                padding: 10px 20px;
+                padding: 8px 16px;
             }
             background: $main-color-background;
         }
@@ -63,8 +63,9 @@
     @include flex-container(row, nowrap, center, center);
     @include button-text;
     width: fit-content;
+    height: fit-content;
     gap: 10px;
-    border-radius: 5px;
+    border-radius: 8px;
 
     &.primary {
 
@@ -184,11 +185,11 @@
 
     &.withPadding {
 
-        padding: 10px 20px;
+        padding: 8px 16px;
     }
 
     &.bigPadding {
-        padding: 15px 20px;
+        padding: 16px 24px;
     }
 
     &.fullWidth {

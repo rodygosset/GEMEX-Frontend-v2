@@ -83,7 +83,7 @@ const Home: NextPage<Props> = (
                 </div>
                 <CyclesWidget 
                     cycles={cycles.filter(cycle => cycle.id !== currentCycleId)}
-                    onRefresh={() => router.replace(router.asPath)}
+                    onRefresh={() => router.reload()}
                 />
             </div>
         </main>

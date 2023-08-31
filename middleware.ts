@@ -11,7 +11,8 @@ import { NextResponse } from 'next/server'
 
 const routePermissions: {[key: string]: string} = {
 	"user-management-dashboard": "manage",
-	"availability-ratio-reports": "rapports"
+	"availability-ratio-reports": "rapports",
+	"quality": "qualite"
 }
 
 /**
