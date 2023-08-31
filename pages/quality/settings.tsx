@@ -14,6 +14,7 @@ import ThematiqueFormModal from "@components/modals/quality-module/thematique-fo
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DeleteDialog from "@components/modals/delete-dialog";
+import ThematiqueViewModal from "@components/modals/quality-module/thematique-view-modal";
 
 interface Props {
     initDomaines: Domaine[];
@@ -47,6 +48,7 @@ const Settings: NextPage<Props> = (
     const [selectedThematique, setSelectedThematique] = useState<Thematique>()
 
     const [thematiqueDeleteModalIsOpen, setThematiqueDeleteModalIsOpen] = useState<boolean>(false)
+    const [thematiqueViewModal, setThematiqueViewModal] = useState<boolean>(false)
 
 
     // utils
@@ -133,6 +135,11 @@ const Settings: NextPage<Props> = (
                                     setSelectedThematique(thematique)
                                     setThematiqueDeleteModalIsOpen(true)
                                 }}
+                                onOpenThematique={(thematique) => {
+                                    setSelectedDomaineId(domaine.id)
+                                    setSelectedThematique(thematique)
+                                    setThematiqueViewModal(true)
+                                }}
                             />
                         ))
                     }
@@ -189,6 +196,21 @@ const Settings: NextPage<Props> = (
                 itemType="thematiques"
                 itemTitle={selectedThematique?.nom || ""}
                 onSuccess={() => refreshSingleDomaine(selectedDomaineId)}
+            />
+            <ThematiqueViewModal
+                thematique={selectedThematique}
+                isOpen={thematiqueViewModal}
+                onClose={() => setThematiqueViewModal(false)}
+                onDelete={() => {
+                    setSelectedDomaineId(selectedDomaineId)
+                    setSelectedThematique(selectedThematique)
+                    setThematiqueDeleteModalIsOpen(true)
+                }}
+                onEdit={() => {
+                    setSelectedDomaineId(selectedDomaineId)
+                    setSelectedThematique(selectedThematique)
+                    setThematiqueEditModalIsOpen(true)
+                }}
             />
         </>
     )

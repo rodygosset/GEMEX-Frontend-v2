@@ -35,7 +35,7 @@ const DropdownMenu = (
                 <DropdownMenuPrimitive.Content 
                     align="end"
                     className="radix-side-top:animate-slide-up radix-side-bottom:animate-slide-down backdrop-blur-lg
-                    rounded-md bg-primary/10">
+                    rounded-md bg-primary/10 z-[999]">
                 {
                     options.map((option, index) => (
                         <DropdownMenuPrimitive.Item 

@@ -3,7 +3,7 @@ import DeleteDialog from "@components/modals/delete-dialog";
 import ContextMenu from "@components/radix/context-menu";
 import { Domaine, Evaluation, Thematique } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
-import { faEdit, faEye, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faEye, faInfoCircle, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import useAPIRequest from "@hook/useAPIRequest";
 import { useSession } from "next-auth/react";
 import { Fragment, useEffect, useState } from "react";
@@ -15,6 +15,7 @@ interface Props {
     onNewThematique: () => void;
     onEditThematique: (thematique: Thematique) => void;
     onDeleteThematique: (thematique: Thematique) => void;
+    onOpenThematique: (thematique: Thematique) => void;
 }
 
 interface ThematiqueEvaluationDate {
@@ -30,7 +31,8 @@ const DomaineCard = (
         onDelete,
         onNewThematique,
         onEditThematique,
-        onDeleteThematique
+        onDeleteThematique,
+        onOpenThematique
     }: Props
 ) => {
 
@@ -192,11 +194,11 @@ const DomaineCard = (
                                         </div>
                                         {
                                             thematiquesEvaluationDates.find(d => d.thematiqueId === thematique.id)?.date ?
-                                            <span className="text-md font-normal text-primary/60 flex-1 capitalize">{thematiquesEvaluationDates.find(d => d.thematiqueId === thematique.id)?.date?.toLocaleDateString("fr-fr", { year: "numeric", month: "long", day: "numeric" })}</span> 
+                                            <span className="text-md max-md:text-sm font-normal text-primary/80 flex-1 capitalize">{thematiquesEvaluationDates.find(d => d.thematiqueId === thematique.id)?.date?.toLocaleDateString("fr-fr", { year: "numeric", month: "long", day: "numeric" })}</span> 
                                             :
-                                            <span className="text-md font-normal text-primary/60 flex-1">Pas d'évaluation</span>
+                                            <span className="text-md max-md:text-sm font-normal text-primary/80 flex-1">Pas d'évaluation</span>
                                         }
-                                        <span className="text-md font-normal text-primary/60 flex-1">
+                                        <span className="text-md max-md:text-sm font-normal text-primary/80 flex-1">
                                             À évaluer 
                                             {
                                                 thematique.periodicite > 1 ?
@@ -208,9 +210,9 @@ const DomaineCard = (
                                     <ContextMenu
                                         options={[
                                             {
-                                                label: "Voir",
-                                                value: "see",
-                                                icon: faEye
+                                                label: "Informations",
+                                                value: "infos",
+                                                icon: faInfoCircle
                                             },
                                             {
                                                 label: "Modifier",
@@ -225,8 +227,8 @@ const DomaineCard = (
                                             }
                                         ]}
                                         onSelect={(option) => {
-                                            if(option === "see") {
-                                                // todo
+                                            if(option === "infos") {
+                                                onOpenThematique(thematique)
                                             }
                                             else if(option === "edit") {
                                                 onEditThematique(thematique)
