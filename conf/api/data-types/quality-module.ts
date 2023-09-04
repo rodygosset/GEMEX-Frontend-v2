@@ -97,3 +97,43 @@ export interface Domaine {
     description: string;
     thematiques: Thematique[];
 }
+
+
+/**
+ * Convert a list of thematiques to a CSV string
+ * @param domaines the list of Domaine objects which contain the thematiques
+ * @returns the CSV string
+ */
+export const thematiquesToCSV = (domaines: Domaine[]) => {
+
+    // each thematique is a row
+    // with the columns: nom, description, periodicite, ponderateur, question, question_ponderateur, domaine
+    // & question_[i] for each question -> this requires finding the longest list of questions and using that as the number of columns
+
+    // first, find the longest list of questions
+
+    const thematiques = domaines.map(d => d.thematiques).flat()
+    const maxQuestions = thematiques.reduce((max, t) => Math.max(max, t.questions.length), 0)
+
+    // now, create the CSV string
+
+    let csv = "Nom,Description,Periodicite en mois,Ponderateur,Question générale,Ponderateur question générale,Domaine d'évaluation"
+    for (let i = 0; i < maxQuestions; i++) {
+        csv += `,Question ${i + 1}`
+    }
+
+    csv += "\n"
+
+    for (const domaine of domaines) {
+        for (const thematique of domaine.thematiques) {
+            csv += `"${thematique.nom}","${thematique.description}",${thematique.periodicite},${thematique.ponderateur},"${thematique.question}",${thematique.question_ponderateur},"${domaine.nom}"`
+            for (let i = 0; i < maxQuestions; i++) {
+                csv += `,${thematique.questions[i]?.question ?? ""}`
+            }
+            csv += "\n"
+        }
+    }
+
+    return csv
+
+}

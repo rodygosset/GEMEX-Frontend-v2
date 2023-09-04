@@ -60,7 +60,7 @@ const ThematiqueViewModal = (
                                             ` tous les mois`
                                         }
                                         </span>
-                                        <span className="text-sm font-normal text-primary/80">
+                                        <span className="text-sm font-normal text-secondary/80">
                                             Pondération à {thematique.ponderateur}
                                         </span>
                                     </p>
@@ -93,7 +93,7 @@ const ThematiqueViewModal = (
                             <div className="flex flex-col w-full">
                                 <h4 className="text-xs font-medium text-primary/60 uppercase tracking-wider">Question générale</h4>
                                 <p className="text-md font-normal text-primary">{thematique.question}</p>
-                                <span className="text-sm font-normal text-primary/80">Pondération à {thematique.question_ponderateur}</span>
+                                <span className="text-sm font-normal text-secondary/80">Pondération à {thematique.question_ponderateur}</span>
                             </div>
                             <div className="w-full h-[1px] bg-primary/20 my-2"></div>
                             <div className="flex flex-col w-full gap-4">

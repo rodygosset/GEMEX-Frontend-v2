@@ -2,7 +2,7 @@ import Button from "@components/button";
 import DomaineCard from "@components/cards/quality-module/domaine-card";
 import Image from "next/image";
 import DomaineFormModal from "@components/modals/quality-module/domaine-form-modal";
-import { Domaine, Thematique } from "@conf/api/data-types/quality-module";
+import { Domaine, Thematique, thematiquesToCSV } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
 import { faChevronLeft, faDownload, faPlus } from "@fortawesome/free-solid-svg-icons";
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request";
@@ -71,6 +71,11 @@ const Settings: NextPage<Props> = (
         )
     }
 
+    const getLinkToCSV = () => {
+        const csv = "data:text/csv;charset=utf-8," + thematiquesToCSV(domaines)
+        return encodeURI(csv)
+    }
+
 
     // render 
 
@@ -93,12 +98,16 @@ const Settings: NextPage<Props> = (
                         <p className="text-md font-normal text-primary/60 tracking-widest whitespace-nowrap uppercase">Liste des thématiques</p>
                     </div>
                     <div className="flex flex-row flex-wrap gap-4">
-                        <Button
-                            icon={faDownload}
-                            role="secondary"
-                            onClick={() => {}}>
-                            Exporter la liste des thématiques
-                        </Button>
+                        <Link 
+                            className="flex flex-row items-center gap-4 w-fit bg-primary bg-opacity-10 rounded-[8px] px-[16px] py-[8px]
+                                hover:bg-opacity-20 transition duration-300 ease-in-out cursor-pointer"
+                            href={getLinkToCSV()} download="thematiques.csv">
+                            <FontAwesomeIcon 
+                                icon={faDownload} 
+                                className="text-sm text-primary"
+                            />
+                            <span className="text-md font-normal text-primary whitespace-nowrap">Exporter la liste des thématiques</span>
+                        </Link>
                         <Button
                             icon={faPlus}
                             onClick={() => setDomaineModalIsOpen(true)}>
