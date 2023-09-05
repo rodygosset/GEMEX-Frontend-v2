@@ -48,7 +48,7 @@ const CurrentMonthlyAssessmentWidget = (
                         </span>
                         <div className={`h-[1px] flex-1 ${ (moisCycle.note || 0) >= 16 ? 'bg-success/20' : ''} ${ (moisCycle.note || 0) >= 15 && (moisCycle.note || 0) < 16 ? 'bg-warning/20' : ''} ${ (moisCycle.note || 0) < 15 ? 'bg-error/20' : ''}`}></div>
                     </div>
-                    <p className={`text-md font-normal text-center w-fit ${ (moisCycle.note || 0) >= 16 ? 'text-success/60' : ''} ${ (moisCycle.note || 0) >= 15 && (moisCycle.note || 0) < 16 ? 'text-warning/60' : ''} ${ (moisCycle.note || 0) < 15 ? 'text-error/60' : ''}`}>Moyenne du mois</p>
+                    <p className={`text-base font-normal text-center w-fit ${ (moisCycle.note || 0) >= 16 ? 'text-success/60' : ''} ${ (moisCycle.note || 0) >= 15 && (moisCycle.note || 0) < 16 ? 'text-warning/60' : ''} ${ (moisCycle.note || 0) < 15 ? 'text-error/60' : ''}`}>Moyenne du mois</p>
                 </div>
                 :
                 // show the no results image if there is no ongoing monthly assessment
@@ -66,7 +66,7 @@ const CurrentMonthlyAssessmentWidget = (
                             }}
                         />
                     </div>
-                    <p className="text-md font-normal text-primary/60">Aucune évaluation en cours</p>
+                    <p className="text-base font-normal text-primary/60">Aucune évaluation en cours</p>
                 </div>
             }
         </DashboardWidget>

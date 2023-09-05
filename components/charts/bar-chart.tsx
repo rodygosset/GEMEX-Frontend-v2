@@ -6,6 +6,7 @@ import {
     Title,
     Tooltip,
     Legend,
+    ChartOptions,
 } from 'chart.js';
 import { Bar } from "react-chartjs-2";
 
@@ -27,6 +28,7 @@ interface Props {
     label: string;
     data: number[];
     labels: string[];
+    options?: ChartOptions<"bar">;
     onDownloadLinkReady: (link: string) => void;
 }
 
@@ -36,6 +38,7 @@ const BarChart = (
         label,
         data,
         labels,
+        options,
         onDownloadLinkReady
     }: Props
 ) => {
@@ -65,7 +68,10 @@ const BarChart = (
                         const link = chartRef.current?.toBase64Image('image/png', 3.0)
                         if(link && onDownloadLinkReady) onDownloadLinkReady(link)
                     }
-                }
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                ...options
             }}
                 
         />

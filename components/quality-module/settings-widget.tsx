@@ -17,7 +17,7 @@ const SettingsWidget = () => {
             
             <div className="h-full min-h-[240px] w-full flex flex-col items-center justify-center gap-4">
                 <FontAwesomeIcon icon={faGear} className="text-secondary text-[90px]" />
-                <p className="text-md font-normal text-secondary/60">Gestion & ajustements</p>
+                <p className="text-base font-normal text-secondary/60">Gestion & ajustements</p>
             </div>
 
         </DashboardWidget>

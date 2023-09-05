@@ -89,13 +89,13 @@ const Settings: NextPage<Props> = (
                         "
                         href="/quality">
                         <FontAwesomeIcon 
-                            className="text-primary group-hover:text-white text-md transition duration-300 ease-in-out"
+                            className="text-primary group-hover:text-white text-base transition duration-300 ease-in-out"
                             icon={faChevronLeft} 
                         />
                     </Link>
                     <div className="flex flex-col flex-1">
                         <h1 className="text-3xl font-medium text-secondary whitespace-nowrap">Domaines d'évaluation</h1>
-                        <p className="text-md font-normal text-primary/60 tracking-widest whitespace-nowrap uppercase">Liste des thématiques</p>
+                        <p className="text-base font-normal text-primary/60 tracking-widest whitespace-nowrap uppercase">Liste des thématiques</p>
                     </div>
                     <div className="flex flex-row flex-wrap gap-4">
                         <Link 
@@ -106,7 +106,7 @@ const Settings: NextPage<Props> = (
                                 icon={faDownload} 
                                 className="text-sm text-primary"
                             />
-                            <span className="text-md font-normal text-primary whitespace-nowrap">Exporter la liste des thématiques</span>
+                            <span className="text-sm font-normal text-primary whitespace-nowrap">Exporter la liste des thématiques</span>
                         </Link>
                         <Button
                             icon={faPlus}
@@ -169,7 +169,7 @@ const Settings: NextPage<Props> = (
                                 }}
                             />
                         </div>
-                        <p className="text-md font-normal text-primary/60">Aucun domaine d'évaluation</p>
+                        <p className="text-base font-normal text-primary/60">Aucun domaine d'évaluation</p>
                     </div>
                 }
             </main>

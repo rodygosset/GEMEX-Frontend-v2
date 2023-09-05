@@ -76,6 +76,14 @@ const CurrentCycleWidget = (
                 cycle ?
                 <div className="h-full min-h-[210px] flex flex-col items-center justify-center">
                     <BarChart
+                        options={{
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 20
+                                }
+                            }
+                        }}
                         label="Note qualité"
                         data={getChartData(cycle)}
                         labels={getLabels(cycle)}
@@ -98,7 +106,7 @@ const CurrentCycleWidget = (
                             }}
                         />
                     </div>
-                    <p className="text-md font-normal text-primary/60">Aucun cycle en cours</p>
+                    <p className="text-base font-normal text-primary/60">Aucun cycle en cours</p>
                 </div>
             }
 

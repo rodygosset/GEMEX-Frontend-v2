@@ -44,7 +44,7 @@ const ThematiqueViewModal = (
     return (
         <ModalContainer isVisible={isOpen}>
             <section
-                className="flex flex-col gap-8 min-w-[400px] overflow-auto bg-white rounded-2xl p-[32px]">
+                className="flex flex-col gap-8 min-w-[400px] max-w-3xl overflow-auto bg-white rounded-2xl p-[32px]">
                     {
                         thematique ?
                         <div className="w-full flex flex-col gap-8">
@@ -88,11 +88,11 @@ const ThematiqueViewModal = (
                             <div className="w-full h-[1px] bg-primary/20 my-2"></div>
                             <div className="flex flex-col w-full">
                                 <h4 className="text-xs font-medium text-primary/60 uppercase tracking-wider">Description</h4>
-                                <p className="text-md font-normal text-primary">{thematique.description}</p>
+                                <p className="text-base font-normal text-primary">{thematique.description}</p>
                             </div>
                             <div className="flex flex-col w-full">
                                 <h4 className="text-xs font-medium text-primary/60 uppercase tracking-wider">Question générale</h4>
-                                <p className="text-md font-normal text-primary">{thematique.question}</p>
+                                <p className="text-base font-normal text-primary">{thematique.question}</p>
                                 <span className="text-sm font-normal text-secondary/80">Pondération à {thematique.question_ponderateur}</span>
                             </div>
                             <div className="w-full h-[1px] bg-primary/20 my-2"></div>
@@ -121,7 +121,7 @@ const ThematiqueViewModal = (
                                                             <span className="text-sm font-normal text-primary/60">Obligatoire</span>
                                                         }
                                                         </p>
-                                                        <p className="text-md font-normal text-primary">{question.question}</p>
+                                                        <p className="text-base font-normal text-primary">{question.question}</p>
                                                     </li>
                                                     {
                                                         index !== thematique.questions.length - 1 ?
@@ -133,7 +133,7 @@ const ThematiqueViewModal = (
                                         }
                                     </ul>
                                     :
-                                    <p className="text-md font-normal text-primary/80">Aucune question spécifique</p>
+                                    <p className="text-base font-normal text-primary/80">Aucune question spécifique</p>
                                 }
                             </div>
                         </div>
@@ -153,7 +153,7 @@ const ThematiqueViewModal = (
                                     }}
                                 />
                             </div>
-                            <p className="text-md font-normal text-primary/60">Aucune thématique sélectionnée</p>
+                            <p className="text-base font-normal text-primary/60">Aucune thématique sélectionnée</p>
                         </div>
                     }
                     <Button

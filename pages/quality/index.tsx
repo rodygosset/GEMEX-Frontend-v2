@@ -56,7 +56,7 @@ const Home: NextPage<Props> = (
                     <FontAwesomeIcon icon={faChartPie} className="text-5xl text-primary" />
                     <div className="flex flex-col">
                         <h1 className="text-2xl text-primary font-semibold h-fit whitespace-nowrap">Taux Qualité</h1>
-                        <p className="text-md text-primary text-opacity-40 tracking-widest whitespace-nowrap">TABLEAU DE BORD</p>
+                        <p className="text-base text-primary text-opacity-40 tracking-widest whitespace-nowrap">TABLEAU DE BORD</p>
                     </div>
                 </div>
                 <Link 
@@ -67,7 +67,7 @@ const Home: NextPage<Props> = (
                         icon={faArrowRight} 
                         className="text-sm text-primary"
                     />
-                    <span className="text-md font-normal text-primary whitespace-nowrap">Historique des évaluations</span>
+                    <span className="text-sm font-normal text-primary whitespace-nowrap">Historique des évaluations</span>
                 </Link>
             </div>
             <div className="w-full h-full flex flex-col gap-4">

@@ -334,7 +334,7 @@ const ThematiqueFormModal = (
                         <div className="w-full h-[1px] bg-primary/10"></div>
                         {
                             questions.length > 0 ?
-                            <ul className="flex flex-col gap-4">
+                            <ul className="flex flex-col gap-4 max-w-3xl">
                             {
                                 questions.map((question, index) => (
                                     <Fragment key={question.id}>
@@ -344,7 +344,7 @@ const ThematiqueFormModal = (
                                                 <div className="flex flex-row flex-wrap gap-2">
                                                     {
                                                         question.titre ?
-                                                        <p className="text-md font-normal text-primary/60">{question.titre}</p>
+                                                        <p className="text-base font-normal text-primary/60">{question.titre}</p>
                                                         : <></>
                                                     }
                                                     {
@@ -353,7 +353,7 @@ const ThematiqueFormModal = (
                                                         : <></>
                                                     }
                                                 </div>
-                                                <p className="text-md font-normal text-primary">{question.question}</p>
+                                                <p className="w-full text-base font-normal text-primary whitespace-wrap">{question.question}</p>
                                             </div>
                                             <Button 
                                                 hasBorders

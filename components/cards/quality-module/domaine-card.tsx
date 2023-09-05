@@ -106,7 +106,7 @@ const DomaineCard = (
                 <div className="flex flex-row gap-4 w-full">
                     <div className="flex flex-col flex-1">
                         <h3 className="text-xl font-bold text-secondary">{domaine.nom}</h3>
-                        <p className="text-md font-normal text-primary/60">{domaine.description}</p>
+                        <p className="text-base font-normal text-primary/60">{domaine.description}</p>
                     </div>
                     <div className="flex flex-row flex-wrap gap-4 max-lg:hidden">
                         <Button
@@ -166,13 +166,14 @@ const DomaineCard = (
                 </div>
                 <ul className="w-full flex flex-col gap-4 sm:mt-8">
                     <li className="w-full flex flex-row items-center max-sm:hidden">
-                        <span className="text-md text-primary/60 font-normal flex-1">Thématiques</span>
-                        <span className="text-md text-primary/60 font-normal flex-1">Dernière évaluation</span>
-                        <span className="text-md text-primary/60 font-normal flex-1">Périodicité</span>
+                        <span className="text-base text-primary/60 font-normal flex-1">Thématiques</span>
+                        <span className="text-base text-primary/60 font-normal flex-1">Dernière évaluation</span>
+                        <span className="text-base text-primary/60 font-normal flex-1">Périodicité</span>
                         <span className="w-[40px] h-[40px]"></span>
                     </li>
                     <div className="w-full h-[1px] bg-primary/10"></div>
                     {
+                        domaine.thematiques.length > 0 ?
                         domaine.thematiques.map((thematique, index) => (
                             <Fragment key={thematique.id}>
                                 <li
@@ -190,15 +191,15 @@ const DomaineCard = (
                                                 </span>
                                                 : <></>
                                             }
-                                            <span className="text-md font-normal text-primary">{thematique.nom}</span>
+                                            <span className="text-base font-normal text-primary">{thematique.nom}</span>
                                         </div>
                                         {
                                             thematiquesEvaluationDates.find(d => d.thematiqueId === thematique.id)?.date ?
-                                            <span className="text-md max-md:text-sm font-normal text-primary/80 flex-1 capitalize">{thematiquesEvaluationDates.find(d => d.thematiqueId === thematique.id)?.date?.toLocaleDateString("fr-fr", { year: "numeric", month: "long", day: "numeric" })}</span> 
+                                            <span className="text-base max-md:text-sm font-normal text-primary/80 flex-1 capitalize">{thematiquesEvaluationDates.find(d => d.thematiqueId === thematique.id)?.date?.toLocaleDateString("fr-fr", { year: "numeric", month: "long", day: "numeric" })}</span> 
                                             :
-                                            <span className="text-md max-md:text-sm font-normal text-primary/80 flex-1">Pas d'évaluation</span>
+                                            <span className="text-base max-md:text-sm font-normal text-primary/80 flex-1">Pas d'évaluation</span>
                                         }
-                                        <span className="text-md max-md:text-sm font-normal text-primary/80 flex-1">
+                                        <span className="text-base max-md:text-sm font-normal text-primary/80 flex-1">
                                             À évaluer 
                                             {
                                                 thematique.periodicite > 1 ?
@@ -246,6 +247,7 @@ const DomaineCard = (
                                 }
                             </Fragment>
                         ))
+                        : <p className="text-base font-normal text-primary/60">Aucune thématique</p>
                     }
                 </ul>
             </li>
