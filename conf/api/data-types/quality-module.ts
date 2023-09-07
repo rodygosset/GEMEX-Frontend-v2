@@ -5,7 +5,7 @@
 export interface Evaluation {
     id: number;
     mois_cycle_id: number;
-    date_rendu_reelle: string;
+    date_rendu_reelle?: string;
     date_rendu: string;
     user_id: number;
     element_id: number;

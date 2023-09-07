@@ -160,7 +160,7 @@ const ChartWidget = (
                             { getLatestMonthData(cycle) }
                             </b> au mois de <span className="lowercase">{ getLatestMonthLabel(cycle) }</span>
                         </span>
-                        <FontAwesomeIcon icon={faCircle} className="text-primary/80 mx-4 text-[0.4rem]" />
+                        <FontAwesomeIcon icon={faCircle} className="text-primary/40 mx-4 text-[0.4rem]" />
                         <span className="text-sm text-primary/80">
                             <b className={getDistanceToGoal(getLatestMonthData(cycle)) < 0 ? "text-error" : getDistanceToGoal(getLatestMonthData(cycle)) < 5 ? "text-warning" : "text-success"}>
                             { getDistanceToGoal(getLatestMonthData(cycle)) }

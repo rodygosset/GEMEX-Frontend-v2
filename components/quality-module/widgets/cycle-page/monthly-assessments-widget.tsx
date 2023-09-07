@@ -51,12 +51,12 @@ const MonthlyAssessmentsWidget = (
                 <h3 className="text-xl font-semibold text-primary">Évaluations mensuelles</h3>
                 <p className="text-base font-normal text-primary/60">Résultats des évaluations des mois passés</p>
             </div>
-            <ul className="w-full flex flex-row flex-wrap gap-4 mt-4">
+            <ul className="w-full gap-4 mt-4 grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))]">
             {
                 cycle.mois_cycle.length > 0 ?
                 cycle.mois_cycle.map(mois => (
                     <li 
-                        className="flex-1 rounded-[8px] hover:bg-primary/10 transition duration-300 ease-in-out cursor-pointer"
+                        className="flex-1 rounded-[8px] hover:bg-primary/5 transition duration-300 ease-in-out cursor-pointer"
                         key={mois.id}>
                         <Link
                             className="w-full flex flex-col p-[16px] whitespace-nowrap" 

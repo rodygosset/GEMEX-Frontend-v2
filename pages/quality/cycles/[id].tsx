@@ -8,8 +8,10 @@ import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request";
 import { GetServerSideProps, NextPage } from "next"
-import { getSession } from "next-auth/react"
+import { getSession, useSession } from "next-auth/react"
 import Link from "next/link";
+import { useState } from "react";
+import useAPIRequest from "@hook/useAPIRequest";
 
 interface Props {
     data: Cycle | null;
@@ -21,15 +23,37 @@ const CyclePage: NextPage<Props> = (
     }: Props
 ) => {
 
+    const [cycle, setCycle] = useState<Cycle | null>(data)
+
+
     // utils
 
     const getCycleYear = () => data ? new Date(data.date_debut).getFullYear() : null
 
     const getLocaleDateString = (date: string) => new Date(date).toLocaleDateString("fr-fr", { year: 'numeric', month: 'long', day: 'numeric' })
 
+
+    // when data is updated, update the state
+    
+    const makeAPIRequest = useAPIRequest()
+    const session = useSession().data as MySession | null
+
+    const refreshCycle = () => {
+        if(!session || !cycle) return
+    
+        makeAPIRequest<Cycle, void>(
+            session,
+            'get',
+            'cycles',
+            `id/${cycle.id}`,
+            undefined,
+            res => setCycle(res.data)
+        )
+    }
+
     // render
 
-    return data ? (
+    return cycle ? (
         <main className="flex flex-col px-[7%] gap-y-16 pt-6">
             <div className="w-full flex flex-row gap-16 flex-wrap">
                 <Link
@@ -46,18 +70,21 @@ const CyclePage: NextPage<Props> = (
                     <h1 className="text-2xl text-primary font-semibold h-fit whitespace-nowrap">{getCycleYear()}</h1>
                     <p className="text-base text-primary uppercase text-opacity-40 tracking-widest whitespace-nowrap">Cycle d'évaluation qualité</p>
                     <p className="text-sm text-primary">
-                        Du {getLocaleDateString(data.date_debut)} au {getLocaleDateString(data.date_fin)}
+                        Du {getLocaleDateString(cycle.date_debut)} au {getLocaleDateString(cycle.date_fin)}
                     </p>
                 </div>
             </div>
             <div className="w-full flex flex-row gap-4 max-lg:flex-col-reverse">
                 <div className="flex flex-col flex-1 flex-grow-[1.3] gap-4">
-                    <MonthlyAssessmentsWidget cycle={data} />
-                    <ExpositionsWidget cycle={data} />
+                    <MonthlyAssessmentsWidget cycle={cycle} />
+                    <ExpositionsWidget 
+                        cycle={cycle} 
+                        onRefresh={refreshCycle}
+                    />
                 </div>
                 <div className="min-w-0 flex flex-col gap-4 flex-1">
-                    <ChartWidget cycle={data} />
-                    <ThematiquesWidget cycle={data} />
+                    <ChartWidget cycle={cycle} />
+                    <ThematiquesWidget cycle={cycle} />
                 </div>
             </div>
         </main>
