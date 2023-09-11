@@ -71,7 +71,7 @@ const Home: NextPage<Props> = (
                 </Link>
             </div>
             <div className="w-full h-full flex flex-col gap-4">
-                <div className="flex flex-row flex-wrap gap-4 min-h-[400px] min-[1070px]:h-[400px]">
+                <div className="flex flex-row flex-wrap gap-4 min-h-[400px] min-[1070px]:h-[400px] items-stretch">
                     <CurrentMonthlyAssessmentWidget 
                         moisCycle={getLatestMonth()}
                         cycleStartDate={getCycleStartDate()}

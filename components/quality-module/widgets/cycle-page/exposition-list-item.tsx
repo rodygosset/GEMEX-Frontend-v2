@@ -144,10 +144,10 @@ const ExpositionListItem = (
 
     return cycleExposition ? (
         <li
-            className="flex-1 rounded-[8px] hover:bg-primary/5 transition duration-300 ease-in-out flex flex-row items-center p-[16px] whitespace-nowrap"
+            className="flex-1 rounded-[8px] hover:bg-primary/5 transition duration-300 ease-in-out flex flex-row items-center p-[16px] gap-4 whitespace-nowrap"
             key={`${cycle.id}-${expositionId}`}>
                 <div className="flex flex-col w-full">
-                    <span className="text-base font-semibold text-primary flex flex-row gap-2 items-center">
+                    <span className="w-full whitespace-normal text-base font-semibold text-primary flex flex-row gap-2 items-center">
                         { cycleExposition.nom }
                         {
                             cycleExposition.note ?
