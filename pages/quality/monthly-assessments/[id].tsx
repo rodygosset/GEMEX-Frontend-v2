@@ -1,3 +1,4 @@
+import ChartWidget from "@components/quality-module/widgets/monthly-assessment-page/chart-widget";
 import { Cycle, MoisCycle } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
@@ -105,6 +106,9 @@ const MonthlyAssessmentPage: NextPage<Props> = (
                     <h1 className="text-2xl text-primary font-semibold h-fit whitespace-nowrap">{ monthAndYear }</h1>
                     <p className="text-base text-primary uppercase text-opacity-40 tracking-widest whitespace-nowrap">évaluation mensuelle</p>
                 </div>
+            </div>
+            <div className="w-full flex flex-row max-md:flex-col">
+                <ChartWidget moisCycle={moisCycle} />
             </div>
         </main>
     ) : <></>
