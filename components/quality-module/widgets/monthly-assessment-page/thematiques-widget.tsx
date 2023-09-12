@@ -1,17 +1,18 @@
-import SectionContainer from "@components/layout/quality/section-container"
-import { Cycle, Domaine, Thematique } from "@conf/api/data-types/quality-module"
+import SectionContainer from "@components/layout/quality/section-container";
+import { ScrollArea } from "@components/radix/scroll-area";
+import { MoisCycle, Thematique } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
 import useAPIRequest from "@hook/useAPIRequest";
 import { useSession } from "next-auth/react";
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react";
 
 interface Props {
-    cycle: Cycle;
+    moisCycle: MoisCycle;
 }
 
 const ThematiquesWidget = (
     {
-        cycle
+        moisCycle
     }: Props
 ) => {
 
@@ -19,34 +20,37 @@ const ThematiquesWidget = (
 
     const [thematiques, setThematiques] = useState<Thematique[]>([])
 
-    // get all Thematique objects from the API
+    // get the evaluations when the moisCycle changes
 
-    const makeAPIRequest = useAPIRequest()
     const session = useSession().data as MySession | null
+    const makeAPIRequest = useAPIRequest()
 
     useEffect(() => {
-
         if(!session) return
 
-        makeAPIRequest<Domaine[], void>(
+        // get the Thematique objects from the API
+        // which have not been evaluated during this month
+        
+        const thematiqueIds = [...moisCycle.evaluations.map(evaluation => evaluation.thematique_id), ...moisCycle.thematiques.map(thematique => thematique.thematique_id)]
+
+        makeAPIRequest<Thematique[], void>(
             session,
             "get",
-            "domaines",
+            "thematiques",
             undefined,
             undefined,
-            res => setThematiques(res.data.map(d => d.thematiques).flat().filter(t => {
-                // console.log(`thematique ${t.nom} shouldEvaluate: ${shouldEvaluate(t)}`)
-                return shouldEvaluate(t) || isUpcoming(t)
-            }))
+            res => {
+                const data = res.data.filter(thematique => !thematiqueIds.includes(thematique.id))
+                setThematiques([...data, ...data, ...data])
+            }
         )
 
-    }, [session])
+    }, [moisCycle, session])
 
     // utils
 
     const getLatestEvaluationDate = (thematiqueId: number) => {
-        const evaluations = cycle.mois_cycle.map(mois => mois.evaluations).flat()
-        const thematiqueEvaluations = evaluations.filter(evaluation => evaluation.thematique_id === thematiqueId)
+        const thematiqueEvaluations = moisCycle.evaluations.filter(evaluation => evaluation.thematique_id === thematiqueId)
         if(thematiqueEvaluations.length === 0) return null
         const latestEvaluation = thematiqueEvaluations.reduce((prev, curr) => {
             const prevDate = prev.date_rendu_reelle ? new Date(prev.date_rendu_reelle) : new Date(prev.date_rendu)
@@ -66,32 +70,24 @@ const ThematiquesWidget = (
         return new Date() >= nextEvalDate
     }
 
-    // true if the next evaluation date is max 3 months away
-
-    const isUpcoming = (thematique: Thematique) => {
-        const latestEvalDate = getLatestEvaluationDate(thematique.id)
-        if(!latestEvalDate) return false
-        const nextEvalDate = new Date(latestEvalDate)
-        nextEvalDate.setMonth(nextEvalDate.getMonth() + thematique.periodicite)
-        return new Date() <= nextEvalDate && new Date() >= new Date(nextEvalDate.getFullYear(), nextEvalDate.getMonth() - 3, nextEvalDate.getDate())
-    }
-
     // render
 
     return (
         <SectionContainer>
             <div className="flex flex-col">
                 <h3 className="text-xl font-semibold text-primary">Prochaines thématiques</h3>
-                <p className="text-base font-normal text-primary/60">Prochaines thématiques à évaluer</p>
+                <p className="text-base font-normal text-primary/60">Thématiques non évaluées durant ce mois</p>
             </div>
-            <ul className="w-full flex flex-col gap-4 sm:mt-8">
-                <li className="w-full flex flex-row items-center max-sm:hidden">
+            <ul className="w-full flex flex-col gap-4 md:mt-8 h-full flex-grow-0">
+                <li className="w-full flex flex-row items-center max-md:hidden">
                     <span className="text-base text-primary/60 font-normal flex-1">Thématiques</span>
                     <span className="text-base text-primary/60 font-normal flex-1">Dernière évaluation</span>
                     <span className="text-base text-primary/60 font-normal flex-1">Périodicité</span>
                     <span className="w-[40px] h-[40px]"></span>
                 </li>
                 <div className="w-full h-[1px] bg-primary/10"></div>
+
+                <ScrollArea className="flex h-[280px] flex-col gap-4">
                 {
                     thematiques.length > 0 ?
                     thematiques.map((thematique, index) => (
@@ -100,9 +96,9 @@ const ThematiquesWidget = (
                                 className="w-full flex flex-row items-center gap-4 py-[16px]">
                                 <div 
                                     className="w-full flex flex-row items-center flex-1
-                                            max-sm:flex-col max-sm:items-start">
+                                            max-md:flex-col max-md:items-start">
                                     <div className="flex flex-row flex-wrap gap-4 flex-1 items-center
-                                            max-sm:flex-col max-sm:items-start">
+                                            max-md:flex-col max-md:items-start">
                                         {
                                             shouldEvaluate(thematique) ?
                                             <span className="text-sm font-normal text-warning px-[8px] py-[4px]
@@ -139,6 +135,7 @@ const ThematiquesWidget = (
                     ))
                     : <p className="text-base font-normal text-primary/60">Aucune thématique à évaluer</p>
                 }
+                </ScrollArea>
             </ul>
         </SectionContainer>
     )

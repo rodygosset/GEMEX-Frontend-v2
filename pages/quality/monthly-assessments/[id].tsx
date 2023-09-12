@@ -1,4 +1,5 @@
 import ChartWidget from "@components/quality-module/widgets/monthly-assessment-page/chart-widget";
+import ThematiquesWidget from "@components/quality-module/widgets/monthly-assessment-page/thematiques-widget";
 import { Cycle, MoisCycle } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
@@ -8,7 +9,7 @@ import SSRmakeAPIRequest from "@utils/ssr-make-api-request";
 import { GetServerSideProps, NextPage } from "next";
 import { getSession, useSession } from "next-auth/react";
 import Link from "next/link";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 
 
@@ -107,8 +108,9 @@ const MonthlyAssessmentPage: NextPage<Props> = (
                     <p className="text-base text-primary uppercase text-opacity-40 tracking-widest whitespace-nowrap">évaluation mensuelle</p>
                 </div>
             </div>
-            <div className="w-full flex flex-row max-md:flex-col">
+            <div className="w-full flex flex-row max-lg:flex-col gap-4">
                 <ChartWidget moisCycle={moisCycle} />
+                <ThematiquesWidget moisCycle={moisCycle} />
             </div>
         </main>
     ) : <></>

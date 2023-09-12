@@ -2,7 +2,6 @@ import Select from "@components/form-elements/select"
 import TextInput from "@components/form-elements/text-input"
 import GoBackButton from "@components/go-back-button"
 import HorizontalSeperator from "@components/utils/horizontal-seperator"
-import VerticalScrollBar from "@components/utils/vertical-scrollbar"
 import { itemTypes } from "@conf/api/search"
 import { createFormConf, FormElement, FormFieldsObj } from "@conf/create"
 import useAPIRequest from "@hook/useAPIRequest"
@@ -21,6 +20,7 @@ import Button from "@components/button"
 import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons"
 import { MySession } from "@conf/utility-types"
 import { useSession } from "next-auth/react"
+import { ScrollArea } from "@components/radix/scroll-area"
 
 
 // custom styles for the fiche type select
@@ -458,7 +458,7 @@ const CreateTemplate = (
                     </Button>
                 </div>
                 <HorizontalSeperator/>
-                <VerticalScrollBar className={styles.contentScrollContainer}>
+                <ScrollArea className={styles.contentScrollContainer}>
                     {
                         formData ?
                         <CreateForm
@@ -471,7 +471,7 @@ const CreateTemplate = (
                         :
                         <></>
                     }
-                </VerticalScrollBar>
+                </ScrollArea>
             </section>
         </main>
     )

@@ -1,7 +1,6 @@
 import TextInput from "@components/form-elements/text-input"
 import GoBackButton from "@components/go-back-button"
 import HorizontalSeperator from "@components/utils/horizontal-seperator"
-import VerticalScrollBar from "@components/utils/vertical-scrollbar"
 import { itemTypes } from "@conf/api/search"
 import { createFormConf, FormElement, FormFieldsObj } from "@conf/create"
 import useAPIRequest from "@hook/useAPIRequest"
@@ -17,6 +16,7 @@ import Button from "@components/button"
 import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons"
 import { useSession } from "next-auth/react"
 import { MySession } from "@conf/utility-types"
+import { ScrollArea } from "@components/radix/scroll-area"
 
 interface Props {
     itemType: string;
@@ -395,7 +395,7 @@ const EditTemplate = (
                     </Button>
                 </div>
                 <HorizontalSeperator/>
-                <VerticalScrollBar className={styles.contentScrollContainer}>
+                <ScrollArea className={styles.contentScrollContainer}>
                     {
                         formData ?
                         <CreateForm
@@ -407,7 +407,7 @@ const EditTemplate = (
                         :
                         <></>
                     }
-                </VerticalScrollBar>
+                </ScrollArea>
             </section>
         </main>
     )

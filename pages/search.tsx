@@ -4,7 +4,6 @@ import SearchBar from "@components/form-elements/search-bar"
 import Pagination from "@components/pagination"
 import SearchFilters from "@components/search-filters"
 import LoadingIndicator from "@components/utils/loading-indicator"
-import VerticalScrollBar from "@components/utils/vertical-scrollbar"
 import { searchConf, SearchResultsMetaData } from "@conf/api/search"
 import { MySession } from "@conf/utility-types"
 import { faList, faTableCellsLarge } from "@fortawesome/free-solid-svg-icons"
@@ -26,6 +25,7 @@ import { authOptions } from "./api/auth/[...nextauth]"
 
 import Image from "next/image"
 import { useSession } from "next-auth/react"
+import { ScrollArea } from "@components/radix/scroll-area"
 
 interface Props {
     queryItemType: string;
@@ -347,7 +347,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                                     </Button>
                                 </div>
                             </div>
-                            <VerticalScrollBar className={styles.scrollContainer}>
+                            <ScrollArea className={styles.scrollContainer}>
                                 <ul 
                                     id={styles.searchResults} 
                                     className={getResultsContainerClassNames()}>
@@ -365,7 +365,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                                     })
                                 }
                                 </ul>
-                            </VerticalScrollBar>
+                            </ScrollArea>
                         </>
                         :
                         // while loading

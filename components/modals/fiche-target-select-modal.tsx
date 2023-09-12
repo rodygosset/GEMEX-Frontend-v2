@@ -9,7 +9,6 @@ import { useGetMetaData } from "@hook/useGetMetaData";
 import SearchFilters from "@components/search-filters";
 import LoadingIndicator from "@components/utils/loading-indicator";
 import Pagination from "@components/pagination";
-import VerticalScrollBar from "@components/utils/vertical-scrollbar";
 import useAPIRequest from "@hook/useAPIRequest";
 import { AxiosResponse } from "axios";
 import { resultsPerPage } from "pages/search";
@@ -18,6 +17,7 @@ import { faList, faTableCellsLarge } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { MySession } from "@conf/utility-types";
+import { ScrollArea } from "@components/radix/scroll-area";
 
 
 interface Props {
@@ -302,7 +302,7 @@ const FicheTargetSelectModal = (
                                 </Button>
                             </div>
                         </div>
-                        <VerticalScrollBar className={styles.scrollContainer}>
+                        <ScrollArea className={styles.scrollContainer}>
                             <ul 
                                 id={styles.searchResults} 
                                 className={getResultsContainerClassNames()}>
@@ -323,7 +323,7 @@ const FicheTargetSelectModal = (
                                 })
                             }
                             </ul>
-                        </VerticalScrollBar>
+                        </ScrollArea>
                     </>
                     :
                     // while loading

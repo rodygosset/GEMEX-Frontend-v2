@@ -2,7 +2,6 @@ import Button from "@components/button";
 import FileCard from "@components/cards/file-card";
 import SearchBar from "@components/form-elements/search-bar";
 import LoadingIndicator from "@components/utils/loading-indicator";
-import VerticalScrollBar from "@components/utils/vertical-scrollbar";
 import { Fichier } from "@conf/api/data-types/fichier";
 import { faList, faTableCellsLarge, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import styles from "@styles/components/modals/file-picker.module.scss"
@@ -14,6 +13,7 @@ import { useSession } from "next-auth/react";
 import { MySession } from "@conf/utility-types";
 import { DynamicObject } from "@utils/types";
 import DeleteDialog from "./delete-dialog";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 interface Props {
     isVisible: boolean;
@@ -229,7 +229,7 @@ const FilePicker = (
                     // don't display any content
                     // if there aren't no search results
                     files.length > 0 && !isLoading ?
-                    <VerticalScrollBar className={styles.scrollContainer}>
+                    <ScrollArea className={styles.scrollContainer}>
                         <ul className={getFileListClassNames()}>
                         {
                             files.map(file => { 
@@ -246,7 +246,7 @@ const FilePicker = (
                             })
                         }
                         </ul>
-                    </VerticalScrollBar>
+                    </ScrollArea>
                     :
                     // while loading
                     // display a loading indicator

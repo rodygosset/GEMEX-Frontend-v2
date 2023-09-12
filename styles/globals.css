@@ -16,16 +16,7 @@ body {
 	background: rgba(41, 98, 255, 0.05); 
 }
 
-.scroll {
-	overflow: initial !important;
-	scrollbar-width: initial;
-	-ms-overflow-style: initial;
-}
-
 html, body, div#__next {
-	overflow: initial !important;
-	scrollbar-width: initial;
-	-ms-overflow-style: initial;
 	min-height: 100vh;
 	height: fit-content;
 	min-width: 100vw;
@@ -33,9 +24,6 @@ html, body, div#__next {
 	padding: 0;
 	margin: 0;
 	font-family: 'Josefin Sans';
-	/* overflow: initial !important; */
-	/* scrollbar-width: initial; */
-	/* -ms-overflow-style: initial; */
 }
 
 a {
@@ -45,14 +33,9 @@ a {
 
 * {
 	box-sizing: border-box;
-	-ms-overflow-style: none;
-	scrollbar-width: none;
 	font-family: 'Josefin Sans';
 }
 
-*:not(.scroll)::-webkit-scrollbar {
-	display: none;
-}
 
 div#__next {
 	padding-bottom: 64px;

@@ -14,7 +14,7 @@ import NumericFilter from "./search-filters/numeric-filter"
 import SelectFilter from "./search-filters/select-filter"
 import TextFilter from "./search-filters/text-filter"
 import TimeDeltaFilter from "./search-filters/time-delta-filter"
-import VerticalScrollBar from "./utils/vertical-scrollbar"
+import { ScrollArea } from "./radix/scroll-area"
 
 interface Props {
     className?: string;
@@ -203,14 +203,14 @@ const SearchFilters = (
     const renderForm = () => {
         return (
             <>
-                <VerticalScrollBar className={styles.filtersContainer}>
+                <ScrollArea className={styles.filtersContainer}>
                     {
                         // Generate the form
                         // for each SearchFilter
                         // render a component according to its type
                         renderFilters()
                     }
-                </VerticalScrollBar>
+                </ScrollArea>
                 {
                     !hideSearchButton ?
                     /* Submit button */

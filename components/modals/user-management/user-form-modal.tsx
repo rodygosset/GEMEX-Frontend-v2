@@ -81,9 +81,7 @@ const UserFormModal = (
 
     const makeAPIRequest = useAPIRequest()
 
-    const { data: sessionData, status } = useSession()
-
-    const session = (sessionData as MySession | null)
+    const session = useSession().data as MySession | null
 
     useEffect(() => {
 

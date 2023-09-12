@@ -9,6 +9,7 @@ module.exports = {
   images: {
       domains: [
           "localhost",
+          "127.0.0.1",
           "vm-dev-gemex.citepro.cite-sciences.fr",
           "host.docker.internal",
           "vm-gemex.citepro.cite-sciences.fr"
