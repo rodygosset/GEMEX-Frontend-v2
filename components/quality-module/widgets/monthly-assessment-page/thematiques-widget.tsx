@@ -40,8 +40,7 @@ const ThematiquesWidget = (
             undefined,
             undefined,
             res => {
-                const data = res.data.filter(thematique => !thematiqueIds.includes(thematique.id))
-                setThematiques([...data, ...data, ...data])
+                setThematiques(res.data.filter(thematique => !thematiqueIds.includes(thematique.id)))
             }
         )
 

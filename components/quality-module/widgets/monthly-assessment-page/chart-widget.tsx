@@ -1,6 +1,6 @@
 import BarChart from "@components/charts/bar-chart";
 import SectionContainer from "@components/layout/quality/section-container";
-import { MoisCycle, Thematique } from "@conf/api/data-types/quality-module";
+import { Cycle, Evaluation, MoisCycle, Thematique } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -51,17 +51,68 @@ const ChartWidget = (
     
     // effects
 
+
+    const getThematiqueNote = async (id: number) => {
+        if(!session || !moisCycle) return
+
+        // get all the Evaluations for the given thematique
+        // and filter out those that aren't part of the current cycle
+        // then keep only the notes from the latest monthly assessment
+
+        const currentCycle = await makeAPIRequest<Cycle, Cycle>(
+            session,
+            "get",
+            "cycles",
+            `id/${moisCycle.cycle_id}`,
+            undefined,
+            res => res.data
+        )
+
+        if(!currentCycle || currentCycle instanceof Error) return
+
+        const note = await makeAPIRequest<Evaluation[], number>(
+            session,
+            "post",
+            "evaluations",
+            "search",
+            {
+                thematiques: [id],
+            },
+            res => {
+                const evals = res.data.filter(e => 
+                    e.note
+                    && currentCycle.mois_cycle.find(moisCycle => moisCycle.id === e.mois_cycle_id)
+                )
+                const latestMonthlyAssessmentId = Math.max(...evals.map(e => e.mois_cycle_id))
+                return evals.filter(e => e.mois_cycle_id == latestMonthlyAssessmentId).reduce((acc, curr) => acc + (curr.note || 0), 0) / currentCycle.mois_cycle.length
+            }
+        )
+
+        return note && !(note instanceof Error) ? note : 0
+    }
+
     useEffect(() => {
         if(!session) return
-        getThematiques().then(thematiques => thematiques && !(thematiques instanceof Error) ? 
-            setThematiques(thematiques.map(thematique => {
-                return {
+
+        const getNote = (moisCycle: MoisCycle, thematiqueId: number) => {
+            let note = moisCycle.thematiques.find(moisCycleThematique => moisCycleThematique.thematique_id === thematiqueId)?.note
+            if(typeof note === "number") return note
+            return getThematiqueNote(thematiqueId)
+        }
+
+        getThematiques().then(async thematiques => { 
+            if(!thematiques || thematiques instanceof Error) return
+            const data: ThematiqueData[] = []
+            for(const thematique of thematiques) {
+                const note = await getNote(moisCycle, thematique.id)
+                data.push({
                     id: thematique.id,
                     nom: thematique.nom,
-                    note: moisCycle.thematiques.find(moisCycleThematique => moisCycleThematique.thematique_id === thematique.id)?.note || 0
-                }
-            }))
-            : null)
+                    note: note || 0
+                })
+            }
+            setThematiques(data)
+        })
     }, [session])
 
     // useful functions

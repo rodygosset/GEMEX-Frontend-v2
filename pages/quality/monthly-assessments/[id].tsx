@@ -1,8 +1,9 @@
+import Button from "@components/button";
 import ChartWidget from "@components/quality-module/widgets/monthly-assessment-page/chart-widget";
 import ThematiquesWidget from "@components/quality-module/widgets/monthly-assessment-page/thematiques-widget";
 import { Cycle, MoisCycle } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faDownload, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAPIRequest from "@hook/useAPIRequest";
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request";
@@ -111,6 +112,25 @@ const MonthlyAssessmentPage: NextPage<Props> = (
             <div className="w-full flex flex-row max-lg:flex-col gap-4">
                 <ChartWidget moisCycle={moisCycle} />
                 <ThematiquesWidget moisCycle={moisCycle} />
+            </div>
+            <div className="w-full flex flex-row gap-4 justify-between flex-wrap">
+                <div className="flex flex-col">
+                    <h3 className="text-xl font-semibold text-primary">Evaluations</h3>
+                    <p className="text-base font-normal text-primary/60">Gestion des évaluation pour le mois de { monthAndYear }</p>
+                </div>
+                <div className="flex flex-row gap-4 flex-wrap">
+                    <Button
+                        icon={faDownload}
+                        role="secondary"
+                        onClick={() => {}}>
+                            Exporter les commentaires
+                    </Button>
+                    <Button
+                        icon={faPlus}
+                        onClick={() => {}}>
+                            Nouvelle évaluation
+                    </Button>
+                </div>
             </div>
         </main>
     ) : <></>
