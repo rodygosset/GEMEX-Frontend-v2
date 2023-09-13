@@ -13,7 +13,7 @@ import { useSession } from "next-auth/react";
 import { MySession } from "@conf/utility-types";
 import { DynamicObject } from "@utils/types";
 import DeleteDialog from "./delete-dialog";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { ScrollArea } from "@components/radix/scroll-area";
 
 interface Props {
     isVisible: boolean;
@@ -229,7 +229,7 @@ const FilePicker = (
                     // don't display any content
                     // if there aren't no search results
                     files.length > 0 && !isLoading ?
-                    <ScrollArea className={styles.scrollContainer}>
+                    <ScrollArea className={"w-full h-[210px]"}>
                         <ul className={getFileListClassNames()}>
                         {
                             files.map(file => { 

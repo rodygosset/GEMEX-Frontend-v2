@@ -1,5 +1,6 @@
 import Button from "@components/button";
 import ChartWidget from "@components/quality-module/widgets/monthly-assessment-page/chart-widget";
+import EvaluationsWidget from "@components/quality-module/widgets/monthly-assessment-page/evaluations-widget";
 import ThematiquesWidget from "@components/quality-module/widgets/monthly-assessment-page/thematiques-widget";
 import { Cycle, MoisCycle } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
@@ -132,6 +133,7 @@ const MonthlyAssessmentPage: NextPage<Props> = (
                     </Button>
                 </div>
             </div>
+            <EvaluationsWidget moisCycle={moisCycle} onRefresh={refreshMoisCycle} />
         </main>
     ) : <></>
 

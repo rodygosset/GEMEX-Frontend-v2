@@ -1,5 +1,5 @@
 
-import { faChartSimple, faFileCirclePlus, faFileLines, faFolderOpen, faGem, faUsers } from "@fortawesome/free-solid-svg-icons"
+import { faChartSimple, faFileAlt, faFileCirclePlus, faFileLines, faFolderOpen, faGem, faUsers } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/layout/header.module.scss"
 import { useRouter } from "next/router"
@@ -11,17 +11,15 @@ import CreateButton from "./header/create-button"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
 import { MySession } from "@conf/utility-types"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import { Context } from "@utils/context"
 import FilePicker from "@components/modals/file-picker"
+import { NavMenu, NavMenuItem, NavMenuItemType } from "@components/radix/nav-menu"
+import { NavItem, NavSheet } from "@components/radix/nav-sheet"
+import { creatableItemsList } from "@conf/general"
 
 
-interface NavLink {
-    icon: IconProp;
-    text: string;
-    link?: string;
-    onClick: () => void;
-}
+
 
 const Header = () => {
 
@@ -31,6 +29,16 @@ const Header = () => {
 
     const user = (session.data as MySession | null)?.user
     const userRole = (session.data as MySession | null)?.userRole
+
+    // if the user doesn't have create permission on any of the items above
+    // or on Fiche objects
+    // don't show the create button
+
+    const getAuthorizedCreatableItems = () => {
+        return creatableItemsList.filter(item => {
+            return userRole?.permissions?.includes(item.permission)
+        })
+    }
 
     // don't show the nav bar on specific routes
 
@@ -53,53 +61,67 @@ const Header = () => {
 
     // link to be displayed in the nav
 
+    const shouldShowQualityLink = () => (
+        userRole && userRole.permissions.includes("qualite") 
+    )
+
     const shouldShowManageLink = () => (
-        userRole && userRole.permissions.includes("manage") &&
-        !router.pathname.includes("user-management-dashboard")
+        userRole && userRole.permissions.includes("manage") 
     )
 
     const shouldShouldAvailabilityRatioModuleLink = () => (
-        userRole && userRole.permissions.includes("rapports") &&
-        !router.pathname.includes("availability-ratio-reports")
+        userRole && userRole.permissions.includes("rapports")
     )
 
 
-    const manageUsersLink: NavLink = {
-        icon: faUsers,
-        text: "Utilisateurs",
-        link: "/user-management-dashboard",
-        onClick: () => router.push("/user-management-dashboard")
+
+    const manageQualityItem: NavMenuItemType = {
+        icon: faChartSimple,
+        label: "Qualité",
+        href: "/quality",
+        value: "quality"
     }
 
-    const availabilityRationModuleLink: NavLink = {
-        icon: faChartSimple,
-        text: "Taux de disponibilité",
-        link: "/availability-ratio-reports",
-        onClick: () => router.push("/availability-ratio-reports")
+    const manageUsersItem: NavMenuItemType = {
+        icon: faUsers,
+        label: "Utilisateurs",
+        href: "/user-management-dashboard",
+        value: "users"
     }
-    
-    const navLinks: NavLink[] = [
+
+    const availabilityRatioModuleItem: NavMenuItemType = {
+        icon: faChartSimple,
+        label: "Taux de disponibilité",
+        href: "/availability-ratio-reports",
+        value: "availability-ratio-reports"
+    }
+
+    const navItems: NavMenuItemType[] = [
+        ...getAuthorizedCreatableItems().map(item => ({
+            icon: item.icon,
+            label: `Créer ${item.label}`,
+            href: `/create/${item.value}`,
+            value: item.value
+        })),
+        // only show the link to the quality module if the user's a manager
+        ... shouldShowQualityLink() ? [manageQualityItem] : [],
         // only show the link to the user management page if the user's a manager
-        ... shouldShowManageLink() ? [manageUsersLink] : [],
+        ... shouldShowManageLink() ? [manageUsersItem] : [],
         // only show the link to the availability ratio module if the user's a manager
-        ... shouldShouldAvailabilityRatioModuleLink() ? [availabilityRationModuleLink] : [],
+        ...shouldShouldAvailabilityRatioModuleLink() ? [availabilityRatioModuleItem] : [],
         {
             icon: faFolderOpen,
-            text: "Mes fichiers",
-            onClick: () => setShowFileExplorer(true)
+            label: "Mes fichiers",
+            onClick: () => setShowFileExplorer(true),
+            value: "files"
         },
         {
             icon: faFileLines,
-            text: "Mes fiches",
-            link: `/search?item=fiches&auteur_id=${user?.id}`,
-            onClick: () => router.push(`/search?item=fiches&auteur_id=${user?.id}`)
-        },
-        {
-            icon: faFileCirclePlus,
-            text: "Create",
-            onClick: () => {}
+            label: "Mes fiches",
+            href: `/search?item=fiches&auteur_id=${user?.id}`,
         }
     ]
+
     // render
 
     return (
@@ -111,40 +133,13 @@ const Header = () => {
                     <FontAwesomeIcon icon={faGem} />
                     GEMEX
                 </Link>
-                <nav>
-                    <ul className={styles.navList}>
-                        {
-                            navLinks.map(({icon, text, link, onClick}, index) => {
-                                return (
-                                    <li key={index}>
-                                        {
-                                            text == "Create" ?
-                                            <CreateButton/>
-                                            :
-                                            <Button
-                                                icon={icon}
-                                                role="tertiary"
-                                                onClick={onClick}>
-                                            {
-                                                link ?
-                                                <Link href={link}>{text}</Link>
-                                                :
-                                                text
-                                            }
-                                            </Button>
-                                        }
-                                    </li>
-                                )
-                            })
-                        }
-                        <li>
-                            <UserCard/>
-                        </li>
-                        <li>
-                            <LogOutButton/>
-                        </li>
-                    </ul>
-                </nav>
+                <NavSheet>
+                {
+                    navItems.map((item, index) => (
+                        <NavItem key={index} item={item} />
+                    ))
+                }
+                </NavSheet>
             </header>
             <FilePicker 
                 isVisible={showFileExplorer}
