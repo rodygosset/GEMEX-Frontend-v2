@@ -30,7 +30,7 @@ const UserCard = () => {
             {
                 session ?
                 <div className={styles.userInfo}>
-                    <h5>{getUserFullName(session?.user)}</h5>
+                    <h5 className="text-white/80">{getUserFullName(session?.user)}</h5>
                     <p>{userRole ? capitalizeFirstLetter(userRole.titre) : ""}</p>
                 </div>
                 :

@@ -6,7 +6,7 @@ import { Cross2Icon } from "@radix-ui/react-icons"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@utils/tailwind"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faArrowRight, faChevronRight } from "@fortawesome/free-solid-svg-icons"
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons"
 
 
 const Sheet = SheetPrimitive.Root
@@ -74,8 +74,8 @@ const SheetContent = React.forwardRef<
     >
       {children}
       <SheetPrimitive.Close className="absolute right-4 top-4 rounded-[8px] w-[32px] h-[32px] outline-none p-[8px] transition-opacity hover:opacity-100 focus:ring-offset-2 disabled:pointer-events-none
-        hover:bg-primary/10 border border-primary/10 flex justify-center items-center">
-        <FontAwesomeIcon icon={faArrowRight} className="text-sm text-primary" />
+        hover:bg-white/10 border border-white/10 flex justify-center items-center">
+        <FontAwesomeIcon icon={faArrowLeft} className="text-sm text-white" />
       </SheetPrimitive.Close>
     </SheetPrimitive.Content>
   </SheetPortal>
@@ -102,7 +102,7 @@ const SheetFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      "flex flex-col",
       className
     )}
     {...props}

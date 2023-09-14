@@ -7,6 +7,7 @@
 
     @include flex-container(row, nowrap, flex-start, center);
     gap: 16px;
+    margin-bottom: 32px;
 
     .illustrationContainer {
         position: relative;
@@ -19,13 +20,12 @@
         @include flex-col-nowrap;
 
         h5 {
-            @include text-md-semibold;
-            color: $black;
+            @include text-md-regular;
         }
 
         p {
             @include text-sm-medium;
-            color: $black-400;
+            color: $white-400;
         }
     
     }

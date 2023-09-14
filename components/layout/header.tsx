@@ -1,5 +1,5 @@
 
-import { faChartSimple, faFileAlt, faFileCirclePlus, faFileLines, faFolderOpen, faGem, faUsers } from "@fortawesome/free-solid-svg-icons"
+import { faChartSimple, faFileAlt, faFileCirclePlus, faFileLines, faFolderOpen, faGem, faHome, faUsers } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/layout/header.module.scss"
 import { useRouter } from "next/router"
@@ -79,29 +79,40 @@ const Header = () => {
         icon: faChartSimple,
         label: "Qualité",
         href: "/quality",
-        value: "quality"
+        value: "quality",
+        onClick: () => router.push("/quality")
     }
 
     const manageUsersItem: NavMenuItemType = {
         icon: faUsers,
         label: "Utilisateurs",
         href: "/user-management-dashboard",
-        value: "users"
+        value: "users",
+        onClick: () => router.push("/user-management-dashboard")
     }
 
     const availabilityRatioModuleItem: NavMenuItemType = {
         icon: faChartSimple,
         label: "Taux de disponibilité",
         href: "/availability-ratio-reports",
-        value: "availability-ratio-reports"
+        value: "availability-ratio-reports",
+        onClick: () => router.push("/availability-ratio-reports")
     }
 
     const navItems: NavMenuItemType[] = [
+        {
+            icon: faHome,
+            label: "Accueil",
+            href: "/",
+            value: "home",
+            onClick: () => router.push("/")
+        },
         ...getAuthorizedCreatableItems().map(item => ({
             icon: item.icon,
             label: `Créer ${item.label}`,
             href: `/create/${item.value}`,
-            value: item.value
+            value: item.value,
+            onClick: () => router.push(`/create/${item.value}`)
         })),
         // only show the link to the quality module if the user's a manager
         ... shouldShowQualityLink() ? [manageQualityItem] : [],
@@ -133,13 +144,7 @@ const Header = () => {
                     <FontAwesomeIcon icon={faGem} />
                     GEMEX
                 </Link>
-                <NavSheet>
-                {
-                    navItems.map((item, index) => (
-                        <NavItem key={index} item={item} />
-                    ))
-                }
-                </NavSheet>
+                <NavSheet navItems={navItems} />
             </header>
             <FilePicker 
                 isVisible={showFileExplorer}

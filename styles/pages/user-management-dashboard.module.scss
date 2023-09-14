@@ -76,7 +76,7 @@
                 position: sticky;
                 top: $nav-bar-height;
                 background: #f4f7ff;
-                z-index: 100;
+                z-index: 48;
 
                 .row {
                     @include flex-container(row, nowrap, space-between, center);
