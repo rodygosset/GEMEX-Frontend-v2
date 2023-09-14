@@ -1,7 +1,9 @@
 import Button from "@components/button";
+import EvaluationFormModal from "@components/modals/quality-module/evaluation-form-modal";
 import ChartWidget from "@components/quality-module/widgets/monthly-assessment-page/chart-widget";
 import EvaluationsWidget from "@components/quality-module/widgets/monthly-assessment-page/evaluations-widget";
 import ThematiquesWidget from "@components/quality-module/widgets/monthly-assessment-page/thematiques-widget";
+import { Dialog, DialogTrigger } from "@components/radix/dialog";
 import { Cycle, MoisCycle } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
 import { faChevronLeft, faDownload, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -119,18 +121,17 @@ const MonthlyAssessmentPage: NextPage<Props> = (
                     <h3 className="text-xl font-semibold text-primary">Evaluations</h3>
                     <p className="text-base font-normal text-primary/60">Gestion des évaluation pour le mois de { monthAndYear }</p>
                 </div>
-                <div className="flex flex-row gap-4 flex-wrap">
+                <div className="flex flex-row gap-4 flex-wrap items-center">
                     <Button
                         icon={faDownload}
                         role="secondary"
                         onClick={() => {}}>
                             Exporter les commentaires
                     </Button>
-                    <Button
-                        icon={faPlus}
-                        onClick={() => {}}>
-                            Nouvelle évaluation
-                    </Button>
+                    <EvaluationFormModal
+                        mois_cycle_id={moisCycle.id}
+                        onSubmit={() => {}}
+                    />
                 </div>
             </div>
             <EvaluationsWidget moisCycle={moisCycle} onRefresh={refreshMoisCycle} />

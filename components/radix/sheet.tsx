@@ -73,7 +73,7 @@ const SheetContent = React.forwardRef<
       {...props}
     >
       {children}
-      <SheetPrimitive.Close className="absolute right-4 top-4 rounded-[8px] w-[32px] h-[32px] outline-none p-[8px] transition-opacity hover:opacity-100 focus:ring-offset-2 disabled:pointer-events-none
+      <SheetPrimitive.Close className="absolute right-4 top-4 rounded-[8px] w-[32px] h-[32px] outline-none p-[8px] disabled:pointer-events-none
         hover:bg-white/10 border border-white/10 flex justify-center items-center">
         <FontAwesomeIcon icon={faArrowLeft} className="text-sm text-white" />
       </SheetPrimitive.Close>

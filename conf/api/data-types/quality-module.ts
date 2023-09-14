@@ -27,6 +27,14 @@ export interface Evaluation {
     approved: boolean;
 }
 
+export interface EvaluationCreate {
+    mois_cycle_id: number;
+    date_rendu: string;
+    user_id: number;
+    element_id: number;
+    thematique_id: number;
+}
+
 export interface MoisCycle {
     id: number;
     cycle_id: number;
