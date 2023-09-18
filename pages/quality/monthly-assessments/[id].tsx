@@ -93,6 +93,8 @@ const MonthlyAssessmentPage: NextPage<Props> = (
         getMonthAndYear(moisCycle).then(res => setMonthAndYear(res))
     }, [moisCycle, session])
 
+    const [date, setDate] = useState<Date | undefined>(new Date())
+
 
     // render
 
@@ -136,7 +138,6 @@ const MonthlyAssessmentPage: NextPage<Props> = (
                     />
                 </div>
             </div>
-            <DatePicker />
             <EvaluationsWidget moisCycle={moisCycle} onRefresh={refreshMoisCycle} />
         </main>
     ) : <></>

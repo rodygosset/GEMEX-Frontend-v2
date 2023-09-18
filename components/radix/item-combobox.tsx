@@ -14,15 +14,19 @@ import { ScrollArea } from "./scroll-area"
 
 interface Props {
     itemType: string;
+    searchParams?: any;
     onChange: (value: number) => void;
     field: ControllerRenderProps<any, any>;
+    selected?: number;
 }
 
 const ItemComboBox = (
     {
         itemType,
+        searchParams,
         onChange,
-        field
+        field,
+        selected
     }: Props
 ) => {
 
@@ -80,6 +84,17 @@ const ItemComboBox = (
 
         // make our API request
 
+        searchParams ?
+        makeAPIRequest(
+            session,
+            "post",
+            itemType,
+            "search/",
+            searchParams,
+            handleReqSucess,
+            handleReqFailure,
+        )
+        :
         makeAPIRequest(
             session,
             "get",
@@ -90,7 +105,16 @@ const ItemComboBox = (
             handleReqFailure,
         )
 
-    }, [session])    
+    }, [session, searchParams])    
+
+
+    useEffect(() => console.log(`selected: ${selected}`), [selected])
+
+    const getLabel = () => {
+        if(selected) return options.find(option => option.value == selected)?.label
+        else if(field.value) return options.find(option => option.value == field.value)?.label
+        else return "Sélectionner..."
+    }
 
 
     // render
@@ -103,12 +127,9 @@ const ItemComboBox = (
                     role="combobox"
                     className={`flex flex-row justify-between items-center gap-4 px-[16px] py-[8px] rounded-[8px] w-full
                                 bg-primary/10
-                                text-sm ${field.value == 0 ? "text-primary/60" : "text-primary"} `}>
+                                text-sm ${!field.value && !selected ? "text-primary/60" : "text-primary"} `}>
                 {
-                    field.value == 0 ?
-                    "Séléctionner..."
-                    : 
-                    options.find(option => option.value == field.value)?.label
+                    getLabel()
                 }
                 <FontAwesomeIcon icon={faChevronDown} className="text-primary" />
                 </button>
@@ -137,7 +158,8 @@ const ItemComboBox = (
                                         >
                                             {option.label}
                                             {
-                                                option.value == field.value && field.value != 0 ?
+                                                (selected && option.value == selected && selected != 0) ||
+                                                (option.value == field.value && field.value != 0) ?
                                                 <FontAwesomeIcon icon={faCheck} className="text-primary" />
                                                 : <></>
                                             }

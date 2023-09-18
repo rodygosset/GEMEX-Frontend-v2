@@ -22,7 +22,7 @@ function Calendar({
       className={cn("p-[12px]", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-[16px] sm:space-x-[16px] sm:space-y-0",
-        month: "space-y-[16px] text-primary",
+        month: "space-y-[16px] text-primary capitalize",
         caption: "flex justify-center pt-[4px] relative items-center",
         caption_label: "text-sm font-medium",
         nav: "space-x-[4px] flex items-center",
