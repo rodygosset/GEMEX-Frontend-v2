@@ -195,7 +195,7 @@ const ResultsStep = (
                         report.groupes_expositions.length > 0 && selectedGroup ?
                         <>
                             <div className={styles.chartContainer}>  
-                                <div className="relative w-full flex-1 h-[400px]">
+                                <div className="relative w-full min-[992px]:w-[600px] min-[1024px]:w-full h-[300px] min-h-[300px] max-[992px]:h-[400px] max-[992px]:min-h-[400px]">
                                     <BarChart
                                         data={getSelectedGroup()?.expositions.map(expo => expo.taux) || []}
                                         labels={getSelectedGroup()?.expositions.map(expo => expo.nom) || []}
