@@ -32,7 +32,7 @@
         padding-bottom: 30px;
         top: $nav-bar-height;
         background: #f4f7ff;
-        z-index: 100;
+        z-index: 49;
 
         @media (max-width: $bp-sm) {
             @include flex-container(column, nowrap, flex-start, flex-start);
