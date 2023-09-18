@@ -56,8 +56,8 @@ const DomaineCard = (
             },
             // keep the latest one (sort by date_rendu_reelle descending)
             res => {
-                const sortedEvaluations = res.data.sort((a, b) => new Date(b.date_rendu_reelle).getTime() - new Date(a.date_rendu_reelle).getTime())
-                return sortedEvaluations.length > 0 ? new Date(sortedEvaluations[0].date_rendu_reelle) : null
+                const sortedEvaluations = res.data.sort((a, b) => new Date(b.date_rendu).getTime() - new Date(a.date_rendu).getTime())
+                return sortedEvaluations.length > 0 ? new Date(sortedEvaluations[0].date_rendu) : null
             },
             err => {
                 console.log(err)
