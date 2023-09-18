@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "./command"
-import { Popover, PopoverContent, PopoverTrigger } from "./popover"
+import { Popover, PopoverContentScroll, PopoverTrigger } from "./popover"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCheck, faChevronDown } from "@fortawesome/free-solid-svg-icons"
 import useAPIRequest from "@hook/useAPIRequest"
@@ -113,41 +113,42 @@ const ItemComboBox = (
                 <FontAwesomeIcon icon={faChevronDown} className="text-primary" />
                 </button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContentScroll className="w-[200px] p-0">
                 <Command>
                     <CommandInput placeholder="Rechercher..." />
-                    <CommandEmpty>
-                        Aucun résultat
-                    </CommandEmpty>
-                    <CommandGroup>
-                        <ScrollArea className="flex max-h-[280px] flex-col gap-4">
-                        {
-                            options.map((option) => (
-                                <Fragment key={option.value}>
-                                    <CommandItem 
-                                        className="flex flex-row justify-between items-center"
-                                        onSelect={currentValue => {
-                                            const option = options.find(option => option.label.toLowerCase() == currentValue)
-                                            if(option) {
-                                                setIsOpen(false)
-                                                onChange(option.value)
+                    <ScrollArea className="flex max-h-[280px] flex-col gap-4">
+                        <CommandEmpty>
+                            Aucun résultat
+                        </CommandEmpty>
+                        <CommandGroup>
+                            
+                            {
+                                options.map((option) => (
+                                    <Fragment key={option.value}>
+                                        <CommandItem 
+                                            className="flex flex-row justify-between items-center"
+                                            onSelect={currentValue => {
+                                                const option = options.find(option => option.label.toLowerCase() == currentValue)
+                                                if(option) {
+                                                    setIsOpen(false)
+                                                    onChange(option.value)
+                                                }
+                                            }}
+                                        >
+                                            {option.label}
+                                            {
+                                                option.value == field.value && field.value != 0 ?
+                                                <FontAwesomeIcon icon={faCheck} className="text-primary" />
+                                                : <></>
                                             }
-                                        }}
-                                    >
-                                        {option.label}
-                                        {
-                                            option.value == field.value && field.value != 0 ?
-                                            <FontAwesomeIcon icon={faCheck} className="text-primary" />
-                                            : <></>
-                                        }
-                                    </CommandItem>
-                                </Fragment>
-                            ))
-                        }
-                        </ScrollArea>
-                    </CommandGroup>
+                                        </CommandItem>
+                                    </Fragment>
+                                ))
+                            }
+                        </CommandGroup>
+                    </ScrollArea>
                 </Command>
-            </PopoverContent>
+            </PopoverContentScroll>
         </Popover>
     )
 }

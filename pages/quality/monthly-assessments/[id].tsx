@@ -3,6 +3,8 @@ import EvaluationFormModal from "@components/modals/quality-module/evaluation-fo
 import ChartWidget from "@components/quality-module/widgets/monthly-assessment-page/chart-widget";
 import EvaluationsWidget from "@components/quality-module/widgets/monthly-assessment-page/evaluations-widget";
 import ThematiquesWidget from "@components/quality-module/widgets/monthly-assessment-page/thematiques-widget";
+import { Calendar } from "@components/radix/calendar";
+import { DatePicker } from "@components/radix/date-picker";
 import { Dialog, DialogTrigger } from "@components/radix/dialog";
 import { Cycle, MoisCycle } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
@@ -134,6 +136,7 @@ const MonthlyAssessmentPage: NextPage<Props> = (
                     />
                 </div>
             </div>
+            <DatePicker />
             <EvaluationsWidget moisCycle={moisCycle} onRefresh={refreshMoisCycle} />
         </main>
     ) : <></>
