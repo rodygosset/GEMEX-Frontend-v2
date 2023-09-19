@@ -94,7 +94,7 @@ const EvaluationFormModal = (
                     Nouvelle évaluation
                 </DialogTrigger>
             }
-            <DialogContent className="sm:max-h-[90vh] sm:h-fit h-screen w-screen max-w-full">
+            <DialogContent className="sm:max-h-[90vh] sm:h-fit h-screen w-screen sm:w-fit max-sm:max-w-full">
                 <ScrollArea className="w-full sm:h-[80vh] h-[95vh]">
                     <DialogHeader className="border-none pb-0">
                         <DialogTitle>
