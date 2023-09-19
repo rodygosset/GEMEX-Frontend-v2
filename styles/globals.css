@@ -36,12 +36,10 @@ a {
 	font-family: 'Josefin Sans';
 }
 
-
-div#__next {
-	padding-bottom: 64px;
-}
-
 div#__next main {
 	width: 100%;
-	/* height: calc(100vh - $nav-bar-height); */
+}
+
+div#__next main:not(#main-login) {
+	padding-bottom: 64px;
 }

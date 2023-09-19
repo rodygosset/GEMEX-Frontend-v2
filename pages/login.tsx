@@ -75,7 +75,9 @@ const LoginPage: NextPage = () => {
     // render
 
     return (
-        <main className="w-screen h-screen flex justify-center items-center">
+        <main 
+            id="main-login"
+            className="w-screen h-screen flex justify-center items-center pb-0">
             <div className="w-full h-full sm:p-[64px] bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat
                             flex justify-center items-center gap-[32px]">
                 <section className="h-full flex-1 flex flex-col justify-center gap-0 max-lg:hidden">
