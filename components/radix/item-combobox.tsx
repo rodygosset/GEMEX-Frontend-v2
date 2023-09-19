@@ -53,7 +53,9 @@ const ItemComboBox = (
             setIsLoading(false)
             // convert the array of objects into an array of select options
 
-            if(!Array.isArray(res.data) || res.data.length == 0) { return }
+            if(!Array.isArray(res.data)) { return }
+
+            if(res.data.length == 0) setOptions([ { value: 0, label: "Sélectionner..." } ])
 
 
             // get the object property we'll use as the label
@@ -111,8 +113,8 @@ const ItemComboBox = (
     useEffect(() => console.log(`selected: ${selected}`), [selected])
 
     const getLabel = () => {
-        if(selected) return options.find(option => option.value == selected)?.label
-        else if(field.value) return options.find(option => option.value == field.value)?.label
+        if(selected) return options.find(option => option.value == selected)?.label ?? "Sélectionner..."
+        else if(field.value) return options.find(option => option.value == field.value)?.label ?? "Sélectionner..."
         else return "Sélectionner..."
     }
 
@@ -126,7 +128,7 @@ const ItemComboBox = (
                 <button 
                     role="combobox"
                     className={`flex flex-row justify-between items-center gap-4 px-[16px] py-[8px] rounded-[8px] w-full
-                                bg-primary/10
+                                bg-primary/10 text-left overflow-hidden overflow-ellipsis
                                 text-sm ${!field.value && !selected ? "text-primary/60" : "text-primary"} `}>
                 {
                     getLabel()

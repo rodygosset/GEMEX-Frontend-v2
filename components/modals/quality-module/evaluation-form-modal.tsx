@@ -11,13 +11,23 @@ import ItemComboBox from "@components/radix/item-combobox";
 import Button from "@components/button";
 import { useEffect, useState } from "react";
 import { DatePicker } from "@components/radix/date-picker";
-import FicheTargetSelect from "@components/page-templates/create/fiche-target-select";
 import { ScrollArea } from "@components/radix/scroll-area";
+import useAPIRequest from "@hook/useAPIRequest";
+import { MySession } from "@conf/utility-types";
+import { useSession } from "next-auth/react";
+import { toISO } from "@utils/general";
 
 interface Props {
     mois_cycle_id: number;
     evaluation?: Evaluation;
     onSubmit: () => void;
+}
+
+
+const getTomorrow = () => {
+    const date = new Date()
+    date.setDate(date.getDate() + 1)
+    return date
 }
 
 // form schema
@@ -35,7 +45,7 @@ const formSchema = z.object({
     element_id: z.number().min(1, {
         message: "Veuillez sélectionner un élément"
     }),
-    date_rendu: z.date().min(new Date(), {
+    date_rendu: z.date().min(getTomorrow(), {
         message: "La date de rendu doit être supérieure ou égale à la date du jour"
     }),
 })
@@ -55,18 +65,42 @@ const EvaluationFormModal = (
             thematique_id: evaluation ? evaluation.thematique_id : 0,
             user_id: evaluation ? evaluation.user_id : 0,
             element_id: evaluation ? evaluation.element_id : 0,
-            date_rendu: evaluation ? new Date(evaluation.date_rendu) : new Date()
+            date_rendu: evaluation ? new Date(evaluation.date_rendu) : getTomorrow()
         }
     })
 
     // handlers
 
-    const onSubmitHandler = (data: z.infer<typeof formSchema>) => {
-        // todo
-        console.log("hello")
-        console.log(data)
+    const onSuccess = () => {
         form.control._reset()
         setIsOpen(false)
+        onSubmit()
+    }
+
+
+    // form submit handler
+
+    const makeAPIRequest = useAPIRequest()
+    const session = useSession().data as MySession | null
+
+    const onSubmitHandler = (data: z.infer<typeof formSchema>) => {
+
+        if(!session) return
+
+        // make a request to the API to create the evaluation in the database
+
+        makeAPIRequest<EvaluationCreate, void>(
+            session,
+            'post',
+            'evaluations',
+            undefined,
+            {
+                ...data,
+                date_rendu: toISO(data.date_rendu)
+            },
+            onSuccess
+        )
+        
     }
 
     // state
@@ -74,6 +108,11 @@ const EvaluationFormModal = (
     const [isOpen, setIsOpen] = useState(false)
 
     const [expositionId, setExpositionId] = useState<number>(0)
+
+
+    useEffect(() => {
+        if(expositionId == 0) form.setValue("element_id", 0)
+    }, [expositionId])
 
 
     // render

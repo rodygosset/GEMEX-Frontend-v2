@@ -134,7 +134,7 @@ const MonthlyAssessmentPage: NextPage<Props> = (
                     </Button>
                     <EvaluationFormModal
                         mois_cycle_id={moisCycle.id}
-                        onSubmit={() => {}}
+                        onSubmit={refreshMoisCycle}
                     />
                 </div>
             </div>

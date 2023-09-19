@@ -92,7 +92,7 @@ const LoginPage: NextPage = () => {
                         <p className="text-base font-normal text-white/60">et de la maintenance technique des expositions à Universcience</p>
                     </div>
                 </section>
-                <section className="h-full flex-1 sm:rounded-[8px] bg-white/10 backdrop-blur-3xl  gap-[16px]
+                <section className="h-full flex-1 sm:rounded-[8px] bg-white/10 backdrop-blur-3xl  gap-[16px] shadow-2xl
                                     flex flex-col p-[64px]">
                     <span className="flex items-center gap-4 lg:hidden">
                             <FontAwesomeIcon icon={faGem} className="text-base text-white" />
