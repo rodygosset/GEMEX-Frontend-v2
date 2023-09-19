@@ -12,6 +12,7 @@ import { User, UserRole } from "@conf/api/data-types/user"
 export const authOptions: AuthOptions = {
     providers: [
         CredentialsProvider({
+        id: 'credentials',
         // The name to display on the sign in form (e.g. 'Sign in with...')
         name: 'Credentials',
         // @ts-ignore
