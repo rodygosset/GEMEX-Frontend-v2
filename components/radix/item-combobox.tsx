@@ -136,7 +136,7 @@ const ItemComboBox = (
                 <FontAwesomeIcon icon={faChevronDown} className="text-primary" />
                 </button>
             </PopoverTrigger>
-            <PopoverContentScroll className="w-[200px] p-0">
+            <PopoverContentScroll className="w-[250px] p-0">
                 <Command>
                     <CommandInput placeholder="Rechercher..." />
                     <ScrollArea className="flex max-h-[280px] flex-col gap-4">
