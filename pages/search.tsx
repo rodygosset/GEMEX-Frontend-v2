@@ -6,7 +6,7 @@ import SearchFilters from "@components/search-filters"
 import LoadingIndicator from "@components/utils/loading-indicator"
 import { searchConf, SearchResultsMetaData } from "@conf/api/search"
 import { MySession } from "@conf/utility-types"
-import { faList, faTableCellsLarge } from "@fortawesome/free-solid-svg-icons"
+import { faDownload, faList, faTableCellsLarge } from "@fortawesome/free-solid-svg-icons"
 import useAPIRequest from "@hook/useAPIRequest"
 import { useGetMetaData } from "@hook/useGetMetaData"
 import styles from "@styles/pages/search.module.scss"
@@ -26,6 +26,11 @@ import { authOptions } from "./api/auth/[...nextauth]"
 import Image from "next/image"
 import { useSession } from "next-auth/react"
 import { ScrollArea } from "@components/radix/scroll-area"
+import Link from "next/link"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { capitalizeFirstLetter, toISO } from "@utils/general"
+import { apiURLs } from "@conf/api/conf"
+import { Skeleton } from "@components/radix/skeleton"
 
 interface Props {
     queryItemType: string;
@@ -216,7 +221,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
     // manage search filters visibility
 
     
-    const [showFilters, setShowFilters] = useState(true)
+    const [showFilters, setShowFilters] = useState(false)
     
     const toggleFiltersVisibilty = () => setShowFilters(!showFilters)
 
@@ -282,6 +287,75 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         setNavHistory([...newNavHistory, `/search?${query}`])
     }, [searchParams, itemType])
 
+    // generate a CSV file from the search results
+
+    const [csv, setCSV] = useState("")
+
+    const searchResultsToCSV = async () => {
+        if(!session) return
+        // get the label for each attribute
+        const labels = Object.entries(searchConf[itemType].searchParams).map(([key, value]) => capitalizeFirstLetter(value.label ?? key))
+        // start building the CSV string
+        let csv = "data:text/csv;charset=utf-8,"
+        csv += labels.join(",") + "\n"
+        // now insert each row into the CSV string
+        console.log("row 1 ->", searchResults[0])
+        console.log("row 2 ->", searchResults[1])
+        for(const result of searchResults) {
+            // for each attribute
+            const row = await Promise.all(Object.entries(result)
+            // filter out attributes that are not part of the search conf
+            .filter(([key]) => searchConf[itemType].searchParams.hasOwnProperty(key))
+            // sort by key to make sure the order is the same for each row
+            // in the order that the attributes are defined in the search conf
+            .sort(([key1], [key2]) => {
+                const key1Pos = Object.keys(searchConf[itemType].searchParams).indexOf(key1)
+                const key2Pos = Object.keys(searchConf[itemType].searchParams).indexOf(key2)
+                return key1Pos - key2Pos
+            })
+            .map(async ([key, value]) => {
+                // if the attribute is a date, convert it to ISO format
+                if(searchConf[itemType].searchParams[key].type == "date") {
+                    return toISO(new Date(value as string))
+                } 
+                // if the attribute is a boolean, convert it to "Oui" or "Non"
+                else if(searchConf[itemType].searchParams[key].type == "boolean") {
+                    return value ? "Oui" : "Non"
+                } 
+                // if the attribute is a list of items, join them with a comma & escape the list
+                else if(searchConf[itemType].searchParams[key].type == "itemList") {
+                    return `"${(value as any[]).join(", ")}"`
+                } 
+                // if the attribute is part of the meta-data, get the display value from the meta-data
+                else if(metaData.hasOwnProperty(key)) {
+                    const index = metaData[key].ids.indexOf(value as number)
+                    return metaData[key].values[index]
+                } 
+                // if the attribute is an id referring to another item, get the display value from the API
+                else if(apiURLs.hasOwnProperty(searchConf[itemType].searchParams[key].type)) {
+                    return await makeAPIRequest<any, string>(
+                        session,
+                        "get",
+                        searchConf[itemType].searchParams[key].type,
+                        `id/${value}`,
+                        undefined,
+                        res => res.data.prenom ? `${res.data.prenom} ${res.data.nom}` : res.data.nom ?? res.data.titre ?? value
+                    )
+
+                } else return value ?? "Non rensigné"
+            }))
+            // escape \n & \r characters
+            .then(row => row.map(value => value?.toString().replace(/(\r\n|\n|\r)/gm, " ")))
+            csv += row.join(",") + "\n"
+        }
+        return encodeURI(csv)
+
+    }
+
+    useEffect(() => {
+        searchResultsToCSV().then(csv => setCSV(csv ?? ""))
+    }, [searchResults, metaData, itemType, session])
+
     // render
 
     return (
@@ -328,7 +402,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                                     totalPagesNb={totalPagesNb}
                                     setPageNb={setCurrentPageNb}
                                 />
-                                <div className={styles.viewModeContainer}>
+                                {/* <div className={styles.viewModeContainer}>
                                     <Button
                                         className={getViewModeButtonClassName(false)}
                                         icon={faTableCellsLarge}
@@ -345,7 +419,20 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                                         onClick={() => setIsListView(true)}>
                                         Liste
                                     </Button>
-                                </div>
+                                </div> */}
+                                {
+                                    csv ?
+                                    <Link 
+                                        download={`resultats-recherche-${itemType}-${new Date().toLocaleDateString("fr-fr")}.csv`}
+                                        href={csv}
+                                        className="text-sm text-primary bg-primary/10 flex items-center gap-4 px-[16px] py-[8px] rounded-[8px] 
+                                    hover:bg-primary/20 transition-colors duration-300 ease-in-out">
+                                        <FontAwesomeIcon icon={faDownload} />
+                                        Export Excel
+                                    </Link>
+                                    : 
+                                    <Skeleton className="w-[150px] h-[40px]" />
+                                }
                             </div>
                             <ScrollArea className={styles.scrollContainer}>
                                 <ul 

@@ -519,7 +519,7 @@ const UserManagementDashboard = (
                                     // display the view mode buttons
                                     searchResults.length > 0 ?
                                     <>
-                                        <div className={styles.viewModeContainer}>
+                                        {/* <div className={styles.viewModeContainer}>
                                             <Button
                                                 className={getViewModeButtonClassName(false)}
                                                 icon={faTableCellsLarge}
@@ -536,7 +536,7 @@ const UserManagementDashboard = (
                                                 onClick={() => setIsListView(true)}>
                                                 Liste
                                             </Button>
-                                        </div>
+                                        </div> */}
                                         <Pagination
                                             currentPageNb={currentPageNb}
                                             totalPagesNb={totalPagesNb}

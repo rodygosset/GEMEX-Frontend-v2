@@ -91,7 +91,7 @@ const DeleteDialog = (
             handleDeleteSuccess()
         }
         else {
-            const itemID = customItemID || itemTitle
+            const itemID = customItemID ?? itemTitle
             // make a single DELETE request to our API
             makeDeleteRequest(itemID)?.then(handleDeleteSuccess)
         }

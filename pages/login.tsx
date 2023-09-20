@@ -77,7 +77,7 @@ const LoginPage: NextPage = () => {
     return (
         <main 
             id="main-login"
-            className="w-screen h-screen flex justify-center items-center pb-0">
+            className="w-screen h-screen flex justify-center items-center pb-0 bg-slate-900">
             <div className="w-full h-full sm:p-[64px] bg-[url('/images/login-bg.jpg')] bg-cover bg-center bg-no-repeat
                             flex justify-center items-center gap-[32px]">
                 <section className="h-full flex-1 flex flex-col justify-center gap-0 max-lg:hidden">
@@ -153,8 +153,8 @@ const LoginPage: NextPage = () => {
                                 />
                             </div>
                             <button 
-                                className="w-full rounded-[8px] bg-blue-500 text-white text-sm font-normal p-[16px]
-                                            hover:bg-blue-400 transition duration-300 ease-in-out"
+                                className="w-full rounded-[8px] bg-blue-600 text-white text-sm font-normal p-[16px]
+                                            hover:bg-blue-700 transition duration-300 ease-in-out"
                                 onClick={form.handleSubmit(SubmitHandler)}>
                                 Se connecter
                             </button>

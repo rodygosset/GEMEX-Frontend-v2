@@ -36,35 +36,37 @@ const Pagination = (
 
     return (
         <div className={styles.container}>
-            <Button
+            {/* <Button
                 className={styles.edgeButton}
                 icon={faBackward} 
                 role="tertiary"
                 bigPadding
                 animateOnHover={false}
                 onClick={handleClickBackward}>
-            </Button>
+            </Button> */}
             <Button
                 icon={faCaretLeft}
                 role="secondary"
                 bigPadding
+                active={currentPageNb > 1}
                 onClick={handleClickPrev}>
             </Button>
-            <p>Page {currentPageNb} / {totalPagesNb}</p>
+            <p>Page {currentPageNb} sur {totalPagesNb}</p>
             <Button
                 icon={faCaretRight}
                 role="secondary"
                 bigPadding
+                active={currentPageNb < totalPagesNb}
                 onClick={handleClickNext}>
             </Button>
-            <Button
+            {/* <Button
                 className={styles.edgeButton}
                 icon={faForward} 
                 role="tertiary"
                 bigPadding
                 animateOnHover={false}
                 onClick={handleClickForward}>
-            </Button>
+            </Button> */}
         </div>
     )
 }
