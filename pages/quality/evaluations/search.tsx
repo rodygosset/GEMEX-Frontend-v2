@@ -1,5 +1,6 @@
 import ItemMultiSelect from "@components/form-elements/multi-select";
-import { Form, FormField } from "@components/radix/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@components/radix/form";
+import MultiSelectCombobox from "@components/radix/multi-select-combobox";
 import { Skeleton } from "@components/radix/skeleton";
 import { Evaluation } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
@@ -100,8 +101,25 @@ const Search: NextPage<Props> = (
                             control={searchForm.control}
                             name="thematiques"
                             render={({ field }) => (
-                                <></>
-                                // todo
+                                <FormItem>
+                                    <FormLabel>Thématiques</FormLabel>
+                                    <FormControl>
+                                        <MultiSelectCombobox
+                                            options={[
+                                                { value: 1, label: "Thématique 1" },
+                                                { value: 2, label: "Thématique 2" },
+                                                { value: 3, label: "Thématique 3" },
+                                            ]}
+                                            selected={[
+                                                { value: 1, label: "Thématique 1" }
+                                            ]}
+                                            onSelect={() => {}}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Sélectionnez les thématiques pour lesquelles vous souhaitez consulter les évaluations
+                                    </FormDescription>
+                                </FormItem>
                             )}
                         />
 
