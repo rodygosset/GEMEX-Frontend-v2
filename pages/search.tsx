@@ -345,7 +345,11 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                 } else return value ?? "Non rensigné"
             }))
             // escape \n & \r characters
-            .then(row => row.map(value => `"${value?.toString().replace(/(\r\n|\n|\r)/gm, " ")}"`))
+            .then(row => row.map(value => `"${value?.toString()
+                .replace(/(\r\n|\n|\r)/gm, " ") 
+                // escape double quotes
+                .replace(/"/g, '""')
+                ?? ""}"`))
             csv += row.join(",") + "\n"
         }
         return encodeURI(csv)
