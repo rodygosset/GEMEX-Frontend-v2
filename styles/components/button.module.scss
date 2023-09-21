@@ -67,6 +67,10 @@
     gap: 10px;
     border-radius: 8px;
 
+    &:not(.active) {
+        cursor: not-allowed;
+    }
+
     &.primary {
 
         @include make-primary-button($primary, $primary-600);

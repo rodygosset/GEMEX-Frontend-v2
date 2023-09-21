@@ -1,6 +1,7 @@
-import { faBackward, faCaretLeft, faCaretRight, faForward } from "@fortawesome/free-solid-svg-icons"
-import styles from "@styles/components/pagination.module.scss"
+import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons"
 import Button from "./button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { cn } from "@utils/tailwind";
 
 
 interface Props {
@@ -28,45 +29,33 @@ const Pagination = (
 
     const handleClickNext = () => handlePageChange(currentPageNb + 1)
 
-    const handleClickBackward = () => handlePageChange(1)
-
-    const handleClickForward = () => handlePageChange(totalPagesNb)
-
     // render
 
     return (
-        <div className={styles.container}>
-            {/* <Button
-                className={styles.edgeButton}
-                icon={faBackward} 
-                role="tertiary"
-                bigPadding
-                animateOnHover={false}
-                onClick={handleClickBackward}>
-            </Button> */}
-            <Button
-                icon={faCaretLeft}
-                role="secondary"
-                bigPadding
-                active={currentPageNb > 1}
+        <div className="flex items-center gap-[16px]">
+            <span className="text-base text-primary/60 font-normal">
+                Page {currentPageNb} sur {totalPagesNb}
+            </span>
+            <button
+                className={cn(
+                    "text-sm text-primary h-[40px] w-[40px] rounded-[8px] bg-primary/10 flex items-center justify-center",
+                    "hover:bg-primary/20 transition-colors duration-300 ease-in-out",
+                    !isInBounds(currentPageNb - 1) && "opacity-50 cursor-not-allowed"
+                )}
+                disabled={!isInBounds(currentPageNb - 1)}
                 onClick={handleClickPrev}>
-            </Button>
-            <p>Page {currentPageNb} sur {totalPagesNb}</p>
-            <Button
-                icon={faCaretRight}
-                role="secondary"
-                bigPadding
-                active={currentPageNb < totalPagesNb}
+                <FontAwesomeIcon icon={faCaretLeft} />
+            </button>
+            <button
+                className={cn(
+                    "text-sm text-primary h-[40px] w-[40px] rounded-[8px] bg-primary/10 flex items-center justify-center",
+                    "hover:bg-primary/20 transition-colors duration-300 ease-in-out",
+                    !isInBounds(currentPageNb + 1) && "opacity-50 cursor-not-allowed"
+                )}
+                disabled={!isInBounds(currentPageNb + 1)}
                 onClick={handleClickNext}>
-            </Button>
-            {/* <Button
-                className={styles.edgeButton}
-                icon={faForward} 
-                role="tertiary"
-                bigPadding
-                animateOnHover={false}
-                onClick={handleClickForward}>
-            </Button> */}
+                <FontAwesomeIcon icon={faCaretRight} />
+            </button>
         </div>
     )
 }

@@ -381,7 +381,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                 <></>
             }
 
-            <div id={styles.mainColumn}> 
+            <div id={styles.mainColumn} className="w-full"> 
                 <SearchBar
                     fullWidth
                     hideCTA
@@ -393,37 +393,13 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                     onInputChange={handleSearchInputChange}
                     onSubmit={handleFormSubmit}
                 />
-                <section>
+                <section className="w-full">
                     { 
                         // don't display any content
                         // if there aren't no search results
                         searchResults.length > 0 && !isLoading ?
                         <>
-                            <h3>Résultats de recherche ({ nbResults })</h3>
-                            <div className={styles.buttonsContainer}>
-                                <Pagination
-                                    currentPageNb={currentPageNb}
-                                    totalPagesNb={totalPagesNb}
-                                    setPageNb={setCurrentPageNb}
-                                />
-                                {/* <div className={styles.viewModeContainer}>
-                                    <Button
-                                        className={getViewModeButtonClassName(false)}
-                                        icon={faTableCellsLarge}
-                                        role="tertiary"
-                                        bigPadding
-                                        onClick={() => setIsListView(false)}>
-                                        Cartes
-                                    </Button>
-                                    <Button
-                                        className={getViewModeButtonClassName(true)}
-                                        icon={faList}
-                                        role="tertiary"
-                                        bigPadding
-                                        onClick={() => setIsListView(true)}>
-                                        Liste
-                                    </Button>
-                                </div> */}
+                            <div className="w-full flex items-center justify-between gap-[16px] flex-wrap">
                                 {
                                     csv ?
                                     <Link 
@@ -437,8 +413,14 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                                     : 
                                     <Skeleton className="w-[150px] h-[40px]" />
                                 }
+                                <span className="text-base text-primary/60">{ nbResults } résultat(s)</span>
+                                <Pagination
+                                    currentPageNb={currentPageNb}
+                                    totalPagesNb={totalPagesNb}
+                                    setPageNb={setCurrentPageNb}
+                                />
                             </div>
-                            <ScrollArea className={styles.scrollContainer}>
+                            <ScrollArea className={styles.scrollContainer + " w-full"}>
                                 <ul 
                                     id={styles.searchResults} 
                                     className={getResultsContainerClassNames()}>

@@ -70,6 +70,7 @@ const Button = ({
     return !hidden ? (
         <button
             ref={ref}
+            disabled={!active}
             className={getClassNames()}
             onClick={handleClick}
             onMouseOver={onMouseOver}

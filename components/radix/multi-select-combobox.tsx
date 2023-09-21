@@ -40,28 +40,24 @@ const MultiSelectCombobox = (
 
     // handlers
 
-    const handleUnselect = React.useCallback((option: SelectOption) => {
-        onSelect(options.filter(o => o.value != option.value))
-    }, [])
+    const handleUnselect = (option: SelectOption) => {
+        if(!selected) return
+        onSelect(selected.filter(o => o.value != option.value))
+    }
 
 
-    const handleKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         const input = inputRef.current
         if(!input) return
         if((e.key == "Delete" || e.key == "Backspace") && input.value == "") {
-            onSelect(options.slice(0, -1))
+            if(!selected) return
+            onSelect(selected.slice(0, -1))
         }
         // blur on escape
         if(e.key == "Escape") {
             input.blur()
         }
-    }, [])
-
-    useEffect(() => {
-
-        console.log("is open ? ", isOpen)
-
-    }, [isOpen])
+    }
 
 
     // render
@@ -72,7 +68,7 @@ const MultiSelectCombobox = (
                 <div 
                     ref={ref} 
                     className={cn(
-                        "flex items-center gap-4",
+                        "flex flex-wrap items-center gap-4 min-h-[53px]",
                         "px-[16px] py-[8px] rounded-[8px] bg-primary/10",
                         "text-sm font-normal text-primary/80",
                         "ring-offset-primary/10 focus-within:ring-2 focus-within:ring-primary/5 focus-within:ring-offset-2",
@@ -126,7 +122,8 @@ const MultiSelectCombobox = (
                                                 const option = options.find(option => option.label.toLowerCase() == currentValue)
                                                 if(option) {
                                                     setIsOpen(false)
-                                                    onSelect([...options, option])
+                                                    if(selected?.find(item => item.value == option.value)) handleUnselect(option)
+                                                    else onSelect([...selected ?? [], option])
                                                 }
                                             }}
                                         >

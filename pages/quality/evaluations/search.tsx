@@ -1,18 +1,20 @@
-import ItemMultiSelect from "@components/form-elements/multi-select";
+import Pagination from "@components/pagination";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@components/radix/form";
-import MultiSelectCombobox from "@components/radix/multi-select-combobox";
+import ItemMultiSelectCombobox from "@components/radix/item-multi-select-combobox";
 import { Skeleton } from "@components/radix/skeleton";
 import { Evaluation } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
 import { faChevronLeft, faDownload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import useAPIRequest from "@hook/useAPIRequest";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request";
+import { AxiosResponse } from "axios";
 import { GetServerSideProps, NextPage } from "next";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useRef, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 
@@ -21,9 +23,14 @@ interface EvaluationSearchParams {
     expositions: number[];
 }
 
+interface SearchResultsByMonth {
+    mois_cycle_id: number;
+    evaluations: Evaluation[];
+}
+
 interface Props {
     initSearchParams: EvaluationSearchParams;
-    initSearchResults: Evaluation[];
+    initSearchResults: SearchResultsByMonth[];
 }
 
 
@@ -31,6 +38,8 @@ const searchFormSchema = z.object({
     thematiques: z.array(z.number()),
     expositions: z.array(z.number())
 })
+
+export const resultsPerPage = 30
 
 const Search: NextPage<Props> = (
     {
@@ -49,11 +58,126 @@ const Search: NextPage<Props> = (
         }
     })
 
-    // submit handler
+    const searchParams = useWatch({
+        control: searchForm.control
+    })
 
-    const handleSubit = async (data: z.infer<typeof searchFormSchema>) => {
-        // todo 
+    // utils
+
+    const getSearchParams = () => {
+        let params: any = {}
+        if(searchParams.thematiques && searchParams.thematiques.length > 0) params.thematiques = searchParams.thematiques
+        if(searchParams.expositions && searchParams.expositions.length > 0) params.expositions = searchParams.expositions
+        return params
     }
+
+    const [results, setResults] = useState(initSearchResults)
+
+    // data fetching & pagination logic
+
+    const makeAPIRequest = useAPIRequest()
+    const session = useSession().data as MySession | null
+    
+    const [isLoading, setIsLoading] = useState(false)
+
+    // we need to cancel on-going search requests
+    // after a new one has been made
+    // for that purpose, we use the native AbortController
+
+    const reqController = useRef<AbortController>()
+
+    const [currentPageNb, setCurrentPageNb] = useState(1)
+    const [nbResults, setNbResults] = useState(0)
+    const [totalPagesNb, setTotalPagesNb] = useState(1)
+
+
+    // on each search request, get the number of results
+    // & compute the total number of pages
+
+    const getNbResults = () => {
+        if(!session) return
+
+        // make a request to our API to get the number of search results
+        // & divide that by the number of results per page 
+        makeAPIRequest<{nb_results: number}, void>(
+            session,
+            "post", 
+            "evaluations",
+            "search/nb",
+            getSearchParams(),
+            (res: AxiosResponse<{nb_results: number}>) => setNbResults(res.data.nb_results),
+            () => console.log("search params => ", searchParams)
+        )
+    }
+
+    useEffect(getNbResults, [results, session])
+
+    useEffect(() => setTotalPagesNb(Math.ceil(nbResults / resultsPerPage)), [nbResults])
+
+    // go back to the first page
+    // when the search parameters or the search item change
+    
+    useEffect(() => {
+        setCurrentPageNb(1)
+        getNbResults()
+    }, [searchParams])
+
+    // fetch data on page change
+    // & when the item type or the search params are updated
+
+    const [refreshTrigger, setRefreshTrigger] = useState(false)
+
+    const refresh = () => setRefreshTrigger(!refreshTrigger)
+
+    useEffect(() => {
+
+        if(!session) return
+
+        // let the user know we're fetching data
+
+        setIsLoading(true)
+
+        // cancel previous request if it exists
+
+        if(typeof reqController.current != "undefined") reqController.current.abort()
+
+        // new abort controller for the new request we're going to make
+
+        reqController.current = new AbortController()
+
+        // make a request to our backend API
+
+        makeAPIRequest<any[], void>(
+            session,
+            "post", 
+            "evaluations",
+            `search/?skip=${(currentPageNb - 1) * resultsPerPage}&max=${resultsPerPage}`,
+            getSearchParams(),
+            res => {
+                // sort the results by month
+                const resultsByMonth: SearchResultsByMonth[] = []
+                res.data.forEach(evaluation => {
+                    const monthId = evaluation.mois_cycle_id
+                    const monthResults = resultsByMonth.find(result => result.mois_cycle_id === monthId)
+                    if(monthResults) {
+                        monthResults.evaluations.push(evaluation)
+                    } else {
+                        resultsByMonth.push({
+                            mois_cycle_id: monthId,
+                            evaluations: [evaluation]
+                        })
+                    }
+                })
+                console.log("resultsByMonth => ", resultsByMonth)
+                setResults(resultsByMonth)
+                setIsLoading(false)
+                reqController.current = undefined
+            },
+            undefined,
+            reqController.current.signal
+        )
+
+    }, [searchParams, currentPageNb, session, refreshTrigger])
 
     // excel export
 
@@ -95,25 +219,19 @@ const Search: NextPage<Props> = (
             <div className="w-full flex items-center flex-wrap gap-[16px]">
                 <Form {...searchForm}>
                     <form
-                        onSubmit={searchForm.handleSubmit(handleSubit)}
-                        className="flex items-center flex-wrap gap-[16px]">
+                        onSubmit={searchForm.handleSubmit(refresh)}
+                        className="w-full flex flex-wrap gap-[16px]">
                         <FormField
                             control={searchForm.control}
                             name="thematiques"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="flex-1 min-w-[250px]">
                                     <FormLabel>Thématiques</FormLabel>
                                     <FormControl>
-                                        <MultiSelectCombobox
-                                            options={[
-                                                { value: 1, label: "Thématique 1" },
-                                                { value: 2, label: "Thématique 2" },
-                                                { value: 3, label: "Thématique 3" },
-                                            ]}
-                                            selected={[
-                                                { value: 1, label: "Thématique 1" }
-                                            ]}
-                                            onSelect={() => {}}
+                                        <ItemMultiSelectCombobox
+                                            itemType="thematiques"
+                                            selected={field.value}
+                                            onSelect={options => searchForm.setValue(field.name, options.map(o => o.value as number))}
                                         />
                                     </FormControl>
                                     <FormDescription>
@@ -122,9 +240,47 @@ const Search: NextPage<Props> = (
                                 </FormItem>
                             )}
                         />
-
+                        <FormField
+                            control={searchForm.control}
+                            name="expositions"
+                            render={({field}) => (
+                                <FormItem className="flex-1 min-w-[250px]">
+                                    <FormLabel>Expositions</FormLabel>
+                                    <FormControl>
+                                        <ItemMultiSelectCombobox
+                                            itemType="expositions"
+                                            selected={field.value}
+                                            onSelect={options => searchForm.setValue(field.name, options.map(o => o.value as number))}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Sélectionnez les expositions pour lesquelles vous souhaitez consulter les évaluations
+                                    </FormDescription>
+                                </FormItem>
+                            )}
+                        />
                     </form>
                 </Form>
+            </div>
+            {
+                isLoading ?
+                <Skeleton className="w-full h-[200px]" />
+                :
+                results.length > 0 ?
+                results.map((result, index) => (
+                    <div key={index} className="w-full flex flex-col gap-y-4">
+                        <h2 className="text-xl text-primary font-semibold h-fit whitespace-nowrap">{ result.mois_cycle_id }</h2>
+                    </div>
+                ))
+                :
+                <p className="text-base text-primary text-opacity-40">Aucun résultat</p>
+            }
+            <div className="w-full flex items-center">
+                <Pagination
+                    currentPageNb={currentPageNb}
+                    totalPagesNb={totalPagesNb}
+                    setPageNb={setCurrentPageNb}
+                />
             </div>
         </main>
     )
@@ -175,7 +331,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
     // make the request to the API
 
-    const initSearchResults = (await SSRmakeAPIRequest<Evaluation[], Evaluation[]>({
+    const initSearchResults = (await SSRmakeAPIRequest<Evaluation[], SearchResultsByMonth[]>({
         session,
         verb: "post",
         itemType: "evaluations",
@@ -184,7 +340,23 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
             thematiques,
             expositions
         },
-        onSuccess: res => res.data
+        onSuccess: res => {
+            // sort the results by month
+            const resultsByMonth: SearchResultsByMonth[] = []
+            res.data.forEach(evaluation => {
+                const monthId = evaluation.mois_cycle_id
+                const monthResults = resultsByMonth.find(result => result.mois_cycle_id === monthId)
+                if(monthResults) {
+                    monthResults.evaluations.push(evaluation)
+                } else {
+                    resultsByMonth.push({
+                        mois_cycle_id: monthId,
+                        evaluations: [evaluation]
+                    })
+                }
+            })
+            return resultsByMonth
+        }
     })) ?? []
 
     return {
