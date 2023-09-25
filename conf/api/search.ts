@@ -383,6 +383,31 @@ export const searchConf: SearchConf = {
             "date_debut",
             "date_fin"
         ]
+    },
+    evaluations: {
+        url: "/api/qualite/evaluations/search",
+        defaultSearchParam: "",
+        searchParams: {
+            mois_cycle_id: { ...itemSearchParam, type: "mois_cycle", label: "Mois de l'évaluation" },
+            date_rendu: { ...dateSearchParam, label: "Date de rendu" },
+            date_rendu_reelle: { ...dateSearchParam, label: "Date de rendu réelle" },
+            user_id: { ...itemSearchParam, type: "users", label: "Évaluateur" },
+            element_id: { ...itemSearchParam, type: "elements", label: "Élément" },
+            thematique_id: { ...itemSearchParam, type: "thematiques", label: "Thématique" },
+            question_note: { ...numberSearchParam, label: "Note de la question principale" },
+            note_a: { ...numberSearchParam, label: "Nombre de note A données au cours de l'évaluation" },
+            note_b: { ...numberSearchParam, label: "Nombre de note B données au cours de l'évaluation" },
+            note_c: { ...numberSearchParam, label: "Nombre de note C données au cours de l'évaluation" },
+            note_d: { ...numberSearchParam, label: "Nombre de note D données au cours de l'évaluation" },
+            note_e: { ...numberSearchParam, label: "Nombre de note E données au cours de l'évaluation" },
+            note: { ...numberSearchParam, label: "Note de l'évaluation" },
+            commentaire: textSearchParam,
+            approved: { ...booleanSearchParam, label: "Approuvé" },
+        },
+        searchResultFields: [
+            "thematique_id",
+            "note"
+        ]
     }
 }
 

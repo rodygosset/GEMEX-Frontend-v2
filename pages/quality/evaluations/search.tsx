@@ -19,6 +19,9 @@ import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import Image from "next/image";
 import SearchResultsCard from "@components/cards/quality-module/search-results-card";
+import { searchConf } from "@conf/api/search";
+import { capitalizeFirstLetter, toISO } from "@utils/general";
+import { apiURLs } from "@conf/api/conf";
 
 
 interface EvaluationSearchParams {
@@ -186,6 +189,69 @@ const Search: NextPage<Props> = (
 
     const [csv, setCSV] = useState("")
 
+    const searchResultsToCSV = async () => {
+        if(!session) return
+        // get the label for each attribute
+        const labels = Object.entries(searchConf["evaluations"].searchParams).map(([key, value]) => capitalizeFirstLetter(value.label ?? key))
+        // start building the CSV string
+        let csv = "data:text/csv;charset=utf-8,"
+        csv += labels.join(",") + "\n"
+        // now insert each row into the CSV string
+        for(const result of results.flatMap(result => result.evaluations)) {
+            // for each attribute
+            const row = await Promise.all(Object.entries(result)
+            // filter out attributes that are not part of the search conf
+            .filter(([key]) => searchConf["evaluations"].searchParams.hasOwnProperty(key))
+            // sort by key to make sure the order is the same for each row
+            // in the order that the attributes are defined in the search conf
+            .sort(([key1], [key2]) => {
+                const key1Pos = Object.keys(searchConf["evaluations"].searchParams).indexOf(key1)
+                const key2Pos = Object.keys(searchConf["evaluations"].searchParams).indexOf(key2)
+                return key1Pos - key2Pos
+            })
+            .map(async ([key, value]) => {
+                // if the attribute is a date, convert it to ISO format
+                if(searchConf["evaluations"].searchParams[key].type == "date") {
+                    return value ? toISO(new Date(value as string)) : "Non rensigné"
+                } 
+                // if the attribute is a boolean, convert it to "Oui" or "Non"
+                else if(searchConf["evaluations"].searchParams[key].type == "boolean") {
+                    return value ? "Oui" : "Non"
+                } 
+                // if the attribute is a list of items, join them with a comma & escape the list
+                else if(searchConf["evaluations"].searchParams[key].type == "itemList") {
+                    return `"${(value as any[]).join(", ")}"`
+                } 
+                 
+                // if the attribute is an id referring to another item, get the display value from the API
+                else if(apiURLs.hasOwnProperty(searchConf["evaluations"].searchParams[key].type)) {
+                    return await makeAPIRequest<any, string>(
+                        session,
+                        "get",
+                        searchConf["evaluations"].searchParams[key].type,
+                        `id/${value}`,
+                        undefined,
+                        res => res.data.prenom ? `${res.data.prenom} ${res.data.nom}` : res.data.nom ?? res.data.titre ?? value
+                    )
+
+                } else return value ?? "Non rensigné"
+            }))
+            // escape \n & \r characters
+            .then(row => row.map(value => `"${value?.toString()
+                .replace(/(\r\n|\n|\r)/gm, " ") 
+                // escape double quotes
+                .replace(/"/g, '""')
+                ?? ""}"`))
+            csv += row.join(",") + "\n"
+        }
+        return encodeURI(csv)
+
+    }
+
+    useEffect(() => {
+        searchResultsToCSV().then(csv => setCSV(csv ?? ""))
+    }, [results, session])
+
     // render
 
     return (
@@ -206,7 +272,7 @@ const Search: NextPage<Props> = (
                     <p className="text-base text-primary text-opacity-40">Passer en revue les évaluations passées en fonction des thématiques et des expositions</p>
                 </div>
                 {
-                    !csv ?
+                    csv ?
                     <Link 
                         download={`resultats-recherche-historique-evaluation-${new Date().toLocaleDateString("fr-fr")}.csv`}
                         href={csv}

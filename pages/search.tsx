@@ -1,4 +1,3 @@
-import Button from "@components/button"
 import SearchResultCard from "@components/cards/search-result-card"
 import SearchBar from "@components/form-elements/search-bar"
 import Pagination from "@components/pagination"
@@ -299,8 +298,6 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         let csv = "data:text/csv;charset=utf-8,"
         csv += labels.join(",") + "\n"
         // now insert each row into the CSV string
-        console.log("row 1 ->", searchResults[0])
-        console.log("row 2 ->", searchResults[1])
         for(const result of searchResults) {
             // for each attribute
             const row = await Promise.all(Object.entries(result)
@@ -316,7 +313,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
             .map(async ([key, value]) => {
                 // if the attribute is a date, convert it to ISO format
                 if(searchConf[itemType].searchParams[key].type == "date") {
-                    return toISO(new Date(value as string))
+                    return value ? toISO(new Date(value as string)) : "Non rensigné"
                 } 
                 // if the attribute is a boolean, convert it to "Oui" or "Non"
                 else if(searchConf[itemType].searchParams[key].type == "boolean") {
