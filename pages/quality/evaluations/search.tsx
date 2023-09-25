@@ -2,6 +2,7 @@ import Pagination from "@components/pagination";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@components/radix/form";
 import ItemMultiSelectCombobox from "@components/radix/item-multi-select-combobox";
 import { Skeleton } from "@components/radix/skeleton";
+import LoadingIndicator from "@components/utils/loading-indicator";
 import { Evaluation } from "@conf/api/data-types/quality-module";
 import { MySession } from "@conf/utility-types";
 import { faChevronLeft, faDownload } from "@fortawesome/free-solid-svg-icons";
@@ -16,6 +17,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
+import Image from "next/image";
+import SearchResultsCard from "@components/cards/quality-module/search-results-card";
 
 
 interface EvaluationSearchParams {
@@ -23,7 +26,7 @@ interface EvaluationSearchParams {
     expositions: number[];
 }
 
-interface SearchResultsByMonth {
+export interface SearchResultsByMonth {
     mois_cycle_id: number;
     evaluations: Evaluation[];
 }
@@ -264,16 +267,36 @@ const Search: NextPage<Props> = (
             </div>
             {
                 isLoading ?
-                <Skeleton className="w-full h-[200px]" />
+                <div className="w-full flex flex-col items-center justify-center p-[32px] gap-[32px]">
+                    <LoadingIndicator />
+                    <p className="text-base text-primary text-opacity-40">Chargement des résultats...</p>
+                </div>
                 :
                 results.length > 0 ?
-                results.map((result, index) => (
-                    <div key={index} className="w-full flex flex-col gap-y-4">
-                        <h2 className="text-xl text-primary font-semibold h-fit whitespace-nowrap">{ result.mois_cycle_id }</h2>
-                    </div>
+                results.map(result => (
+                    <SearchResultsCard
+                        {...result}
+                        key={result.mois_cycle_id}
+                        onRefresh={refresh}
+                    />
                 ))
                 :
-                <p className="text-base text-primary text-opacity-40">Aucun résultat</p>
+                <div className="w-full flex flex-col items-center justify-center gap-[32px] p-[16px]">
+                    <div className="w-full max-w-[400px] aspect-[1.193] relative">
+                        <Image 
+                            quality={100}
+                            src={'/images/no-results-illustration.svg'} 
+                            alt={"Aucun résultat."} 
+                            priority
+                            fill
+                            style={{ 
+                                objectFit: "contain", 
+                                top: "auto"
+                            }}
+                        />
+                    </div>
+                    <p className="text-base text-primary text-opacity-40">Aucun résultat</p>
+                </div>
             }
             <div className="w-full flex items-center">
                 <Pagination

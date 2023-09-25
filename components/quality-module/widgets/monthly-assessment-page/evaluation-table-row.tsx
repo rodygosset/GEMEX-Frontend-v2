@@ -8,10 +8,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faEllipsisVertical, faEye, faLink, faThumbsUp, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faCircle, faEdit, faEye, faThumbsUp, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { cn } from "@utils/tailwind";
-import DropdownMenu from "@components/radix/dropdown-menu";
-import { Button } from "@components/radix/button";
 import ContextMenu from "@components/radix/context-menu";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
@@ -193,9 +191,21 @@ const EvaluationTableRow = (
                 className
             )
         }>
+            <TableCell className="flex-1 max-w-[72px] max-md:p-0">
+            {
+                typeof evaluation.note !== "number" ? 
+                <span className={`text-base font-semibold ${ (evaluation.note || 0) >= 16 ? 'text-success' : ''} ${ (evaluation.note || 0) >= 15 && (evaluation.note || 0) < 16 ? 'text-warning' : ''} ${ (evaluation.note || 0) < 15 ? 'text-error' : ''}`}>
+                    {evaluation.note ?? 0}
+                </span>
+                :
+                <span className="text-sm font-normal text-primary/60">En cours</span>
+            }
+            </TableCell>
             <TableCell className="flex-1 w-full flex flex-row items-start justify-between gap-4 max-md:p-0">
                 <div className="flex flex-col gap-2">
-                    <span className="text-sm font-semibold text-primary max-md:text-base">{rowData.thematique}</span>
+                    <div className="flex flex-1 items-center gap-[8px]">
+                        <span className="text-sm font-semibold text-primary max-md:text-base">{rowData.thematique}</span>
+                    </div>
                     <span className="text-xs text-primary/80 max-md:text-sm">{rowData.exposition}</span>
                 </div>
                 <ContextDropdown className="md:hidden" onSelect={onContextSelect} evaluation={evaluation} />
