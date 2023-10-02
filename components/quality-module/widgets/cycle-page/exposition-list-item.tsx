@@ -144,15 +144,15 @@ const ExpositionListItem = (
 
     return cycleExposition ? (
         <li
-            className="flex-1 rounded-[8px] hover:bg-primary/5 transition duration-300 ease-in-out flex flex-row items-center p-[16px] gap-4 whitespace-nowrap"
+            className="flex-1 rounded-[8px] hover:bg-blue-600/5 transition duration-300 ease-in-out flex flex-row items-center p-[16px] gap-4 whitespace-nowrap"
             key={`${cycle.id}-${expositionId}`}>
                 <div className="flex flex-col w-full">
-                    <span className="w-full whitespace-normal text-base font-semibold text-primary flex flex-row gap-2 items-center">
+                    <span className="w-full whitespace-normal text-base font-semibold text-blue-600 flex flex-row gap-2 items-center">
                         { cycleExposition.nom }
                         {
                             cycleExposition.note ?
                             <>
-                                <FontAwesomeIcon icon={faCircle} className="text-primary/40 text-[0.4rem] mx-2" />
+                                <FontAwesomeIcon icon={faCircle} className="text-blue-600/40 text-[0.4rem] mx-2" />
                                 <b className={`text-base font-bold ${cycleExposition.note >= 16 ? "text-success" : cycleExposition.note >= 15 ? "text-warning" : "text-error"}`}>
                                     { cycleExposition.note }
                                 </b>
@@ -165,14 +165,14 @@ const ExpositionListItem = (
                         cycleExposition.latestEvaluation ?
                         // if the evaluation has been done
                         cycleExposition.latestEvaluation?.date_rendu_reelle ?
-                            <span className="text-sm font-normal text-primary/60">{ getMonthAndYear(new Date(cycleExposition.latestEvaluation.date_rendu_reelle)) }</span>
+                            <span className="text-sm font-normal text-blue-600/60">{ getMonthAndYear(new Date(cycleExposition.latestEvaluation.date_rendu_reelle)) }</span>
                             :
                             // if it's planned
-                            <span className="text-sm font-bold text-primary/60">Prévu pour { getMonthAndYear(new Date(cycleExposition.latestEvaluation.date_rendu)) }</span>
+                            <span className="text-sm font-bold text-blue-600/60">Prévu pour { getMonthAndYear(new Date(cycleExposition.latestEvaluation.date_rendu)) }</span>
                         : 
                         <>
-                            <span className="text-sm font-normal text-primary/60">A faire</span>
-                            {/* <FontAwesomeIcon icon={faCircle} className="text-primary/40 text-[0.4rem] mx-2" />
+                            <span className="text-sm font-normal text-blue-600/60">A faire</span>
+                            {/* <FontAwesomeIcon icon={faCircle} className="text-blue-600/40 text-[0.4rem] mx-2" />
                             <button className="text-sm font-normal text-warning px-[8px] py-[4px] border border-warning/20 rounded-lg bg-warning/10
                                             hover:bg-warning hover:text-white cursor-pointer transition duration-300 ease-in-out">
                                 Planifier

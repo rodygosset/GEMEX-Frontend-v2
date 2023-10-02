@@ -1,30 +1,28 @@
-
-import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import styles from "@styles/components/form-elements/numeric-field.module.scss"
-import { FormFieldProps } from "@utils/types"
-import { ChangeEvent, KeyboardEventHandler, useEffect, useState } from "react"
+import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { cn } from "@utils/tailwind";
+import { ChangeEvent, KeyboardEventHandler } from "react"
 
 
-interface Props extends FormFieldProps<number> {
-    large?: boolean;
-    embedded?: boolean;
-    fullWidth?: boolean;
+interface Props {
+    className?: string;
+    value?: number;
     min?: number;
     max?: number;
+    onChange: (newValue: number) => void;
 }
 
-const NumericField = (
+const NumberInput = (
     {
+        className,
         value,
-        large,
-        embedded,
-        fullWidth,
         min,
         max,
         onChange
     }: Props
 ) => {
+
+    // lifecycle
 
     // handlers
 
@@ -58,7 +56,6 @@ const NumericField = (
         onChange(newN)
     }
 
-
     // update N when the up and down keys are pressed
 
     const handleKeyDown: KeyboardEventHandler = event => {
@@ -76,6 +73,7 @@ const NumericField = (
 
     // don't increase if we've reached the max value
     const handleIncrease = () => {
+        if(typeof value === "undefined") return
         if(typeof max !== "undefined" && value + 1 > max) return
         onChange(value + 1)
     }
@@ -83,55 +81,45 @@ const NumericField = (
 
     // don't decrease if we've reached the min value
     const handleDecrease = () => {
+        if(typeof value === "undefined") return
         if(typeof min !== "undefined" && value - 1 < min) return
         onChange(value - 1)
     }
 
-    // conf
-
-    const maxSize = 15
-
-    // utils
-
-    const getClassNames = () => {
-        let classNames = styles.container
-        classNames += large ? ' ' + styles.large : ''
-        classNames += fullWidth ? ' ' + styles.fullWidth : ''
-        classNames += embedded ? ' ' + styles.embedded : ''
-        return classNames
-    }
-
-    const getSize = () => {
-        if(large) return undefined 
-        return Math.min(value.toString().length, maxSize)
-    }
-
+    // render
 
     return (
-        <div className={getClassNames()}>
-            <input 
-                type="text" 
-                value={value} 
+        <div className="flex items-center rounded-[8px] border border-blue-600/20">
+            <button 
+                onClick={handleDecrease}
+                className={cn(
+                    "text-xs w-[32px] h-[32px] text-blue-600 flex justify-center items-center",
+                    "hover:bg-blue-600/10 transition-colors duration-300 ease-in-out"
+                )}>
+                <FontAwesomeIcon icon={faMinus} />
+            </button>
+            <input
+                className={cn(
+                    "w-[128px] h-[32px] text-sm font-normal text-blue-600 placeholder:text-blue-600/60",
+                    "bg-transparent text-center",
+                )}
+                placeholder="0"
                 min={min}
                 max={max}
+                value={value}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
-                size={getSize()}
             />
-            <div className={styles.controls}>
-                <div 
-                    className={styles.controlButton}
-                    onClick={() => handleIncrease()}>
-                    <FontAwesomeIcon icon={faCaretUp} />
-                </div>
-                <div 
-                    className={styles.controlButton}
-                    onClick={() => handleDecrease()}>
-                    <FontAwesomeIcon icon={faCaretDown} />
-                </div>
-            </div>
+            <button
+                onClick={handleIncrease} 
+                className={cn(
+                    "text-xs w-[32px] h-[32px] text-blue-600 flex justify-center items-center",
+                    "hover:bg-blue-600/10 transition-colors duration-300 ease-in-out"
+                )}>
+                <FontAwesomeIcon icon={faPlus} />
+            </button>
         </div>
     )
 }
 
-export default NumericField
+export default NumberInput

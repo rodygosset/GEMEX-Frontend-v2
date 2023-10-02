@@ -1,5 +1,4 @@
 import SearchResultCard from "@components/cards/search-result-card"
-import SearchBar from "@components/form-elements/search-bar"
 import Pagination from "@components/pagination"
 import SearchFilters from "@components/search-filters"
 import LoadingIndicator from "@components/utils/loading-indicator"
@@ -8,7 +7,6 @@ import { MySession } from "@conf/utility-types"
 import { faDownload, faList, faTableCellsLarge } from "@fortawesome/free-solid-svg-icons"
 import useAPIRequest from "@hook/useAPIRequest"
 import { useGetMetaData } from "@hook/useGetMetaData"
-import styles from "@styles/pages/search.module.scss"
 import { Context } from "@utils/context"
 import { parseURLQuery } from "@utils/search-utils"
 import { SSRGetMetaData } from "@utils/ssr-get-metadata"
@@ -19,7 +17,7 @@ import { GetServerSideProps, NextPage } from "next"
 import { getServerSession } from "next-auth"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { useContext, useEffect, useRef, useState } from "react"
+import { Fragment, useContext, useEffect, useRef, useState } from "react"
 import { authOptions } from "./api/auth/[...nextauth]"
 
 import Image from "next/image"
@@ -30,6 +28,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { capitalizeFirstLetter, toISO } from "@utils/general"
 import { apiURLs } from "@conf/api/conf"
 import { Skeleton } from "@components/radix/skeleton"
+import { cn } from "@utils/tailwind"
 
 interface Props {
     queryItemType: string;
@@ -61,17 +60,14 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         setNavHistory
     } = useContext(Context)
 
-
-    // state 
-
-    const [itemType, setItemType] = useState(queryItemType)
+    const itemType = searchParams.item as string ?? "fiches"
 
     // load the search params from the URL query
 
     useEffect(() => {
         setSearchParams({
             ...initSearchParams,
-            item: itemType
+            item: queryItemType
         })
     }, [])
 
@@ -233,34 +229,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 
     const getDefaultSearchParam = () => searchConf[itemType].defaultSearchParam
 
-    const getResultsContainerClassNames = () => {
-        let classNames = ''
-        classNames += isListView ? styles.listView : ''
-        return classNames
-    }
-
-    // compute which view mode button should show as the current selected view mode
-    // & return the corresponding CSS class
-
-    const getViewModeButtonClassName = (isListViewButton: boolean) => {
-        if(isListViewButton && isListView || !isListViewButton && !isListView) {
-            return styles.selected
-        }
-        return ''
-    }
-
     // handlers
-
-    const handleItemTypeChange = (newItemType: string) => {
-        setItemType(newItemType)
-    }
-
-    const handleSearchInputChange = (newInputValue: string) => {
-        setSearchParams({
-            ...searchParams,
-            [getDefaultSearchParam()]: newInputValue
-        })
-    }
 
     const handleFormSubmit = () => {
         // before pushing to the new url
@@ -360,117 +329,109 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
     // render
 
     return (
-        <main id={styles.container}>
+        <>
             <Head>
 				<title>Recherche</title>
 				<meta name="description" content="Page de recherche de GEMEX" />
 			</Head>
             {
-                // don't load the search filters
-                // until the default search params have been loaded
-                // to make sure they are not ignored
-                initSearchParamsLoaded ?
-                <SearchFilters 
-                    hidden={!showFilters} 
-                    onSubmit={handleFormSubmit}
-                />
-                :
-                <></>
-            }
-
-            <div id={styles.mainColumn} className="w-full"> 
-                <SearchBar
-                    fullWidth
-                    hideCTA
-                    showFiltersButton
-                    onFiltersToggle={toggleFiltersVisibilty}
-                    defaultValue={ initSearchParams[getDefaultSearchParam()] }
-                    itemType={itemType}
-                    onItemTypeChange={handleItemTypeChange}
-                    onInputChange={handleSearchInputChange}
-                    onSubmit={handleFormSubmit}
-                />
-                <section className="w-full">
-                    { 
-                        // don't display any content
-                        // if there aren't no search results
-                        searchResults.length > 0 && !isLoading ?
-                        <>
-                            <div className="w-full flex items-center justify-between gap-[16px] flex-wrap">
-                                {
-                                    csv ?
-                                    <Link 
-                                        download={`resultats-recherche-${itemType}-${new Date().toLocaleDateString("fr-fr")}.csv`}
-                                        href={csv}
-                                        className="text-sm text-primary bg-primary/10 flex items-center gap-4 px-[16px] py-[8px] rounded-[8px] 
-                                    hover:bg-primary/20 transition-colors duration-300 ease-in-out">
-                                        <FontAwesomeIcon icon={faDownload} />
-                                        Export Excel
-                                    </Link>
-                                    : 
-                                    <Skeleton className="w-[150px] h-[40px]" />
-                                }
-                                <span className="text-base text-primary/60">{ nbResults } résultat(s)</span>
-                                <Pagination
-                                    currentPageNb={currentPageNb}
-                                    totalPagesNb={totalPagesNb}
-                                    setPageNb={setCurrentPageNb}
-                                />
-                            </div>
-                            <ScrollArea className={styles.scrollContainer + " w-full"}>
-                                <ul 
-                                    id={styles.searchResults} 
-                                    className={getResultsContainerClassNames()}>
-                                {
-                                    searchResults.map((item, index) => {
-                                        return (
-                                            <SearchResultCard
-                                                key={`${itemType}-${index}-search-result-card`}
-                                                itemType={itemType}
-                                                data={item}
-                                                globalMetaData={metaData}
-                                                listView={isListView}
-                                            />
-                                        )
-                                    })
-                                }
-                                </ul>
-                            </ScrollArea>
-                        </>
-                        :
-                        // while loading
-                        // display a loading indicator
-                        isLoading ?
-                        <div className={styles.loadingIndicatorContainer}>
-                            <LoadingIndicator/>
-                            <h4>Chargement...</h4>
-                        </div>
-                        :
-                        // if there aren't any results
-                        // display the corresponding illustration
-                        // & a message for the user
-                        <div className={styles.noResultsMessageContainer}>
-                            <div className={styles.illustrationContainer}>
-                                <Image 
-                                    quality={100}
-                                    src={'/images/no-results-illustration.svg'} 
-                                    alt={"Aucun résultat."} 
-                                    priority
-                                    fill
-                                    style={{ 
-                                        objectFit: "contain", 
-                                        top: "auto"
-                                    }}
-                                />
-                            </div>
-                            <h1>Aucun résultat...</h1>
-                            <p>Ré-essayer en changeant les paramètres de recherche</p>
-                        </div>
-
+                // don't display the controls if there aren't any results
+                searchResults.length > 0 && !isLoading ?
+                <div className={cn(
+                    "w-full flex items-center justify-between gap-[16px] flex-wrap sticky top-[80px]",
+                    "border-b border-blue-600/10",
+                    "bg-neutral-50/20 backdrop-blur-2xl",
+                    "px-[2.5vw] py-[16px]"
+                )}>
+                    {
+                        csv ?
+                        <Link 
+                            download={`resultats-recherche-${itemType}-${new Date().toLocaleDateString("fr-fr")}.csv`}
+                            href={csv}
+                            className="text-sm text-blue-600 bg-blue-600/10 flex items-center gap-4 px-[16px] py-[8px] rounded-[8px] 
+                        hover:bg-blue-600/20 transition-colors duration-300 ease-in-out">
+                            <FontAwesomeIcon icon={faDownload} />
+                            Export Excel
+                        </Link>
+                        : 
+                        <Skeleton className="w-[150px] h-[40px]" />
                     }
-                </section>
-            </div>
+                    <span className="text-base text-blue-600/60">{ nbResults } résultat(s)</span>
+                    <Pagination
+                        currentPageNb={currentPageNb}
+                        totalPagesNb={totalPagesNb}
+                        setPageNb={setCurrentPageNb}
+                    />
+                </div>
+                : <></>
+            }
+            <main className="w-full h-full flex-1 flex flex-col gap-16 px-[7%] gap-y-[32px] pt-6">
+            
+            { 
+                // don't display any content
+                // if there aren't no search results
+                searchResults.length > 0 && !isLoading ?
+                <>
+                    
+                    <ul 
+                        className={cn(
+                            "rounded-[8px] flex flex-col w-full h-full",
+                            "border border-blue-600/10",
+                        )}>
+                    {
+                        searchResults.map((item, index) => (
+                            <Fragment key={`${itemType}-${index}-search-result`}>
+                                <SearchResultCard
+                                    itemType={itemType}
+                                    data={item}
+                                    globalMetaData={metaData}
+                                />
+                                {
+                                    index < searchResults.length - 1 ?
+                                    <div className="w-full h-[1px] bg-blue-600/10" />
+                                    : <></>
+                                }
+                            </Fragment>
+                            ))
+                    }
+                    </ul>
+                </>
+                :
+                // while loading
+                // display a loading indicator
+                isLoading ?
+                <div className="w-full h-full flex-1 flex flex-col justify-center items-center gap-[8px]">
+                    <LoadingIndicator/>
+                    <span className="text-base text-blue-600 font-normal">Chargement...</span>
+                </div>
+                :
+                // if there aren't any results
+                // display the corresponding illustration
+                // & a message for the user
+                <div className="w-full h-full flex-1 flex flex-col justify-center items-center gap-[16px]">
+                    <div className="w-full relative aspect-[1.226] max-w-[500px]">
+                        <Image 
+                            quality={100}
+                            src={'/images/no-results-illustration.svg'} 
+                            alt={"Aucun résultat."} 
+                            priority
+                            fill
+                            style={{ 
+                                objectFit: "contain", 
+                                top: "auto"
+                            }}
+                        />
+                    </div>
+                    <div className="flex flex-col justify-center items-center text-center">
+                        <h1 className="text-blue-600 text-2xl">Aucun résultat...</h1>
+                        <p className="text-blue-600/60 text-base font-normal">Ré-essayer en changeant les paramètres de recherche</p>
+                    </div>
+                    </div>
+
+            }
         </main>
+        </>
+    
     )
 }
 

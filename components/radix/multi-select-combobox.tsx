@@ -7,7 +7,7 @@ import { cn } from '@utils/tailwind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { CommandEmpty, CommandGroup } from 'cmdk';
-import { Command, CommandItem } from './command';
+import { Command, CommandInput, CommandItem } from './command';
 import { ScrollArea } from './scroll-area';
 
 interface Props {
@@ -69,8 +69,8 @@ const MultiSelectCombobox = (
                     ref={ref} 
                     className={cn(
                         "flex flex-wrap items-center gap-4 min-h-[53px]",
-                        "px-[16px] py-[8px] rounded-[8px] bg-primary/10",
-                        "text-sm font-normal text-primary/80",
+                        "px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
+                        "text-sm font-normal text-blue-600/80",
                         "ring-offset-primary/10 focus-within:ring-2 focus-within:ring-primary/5 focus-within:ring-offset-2",
                         className
                     )}>
@@ -79,14 +79,14 @@ const MultiSelectCombobox = (
                         selected.map(option => (
                             <div 
                                 key={option.value}
-                                className="flex items-center gap-2 px-[16px] py-[8px] rounded-[8px] bg-primary/10">
+                                className="flex items-center gap-2 px-[16px] py-[8px] rounded-[8px] bg-blue-600/10">
                                 <button 
                                     type="button"
-                                    className="flex items-center justify-center h-[20px] w-[20px]  text-xs text-primary hover:text-error rounded-[4px] bg-transparent hover:bg-error/10 transition-colors duration-300 ease-in-out"
+                                    className="flex items-center justify-center h-[20px] w-[20px]  text-xs text-blue-600 hover:text-error rounded-[4px] bg-transparent hover:bg-error/10 transition-colors duration-300 ease-in-out"
                                     onClick={() => handleUnselect(option)}>
                                     <FontAwesomeIcon icon={faTimes} />
                                 </button>
-                                <span className='text-sm text-primary'>{option.label}</span>
+                                <span className='text-sm text-blue-600'>{option.label}</span>
                             </div>
                         ))
                         : <></>
@@ -94,9 +94,10 @@ const MultiSelectCombobox = (
                     <input 
                         ref={inputRef}
                         className={cn(
-                            "flex-1 bg-transparent outline-none text-sm font-normal text-primary/80",
-                            "placeholder:text-primary/60",
+                            "flex-1 bg-transparent outline-none text-sm font-normal text-blue-600/80",
+                            "placeholder:text-blue-600/60",
                         )}
+                        onClick={() => setIsOpen(true)}
                         onFocus={() => setIsOpen(true)}
                         onBlur={() => setIsOpen(false)}
                         value={inputValue}
@@ -108,20 +109,23 @@ const MultiSelectCombobox = (
             </PopoverTrigger>
             <PopoverContentScroll className='w-[250px] p-0'>
                 <Command>
+                    <CommandInput placeholder='Rechercher...' />
+                    <CommandEmpty>
+                        Aucun résultat
+                    </CommandEmpty>
                     <ScrollArea className='flex max-h-[280px] flex-col gap-4"'>
-                        <CommandEmpty>
-                            Aucun résultat
-                        </CommandEmpty>
                         <CommandGroup>
                             {
-                                options.map(option => (
+                                options
+                                // filter out options that are already selected
+                                .filter(option => !selected?.find(item => item.value == option.value))
+                                .map(option => (
                                     <Fragment key={option.value}>
                                         <CommandItem
                                             className="flex flex-row justify-between items-center"
                                             onSelect={currentValue => {
                                                 const option = options.find(option => option.label.toLowerCase() == currentValue)
                                                 if(option) {
-                                                    setIsOpen(false)
                                                     if(selected?.find(item => item.value == option.value)) handleUnselect(option)
                                                     else onSelect([...selected ?? [], option])
                                                 }
@@ -130,7 +134,7 @@ const MultiSelectCombobox = (
                                             {option.label}
                                             {
                                                 selected && selected.find(o => o.value == option.value) ?
-                                                <FontAwesomeIcon icon={faCheck} className="text-primary" />
+                                                <FontAwesomeIcon icon={faCheck} className="text-blue-600" />
                                                 : <></>
                                             }
                                         </CommandItem>

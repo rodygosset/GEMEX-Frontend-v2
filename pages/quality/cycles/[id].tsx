@@ -57,19 +57,19 @@ const CyclePage: NextPage<Props> = (
         <main className="flex flex-col px-[7%] gap-y-16 pt-6">
             <div className="w-full flex flex-row gap-16 flex-wrap">
                 <Link
-                    className="flex flex-row items-center justify-center w-[60px] h-[60px] rounded-full bg-primary/10
-                        group hover:bg-primary hover:shadow-2xl hover:shadow-primary/40 transition duration-300 ease-in-out cursor-pointer
+                    className="flex flex-row items-center justify-center w-[60px] h-[60px] rounded-full bg-blue-600/10
+                        group hover:bg-blue-600 hover:shadow-2xl hover:shadow-primary/40 transition duration-300 ease-in-out cursor-pointer
                     "
                     href="/quality">
                     <FontAwesomeIcon 
-                        className="text-primary group-hover:text-white text-base transition duration-300 ease-in-out"
+                        className="text-blue-600 group-hover:text-white text-base transition duration-300 ease-in-out"
                         icon={faChevronLeft} 
                     />
                 </Link>
                 <div className="flex flex-col flex-1">
-                    <h1 className="text-2xl text-primary font-semibold h-fit whitespace-nowrap">{getCycleYear()}</h1>
-                    <p className="text-base text-primary uppercase text-opacity-40 tracking-widest whitespace-nowrap">Cycle d'évaluation qualité</p>
-                    <p className="text-sm text-primary">
+                    <h1 className="text-2xl text-blue-600 font-semibold h-fit whitespace-nowrap">{getCycleYear()}</h1>
+                    <p className="text-base text-blue-600 uppercase text-opacity-40 tracking-widest whitespace-nowrap">Cycle d'évaluation qualité</p>
+                    <p className="text-sm text-blue-600">
                         Du {getLocaleDateString(cycle.date_debut)} au {getLocaleDateString(cycle.date_fin)}
                     </p>
                 </div>

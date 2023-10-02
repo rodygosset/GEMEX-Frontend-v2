@@ -29,8 +29,8 @@ const ContextMenu = (
             options={options}
             onSelect={onSelect}>
             <div className="h-[40px] w-[40px] flex items-center justify-center rounded-full border border-primary/20
-hover:bg-primary/10">
-                <FontAwesomeIcon icon={faEllipsisVertical} className="text-primary" />
+hover:bg-blue-600/10">
+                <FontAwesomeIcon icon={faEllipsisVertical} className="text-blue-600" />
             </div>
         </DropdownMenu>
     )

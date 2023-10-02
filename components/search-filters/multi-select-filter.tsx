@@ -8,7 +8,10 @@ import { useEffect, useState } from "react";
 import FilterWrapper from "./filter-wrapper";
 import { MySession } from "@conf/utility-types";
 import { useSession } from "next-auth/react";
+import ItemMultiSelectCombobox from "@components/radix/item-multi-select-combobox";
 
+
+// todo: finish this component
 
 const MultiSelectFilter = (
     {
@@ -21,98 +24,77 @@ const MultiSelectFilter = (
 
     // state
 
-    const [options, setOptions] = useState<SelectOption[]>([])
     const [selected, setSelected] = useState<string[]>(filter.value)
     
-    const [isLoading, setIsLoading] = useState(true)
-
-    // Fetch the data from the API 
-    // & convert it into a list of options
-
     
     const { conf } = filter
 
-    const makeAPIRequest = useAPIRequest()
+    // get the already selected options from the API
 
+    const makeAPIRequest = useAPIRequest()
     const session = useSession().data as MySession | null
 
-    useEffect(() => {
-
+    const getSelectedOption = async (label: string) => {
         if(!conf.item || !session) return
-
-        // start with making a request to the API
-
-        const handleReqSucess = (res: AxiosResponse<any[]>) => {
-            setIsLoading(false)
-            // convert the array of objects into an array of select options
-
-            if(!Array.isArray(res.data) || res.data.length == 0) { return }
-
-
-            // get the object property we'll use as the label
-            let mainAttr = '';
-            if('username' in res.data[0]) { mainAttr = 'username' }
-            else if('titre' in res.data[0]) { mainAttr = 'titre' }
-            else if('nom' in res.data[0]) { mainAttr = 'nom' }
-            else { mainAttr = 'id' }
-
-            setOptions(res.data.map(item => {
-                // if our options are users
-                // display their full name
-                let optionLabel: string = item[mainAttr]
-                if(mainAttr == 'username') {
-                    optionLabel = capitalizeEachWord(item['prenom'] + ' ' + item['nom'])
-                }
-                return { value: item.id, label: optionLabel }
-            }))
-        }
-
-        // in case there was an error with our request
-
-        const handleReqFailure = (res: Error | AxiosError<unknown, any>) => {
-            setIsLoading(false)
-        }
-
-        // make our API request
-
-        makeAPIRequest(
+    
+        return await makeAPIRequest<any, SelectOption>(
             session,
             "get",
             conf.item,
+            label,
             undefined,
-            undefined,
-            handleReqSucess,
-            handleReqFailure,
+            res => ({
+                label,
+                value: res.data.id
+            })
         )
-
-    }, [session, conf.item])
+    }
 
     // handlers
 
-    const handleChange: OnSelectHandler<string[]> = optionValue => {
-        setSelected(optionValue)
-        onChange(name, optionValue)
-    }
+    const handleChange: OnSelectHandler<string[]> = optionValue => onChange(name, optionValue)
 
+    const [selectedOptions, setSelectedOptions] = useState<SelectOption[]>([])
 
-    return (
+    useEffect(() => {
+        handleChange(selectedOptions.map(option => option.label))
+    }, [selectedOptions])
+
+    const [defaultValuesLoaded, setDefaultValuesLoaded] = useState(false)
+
+    useEffect(() => {
+        if(!conf.item || !session || defaultValuesLoaded || !filter.value) return
+
+        const getSelectedOptions = async () => {
+            const selectedOptions: SelectOption[] = []
+            for(const label of filter.value) {
+                const option = await getSelectedOption(label)
+                if(option && !(option instanceof Error)) selectedOptions.push(option)
+            }
+            setSelectedOptions(selectedOptions)
+            setDefaultValuesLoaded(true)
+        }
+
+        getSelectedOptions()
+    }, [session])
+
+    
+    // render
+
+    return conf.item ? (
         <FilterWrapper
             filterName={name}
             label={getFilterLabel(name, conf)}
             onCheckToggle={onToggle}
             checked={filter.checked}
         >
-            <Select
-                name={name}
-                options={options}
-                isLoading={isLoading}
-                value={selected}
-                onChange={handleChange}
-                isMulti
-                large
+            <ItemMultiSelectCombobox
+                itemType={conf.item}
+                onSelect={setSelectedOptions}
+                selected={selectedOptions.map(option => option.value as number)}
             />
         </FilterWrapper>
-    )
+    ) : <></>
 }
 
 export default MultiSelectFilter

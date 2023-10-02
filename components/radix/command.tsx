@@ -17,7 +17,7 @@ const Command = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      "flex h-full w-full flex-col overflow-hidden rounded-[8px] bg-white text-primary/80",
+      "flex h-full w-full flex-col overflow-hidden rounded-[8px] bg-white text-blue-600/80",
       className
     )}
     {...props}
@@ -31,7 +31,7 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   return (
     <Dialog {...props}>
       <DialogContent className="overflow-hidden p-0">
-        <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-primary/60 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
+        <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-blue-600/60 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
           {children}
         </Command>
       </DialogContent>
@@ -44,11 +44,11 @@ const CommandInput = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
   <div className="flex items-center border-b border-primary/10 px-[16px] gap-4" cmdk-input-wrapper="">
-    <FontAwesomeIcon icon={faMagnifyingGlass} className="text-primary/60 text-xs" />
+    <FontAwesomeIcon icon={faMagnifyingGlass} className="text-blue-600/60 text-xs" />
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
-        "flex w-full rounded-md bg-transparent py-[8px] text-sm outline-none placeholder:text-primary/60 disabled:cursor-not-allowed disabled:opacity-50",
+        "flex w-full rounded-md bg-transparent py-[8px] text-sm outline-none placeholder:text-blue-600/60 disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
       {...props}
@@ -77,7 +77,7 @@ const CommandEmpty = React.forwardRef<
 >((props, ref) => (
   <CommandPrimitive.Empty
     ref={ref}
-    className="py-6 text-center text-sm text-primary/80"
+    className="py-6 text-center text-sm text-blue-600/80"
     {...props}
   />
 ))
@@ -91,7 +91,7 @@ const CommandGroup = React.forwardRef<
   <CommandPrimitive.Group
     ref={ref}
     className={cn(
-      "overflow-hidden text-primary/80 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-primary/60",
+      "overflow-hidden text-blue-600/80 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-blue-600/60",
       className
     )}
     {...props}
@@ -106,7 +106,7 @@ const CommandSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.Separator
     ref={ref}
-    className={cn("-mx-1 h-px bg-primary/10", className)}
+    className={cn("-mx-1 h-px bg-blue-600/10", className)}
     {...props}
   />
 ))
@@ -119,7 +119,7 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm p-[8px] text-sm outline-none aria-selected:bg-primary/10 aria-selected:text-primary data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex cursor-default select-none items-center rounded-sm p-[8px] text-sm outline-none aria-selected:bg-blue-600/10 aria-selected:text-blue-600 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
     {...props}
@@ -135,7 +135,7 @@ const CommandShortcut = ({
   return (
     <span
       className={cn(
-        "ml-auto text-xs tracking-widest text-primary/60",
+        "ml-auto text-xs tracking-widest text-blue-600/60",
         className
       )}
       {...props}

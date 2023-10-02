@@ -74,17 +74,17 @@ const ThematiquesWidget = (
     return (
         <SectionContainer>
             <div className="flex flex-col">
-                <h3 className="text-xl font-semibold text-primary">Prochaines thématiques</h3>
-                <p className="text-base font-normal text-primary/60">Thématiques non évaluées durant ce mois</p>
+                <h3 className="text-xl font-semibold text-blue-600">Prochaines thématiques</h3>
+                <p className="text-base font-normal text-blue-600/60">Thématiques non évaluées durant ce mois</p>
             </div>
             <ul className="w-full flex flex-col gap-4 md:mt-8 h-full flex-grow-0">
                 <li className="w-full flex flex-row items-center max-md:hidden">
-                    <span className="text-base text-primary/60 font-normal flex-1">Thématiques</span>
-                    <span className="text-base text-primary/60 font-normal flex-1">Dernière évaluation</span>
-                    <span className="text-base text-primary/60 font-normal flex-1">Périodicité</span>
+                    <span className="text-base text-blue-600/60 font-normal flex-1">Thématiques</span>
+                    <span className="text-base text-blue-600/60 font-normal flex-1">Dernière évaluation</span>
+                    <span className="text-base text-blue-600/60 font-normal flex-1">Périodicité</span>
                     <span className="w-[40px] h-[40px]"></span>
                 </li>
-                <div className="w-full h-[1px] bg-primary/10"></div>
+                <div className="w-full h-[1px] bg-blue-600/10"></div>
 
                 <ScrollArea className="flex h-[280px] flex-col gap-4">
                 {
@@ -106,15 +106,15 @@ const ThematiquesWidget = (
                                             </span>
                                             : <></>
                                         }
-                                        <span className="text-base font-normal text-primary">{thematique.nom}</span>
+                                        <span className="text-base font-normal text-blue-600">{thematique.nom}</span>
                                     </div>
                                     {
                                         getLatestEvaluationDate(thematique.id) ?
-                                        <span className="text-base max-md:text-sm font-normal text-primary/80 flex-1 capitalize">{getLatestEvaluationDate(thematique.id)?.toLocaleDateString("fr-fr", { year: "numeric", month: "long", day: "numeric" })}</span> 
+                                        <span className="text-base max-md:text-sm font-normal text-blue-600/80 flex-1 capitalize">{getLatestEvaluationDate(thematique.id)?.toLocaleDateString("fr-fr", { year: "numeric", month: "long", day: "numeric" })}</span> 
                                         :
-                                        <span className="text-base max-md:text-sm font-normal text-primary/80 flex-1">Pas d'évaluation</span>
+                                        <span className="text-base max-md:text-sm font-normal text-blue-600/80 flex-1">Pas d'évaluation</span>
                                     }
-                                    <span className="text-base max-md:text-sm font-normal text-primary/80 flex-1">
+                                    <span className="text-base max-md:text-sm font-normal text-blue-600/80 flex-1">
                                         À évaluer 
                                         {
                                             thematique.periodicite > 1 ?
@@ -127,12 +127,12 @@ const ThematiquesWidget = (
                             </li>
                             {
                                 index < thematiques.length - 1 ?
-                                <div className="w-full h-[1px] bg-primary/10"></div> :
+                                <div className="w-full h-[1px] bg-blue-600/10"></div> :
                                 <></>
                             }
                         </Fragment>
                     ))
-                    : <p className="text-base font-normal text-primary/60">Aucune thématique à évaluer</p>
+                    : <p className="text-base font-normal text-blue-600/60">Aucune thématique à évaluer</p>
                 }
                 </ScrollArea>
             </ul>

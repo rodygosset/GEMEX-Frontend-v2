@@ -148,8 +148,8 @@ const ChartWidget = (
         <SectionContainer>
             <div className="w-full flex flex-row justify-between max-[480px]:flex-col">
                 <div className="flex flex-col">
-                    <h3 className="text-xl font-semibold text-primary">Taux qualité</h3>
-                    <p className="text-base font-normal text-primary/60">Pour l'évaluation mensuelle</p>
+                    <h3 className="text-xl font-semibold text-blue-600">Taux qualité</h3>
+                    <p className="text-base font-normal text-blue-600/60">Pour l'évaluation mensuelle</p>
                 </div>
                 <div className="flex flex-col items-end max-[480px]:items-start">
                     <span>
@@ -158,7 +158,7 @@ const ChartWidget = (
                         }`}>
                             { moisCycle.note || 0 }
                         </b> 
-                        <span className="text-sm font-normal text-primary/80">/20</span>
+                        <span className="text-sm font-normal text-blue-600/80">/20</span>
                     </span>
                     <span className="text-end max-[480px]:text-start">
                         <b className={`text-sm ${
@@ -166,7 +166,7 @@ const ChartWidget = (
                         }`}>
                             { getDistanceToGoal(moisCycle.note || 0) }
                         </b>
-                        <span className="text-sm font-normal text-primary/80"> par rapport à l'objectif</span>
+                        <span className="text-sm font-normal text-blue-600/80"> par rapport à l'objectif</span>
                     </span>
                 </div>
             </div>
@@ -189,15 +189,15 @@ const ChartWidget = (
                 </div>
                 <div className="w-full flex flex-row gap-4 max-[480px]:flex-wrap">
                     <a
-                        className="w-full bg-primary/10 rounded-[8px] px-[16px] py-[8px] 
-                        flex flex-row justify-center items-center gap-4 hover:bg-primary/20 transition duration-300 ease-in-out cursor-pointer"
+                        className="w-full bg-blue-600/10 rounded-[8px] px-[16px] py-[8px] 
+                        flex flex-row justify-center items-center gap-4 hover:bg-blue-600/20 transition duration-300 ease-in-out cursor-pointer"
                         download={`graphique-taux-qualite-${moisCycle.mois}.png`}
                         href={imageLink}>
-                        <FontAwesomeIcon icon={faDownload} className="text-primary" />
-                        <span className="font-normal text-sm text-primary whitespace-nowrap">Télécharger l'image</span>
+                        <FontAwesomeIcon icon={faDownload} className="text-blue-600" />
+                        <span className="font-normal text-sm text-blue-600 whitespace-nowrap">Télécharger l'image</span>
                     </a>
                     <a
-                        className="w-full bg-primary rounded-[8px] px-[16px] py-[8px] 
+                        className="w-full bg-blue-600 rounded-[8px] px-[16px] py-[8px] 
                         flex flex-row justify-center items-center gap-4 hover:shadow-2xl hover:shadow-primary transition duration-300 ease-in-out cursor-pointer"
                         download={`resultats-taux-qualite-${moisCycle.mois}.csv`}
                         href={dataToCSV()}>

@@ -45,7 +45,7 @@ const DialogContent = React.forwardRef<
       ref={ref}
       className={cn(
         `fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 bg-white shadow-2xl shadow-primary/30 
-        transition ease-in-out rounded-[8px] p-[32px]
+        transition ease-in-out rounded-[8px]
         duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 
         data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 
         data-[state=open]:slide-in-from-top-[48%] sm:rounded-[8px] md:w-full`,
@@ -55,7 +55,7 @@ const DialogContent = React.forwardRef<
     >
       {children}
       <DialogPrimitive.Close className="absolute right-[16px] top-[16px] rounded-[8px] w-[32px] h-[32px] outline-none p-[8px] disabled:pointer-events-none
-        hover:bg-primary/10 border border-primary/10 flex justify-center items-center text-primary text-base">
+        hover:bg-blue-600/10 border border-primary/10 flex justify-center items-center text-blue-600 text-base">
         <FontAwesomeIcon icon={faXmark} />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
@@ -99,7 +99,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "text-xl font-semibold text-primary text-left",
+      "text-xl font-semibold text-blue-600 text-left",
       className
     )}
     {...props}
@@ -113,7 +113,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm font-normal text-left text-primary/60", className)}
+    className={cn("text-sm font-normal text-left text-blue-600/60", className)}
     {...props}
   />
 ))

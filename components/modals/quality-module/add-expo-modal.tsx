@@ -42,10 +42,10 @@ const AddExpoModal = (
                 className="flex flex-col gap-8 w-[300px] overflow-auto bg-white rounded-2xl p-[32px]"
                 name="add-expo-form">
                 <div className="w-full flex flex-col">
-                    <h3 className="text-xl font-bold text-primary flex-1">Ajouter une exposition</h3>
-                    <span className="text-base font-normal text-primary/60">A la liste pour ce cycle</span>
+                    <h3 className="text-xl font-bold text-blue-600 flex-1">Ajouter une exposition</h3>
+                    <span className="text-base font-normal text-blue-600/60">A la liste pour ce cycle</span>
                 </div>
-                <div className="w-full h-[1px] bg-primary/10"></div>
+                <div className="w-full h-[1px] bg-blue-600/10"></div>
                 <FieldContainer fullWidth>
                     <Label>Exposition</Label>
                     <ItemSelect

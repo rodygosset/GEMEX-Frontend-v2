@@ -59,6 +59,7 @@ const DateFilter = (
 
     return (
         <FilterWrapper
+            inline
             filterName={name}
             label={getFilterLabel(name, conf)}
             onCheckToggle={onToggle}

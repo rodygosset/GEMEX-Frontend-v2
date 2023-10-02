@@ -1,11 +1,11 @@
-import NumericField from "@components/form-elements/numeric-field"
-import Select from "@components/form-elements/select"
 import { getFilterLabel, numberSearchParam, SearchFilterProps } from "@conf/api/search"
 import { Context } from "@utils/context"
 import { getOperatorOption, hasNumberOperatorParam, operatorOptions } from "@utils/form-elements/time-delta-input"
 import { useContext, useEffect, useState } from "react"
 import FilterWrapper from "./filter-wrapper"
-import { numberOperatorSelectStyles } from "./time-delta-filter"
+import { cn } from "@utils/tailwind"
+import NumberInput from "@components/radix/number-input"
+import DropdownMenu from "@components/radix/dropdown-menu"
 
 
 const NumericFilter = (
@@ -70,6 +70,7 @@ const NumericFilter = (
 
     return (
         <FilterWrapper
+            inline
             filterName={name}
             label={getFilterLabel(name, conf)}
             onCheckToggle={onToggle}
@@ -79,21 +80,23 @@ const NumericFilter = (
                 // only render the operator selector if the current parameter
                 // has a corresponding number operator param for the current item type
                 hasNumberOperatorParam(name, searchParams["item"]?.toString()) ?
-                <Select
-                    name={name}
+                <DropdownMenu
                     options={operatorOptions}
-                    onChange={handleOperatorChange}
-                    defaultValue={operator.value}
-                    customStyles={numberOperatorSelectStyles}
-                    isSearchable={false}
-                />
+                    onSelect={handleOperatorChange}
+                >
+                    <span className={cn(
+                        "w-[32px] h-[32px] rounded-[4px] border border-blue-600/20",
+                        "text-xs text-blue-600 flex justify-center items-center",
+                    )}>
+                    {operator.label}
+                    </span>
+                </DropdownMenu>
                 :
                 <></>
             }
-            <NumericField
+            <NumberInput
                 value={value}
                 onChange={handleChange}
-                large
             />
         </FilterWrapper>
     )

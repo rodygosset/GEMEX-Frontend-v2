@@ -5,6 +5,7 @@ import { faLink } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/components/cards/search-result-card.module.scss"
 import { capitalizeEachWord, capitalizeFirstLetter, dateOptions } from "@utils/general"
+import { cn } from "@utils/tailwind"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -15,7 +16,6 @@ interface Props {
     itemType: keyof SearchConf;
     href?: string;
     globalMetaData: SearchResultsMetaData;
-    listView?: boolean;
     isSelected?: boolean;
     areLinksDisabled?: boolean;
     onClick?: () => void;
@@ -27,7 +27,6 @@ const SearchResultCard = (
         itemType,
         href,
         globalMetaData,
-        listView,
         isSelected,
         areLinksDisabled,
         onClick
@@ -111,12 +110,6 @@ const SearchResultCard = (
 
     // utils
     
-    const getClassNames = () => {
-        let classNames = styles.listItem
-        classNames += listView ? ' ' + styles.listView : ''
-        classNames += isSelected ? ' ' + styles.selected : ''
-        return classNames
-    }
 
     const getItemIcon = () => searchItemIcons[itemType]
 
@@ -151,14 +144,22 @@ const SearchResultCard = (
     return (
         <li 
             onClick={e => handleClick(e)}
-            className={getClassNames()}>
-            <h4>
-                <Link href={getHref()} onClick={handleLinkClick}>
-                    <FontAwesomeIcon icon={getItemIcon()}/>
-                    <span>{ getItemTitle() }</span>
+            className={cn(
+                "cursor-pointer transition-all duration-200 ease-in-out",
+                "w-full flex items-center flex-wrap px-[32px] py-[16px]",
+                isSelected ? "bg-blue-600/10 border-2 border-blue-600" : "hover:bg-blue-600/5",
+                "max-md:flex-col max-md:items-start max-md:gap-[16px]"
+            )}>
+            <h4 className="text-base text-blue-600 font-medium flex-1">
+                <Link 
+                    className="flex items-center gap-[8px]"
+                    href={getHref()} 
+                    onClick={handleLinkClick}>
+                    <FontAwesomeIcon icon={getItemIcon()} className="text-2xl" />
+                    <span className="flex-1 w-full">{ getItemTitle() }</span>
                 </Link>
             </h4>
-            <ul>
+            <ul className="w-full flex flex-col items-start flex-1 gap-[8px]">
             {
                 searchResultConfig.map((field, index) => {
                     // get the conf from viewConf
@@ -167,21 +168,34 @@ const SearchResultCard = (
                     if(!metaData[index]) return
                     // render
                     return (
-                        <li key={`${field}_item_${data.id}`}>
-                            <span className={styles.label}>{getFilterLabel(field, fieldConf)}</span>
+                        <li 
+                            className="w-full flex flex-wrap items-center gap-[8px]"
+                            key={`${field}_item_${data.id}`}>
+                            <span className="text-blue-600/80">
+                                {getFilterLabel(field, fieldConf)}
+                            </span>
                             {
                                 // if the current piece of meta-data is a link
                                 fieldConf.type in apiURLs ?
                                 // display it accordingly
                                 <Link 
+                                    className={cn(
+                                        "flex-1 flex gap-[4px] text-purple-600 hover:scale-110 underline cursor-pointer",
+                                        "transition-all duration-200 ease-in-out",
+                                        "whitespace-nowrap overflow-hidden text-ellipsis"
+                                    )}
                                     onClick={handleLinkClick}
                                     href={getMetaDataLinkHref(fieldConf.type, data[field])}>
                                     <FontAwesomeIcon icon={faLink}/>
-                                    <span className={styles.metaData}>{metaData[index]}</span>
+                                    <span className="w-full whitespace-nowrap overflow-hidden text-ellipsis">{metaData[index]}</span>
                                 </Link>
                                 :
                                 // otherwise, display it as text
-                                <span className={styles.metaData}>{metaData[index]}</span>
+                                <span className={cn(
+                                    "text-blue-600 w-full whitespace-nowrap overflow-hidden text-ellipsis",
+                                )}>
+                                    {metaData[index]}
+                                </span>
                             }
                         </li>
                     )

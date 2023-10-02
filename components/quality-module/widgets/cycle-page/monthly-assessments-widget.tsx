@@ -48,22 +48,22 @@ const MonthlyAssessmentsWidget = (
     return (
         <SectionContainer heightFit>
             <div className="flex flex-col">
-                <h3 className="text-xl font-semibold text-primary">Évaluations mensuelles</h3>
-                <p className="text-base font-normal text-primary/60">Résultats des évaluations des mois passés</p>
+                <h3 className="text-xl font-semibold text-blue-600">Évaluations mensuelles</h3>
+                <p className="text-base font-normal text-blue-600/60">Résultats des évaluations des mois passés</p>
             </div>
             <ul className="w-full gap-4 mt-4 grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))]">
             {
                 cycle.mois_cycle.length > 0 ?
                 cycle.mois_cycle.map(mois => (
                     <li 
-                        className="flex-1 rounded-[8px] hover:bg-primary/5 transition duration-300 ease-in-out cursor-pointer"
+                        className="flex-1 rounded-[8px] hover:bg-blue-600/5 transition duration-300 ease-in-out cursor-pointer"
                         key={mois.id}>
                         <Link
                             className="w-full flex flex-col p-[16px] whitespace-nowrap" 
                             href={`/quality/monthly-assessments/${mois.id}`}>
                             <span className="flex flex-row items-center gap-4">
-                                <span className="text-base font-semibold text-primary">{ getMonthAndYear(mois, new Date(cycle.date_debut)) }</span>
-                                <FontAwesomeIcon icon={faCircle} className="text-primary/40 text-[0.4rem]" />
+                                <span className="text-base font-semibold text-blue-600">{ getMonthAndYear(mois, new Date(cycle.date_debut)) }</span>
+                                <FontAwesomeIcon icon={faCircle} className="text-blue-600/40 text-[0.4rem]" />
                                 <span className={`text-xl font-semibold ${
                                     (mois.note || 0) < 15 ? 'text-error' : (mois.note || 0) < 16 ? 'text-warning' : 'text-success'
                                 }`}>
@@ -72,7 +72,7 @@ const MonthlyAssessmentsWidget = (
                             </span>
                             {
                                 isLatestMonth(mois) ?
-                                <span className="text-sm font-semibold text-secondary">En cours</span>
+                                <span className="text-sm font-semibold text-purple-600">En cours</span>
                                 : <></>
                             }
                             <span className="flex flex-row items-center gap-2 text-sm">
@@ -81,12 +81,12 @@ const MonthlyAssessmentsWidget = (
                                 }>
                                     { getDistanceToGoal(mois.note || 0) }
                                 </b> 
-                                <span className="text-primary/60">{ getDistanceToGoal(mois.note || 0) > 0 ? "au-dessus" : "en-dessous" } de l'objectif</span>
+                                <span className="text-blue-600/60">{ getDistanceToGoal(mois.note || 0) > 0 ? "au-dessus" : "en-dessous" } de l'objectif</span>
                             </span>
                         </Link>
                     </li>
                 ))
-                : <p className="text-base font-normal text-primary/60">Aucune évaluation mensuelle pour ce cycle</p>
+                : <p className="text-base font-normal text-blue-600/60">Aucune évaluation mensuelle pour ce cycle</p>
             }
             </ul>
         </SectionContainer>

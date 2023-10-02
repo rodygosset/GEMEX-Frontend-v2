@@ -106,7 +106,7 @@ const CurrentCycleWidget = (
                             }}
                         />
                     </div>
-                    <p className="text-base font-normal text-primary/60">Aucun cycle en cours</p>
+                    <p className="text-base font-normal text-blue-600/60">Aucun cycle en cours</p>
                 </div>
             }
 

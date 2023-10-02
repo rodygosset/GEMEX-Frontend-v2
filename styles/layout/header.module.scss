@@ -15,7 +15,6 @@
     width: fit-content;
     height: $nav-bar-height;
     padding: 0 2.5vw;
-    background: #f4f7ff;
 
     .logoContainer {
         @include flex-container(row, nowrap, center, center);

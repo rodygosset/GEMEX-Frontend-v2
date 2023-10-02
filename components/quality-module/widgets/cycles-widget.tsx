@@ -38,8 +38,8 @@ const CyclesWidget = (
             <SectionContainer>
                 <div className="w-full flex flex-row justify-between content-center max-[520px]:flex-col gap-4">
                     <div className="flex flex-col">
-                        <h3 className="text-xl font-bold text-primary">Cycles passés</h3>
-                        <p className="text-sm font-normal text-primary text-opacity-60">Cycles d’évaluation annuels cloturés</p>
+                        <h3 className="text-xl font-bold text-blue-600">Cycles passés</h3>
+                        <p className="text-sm font-normal text-blue-600 text-opacity-60">Cycles d’évaluation annuels cloturés</p>
                     </div>   
                     <Button
                         icon={faPlus}
@@ -54,14 +54,14 @@ const CyclesWidget = (
                     {
                         cycles.map(cycle => (
                             <li 
-                                className="flex-1 rounded-[8px] hover:bg-primary/10 transition duration-300 ease-in-out cursor-pointer"
+                                className="flex-1 rounded-[8px] hover:bg-blue-600/10 transition duration-300 ease-in-out cursor-pointer"
                                 key={cycle.id}>
                                 <Link
                                     className="w-full flex flex-col p-[16px] whitespace-nowrap" 
                                     href={`/quality/cycles/${cycle.id}`}>
                                     <span className="flex flex-row items-center gap-4">
-                                        <span className="text-base font-semibold text-primary">{ getCycleYear(cycle) }</span>
-                                        <FontAwesomeIcon icon={faCircle} className="text-primary/40 text-[0.4rem]" />
+                                        <span className="text-base font-semibold text-blue-600">{ getCycleYear(cycle) }</span>
+                                        <FontAwesomeIcon icon={faCircle} className="text-blue-600/40 text-[0.4rem]" />
                                         <span className={`text-xl font-semibold ${
                                             (cycle.note || 0) < 15 ? 'text-error' : (cycle.note || 0) < 16 ? 'text-warning' : 'text-success'
                                         }`}>
@@ -74,7 +74,7 @@ const CyclesWidget = (
                                         }>
                                             { getDistanceToGoal(cycle.note || 0) }
                                         </b> 
-                                        <span className="text-primary/60">{ getDistanceToGoal(cycle.note || 0) > 0 ? "au-dessus" : "en-dessous" } de l'objectif</span>
+                                        <span className="text-blue-600/60">{ getDistanceToGoal(cycle.note || 0) > 0 ? "au-dessus" : "en-dessous" } de l'objectif</span>
                                     </span>
                                 </Link>
                             </li>
@@ -98,7 +98,7 @@ const CyclesWidget = (
                                 }}
                             />
                         </div>
-                        <p className="text-base font-normal text-primary/60">Aucun cycle d’évaluation passé</p>
+                        <p className="text-base font-normal text-blue-600/60">Aucun cycle d’évaluation passé</p>
                     </div>
 
                 }

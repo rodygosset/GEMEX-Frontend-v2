@@ -113,8 +113,8 @@ const ChartWidget = (
         <SectionContainer>
             <div className="w-full flex flex-row justify-between max-[480px]:flex-col">
                 <div className="flex flex-col">
-                    <h3 className="text-xl font-semibold text-primary">Taux qualité annuel</h3>
-                    <p className="text-base font-normal text-primary/60">Pour le cycle en cours</p>
+                    <h3 className="text-xl font-semibold text-blue-600">Taux qualité annuel</h3>
+                    <p className="text-base font-normal text-blue-600/60">Pour le cycle en cours</p>
                 </div>
                 <div className="flex flex-col items-end max-[480px]:items-start">
                     <span>
@@ -123,7 +123,7 @@ const ChartWidget = (
                         }`}>
                             { getAverage(cycle) }
                         </b> 
-                        <span className="text-sm font-normal text-primary/80">/20</span>
+                        <span className="text-sm font-normal text-blue-600/80">/20</span>
                     </span>
                     <span className="text-end max-[480px]:text-start">
                         <b className={`text-sm ${
@@ -131,7 +131,7 @@ const ChartWidget = (
                         }`}>
                             { getDistanceToGoal(getAverage(cycle)) }
                         </b>
-                        <span className="text-sm font-normal text-primary/80"> par rapport à l'objectif</span>
+                        <span className="text-sm font-normal text-blue-600/80"> par rapport à l'objectif</span>
                     </span>
                 </div>
             </div>
@@ -155,13 +155,13 @@ const ChartWidget = (
                 {
                     cycle.mois_cycle.length > 0 ?
                     <div className="w-full flex flex-row flex-wrap items-center">
-                        <span className="text-sm text-primary/80">
+                        <span className="text-sm text-blue-600/80">
                             <b className={getLatestMonthData(cycle) < 10 ? "text-error" : getLatestMonthData(cycle) < 15 ? "text-warning" : "text-success"}>
                             { getLatestMonthData(cycle) }
                             </b> au mois de <span className="lowercase">{ getLatestMonthLabel(cycle) }</span>
                         </span>
-                        <FontAwesomeIcon icon={faCircle} className="text-primary/40 mx-4 text-[0.4rem]" />
-                        <span className="text-sm text-primary/80">
+                        <FontAwesomeIcon icon={faCircle} className="text-blue-600/40 mx-4 text-[0.4rem]" />
+                        <span className="text-sm text-blue-600/80">
                             <b className={getDistanceToGoal(getLatestMonthData(cycle)) < 0 ? "text-error" : getDistanceToGoal(getLatestMonthData(cycle)) < 5 ? "text-warning" : "text-success"}>
                             { getDistanceToGoal(getLatestMonthData(cycle)) }
                             </b> { getDistanceToGoal(getLatestMonthData(cycle)) > 0 ? "au-dessus" : "points en-dessous" } de l'objectif
@@ -172,15 +172,15 @@ const ChartWidget = (
                 }
                 <div className="w-full flex flex-row gap-4 max-[480px]:flex-wrap">
                     <a
-                        className="w-full bg-primary/10 rounded-[8px] px-[16px] py-[8px] 
-                        flex flex-row justify-center items-center gap-4 hover:bg-primary/20 transition duration-300 ease-in-out cursor-pointer"
+                        className="w-full bg-blue-600/10 rounded-[8px] px-[16px] py-[8px] 
+                        flex flex-row justify-center items-center gap-4 hover:bg-blue-600/20 transition duration-300 ease-in-out cursor-pointer"
                         download={`graphique-taux-qualite-${cycle.date_debut}-${cycle.date_fin}.png`}
                         href={imageLink}>
-                        <FontAwesomeIcon icon={faDownload} className="text-primary" />
-                        <span className="font-normal text-sm text-primary whitespace-nowrap">Télécharger l'image</span>
+                        <FontAwesomeIcon icon={faDownload} className="text-blue-600" />
+                        <span className="font-normal text-sm text-blue-600 whitespace-nowrap">Télécharger l'image</span>
                     </a>
                     <a
-                        className="w-full bg-primary rounded-[8px] px-[16px] py-[8px] 
+                        className="w-full bg-blue-600 rounded-[8px] px-[16px] py-[8px] 
                         flex flex-row justify-center items-center gap-4 hover:shadow-2xl hover:shadow-primary transition duration-300 ease-in-out cursor-pointer"
                         download={`resultats-taux-qualite-${cycle.date_debut}-${cycle.date_fin}.csv`}
                         href={dataToCSV(cycle)}>

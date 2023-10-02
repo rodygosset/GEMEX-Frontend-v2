@@ -53,21 +53,21 @@ const Home: NextPage<Props> = (
         <main className="flex flex-col px-[7%] gap-y-16 pt-6">
             <div className="flex flex-row flex-wrap items-center gap-8">
                 <div className="flex flex-row items-center gap-8 flex-1">
-                    <FontAwesomeIcon icon={faChartPie} className="text-5xl text-primary" />
+                    <FontAwesomeIcon icon={faChartPie} className="text-5xl text-blue-600" />
                     <div className="flex flex-col">
-                        <h1 className="text-2xl text-primary font-semibold h-fit whitespace-nowrap">Taux Qualité</h1>
-                        <p className="text-base text-primary text-opacity-40 tracking-widest whitespace-nowrap">TABLEAU DE BORD</p>
+                        <h1 className="text-2xl text-blue-600 font-semibold h-fit whitespace-nowrap">Taux Qualité</h1>
+                        <p className="text-base text-blue-600 text-opacity-40 tracking-widest whitespace-nowrap">TABLEAU DE BORD</p>
                     </div>
                 </div>
                 <Link 
-                    className="flex flex-row items-center gap-4 w-fit bg-primary bg-opacity-10 rounded-[8px] px-[16px] py-[8px]
+                    className="flex flex-row items-center gap-4 w-fit bg-blue-600 bg-opacity-10 rounded-[8px] px-[16px] py-[8px]
                         hover:bg-opacity-20 transition duration-300 ease-in-out cursor-pointer"
                     href="/quality/evaluations/search">
                     <FontAwesomeIcon 
                         icon={faArrowRight} 
-                        className="text-sm text-primary"
+                        className="text-sm text-blue-600"
                     />
-                    <span className="text-sm font-normal text-primary whitespace-nowrap">Historique des évaluations</span>
+                    <span className="text-sm font-normal text-blue-600 whitespace-nowrap">Historique des évaluations</span>
                 </Link>
             </div>
             <div className="w-full h-full flex flex-col gap-4">

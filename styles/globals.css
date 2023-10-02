@@ -36,6 +36,10 @@ a {
 	font-family: 'Josefin Sans';
 }
 
+div#__next {
+	@apply flex flex-col;
+}
+
 div#__next main {
 	width: 100%;
 }

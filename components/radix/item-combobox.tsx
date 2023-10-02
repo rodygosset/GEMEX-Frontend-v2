@@ -16,7 +16,7 @@ interface Props {
     itemType: string;
     searchParams?: any;
     onChange: (value: number) => void;
-    field: ControllerRenderProps<any, any>;
+    field?: ControllerRenderProps<any, any>;
     selected?: number;
 }
 
@@ -114,7 +114,7 @@ const ItemComboBox = (
 
     const getLabel = () => {
         if(selected) return options.find(option => option.value == selected)?.label ?? "Sélectionner..."
-        else if(field.value) return options.find(option => option.value == field.value)?.label ?? "Sélectionner..."
+        else if(field?.value) return options.find(option => option.value == field.value)?.label ?? "Sélectionner..."
         else return "Sélectionner..."
     }
 
@@ -128,12 +128,12 @@ const ItemComboBox = (
                 <button 
                     role="combobox"
                     className={`flex flex-row justify-between items-center gap-4 px-[16px] py-[8px] rounded-[8px] w-full
-                                bg-primary/10 text-left overflow-hidden overflow-ellipsis
-                                text-sm ${!field.value && !selected ? "text-primary/60" : "text-primary"} `}>
+                                 text-left overflow-hidden overflow-ellipsis border border-blue-600/20
+                                text-sm ${!field?.value && !selected ? "text-blue-600/60" : "text-blue-600"} `}>
                 {
                     getLabel()
                 }
-                <FontAwesomeIcon icon={faChevronDown} className="text-primary" />
+                <FontAwesomeIcon icon={faChevronDown} className="text-blue-600" />
                 </button>
             </PopoverTrigger>
             <PopoverContentScroll className="w-[250px] p-0">
@@ -161,8 +161,8 @@ const ItemComboBox = (
                                             {option.label}
                                             {
                                                 (selected && option.value == selected && selected != 0) ||
-                                                (option.value == field.value && field.value != 0) ?
-                                                <FontAwesomeIcon icon={faCheck} className="text-primary" />
+                                                (option.value == field?.value && field.value != 0) ?
+                                                <FontAwesomeIcon icon={faCheck} className="text-blue-600" />
                                                 : <></>
                                             }
                                         </CommandItem>

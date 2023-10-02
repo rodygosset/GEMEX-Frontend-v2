@@ -16,8 +16,8 @@ const SettingsWidget = () => {
             link="/quality/settings">
             
             <div className="h-full min-h-[240px] w-full flex flex-col items-center justify-center gap-4">
-                <FontAwesomeIcon icon={faGear} className="text-secondary text-[90px]" />
-                <p className="text-base font-normal text-secondary/60">Gestion & ajustements</p>
+                <FontAwesomeIcon icon={faGear} className="text-purple-600 text-[90px]" />
+                <p className="text-base font-normal text-purple-600/60">Gestion & ajustements</p>
             </div>
 
         </DashboardWidget>

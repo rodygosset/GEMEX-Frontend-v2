@@ -85,7 +85,7 @@ const SearchResultsCard = (
 
     return monthAndYear ? (
         <div className="w-full flex flex-col gap-[32px] bg-white/10 shadow-2xl shadow-primary/20 p-[32px] rounded-[16px]">
-            <h3 className="text-xl font-semibold text-primary">{monthAndYear}</h3>
+            <h3 className="text-xl font-semibold text-blue-600">{monthAndYear}</h3>
             <EvaluationsTable
                 evaluations={evaluations}
                 description={`Résultats de la recherche pour le mois de ${monthAndYear}`}

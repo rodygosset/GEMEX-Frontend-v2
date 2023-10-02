@@ -105,10 +105,10 @@ const CycleFormModal = (
                 className="flex flex-col gap-8 w-[300px] overflow-auto bg-white rounded-2xl p-[32px]"
                 name="cycle-form">
                 <div className="flex flex-row items-center gap-4 w-full">
-                    <FontAwesomeIcon icon={faArrowsSpin} className="text-primary text-2xl" />
-                    <h3 className="text-xl font-bold text-primary flex-1">Nouveau cycle</h3>
+                    <FontAwesomeIcon icon={faArrowsSpin} className="text-blue-600 text-2xl" />
+                    <h3 className="text-xl font-bold text-blue-600 flex-1">Nouveau cycle</h3>
                 </div>
-                <div className="w-full h-[1px] bg-primary/10"></div>
+                <div className="w-full h-[1px] bg-blue-600/10"></div>
                 <FieldContainer>
                     <Label>Dates de début et de fin du cycle</Label>
                     <DateRangeInput 

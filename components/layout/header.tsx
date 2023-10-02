@@ -1,22 +1,20 @@
 
-import { faChartSimple, faFileAlt, faFileCirclePlus, faFileLines, faFolderOpen, faGem, faHome, faUsers } from "@fortawesome/free-solid-svg-icons"
+import { faChartSimple, faFileLines, faFolderOpen, faGem, faHome, faUsers } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/layout/header.module.scss"
 import { useRouter } from "next/router"
-import LogOutButton from "@components/layout/header/log-out-button"
-import UserCard from "./header/user-card"
-import { IconProp } from "@fortawesome/fontawesome-svg-core"
-import Button from "@components/button"
-import CreateButton from "./header/create-button"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
 import { MySession } from "@conf/utility-types"
 import { useContext, useState } from "react"
 import { Context } from "@utils/context"
 import FilePicker from "@components/modals/file-picker"
-import { NavMenu, NavMenuItem, NavMenuItemType } from "@components/radix/nav-menu"
-import { NavItem, NavSheet } from "@components/radix/nav-sheet"
+import { NavMenuItemType } from "@components/radix/nav-menu"
+import { NavSheet } from "@components/radix/nav-sheet"
 import { creatableItemsList } from "@conf/general"
+import SearchBar from "@components/radix/search-bar"
+import { cn } from "@utils/tailwind"
+import UserCard from "./header/user-card"
 
 
 
@@ -139,12 +137,20 @@ const Header = () => {
         shouldShowHeader() ?
 
         <>
-            <header className={styles.header}>
+            <header className={cn(
+                styles.header,
+                "border-b border-blue-600/10",
+                "bg-neutral-50/20 backdrop-blur-2xl"
+            )}>
                 <Link href="/" className={styles.logoContainer}> 
                     <FontAwesomeIcon icon={faGem} />
                     GEMEX
                 </Link>
-                <NavSheet navItems={navItems} />
+                <div className="flex items-center gap-[16px]">
+                    <SearchBar />
+                    <NavSheet navItems={navItems} />
+                    <UserCard className="max-md:hidden" />
+                </div>
             </header>
             <FilePicker 
                 isVisible={showFileExplorer}

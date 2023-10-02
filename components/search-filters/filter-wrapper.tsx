@@ -1,10 +1,12 @@
-import styles from "@styles/components/search-filters/filter-wrapper.module.scss"
 import Label from "@components/form-elements/label";
 import { OnFilterToggleHandler } from "@conf/api/search";
 import FilterCheckBox from "./filter-checkbox";
+import { Switch } from "@components/radix/switch";
+import { cn } from "@utils/tailwind";
 
 
 interface Props {
+    inline?: boolean;
     filterName: string;
     label: string;
     children: any;
@@ -14,6 +16,7 @@ interface Props {
 
 const FilterWrapper = (
     {
+        inline = false,
         filterName,
         label,
         children,
@@ -25,11 +28,14 @@ const FilterWrapper = (
     const handleCheckToggle = (newChecked: boolean) => onCheckToggle(filterName, newChecked) 
 
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.label}>
-                <FilterCheckBox
-                    value={checked}
-                    onChange={handleCheckToggle}
+        <div className={cn(
+            "w-full gap-[8px]",
+            inline ? "flex items-center justify-between" : "flex flex-col"
+        )}>
+            <div className="flex items-center gap-[8px]">
+                <Switch 
+                    value={checked ? 1 : 0}
+                    onCheckedChange={handleCheckToggle}
                 />
                 <Label>{label}</Label>
             </div>

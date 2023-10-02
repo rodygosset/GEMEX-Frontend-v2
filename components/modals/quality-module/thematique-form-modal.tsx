@@ -252,14 +252,14 @@ const ThematiqueFormModal = (
                 <form
                     className="flex flex-col gap-8 min-w-[500px] overflow-auto bg-white rounded-2xl p-[32px]"
                     name="thematique-form">
-                    <h3 className="text-xl font-bold text-primary flex-1">
+                    <h3 className="text-xl font-bold text-blue-600 flex-1">
                         {
                             thematique ?
                             "Modifier une thématique"
                             : "Nouvelle thématique"
                         }
                     </h3>
-                    <div className="w-full h-[1px] bg-primary/10"></div>
+                    <div className="w-full h-[1px] bg-blue-600/10"></div>
                     <FieldContainer fullWidth>
                         <Label>Nom</Label>
                         <TextInput
@@ -331,7 +331,7 @@ const ThematiqueFormModal = (
                                 Ajouter une question
                             </Button>
                         </div>
-                        <div className="w-full h-[1px] bg-primary/10"></div>
+                        <div className="w-full h-[1px] bg-blue-600/10"></div>
                         {
                             questions.length > 0 ?
                             <ul className="flex flex-col gap-4 max-w-3xl">
@@ -344,16 +344,16 @@ const ThematiqueFormModal = (
                                                 <div className="flex flex-row flex-wrap gap-2">
                                                     {
                                                         question.titre ?
-                                                        <p className="text-base font-normal text-primary/60">{question.titre}</p>
+                                                        <p className="text-base font-normal text-blue-600/60">{question.titre}</p>
                                                         : <></>
                                                     }
                                                     {
                                                         question.optional ?
-                                                        <span className="text-sm font-semibold text-primary/60">(Optionnelle)</span>
+                                                        <span className="text-sm font-semibold text-blue-600/60">(Optionnelle)</span>
                                                         : <></>
                                                     }
                                                 </div>
-                                                <p className="w-full text-base font-normal text-primary whitespace-wrap">{question.question}</p>
+                                                <p className="w-full text-base font-normal text-blue-600 whitespace-wrap">{question.question}</p>
                                             </div>
                                             <Button 
                                                 hasBorders
@@ -372,13 +372,13 @@ const ThematiqueFormModal = (
                                                 onClick={() => setQuestions(questions.filter((_, i) => i !== index))}
                                             > </Button>
                                         </li>
-                                        <div className="w-full h-[1px] bg-primary/10"></div>
+                                        <div className="w-full h-[1px] bg-blue-600/10"></div>
                                     </Fragment>
                                 ))
                             }
                             </ul>
                             :
-                            <p className="text-sm text-primary/60">Aucune question spécifique</p>
+                            <p className="text-sm text-blue-600/60">Aucune question spécifique</p>
                         }
                     </div>
                     <div className="flex flex-row gap-4 w-full">

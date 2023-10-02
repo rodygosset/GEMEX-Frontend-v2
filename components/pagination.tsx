@@ -33,13 +33,13 @@ const Pagination = (
 
     return (
         <div className="flex items-center gap-[16px]">
-            <span className="text-base text-primary/60 font-normal">
+            <span className="text-base text-blue-600/60 font-normal">
                 Page {currentPageNb} sur {totalPagesNb}
             </span>
             <button
                 className={cn(
-                    "text-sm text-primary h-[40px] w-[40px] rounded-[8px] bg-primary/10 flex items-center justify-center",
-                    "hover:bg-primary/20 transition-colors duration-300 ease-in-out",
+                    "text-sm text-blue-600 h-[40px] w-[40px] rounded-[8px] border border-blue-600/10 flex items-center justify-center",
+                    "hover:bg-blue-600/10 transition-colors duration-300 ease-in-out",
                     !isInBounds(currentPageNb - 1) && "opacity-50 cursor-not-allowed"
                 )}
                 disabled={!isInBounds(currentPageNb - 1)}
@@ -48,8 +48,8 @@ const Pagination = (
             </button>
             <button
                 className={cn(
-                    "text-sm text-primary h-[40px] w-[40px] rounded-[8px] bg-primary/10 flex items-center justify-center",
-                    "hover:bg-primary/20 transition-colors duration-300 ease-in-out",
+                    "text-sm text-blue-600 h-[40px] w-[40px] rounded-[8px] border border-blue-600/10 flex items-center justify-center",
+                    "hover:bg-blue-600/10 transition-colors duration-300 ease-in-out",
                     !isInBounds(currentPageNb + 1) && "opacity-50 cursor-not-allowed"
                 )}
                 disabled={!isInBounds(currentPageNb + 1)}

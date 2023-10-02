@@ -31,19 +31,19 @@ const NavMenuItem = (
         <DropdownMenuPrimitive.Sub>
             <DropdownMenuPrimitive.SubTrigger>
             {item.label}
-            <FontAwesomeIcon icon={faChevronRight} className="text-primary" />
+            <FontAwesomeIcon icon={faChevronRight} className="text-blue-600" />
         </DropdownMenuPrimitive.SubTrigger>
         </DropdownMenuPrimitive.Sub>
     ) : (
         <DropdownMenuPrimitive.Item 
-            className={`flex flex-row gap-4 items-center w-full  focus:outline-none text-primary hover:bg-primary/10 focus:bg-primary/10
+            className={`flex flex-row gap-4 items-center w-full  focus:outline-none text-blue-600 hover:bg-blue-600/10 focus:bg-blue-600/10
             py-[8px] px-[16px] text-sm rounded-md transition duration-300 ease-in-out cursor-pointer`}
             onSelect={item.onClick}>
         {
             item.icon ?
             <FontAwesomeIcon 
                 icon={item.icon} 
-                className="text-primary"
+                className="text-blue-600"
             /> 
             : <></>
         }
@@ -86,7 +86,7 @@ const NavMenu = (
                 <DropdownMenuPrimitive.Content 
                     align="end"
                     className="radix-side-top:animate-slide-up radix-side-bottom:animate-slide-down backdrop-blur-lg
-                    rounded-md bg-primary/10 z-[999]">
+                    rounded-md bg-blue-600/10 z-[999]">
                 {
                     children
                 }

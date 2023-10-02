@@ -66,7 +66,7 @@ const CurrentMonthlyAssessmentWidget = (
                             }}
                         />
                     </div>
-                    <p className="text-base font-normal text-primary/60">Aucune évaluation en cours</p>
+                    <p className="text-base font-normal text-blue-600/60">Aucune évaluation en cours</p>
                 </div>
             }
         </DashboardWidget>

@@ -56,8 +56,8 @@ const ExpositionsWidget = (
             <SectionContainer heightFit>
                 <div className="w-full flex flex-row max-md:flex-col gap-4">
                     <div className="flex flex-col flex-1">
-                        <h3 className="text-xl font-semibold text-primary">Expositions</h3>
-                        <p className="text-base font-normal text-primary/60">Les expositions planifiées pour évaluation durant ce cycle</p>
+                        <h3 className="text-xl font-semibold text-blue-600">Expositions</h3>
+                        <p className="text-base font-normal text-blue-600/60">Les expositions planifiées pour évaluation durant ce cycle</p>
                     </div>
                     <Button
                         icon={faPlus}
@@ -77,7 +77,7 @@ const ExpositionsWidget = (
                             onRefresh={onRefresh}
                         />
                     ))
-                    : <p className="text-base font-normal text-primary/60">Aucune exposition planifiée pour ce cycle</p>
+                    : <p className="text-base font-normal text-blue-600/60">Aucune exposition planifiée pour ce cycle</p>
                 }
                 </ul>
             </SectionContainer>

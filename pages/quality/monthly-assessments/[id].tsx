@@ -186,18 +186,18 @@ const MonthlyAssessmentPage: NextPage<Props> = (
         <main className="flex flex-col px-[7%] gap-y-16 pt-6">
             <div className="w-full flex flex-row gap-16 flex-wrap">
                 <Link
-                    className="flex flex-row items-center justify-center w-[60px] h-[60px] rounded-full bg-primary/10
-                        group hover:bg-primary hover:shadow-2xl hover:shadow-primary/40 transition duration-300 ease-in-out cursor-pointer
+                    className="flex flex-row items-center justify-center w-[60px] h-[60px] rounded-full bg-blue-600/10
+                        group hover:bg-blue-600 hover:shadow-2xl hover:shadow-primary/40 transition duration-300 ease-in-out cursor-pointer
                     "
                     href="/quality">
                     <FontAwesomeIcon 
-                        className="text-primary group-hover:text-white text-base transition duration-300 ease-in-out"
+                        className="text-blue-600 group-hover:text-white text-base transition duration-300 ease-in-out"
                         icon={faChevronLeft} 
                     />
                 </Link>
                 <div className="flex flex-col flex-1">
-                    <h1 className="text-2xl text-primary font-semibold h-fit whitespace-nowrap">{ monthAndYear }</h1>
-                    <p className="text-base text-primary uppercase text-opacity-40 tracking-widest whitespace-nowrap">évaluation mensuelle</p>
+                    <h1 className="text-2xl text-blue-600 font-semibold h-fit whitespace-nowrap">{ monthAndYear }</h1>
+                    <p className="text-base text-blue-600 uppercase text-opacity-40 tracking-widest whitespace-nowrap">évaluation mensuelle</p>
                 </div>
             </div>
             <div className="w-full flex flex-row max-lg:flex-col gap-4">
@@ -206,15 +206,15 @@ const MonthlyAssessmentPage: NextPage<Props> = (
             </div>
             <div className="w-full flex flex-row gap-4 justify-between flex-wrap">
                 <div className="flex flex-col">
-                    <h3 className="text-xl font-semibold text-primary">Evaluations</h3>
-                    <p className="text-base font-normal text-primary/60">Gestion des évaluation pour le mois de { monthAndYear }</p>
+                    <h3 className="text-xl font-semibold text-blue-600">Evaluations</h3>
+                    <p className="text-base font-normal text-blue-600/60">Gestion des évaluation pour le mois de { monthAndYear }</p>
                 </div>
                 <div className="flex flex-row gap-4 flex-wrap items-center">
                     <Link
                         download={`commentaires-evaluations-${monthAndYear}.csv`}
                         href={evaluationsCommentsCSV}
-                        className="text-sm text-primary bg-primary/10 flex items-center gap-4 px-[16px] py-[8px] rounded-[8px] 
-                                hover:bg-primary/20 transition-colors duration-300 ease-in-out">
+                        className="text-sm text-blue-600 bg-blue-600/10 flex items-center gap-4 px-[16px] py-[8px] rounded-[8px] 
+                                hover:bg-blue-600/20 transition-colors duration-300 ease-in-out">
                         <FontAwesomeIcon icon={faDownload} />
                         Exporter les commentaires
                     </Link>

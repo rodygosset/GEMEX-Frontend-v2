@@ -80,12 +80,12 @@ const QuestionFormModal = (
                 className="flex flex-col gap-8 min-w-[400px] overflow-auto bg-white rounded-2xl p-[32px]"
                 name="question-form">
 
-                <h3 className="text-xl font-bold text-primary flex-1">
+                <h3 className="text-xl font-bold text-blue-600 flex-1">
                     {
                         question ? "Modifier la question" : "Nouvelle question"
                     }
                 </h3>
-                <div className="w-full h-[1px] bg-primary/10"></div>
+                <div className="w-full h-[1px] bg-blue-600/10"></div>
                 <FieldContainer fullWidth>
                     <Label>Titre (optionnel)</Label>
                     <TextInput

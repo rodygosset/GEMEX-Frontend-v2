@@ -84,29 +84,29 @@ const Settings: NextPage<Props> = (
             <main className="flex flex-col gap-16 px-[7%] gap-y-16 pt-6">
                 <div className="w-full flex flex-row flex-wrap gap-16 items-center">
                     <Link
-                        className="flex flex-row items-center justify-center w-[60px] h-[60px] rounded-full bg-primary/10
-                            group hover:bg-primary hover:shadow-2xl hover:shadow-primary/40 transition duration-300 ease-in-out cursor-pointer
+                        className="flex flex-row items-center justify-center w-[60px] h-[60px] rounded-full bg-blue-600/10
+                            group hover:bg-blue-600 hover:shadow-2xl hover:shadow-primary/40 transition duration-300 ease-in-out cursor-pointer
                         "
                         href="/quality">
                         <FontAwesomeIcon 
-                            className="text-primary group-hover:text-white text-base transition duration-300 ease-in-out"
+                            className="text-blue-600 group-hover:text-white text-base transition duration-300 ease-in-out"
                             icon={faChevronLeft} 
                         />
                     </Link>
                     <div className="flex flex-col flex-1">
-                        <h1 className="text-3xl font-medium text-secondary whitespace-nowrap">Domaines d'évaluation</h1>
-                        <p className="text-base font-normal text-primary/60 tracking-widest whitespace-nowrap uppercase">Liste des thématiques</p>
+                        <h1 className="text-3xl font-medium text-purple-600 whitespace-nowrap">Domaines d'évaluation</h1>
+                        <p className="text-base font-normal text-blue-600/60 tracking-widest whitespace-nowrap uppercase">Liste des thématiques</p>
                     </div>
                     <div className="flex flex-row flex-wrap gap-4">
                         <Link 
-                            className="flex flex-row items-center gap-4 w-fit bg-primary bg-opacity-10 rounded-[8px] px-[16px] py-[8px]
+                            className="flex flex-row items-center gap-4 w-fit bg-blue-600 bg-opacity-10 rounded-[8px] px-[16px] py-[8px]
                                 hover:bg-opacity-20 transition duration-300 ease-in-out cursor-pointer"
                             href={getLinkToCSV()} download="thematiques.csv">
                             <FontAwesomeIcon 
                                 icon={faDownload} 
-                                className="text-sm text-primary"
+                                className="text-sm text-blue-600"
                             />
-                            <span className="text-sm font-normal text-primary whitespace-nowrap">Exporter la liste des thématiques</span>
+                            <span className="text-sm font-normal text-blue-600 whitespace-nowrap">Exporter la liste des thématiques</span>
                         </Link>
                         <Button
                             icon={faPlus}
@@ -169,7 +169,7 @@ const Settings: NextPage<Props> = (
                                 }}
                             />
                         </div>
-                        <p className="text-base font-normal text-primary/60">Aucun domaine d'évaluation</p>
+                        <p className="text-base font-normal text-blue-600/60">Aucun domaine d'évaluation</p>
                     </div>
                 }
             </main>

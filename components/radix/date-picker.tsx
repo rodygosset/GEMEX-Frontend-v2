@@ -34,7 +34,7 @@ const DatePicker = (
           variant={"outline"}
           className={cn(
             "justify-start text-left font-normal",
-            selected ? "capitalize" : "text-primary",
+            selected ? "capitalize" : "text-blue-600",
             fullWidth ? "w-full" : "w-[200px]"
           )}
         >

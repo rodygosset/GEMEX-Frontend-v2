@@ -111,12 +111,12 @@ const DomaineFormModal = (
             <form
                 className="flex flex-col gap-8 min-w-[300px] overflow-auto bg-white rounded-2xl p-[32px]"
                 name="domaine-form">
-                <h3 className="text-xl font-bold text-primary flex-1">
+                <h3 className="text-xl font-bold text-blue-600 flex-1">
                 {
                     domaine ? "Modifier le domaine d'évaluation" : "Nouveau domaine d'évaluation"
                 }
                 </h3>
-                <div className="w-full h-[1px] bg-primary/10"></div>
+                <div className="w-full h-[1px] bg-blue-600/10"></div>
                 <FieldContainer fullWidth>
                     <Label>Nom</Label>
                     <TextInput

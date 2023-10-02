@@ -1,7 +1,7 @@
-import CheckBox from "@components/form-elements/checkbox"
 import { getFilterLabel, SearchFilterProps } from "@conf/api/search"
 import { useEffect, useState } from "react"
 import FilterWrapper from "./filter-wrapper"
+import { Checkbox } from "@components/radix/checkbox"
 
 
 const BooleanFilter = (
@@ -33,14 +33,15 @@ const BooleanFilter = (
 
     return (
         <FilterWrapper
+            inline
             filterName={name}
             label={getFilterLabel(name, conf)}
             onCheckToggle={onToggle}
             checked={filter.checked}
         >
-            <CheckBox
-                value={value}
-                onChange={handleChange}
+            <Checkbox
+                value={value ? 1 : 0}
+                onCheckedChange={handleChange}
             />
         </FilterWrapper>
     )

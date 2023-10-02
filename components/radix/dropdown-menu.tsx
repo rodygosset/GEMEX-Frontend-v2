@@ -35,7 +35,7 @@ const DropdownMenu = (
                 <DropdownMenuPrimitive.Content 
                     align="end"
                     className="radix-side-top:animate-slide-up radix-side-bottom:animate-slide-down backdrop-blur-lg
-                    rounded-md bg-primary/10 z-[999]">
+                    rounded-md bg-blue-600/10 z-[999]">
                 {
                     options.map((option, index) => (
                         <DropdownMenuPrimitive.Item 
@@ -46,7 +46,7 @@ const DropdownMenu = (
                                     option.status == "danger" ? "text-error hover:bg-error/10 focus:bg-error/10" :
                                     option.status == "warning" ? "text-warning hover:bg-warning/10 focus:bg-warning/10" :
                                     option.status == "success" ? "text-success hover:bg-success/10 focus:bg-success/10" : ""
-                                    : "text-primary hover:bg-primary/10 focus:bg-primary/10"
+                                    : "text-blue-600 hover:bg-blue-600/10 focus:bg-blue-600/10"
                             } 
                             py-[8px] px-[16px] text-sm rounded-md transition duration-300 ease-in-out cursor-pointer`}
                             onSelect={() => onSelect(option.value)}>
@@ -59,7 +59,7 @@ const DropdownMenu = (
                                     option.status == "danger" ? "text-error" :
                                     option.status == "warning" ? "text-warning" :
                                     option.status == "success" ? "text-success" : ""
-                                    : "text-primary"
+                                    : "text-blue-600"
                                 }
                             /> 
                             : <></>

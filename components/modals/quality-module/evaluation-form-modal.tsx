@@ -127,33 +127,33 @@ const EvaluationFormModal = (
                 :
                 <DialogTrigger
                     onClick={() => setIsOpen(true)}
-                    className="bg-primary h-fit rounded-[8px] px-[16px] py-[8px] text-sm text-white flex flex-row gap-4 items-center
+                    className="bg-blue-600 h-fit rounded-[8px] px-[16px] py-[8px] text-sm text-white flex flex-row gap-4 items-center
                             hover:shadow-primary/60 hover:shadow-2xl transition-shadow duration-200 cursor-pointer">
                     <FontAwesomeIcon icon={faPlus} />
                     Nouvelle évaluation
                 </DialogTrigger>
             }
-            <DialogContent className="sm:max-h-[90vh] sm:h-fit h-screen w-screen sm:w-fit max-sm:max-w-full">
-                <ScrollArea className="w-full sm:h-[80vh] h-[95vh]">
-                    <DialogHeader className="border-none pb-0">
-                        <DialogTitle>
-                        {
-                            evaluation ?
-                            "Modifier l'évaluation"
-                            :
-                            "Nouvelle évaluation"
-                        }
-                        </DialogTitle>
-                        <DialogDescription>
-                        {
-                            evaluation ?
-                            "Modifier les paramètres de l'évaluation"
-                            :
-                            "Renseigner les paramètres de l'évaluation"
-                        }
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="w-full h-[1px] bg-primary/10 my-[16px]"/>
+            <DialogContent className="sm:max-h-[90vh] h-fit w-screen sm:w-fit sm:min-w-[400px] max-sm:max-w-full p-[32px] max-sm:top-auto max-sm:bottom-0 max-sm:translate-y-0">
+                <DialogHeader className="border-none pb-0">
+                    <DialogTitle>
+                    {
+                        evaluation ?
+                        "Modifier l'évaluation"
+                        :
+                        "Nouvelle évaluation"
+                    }
+                    </DialogTitle>
+                    <DialogDescription>
+                    {
+                        evaluation ?
+                        "Modifier les paramètres de l'évaluation"
+                        :
+                        "Renseigner les paramètres de l'évaluation"
+                    }
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="w-full h-[1px] bg-blue-600/10 my-[16px]"/>
+                <ScrollArea className="w-full h-[500px]">
                     <Form {...form}>
                         <form
                             className="flex flex-col gap-[32px]" 
@@ -228,7 +228,7 @@ const EvaluationFormModal = (
                                             <FormControl>
                                                 <>
                                                 <div className="flex flex-col gap-2 flex-1">
-                                                    <span className="text-sm text-primary/60">Séléctionner l'exposition de l'élément</span>
+                                                    <span className="text-sm text-blue-600/60">Séléctionner l'exposition de l'élément</span>
                                                     <ItemComboBox
                                                         selected={expositionId}
                                                         itemType="expositions"
@@ -237,7 +237,7 @@ const EvaluationFormModal = (
                                                     />
                                                 </div>
                                                 <div className="flex flex-col gap-2 flex-1">
-                                                    <span className="text-sm text-primary/60">Élément</span>
+                                                    <span className="text-sm text-blue-600/60">Élément</span>
                                                     <ItemComboBox
                                                         itemType="elements"
                                                         searchParams={{ exposition_id: expositionId }}
@@ -254,16 +254,16 @@ const EvaluationFormModal = (
                                         </FormItem>
                                 )}
                             />
-                            <Button 
-                                fullWidth
-                                icon={faFloppyDisk}
-                                type="submit" 
-                                onClick={form.handleSubmit(onSubmitHandler)}>
-                                Sauvegarder
-                            </Button>
                         </form>
                     </Form>
                 </ScrollArea>
+                <Button 
+                    fullWidth
+                    icon={faFloppyDisk}
+                    type="submit" 
+                    onClick={form.handleSubmit(onSubmitHandler)}>
+                    Sauvegarder
+                </Button>
             </DialogContent>
         </Dialog>
     )

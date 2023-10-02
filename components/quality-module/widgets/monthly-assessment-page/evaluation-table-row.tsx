@@ -198,29 +198,29 @@ const EvaluationTableRow = (
                     {evaluation.note ?? 0}
                 </span>
                 :
-                <span className="text-sm font-normal text-primary/60">En cours</span>
+                <span className="text-sm font-normal text-blue-600/60">En cours</span>
             }
             </TableCell>
             <TableCell className="flex-1 w-full flex flex-row items-start justify-between gap-4 max-md:p-0">
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-1 items-center gap-[8px]">
-                        <span className="text-sm font-semibold text-primary max-md:text-base">{rowData.thematique}</span>
+                        <span className="text-sm font-semibold text-blue-600 max-md:text-base">{rowData.thematique}</span>
                     </div>
-                    <span className="text-xs text-primary/80 max-md:text-sm">{rowData.exposition}</span>
+                    <span className="text-xs text-blue-600/80 max-md:text-sm">{rowData.exposition}</span>
                 </div>
                 <ContextDropdown className="md:hidden" onSelect={onContextSelect} evaluation={evaluation} />
             </TableCell>
             <TableCell 
                 onClick={() => router.push(`/view/elements/${evaluation.element_id}`)}
-                className="flex-1 max-md:p-0 text-secondary hover:underline cursor-pointer">
+                className="flex-1 max-md:p-0 text-purple-600 hover:underline cursor-pointer">
                 <Link
                     className="w-full h-full flex items-center gap-[16px]"
                     href={`/view/elements/${evaluation.element_id}`}>
                     {rowData.element}
                 </Link>
             </TableCell>
-            <TableCell className="flex-1 max-md:p-0 max-md:text-primary/60">{rowData.evaluateur}</TableCell>
-            <TableCell className="flex-1 max-md:p-0 max-md:text-primary/60">{(new Date(evaluation.date_rendu)).toLocaleDateString("fr-fr")}</TableCell>
+            <TableCell className="flex-1 max-md:p-0 max-md:text-blue-600/60">{rowData.evaluateur}</TableCell>
+            <TableCell className="flex-1 max-md:p-0 max-md:text-blue-600/60">{(new Date(evaluation.date_rendu)).toLocaleDateString("fr-fr")}</TableCell>
             <TableCell className="max-md:hidden">
                 <ContextDropdown onSelect={onContextSelect} evaluation={evaluation} />
             </TableCell>

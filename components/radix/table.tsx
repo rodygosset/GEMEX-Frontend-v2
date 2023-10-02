@@ -44,7 +44,7 @@ const TableFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tfoot
     ref={ref}
-    className={cn("bg-primary font-medium text-white", className)}
+    className={cn("bg-blue-600 font-medium text-white", className)}
     {...props}
   />
 ))
@@ -57,7 +57,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "border-b transition-colors hover:bg-primary/5 data-[state=selected]:bg-primary/10 py-[8px]",
+      "border-b transition-colors hover:bg-blue-600/5 data-[state=selected]:bg-blue-600/10 py-[8px]",
       className
     )}
     {...props}
@@ -72,7 +72,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-[48px] px-[16px] flex-1 text-left align-middle flex items-center font-medium text-primary/60 [&:has([role=checkbox])]:pr-0",
+      "h-[48px] px-[16px] flex-1 text-left align-middle flex items-center font-medium text-blue-600/60 [&:has([role=checkbox])]:pr-0",
       className
     )}
     {...props}
@@ -86,7 +86,7 @@ const TableCell = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <td
     ref={ref}
-    className={cn("p-[16px] align-middle [&:has([role=checkbox])]:pr-0 text-primary/80 font-medium", className)}
+    className={cn("p-[16px] align-middle [&:has([role=checkbox])]:pr-0 text-blue-600/80 font-medium", className)}
     {...props}
   />
 ))
@@ -98,7 +98,7 @@ const TableCaption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
-    className={cn("mt-[16px] text-sm text-primary/60", className)}
+    className={cn("mt-[16px] text-sm text-blue-600/60", className)}
     {...props}
   />
 ))

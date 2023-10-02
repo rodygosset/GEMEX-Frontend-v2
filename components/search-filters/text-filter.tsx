@@ -1,6 +1,7 @@
 import TextInput from "@components/form-elements/text-input"
 import { getFilterLabel, SearchFilterProps } from "@conf/api/search"
 import FilterWrapper from "./filter-wrapper"
+import { Input } from "@components/radix/input"
 
 
 const TextFilter = (
@@ -31,12 +32,12 @@ const TextFilter = (
             onCheckToggle={onToggle}
             checked={filter.checked}
         >
-            <TextInput
+            <Input
+                className="bg-transparent border border-blue-600/20 text-blue-600/80 placeholder:text-blue-600/40 rounded-[8px]"
                 placeholder={placeholder}
-                onChange={handleChange}
+                onChange={e => handleChange(e.target.value)}
                 name={name}
-                currentValue={filter.value}
-                bigPadding
+                value={filter.value}
             />
         </FilterWrapper>
     )

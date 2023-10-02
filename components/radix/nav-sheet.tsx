@@ -80,9 +80,9 @@ const NavSheet = (
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger>
-                <span className="p-[12px] flex flex-row justify-center items-center rounded-[8px] hover:bg-primary/10 cursor-pointer
+                <span className="p-[12px] flex flex-row justify-center items-center rounded-[8px] hover:bg-blue-600/10 cursor-pointer
                                     border border-primary/10">
-                    <FontAwesomeIcon icon={faBarsStaggered} className="w-[20px] h-[20px] text-primary" />
+                    <FontAwesomeIcon icon={faBarsStaggered} className="w-[20px] h-[20px] text-blue-600" />
                 </span>
             </SheetTrigger>
             <SheetContent className="max-sm:w-full flex flex-col gap-4 bg-blue-900" side="left">
@@ -93,7 +93,7 @@ const NavSheet = (
                     </p>
                 </SheetHeader>
 
-                <UserCard />
+                <UserCard className="mb-[32px]" dark />
                 {
                     navItems.map((item, index) => (
                         <NavItem 

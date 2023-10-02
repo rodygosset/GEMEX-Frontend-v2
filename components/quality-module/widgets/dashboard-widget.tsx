@@ -27,16 +27,16 @@ const DashboardWidget = (
         <SectionContainer>
             <div className="w-full flex flex-row justify-between content-center gap-2">
                 <div className="flex flex-col">
-                    <h3 className="text-xl font-bold text-primary">{title}</h3>
-                    <p className="text-sm font-normal text-primary text-opacity-60">{caption}</p>
+                    <h3 className="text-xl font-bold text-blue-600">{title}</h3>
+                    <p className="text-sm font-normal text-blue-600 text-opacity-60">{caption}</p>
                 </div>
                 {
                     link ?
                     <Link
                         className="flex flex-row items-center justify-center rounded-full min-w-[60px] w-[60px] h-[60px] border border-primary/20
-                            hover:bg-primary/10  transition duration-300 ease-in-out cursor-pointer" 
+                            hover:bg-blue-600/10  transition duration-300 ease-in-out cursor-pointer" 
                         href={link}>
-                        <FontAwesomeIcon icon={faArrowRight} className="text-primary text-xl" />
+                        <FontAwesomeIcon icon={faArrowRight} className="text-blue-600 text-xl" />
                     </Link> 
                     : <></>
                 }
