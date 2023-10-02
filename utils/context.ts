@@ -12,13 +12,17 @@ export interface AppContext {
     setSearchParams: (newSearchParams: SearchParamsType) => void;
     navHistory: string[];
     setNavHistory: (newNavHistory: string[]) => void;
+    initSearchParamsLoaded: boolean;
+    setInitSearchParamsLoaded: (newInitSearchParamsLoaded: boolean) => void;
 }
 
 export const searchContext: AppContext = {
     searchParams: {},
     setSearchParams: () => {},
     navHistory: [],
-    setNavHistory: () => {}
+    setNavHistory: () => {},
+    initSearchParamsLoaded: true,
+    setInitSearchParamsLoaded: () => {},
 }
 
 export const Context = React.createContext(searchContext)

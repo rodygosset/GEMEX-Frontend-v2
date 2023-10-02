@@ -11,55 +11,25 @@ import { defaultOperator, hasNumberOperatorParam } from "@utils/form-elements/ti
 import { toSearchFiltersObject, toURLQuery } from "@utils/search-utils";
 import { useContext, useEffect, useState } from "react";
 import { ScrollArea } from "./scroll-area";
+import { SearchFilters } from "@conf/api/search";
 
 interface Props {
     className?: string;
     clearTrigger?: number;
+    searchFilters: SearchFilters;
+    setSearchFilters: (searchFilters: SearchFilters) => void;
 }
 
 const SearchFilters = (
     {
         className,
-        clearTrigger
+        clearTrigger,
+        searchFilters,
+        setSearchFilters
     }: Props
 ) => {
 
-    const { searchParams, setSearchParams } = useContext(Context)
-
-    // state 
-
-    const [searchFilters, setSearchFilters] = useState(toSearchFiltersObject(searchParams["item"]?.toString(), searchParams))
-
-    // update the filters depending on the item type
-
-    useEffect(() => setSearchFilters(toSearchFiltersObject(searchParams["item"]?.toString(), searchParams)), [searchParams["item"]])
-
-    // clear the filters when the clearTrigger changes
-
-    useEffect(() => {
-        if(!(typeof clearTrigger === "number") || clearTrigger == 0) return
-
-        setSearchFilters(toSearchFiltersObject(searchParams["item"]?.toString(), {}))
-        setSearchParams({ item: searchParams["item"] })
-
-    }, [clearTrigger])
-
-    // update the search params when the filters change
-
-    useEffect(() => {
-        console.log("search filters changed", searchFilters)
-        // avoid "can't access property of undefined" errors :(
-        if(!searchParams["item"]) return
-        // get new URL query
-        const newURLQuery = toURLQuery(searchFilters, searchParams, searchParams["item"].toString())
-        
-        // only update when the values have changed
-        const shouldUpdate = JSON.stringify(newURLQuery) !== JSON.stringify(searchParams)
-        if(shouldUpdate) {
-            setSearchParams({ ...newURLQuery })
-        }
-    }, [searchFilters])
-
+    const { searchParams } = useContext(Context)
 
     // handlers
 

@@ -2,7 +2,7 @@ import SearchResultCard from "@components/cards/search-result-card"
 import Pagination from "@components/pagination"
 import SearchFilters from "@components/search-filters"
 import LoadingIndicator from "@components/utils/loading-indicator"
-import { searchConf, SearchResultsMetaData } from "@conf/api/search"
+import { itemTypes, searchConf, SearchResultsMetaData } from "@conf/api/search"
 import { MySession } from "@conf/utility-types"
 import { faDownload, faList, faTableCellsLarge } from "@fortawesome/free-solid-svg-icons"
 import useAPIRequest from "@hook/useAPIRequest"
@@ -17,7 +17,7 @@ import { GetServerSideProps, NextPage } from "next"
 import { getServerSession } from "next-auth"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { Fragment, useContext, useEffect, useRef, useState } from "react"
+import { Fragment, use, useContext, useEffect, useRef, useState } from "react"
 import { authOptions } from "./api/auth/[...nextauth]"
 
 import Image from "next/image"
@@ -57,24 +57,19 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         searchParams, 
         setSearchParams, 
         navHistory, 
-        setNavHistory
+        setNavHistory,
+        initSearchParamsLoaded,
+        setInitSearchParamsLoaded
     } = useContext(Context)
 
     const itemType = searchParams.item as string ?? "fiches"
 
+
     // load the search params from the URL query
 
     useEffect(() => {
-        setSearchParams({
-            ...initSearchParams,
-            item: queryItemType
-        })
+        setSearchParams({ ...initSearchParams, item: queryItemType })
     }, [])
-
-    // make sure we don't update the search params object
-    // until the default search params have been loaded
-
-    const [initSearchParamsLoaded, setInitSearchParamsLoaded] = useState(false)
 
     useEffect(() => {
         if(!initSearchParamsLoaded &&
@@ -101,7 +96,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         })
     }, [itemType])
 
-    useEffect(() => console.log(searchParams), [searchParams])
+    // useEffect(() => console.log(searchParams), [searchParams])
 
     // search results meta-data
     const [metaData, setMetaData] = useState(initMetaData)
@@ -213,35 +208,8 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 
     }, [itemType, searchParams, currentPageNb, session])
 
-    // manage search filters visibility
-
-    
-    const [showFilters, setShowFilters] = useState(false)
-    
-    const toggleFiltersVisibilty = () => setShowFilters(!showFilters)
-
-
-    // manage view mode (list or card)
-
-    const [isListView, setIsListView] = useState<boolean>(true)
 
     // utils
-
-    const getDefaultSearchParam = () => searchConf[itemType].defaultSearchParam
-
-    // handlers
-
-    const handleFormSubmit = () => {
-        // before pushing to the new url
-        // to get the search results
-        // push the current url to the nav history
-        setNavHistory([...navHistory, router.asPath])
-        // submit search query
-        router.push({
-            pathname: '/search',
-            query: searchParams
-        })
-    }
 
     // keep nav history up to date
 
@@ -356,7 +324,6 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                         : 
                         <Skeleton className="w-[150px] h-[40px]" />
                     }
-                    <span className="text-base text-blue-600/60">{ nbResults } résultat(s)</span>
                     <Pagination
                         currentPageNb={currentPageNb}
                         totalPagesNb={totalPagesNb}
@@ -372,7 +339,10 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                 // if there aren't no search results
                 searchResults.length > 0 && !isLoading ?
                 <>
-                    
+                    <div className="w-full flex flex-col gap-[4px]">
+                        <h1 className="text-2xl font-semibold text-blue-600">Résultats de recherche</h1>
+                        <span className="text-base text-blue-600/60">{ nbResults } { itemTypes.find(i => i.value == itemType) ? itemTypes.find(i => i.value == itemType)?.label.toLowerCase() : 'résultat(s)' } correspondant aux critères de recherche.</span>
+                    </div>
                     <ul 
                         className={cn(
                             "rounded-[8px] flex flex-col w-full h-full",

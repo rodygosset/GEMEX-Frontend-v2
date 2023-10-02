@@ -148,9 +148,9 @@ const SearchResultCard = (
                 "cursor-pointer transition-all duration-200 ease-in-out",
                 "w-full flex items-center flex-wrap px-[32px] py-[16px]",
                 isSelected ? "bg-blue-600/10 border-2 border-blue-600" : "hover:bg-blue-600/5",
-                "max-md:flex-col max-md:items-start max-md:gap-[16px]"
+                "max-md:flex-col max-md:items-start gap-[16px]"
             )}>
-            <h4 className="text-base text-blue-600 font-medium flex-1">
+            <h4 className="text-base text-blue-600 font-medium flex-1 min-w-[200px]">
                 <Link 
                     className="flex items-center gap-[8px]"
                     href={getHref()} 
@@ -180,7 +180,7 @@ const SearchResultCard = (
                                 // display it accordingly
                                 <Link 
                                     className={cn(
-                                        "flex-1 flex gap-[4px] text-purple-600 hover:scale-110 underline cursor-pointer",
+                                        "flex-1 flex gap-[4px] text-purple-600 hover:text-purple-500 underline cursor-pointer",
                                         "transition-all duration-200 ease-in-out",
                                         "whitespace-nowrap overflow-hidden text-ellipsis"
                                     )}
@@ -192,7 +192,7 @@ const SearchResultCard = (
                                 :
                                 // otherwise, display it as text
                                 <span className={cn(
-                                    "text-blue-600 w-full whitespace-nowrap overflow-hidden text-ellipsis",
+                                    "text-blue-600 flex-1 whitespace-nowrap overflow-hidden text-ellipsis",
                                 )}>
                                     {metaData[index]}
                                 </span>

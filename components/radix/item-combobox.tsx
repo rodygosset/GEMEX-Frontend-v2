@@ -109,9 +109,6 @@ const ItemComboBox = (
 
     }, [session, searchParams])    
 
-
-    useEffect(() => console.log(`selected: ${selected}`), [selected])
-
     const getLabel = () => {
         if(selected) return options.find(option => option.value == selected)?.label ?? "Sélectionner..."
         else if(field?.value) return options.find(option => option.value == field.value)?.label ?? "Sélectionner..."

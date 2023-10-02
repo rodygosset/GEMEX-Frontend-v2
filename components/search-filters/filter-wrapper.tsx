@@ -34,7 +34,7 @@ const FilterWrapper = (
         )}>
             <div className="flex items-center gap-[8px]">
                 <Switch 
-                    value={checked ? 1 : 0}
+                    checked={checked}
                     onCheckedChange={handleCheckToggle}
                 />
                 <Label>{label}</Label>

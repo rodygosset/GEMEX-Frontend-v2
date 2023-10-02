@@ -40,7 +40,7 @@ const BooleanFilter = (
             checked={filter.checked}
         >
             <Checkbox
-                value={value ? 1 : 0}
+                checked={value}
                 onCheckedChange={handleChange}
             />
         </FilterWrapper>

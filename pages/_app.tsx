@@ -13,13 +13,17 @@ import nProgress from 'nprogress'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
+	const router = useRouter()
+
 	// set up the search context
 
 	const [searchParams, setSearchParams] = useState<SearchParamsType>({})
+	const [initSearchParamsLoaded, setInitSearchParamsLoaded] = useState(router.pathname == "/search" ? false : true)
 
 	// set up app navigation history
 
 	const [navHistory, setNavHistory] = useState<string[]>([])
+
 	
 	// memoize the context
 	
@@ -27,11 +31,10 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 		searchParams, 
 		setSearchParams,
 		navHistory,
-		setNavHistory 
-	}), [searchParams, navHistory])
-
-
-	const router = useRouter()
+		setNavHistory,
+		initSearchParamsLoaded,
+		setInitSearchParamsLoaded
+	}), [searchParams, navHistory, initSearchParamsLoaded])
 
 	useEffect(() => {
 		// set up nprogress
