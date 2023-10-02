@@ -12,6 +12,7 @@ import { Matcher } from "react-day-picker"
 
 
 interface Props {
+    embed?: boolean,
     fullWidth?: boolean,
     selected?: Date,
     onSelect?: (date?: Date) => void,
@@ -20,6 +21,7 @@ interface Props {
 
 const DatePicker = (
     {
+        embed = false,
         fullWidth = false,
         selected,
         onSelect,
@@ -35,15 +37,20 @@ const DatePicker = (
           className={cn(
             "justify-start text-left font-normal",
             selected ? "capitalize" : "text-blue-600",
-            fullWidth ? "w-full" : "w-[200px]"
+            fullWidth ? "w-full" : "w-[200px]",
+            embed ? "text-center justify-center p-0 border-none hover:bg-transparent w-[150px] h-fit" : ''
           )}
         >
-          <FontAwesomeIcon icon={faCalendar} className="mr-[8px] h-[12px] w-[12px]" />
+          {
+            !embed ?
+            <FontAwesomeIcon icon={faCalendar} className="mr-[8px] h-[12px] w-[12px]" />
+            : <></>
+          }
           {selected ? selected.toLocaleDateString("fr-fr", {
             day: "numeric",
             month: "long",
             year: "numeric"
-          }) : <span>Pick a date</span>}
+          }) : <span className="text-blue-600/60">Séléctionner une date...</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContentScroll className="w-auto p-0">

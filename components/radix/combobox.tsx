@@ -9,6 +9,7 @@ import { cn } from "@utils/tailwind"
 
 
 interface Props {
+    embed?: boolean;
     className?: string;
     options: SelectOption[];
     selected?: SelectOption;
@@ -17,6 +18,7 @@ interface Props {
 
 const Combobox = (
     {
+        embed = false,
         className,
         options,
         selected,
@@ -39,6 +41,7 @@ const Combobox = (
                         `flex flex-row justify-between items-center gap-4 px-[16px] py-[8px] rounded-[8px] w-full
                     text-left overflow-hidden overflow-ellipsis border border-blue-600/20
                    text-sm ${!selected ? "text-blue-600/60" : "text-blue-600"} `,
+                        embed ? "border-none p-0 w-[96px] min-w-[96px]" : "",
                         className
                    )}>
                 {

@@ -1,6 +1,7 @@
 
 import styles from "@styles/components/form-elements/date-input.module.scss"
 import { capitalizeEachWord, dateOptions, frenchToISO } from "@utils/general";
+import { cn } from "@utils/tailwind";
 
 // custom components
 
@@ -37,7 +38,11 @@ export const CustomInput = React.forwardRef((
 
     return (
         <p 
-            className={styles.dateInput + " " + (!value ? styles.placeholder : "")} 
+            // className={styles.dateInput + " " + (!value ? styles.placeholder : "")} 
+            className={cn(
+                "text-sm font-normal text-blue-600 cursor-pointer",
+                !value ? "text-opacity-60" : ""
+            )}
             onClick={onClick} 
             ref={ref}>
             { getDateString() }

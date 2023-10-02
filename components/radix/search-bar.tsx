@@ -158,7 +158,7 @@ const SearchBar = (
                                 "placeholder:text-blue-600/60"
                             )}
                             onKeyDown={handleKeyDown}
-                            value={searchParams[getDefaultSearchParam() as string]}
+                            value={searchParams[getDefaultSearchParam() as string] ?? ""}
                             onChange={e => setSearchParams({
                                 ...searchParams,
                                 [getDefaultSearchParam() as string]: e.target.value
@@ -175,7 +175,6 @@ const SearchBar = (
                                 className="w-full"
                                 options={getItemTypes()}
                                 onChange={selectedItemType => {
-                                    console.log("new item type selected", selectedItemType.value)
                                     setSearchParams({
                                         ...searchParams,
                                         item: selectedItemType.value

@@ -1,6 +1,6 @@
 import styles from "@styles/components/form-elements/date-input.module.scss"
 import colors from "@styles/abstracts/_colors.module.scss"
-import DatePicker from "react-datepicker"
+import ReactDatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { SelectOption } from "@utils/react-select/types"
 import { useEffect, useState } from "react"
@@ -14,6 +14,9 @@ import { StylesConfig } from "react-select"
 import Select from "./select"
 import { fr } from "date-fns/locale"
 import VerticalSeperator from "@components/utils/vertical-seperator"
+import { cn } from "@utils/tailwind"
+import Combobox from "@components/radix/combobox"
+import { DatePicker } from "@components/radix/date-picker"
 
 // This input is used both by the search form,
 // in which case strict is set to false
@@ -192,37 +195,47 @@ const DateInput = (
                 onChange={event => handleDateChange(new Date(event.target.value))} 
                 hidden
             />
-            <div className={getClassNames()}>
+            <div className={cn(
+                "flex justify-center items-center gap-[16px] p-[16px] rounded-[8px]",
+                "min-w-[200px] border border-blue-600/20"
+            )}>
                 {
                     strict && 
-                    <FontAwesomeIcon icon={faCalendar} className={styles.calendarIcon}/>
+                    <FontAwesomeIcon icon={faCalendar} className={cn(
+                        "text-blue-600 text-sm",
+                        showLocaleDate ? "hidden" : "" 
+                    )}/>
                 }
-                <DatePicker
-                    selected={date}
-                    wrapperClassName={styles.wrapper}
-                    onChange={date => handleDateChange(date)}
-                    { ...getDatePickerProps(dateFormat) }
-                    dateFormat={dateFormat.value}
-                    locale={fr}
-                    minDate={minDate}
-                    maxDate={maxDate}
-                    // @ts-ignore
-                    customInput={<CustomInput showLocaleDate={showLocaleDate} />}
-                />
+                {
+                    dateFormat.value == "dd/MM/yyyy" ?
+                    <DatePicker
+                        embed
+                        selected={date ? date : undefined}
+                        onSelect={date => handleDateChange(date ?? null)}
+                    />
+                    :
+                    <ReactDatePicker
+                        selected={date}
+                        wrapperClassName={styles.wrapper}
+                        onChange={date => handleDateChange(date)}
+                        { ...getDatePickerProps(dateFormat) }
+                        dateFormat={dateFormat.value}
+                        locale={fr}
+                        minDate={minDate}
+                        maxDate={maxDate}
+                        // @ts-ignore
+                        customInput={<CustomInput showLocaleDate={showLocaleDate} />}
+                    />
+                }
                 {
                     !strict &&
                     <>
-                        <VerticalSeperator/>
-                        <FontAwesomeIcon icon={faCalendar} className={styles.calendarIcon}/>
-                        <Select
-                            name={name}
+                        <div className="h-full w-[1px] bg-blue-600/20">&nbsp;</div>
+                        <Combobox
+                            embed
                             options={formatOptions}
-                            // only enforce value on first load
-                            // to avoid needless state updates
-                            defaultValue={format}
-                            onChange={handleFormatChange}
-                            customStyles={embeddedSelectStyles}
-                            isSearchable={false}
+                            onChange={selectedOption => handleFormatChange(selectedOption.value as string)}
+                            selected={dateFormat}
                         />
                     </>
                 }
