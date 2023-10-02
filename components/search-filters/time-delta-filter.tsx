@@ -8,6 +8,8 @@ import { StylesConfig } from "react-select"
 import FilterWrapper from "./filter-wrapper"
 import { Context } from "@utils/context"
 import { getOperatorOption, hasNumberOperatorParam, operatorOptions } from "@utils/form-elements/time-delta-input"
+import DropdownMenu from "@components/radix/dropdown-menu"
+import { cn } from "@utils/tailwind"
 
 
 // Allow users to filter based on search parameters
@@ -90,6 +92,7 @@ const TimeDeltaFilter = (
 
     return (
         <FilterWrapper
+            inline
             filterName={name}
             label={getFilterLabel(name, conf)}
             onCheckToggle={onToggle}
@@ -99,14 +102,17 @@ const TimeDeltaFilter = (
                 // only render the operator selector if the current parameter
                 // has a corresponding number operator param for the current item type
                 hasNumberOperatorParam(name, searchParams["item"]?.toString()) ?
-                <Select
-                    name={name}
+                <DropdownMenu
                     options={operatorOptions}
-                    onChange={handleOperatorChange}
-                    defaultValue={operator.value}
-                    customStyles={numberOperatorSelectStyles}
-                    isSearchable={false}
-                />
+                    onSelect={handleOperatorChange}
+                >
+                    <span className={cn(
+                        "w-[32px] h-[32px] rounded-[4px] border border-blue-600/20",
+                        "text-xs text-blue-600 flex justify-center items-center",
+                    )}>
+                    {operator.label}
+                    </span>
+                </DropdownMenu>
                 :
                 <></>
             }

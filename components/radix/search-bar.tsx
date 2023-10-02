@@ -72,7 +72,7 @@ const SearchBar = (
     const router = useRouter()
 
     const onSearch = () => {
-        if(!searchParams.item || router.pathname.includes("/search")) {
+        if(!searchParams.item || router.pathname == "/search") {
             setDialogIsOpen(false)
             return
         }
