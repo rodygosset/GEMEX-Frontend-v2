@@ -29,8 +29,8 @@ const FilterWrapper = (
 
     return (
         <div className={cn(
-            "w-full gap-[8px]",
-            inline ? "flex items-center justify-between" : "flex flex-col"
+            "w-full gap-[16px]",
+            inline ? "flex flex-wrap items-center justify-between" : "flex flex-col"
         )}>
             <div className="flex items-center gap-[8px]">
                 <Switch 

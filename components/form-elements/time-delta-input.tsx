@@ -1,17 +1,15 @@
 import styles from "@styles/components/form-elements/time-delta-input.module.scss"
 import colors from "@styles/abstracts/_colors.module.scss"
-import VerticalSeperator from "@components/utils/vertical-seperator";
-import { faClock } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SelectOption } from "@utils/react-select/types";
 import { TimeDeltaUnit } from "@utils/types"
 import { useEffect, useState } from "react";
 import { embeddedSelectStyles } from "./date-input";
-import NumericField from "./numeric-field";
-import Select from "./select";
 import { StylesConfig } from "react-select";
 import { getDefaultTimeDeltaUnit } from "@utils/form-elements/time-delta-input";
 import { secondsInDay, secondsInMonth, secondsInWeek } from "date-fns";
+import NumberInput from "@components/radix/number-input";
+import { cn } from "@utils/tailwind";
+import Combobox from "@components/radix/combobox";
 
 
 interface Props {
@@ -22,16 +20,6 @@ interface Props {
     strictComparison?: boolean;
     isInErrorState?: boolean;
     onChange?: (newValue: number) => void;
-}
-
-
-const customEmbeddedSelectStyles: StylesConfig = {
-    ...embeddedSelectStyles,
-    menu: base => ({
-        ...base,
-        boxShadow: `0px 30px 60px ${colors["primary-200"]}`,
-        minWidth: "80px"
-    })
 }
 
 const TimeDeltaInput = (
@@ -185,25 +173,24 @@ const TimeDeltaInput = (
                 onChange={event => handleChange(Number(event.target.value))} 
                 hidden
             />
-            <div className={getClassNames()}>
-                <NumericField
+            <div className={cn(
+                "flex justify-center gap-[16px] items-center py-[8px] px-[16px] rounded-[8px] border",
+                isInErrorState ? "border-red-600" : "border-blue-600/20",
+                "text-sm text-blue-600",
+            )}>
+                <NumberInput
                     value={unitValue}
                     onChange={handleChange}
                     min={getMinValueForUnit()}
                     max={getMaxValueForUnit()}
-                    embedded
+                    embed
                 />
-                <VerticalSeperator/>
-                <FontAwesomeIcon icon={faClock} className={styles.clockIcon}/>
-                <Select
-                    name={name}
+                <div className="h-full w-[1px] bg-blue-600/20">&nbsp;</div>
+                <Combobox
+                    embed
                     options={unitOptions}
-                    // only enforce value on first load
-                    // to avoid needless state updates
-                    defaultValue={unit.value}
-                    onChange={handleUnitChange}
-                    customStyles={customEmbeddedSelectStyles}
-                    isSearchable={false}
+                    onChange={selectedOption => handleUnitChange(selectedOption.value as TimeDeltaUnit)}
+                    selected={unit}
                 />
             </div>
         </>

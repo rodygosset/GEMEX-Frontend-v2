@@ -11,9 +11,7 @@ import { CustomInput } from "./date-input-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCalendar } from "@fortawesome/free-solid-svg-icons"
 import { StylesConfig } from "react-select"
-import Select from "./select"
 import { fr } from "date-fns/locale"
-import VerticalSeperator from "@components/utils/vertical-seperator"
 import { cn } from "@utils/tailwind"
 import Combobox from "@components/radix/combobox"
 import { DatePicker } from "@components/radix/date-picker"
@@ -27,6 +25,7 @@ interface Props {
     // select a single month, year or day
     // or whether they're obliged to select a complete date
     // ==> (DD/MM/YY)
+    className?: string;
     name: string;
     value?: Date;
     strict?: boolean;
@@ -102,6 +101,7 @@ export const getFormatOption = (value?: DateFormat) => {
 
 const DateInput = (
     {
+        className,
         name,
         value,
         strict = true,
@@ -197,7 +197,8 @@ const DateInput = (
             />
             <div className={cn(
                 "flex justify-center items-center gap-[16px] p-[16px] rounded-[8px]",
-                "min-w-[200px] border border-blue-600/20"
+                "min-w-[200px] border border-blue-600/20",
+                className
             )}>
                 {
                     strict && 

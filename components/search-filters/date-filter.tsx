@@ -66,6 +66,7 @@ const DateFilter = (
             checked={filter.checked}
         >
             <DateInput 
+                className="max-sm:w-full"
                 name={name}
                 value={getDateValue()} 
                 onChange={handleChange}

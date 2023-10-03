@@ -107,7 +107,7 @@ const Header = () => {
         },
         ...getAuthorizedCreatableItems().map(item => ({
             icon: item.icon,
-            label: `Créer ${item.label}`,
+            label: `Créer ${item.label.toLowerCase()}`,
             href: `/create/${item.value}`,
             value: item.value,
             onClick: () => router.push(`/create/${item.value}`)

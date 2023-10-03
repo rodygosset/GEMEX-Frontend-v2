@@ -46,7 +46,7 @@ const NavItem = (
         <div 
             onClick={item.onClick}
             className={`flex flex-row gap-4 items-center w-full  focus:outline-none ${isCurrentRoute() ? "text-white bg-white/10" : "text-white/60"} hover:bg-white/10 focus:bg-white/10
-        py-[8px] px-[16px] text-sm font-normal rounded-md transition duration-300 ease-in-out cursor-pointer`}>
+        py-[8px] px-[16px] text-sm font-normal rounded-[8px] transition duration-300 ease-in-out cursor-pointer`}>
         {
             item.icon ?
             <FontAwesomeIcon 

@@ -6,6 +6,8 @@ import { ChangeEvent, KeyboardEventHandler } from "react"
 
 interface Props {
     className?: string;
+    name?: string;
+    embed?: boolean;
     value?: number;
     min?: number;
     max?: number;
@@ -15,6 +17,8 @@ interface Props {
 const NumberInput = (
     {
         className,
+        name,
+        embed,
         value,
         min,
         max,
@@ -89,18 +93,27 @@ const NumberInput = (
     // render
 
     return (
-        <div className="flex items-center rounded-[8px] border border-blue-600/20">
+        <div className={cn(
+            "flex items-center",
+            embed ? 
+            ""
+            : 
+            " rounded-[8px] border border-blue-600/20"
+        )}>
             <button 
                 onClick={handleDecrease}
                 className={cn(
                     "text-xs w-[32px] h-[32px] text-blue-600 flex justify-center items-center",
-                    "hover:bg-blue-600/10 transition-colors duration-300 ease-in-out"
+                    "hover:bg-blue-600/10 transition-colors duration-300 ease-in-out",
+                    embed ? "rounded-[4px]" : ""
                 )}>
                 <FontAwesomeIcon icon={faMinus} />
             </button>
             <input
+                name={name}
                 className={cn(
-                    "w-[128px] h-[32px] text-sm font-normal text-blue-600 placeholder:text-blue-600/60",
+                    embed ? "w-[64px]" : "w-[128px]", 
+                    "h-[32px] text-sm font-normal text-blue-600 placeholder:text-blue-600/60",
                     "bg-transparent text-center",
                 )}
                 placeholder="0"
@@ -114,7 +127,8 @@ const NumberInput = (
                 onClick={handleIncrease} 
                 className={cn(
                     "text-xs w-[32px] h-[32px] text-blue-600 flex justify-center items-center",
-                    "hover:bg-blue-600/10 transition-colors duration-300 ease-in-out"
+                    "hover:bg-blue-600/10 transition-colors duration-300 ease-in-out",
+                    embed ? "rounded-[4px]" : ""
                 )}>
                 <FontAwesomeIcon icon={faPlus} />
             </button>

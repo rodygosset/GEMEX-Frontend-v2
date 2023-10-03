@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Dialog, DialogContent, DialogTrigger } from "./dialog"
-import { faChevronDown, faSearch } from "@fortawesome/free-solid-svg-icons"
+import { faSearch } from "@fortawesome/free-solid-svg-icons"
 import { cn } from "@utils/tailwind"
 import { Button } from "./button"
 import SearchFilters from "./search-filters"
@@ -141,7 +141,7 @@ const SearchBar = (
                 className={cn(
                     "max-w-screen-sm max-sm:bottom-0 bg-neutral-50/20 backdrop-blur-2xl",
                     "ring-4 ring-blue-600/30 flex flex-col",
-                    "sm:max-h-[600px] flex flex-col max-sm:max-h-[700px] max-sm:h-full",
+                    "max-h-[600px] flex flex-col max-sm:h-full",
                     "max-sm:top-auto max-sm:bottom-0 max-sm:translate-y-0",
                 )}>
                 {
