@@ -108,7 +108,10 @@ const OperationReportCard = (
         )}>
             {
                 fiche.tags.length > 0 ?
-                <span className="text-sm font-normal capitalize tracking-wider text-opacity-60 text-blue-600 mb-[-8px]">
+                <span className={cn(
+                    "text-sm font-normal capitalize tracking-wider text-opacity-60 mb-[-8px]",
+                    fiche.tags[0] == "Panne" ? "text-red-700" : "text-blue-600"
+                )}>
                     {fiche.tags[0]}
                 </span>
                 : <></>

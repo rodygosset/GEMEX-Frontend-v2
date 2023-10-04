@@ -396,7 +396,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                         <h1 className="text-blue-600 text-2xl">Aucun résultat...</h1>
                         <p className="text-blue-600/60 text-base font-normal">Ré-essayer en changeant les paramètres de recherche</p>
                     </div>
-                    </div>
+                </div>
 
             }
         </main>

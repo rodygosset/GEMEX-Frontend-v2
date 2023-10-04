@@ -87,7 +87,6 @@ const CurrentCycleWidget = (
                         label="Note qualité"
                         data={getChartData(cycle)}
                         labels={getLabels(cycle)}
-                        onDownloadLinkReady={() => {}}
                     />
                 </div>
                 :

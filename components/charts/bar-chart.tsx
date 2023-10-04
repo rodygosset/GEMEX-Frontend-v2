@@ -29,7 +29,7 @@ interface Props {
     data: number[];
     labels: string[];
     options?: ChartOptions<"bar">;
-    onDownloadLinkReady: (link: string) => void;
+    onDownloadLinkReady?: (link: string) => void;
 }
 
 
