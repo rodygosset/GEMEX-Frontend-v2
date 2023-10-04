@@ -1,7 +1,7 @@
 import OperationReportCard from "@components/cards/operation-report-card";
 import { Fiche } from "@conf/api/data-types/fiche";
-import { MySession } from "@conf/utility-types";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FigureCardType, MySession } from "@conf/utility-types";
+import { faBox, faChartPie, faHourglassHalf, faPlus, faSquareCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request";
 import { cn } from "@utils/tailwind";
@@ -11,14 +11,21 @@ import Link from "next/link";
 import { useEffect } from "react";
 import Image from "next/image";
 import OperationReportsChartCard from "@components/cards/operation-reports-chart-card";
+import { toISO } from "@utils/general";
+import { TO_BE_ASSIGNED_TAG } from "@conf/api/conf";
+import FigureCard from "@components/cards/figure-card";
+
+
 
 interface Props {
     fiches: Fiche[];
+    figureCards: FigureCardType[];
 }
 
 const Home: NextPage<Props> = (
     {
-        fiches
+        fiches,
+        figureCards
     }: Props
 ) => {
 
@@ -92,7 +99,17 @@ const Home: NextPage<Props> = (
                     <span className="text-base font-normal text-blue-600/60">Informations utiles sur les opérations en cours</span>
                 </div>
                 <div className="w-full flex flex-wrap gap-[16px]">
-                        <OperationReportsChartCard />
+                    <OperationReportsChartCard />
+                    {/* 
+                        // todo : fix flex layout
+                    */}
+                    <div className="flex gap-[16px]">
+                    {
+                        figureCards.map(figureCard => (
+                            <FigureCard key={figureCard.title} figureCard={figureCard} />
+                        ))
+                    }
+                    </div>
                 </div>
             </section>
         </main>
@@ -109,7 +126,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ctx => {
 
     const session = (await getSession(ctx)) as MySession | null
 
-    if(!session) return { props: { fiches: [] } }
+    if(!session) return { props: { fiches: [], figureCards: [] } }
 
     // get the user's ongoing operation reports from the API
 
@@ -126,11 +143,45 @@ export const getServerSideProps: GetServerSideProps<Props> = async ctx => {
         onSuccess: res => res.data
     })
 
+    // todo: get the data for the data cards
+
+    const figureCardsData: FigureCardType[] = [
+        {
+            title: "Éléments en panne",
+            caption: "Pannes en cours",
+            color: "from-fuchsia-700 to-red-600",
+            icon: faBox,
+            link: `/search?item=fiches&tags=Panne&date_debut=${toISO(new Date())}`
+        },
+        {
+            title: "Évaluations qualité à réaliser",
+            caption: "Au total",
+            color: "from-violet-700 to-fuchsia-700",
+            icon: faChartPie,
+            link: "/quality-assessments-dashboard"
+        },
+        {
+            title: "Fiches systématiques en attente de distribution",
+            caption: "Au sein de votre équipe",
+            color: "from-blue-600 to-emerald-600",
+            icon: faHourglassHalf,
+            link: `/search?item=fiches_systematiques&is_active=true&tags=${TO_BE_ASSIGNED_TAG}${session.user.groups.length > 0 ? "&groups=" + session.user.groups[0] : ""}`
+        },
+        {
+            title: "Fiche systématiques à réaliser",
+            caption: "Au total",
+            color: "from-blue-600 to-emerald-600",
+            icon: faSquareCheck,
+            link: `/search?item=fiches_systematiques&is_active=true&user_en_charge_id=${session.user.id}`
+        }
+    ]
+
     // return the props
 
     return {
         props: {
-            fiches: fiches ?? []
+            fiches: fiches ?? [],
+            figureCards: figureCardsData ?? []
         }
     }
 }
