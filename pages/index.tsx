@@ -98,17 +98,38 @@ const Home: NextPage<Props> = (
                     <h3 className="text-2xl font-semibold text-blue-600">Données</h3>
                     <span className="text-base font-normal text-blue-600/60">Informations utiles sur les opérations en cours</span>
                 </div>
-                <div className="w-full flex flex-wrap gap-[16px]">
+                <div className="w-full flex flex-wrap-reverse gap-[16px]">
                     <OperationReportsChartCard />
                     {/* 
                         // todo : fix flex layout
                     */}
-                    <div className="flex gap-[16px]">
-                    {
-                        figureCards.map(figureCard => (
-                            <FigureCard key={figureCard.title} figureCard={figureCard} />
-                        ))
-                    }
+                    <div className="flex-1 flex max-md:flex-wrap gap-[16px]">
+                        <div className="max-md:flex-1 flex flex-col gap-[16px]">
+                        {
+                            figureCards
+                            .slice(0, 2)
+                            .map(figureCard => (
+                                <FigureCard 
+                                    className="max-md:w-full"
+                                    key={figureCard.title} 
+                                    figureCard={figureCard}
+                                />
+                            ))
+                        }
+                        </div>
+                        <div className="max-md:flex-1 flex flex-col gap-[16px]">
+                        {
+                            figureCards
+                            .slice(2)
+                            .map(figureCard => (
+                                <FigureCard 
+                                    className="max-md:w-full"
+                                    key={figureCard.title} 
+                                    figureCard={figureCard} 
+                                />
+                            ))
+                        }
+                        </div>
                     </div>
                 </div>
             </section>

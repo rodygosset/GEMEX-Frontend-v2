@@ -5,11 +5,13 @@ import { cn } from "@utils/tailwind";
 import Link from "next/link";
 
 interface Props {
+    className?: string;
     figureCard: FigureCardType;
 }
 
 const FigureCard = (
     {
+        className,
         figureCard
     }: Props
 ) => {
@@ -21,7 +23,8 @@ const FigureCard = (
         <article className={cn(
             "w-[320px] min-w-[320px] h-[200px] rounded-[8px]",
             "p-[32px] flex flex-col gap-[16px]",
-            `bg-gradient-to-br ${figureCard.color}`
+            `bg-gradient-to-br ${figureCard.color}`,
+            className
         )}>
             <div className="w-full flex items-center gap-[16px]">
                 <FontAwesomeIcon icon={figureCard.icon} className="text-2xl text-neutral-50/80" />

@@ -59,7 +59,7 @@ const OperationReportsChartCard = () => {
 
     return (
         <section className={cn(
-            "w-full min-w-[320px] flex-1 h-full p-[32px] rounded-[8px] border border-blue-600/20 shadow-2xl shadow-blue-600/20",
+            "w-full min-w-[320px] max-w-[656px] flex-1 h-[416px] p-[32px] rounded-[8px] border border-blue-600/20 shadow-2xl shadow-blue-600/20",
             "flex flex-col gap-[16px]"
         )}>
             <div className="flex flex-col">
