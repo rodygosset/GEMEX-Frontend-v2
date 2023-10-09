@@ -5,8 +5,7 @@ import { cn } from "@utils/tailwind"
 import { Button } from "./button"
 import SearchFilters from "./search-filters"
 import { itemTypes, searchConf } from "@conf/api/search"
-import DropdownMenu from "./dropdown-menu"
-import { KeyboardEventHandler, useContext, useEffect, useState } from "react"
+import { KeyboardEventHandler, use, useContext, useEffect, useState } from "react"
 import { Context } from "@utils/context"
 import Combobox from "./combobox"
 import { useRouter } from "next/router"
@@ -23,6 +22,17 @@ const SearchBar = (
 ) => {
 
     const { searchParams, setSearchParams, navHistory, setNavHistory, initSearchParamsLoaded } = useContext(Context)
+
+    useEffect(() => {
+        if(!searchParams.hasOwnProperty("item")) setSearchParams({ ...searchParams, item: "fiches" })
+        if(!initSearchParamsLoaded) setSearchFilters(toSearchFiltersObject(searchParams["item"]?.toString() ?? "fiches", {}))
+    }, [])
+
+    useEffect(() => {
+        if(!initSearchParamsLoaded) return
+
+        setSearchFilters(toSearchFiltersObject(searchParams["item"]?.toString(), searchParams))
+    }, [initSearchParamsLoaded])
 
     const [searchFilters, setSearchFilters] = useState(toSearchFiltersObject(searchParams["item"]?.toString(), searchParams))
 
@@ -41,7 +51,7 @@ const SearchBar = (
     const clear = () => setClearTrigger(clearTrigger == 1 ? 2 : 1)
 
     useEffect(() => {
-        if(!(typeof clearTrigger === "number") || clearTrigger == 0) return
+        if(clearTrigger == 0) return
 
         setSearchFilters(toSearchFiltersObject(searchParams["item"]?.toString(), {}))
         setSearchParams({ item: searchParams["item"] })
@@ -186,7 +196,6 @@ const SearchBar = (
                         <div className="w-full flex-1 min-h-0 flex flex-col gap-[16px] h-full">
                             <label className="text-sm font-medium text-blue-600/60">Filtres</label>
                             <SearchFilters 
-                                clearTrigger={clearTrigger}
                                 searchFilters={searchFilters}
                                 setSearchFilters={setSearchFilters}
                             />

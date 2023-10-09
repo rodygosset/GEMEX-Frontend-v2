@@ -1,10 +1,9 @@
 import SearchResultCard from "@components/cards/search-result-card"
 import Pagination from "@components/pagination"
-import SearchFilters from "@components/search-filters"
 import LoadingIndicator from "@components/utils/loading-indicator"
 import { itemTypes, searchConf, SearchResultsMetaData } from "@conf/api/search"
 import { MySession } from "@conf/utility-types"
-import { faDownload, faList, faTableCellsLarge } from "@fortawesome/free-solid-svg-icons"
+import { faDownload } from "@fortawesome/free-solid-svg-icons"
 import useAPIRequest from "@hook/useAPIRequest"
 import { useGetMetaData } from "@hook/useGetMetaData"
 import { Context } from "@utils/context"
@@ -17,12 +16,11 @@ import { GetServerSideProps, NextPage } from "next"
 import { getServerSession } from "next-auth"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { Fragment, use, useContext, useEffect, useRef, useState } from "react"
+import { Fragment, useContext, useEffect, useRef, useState } from "react"
 import { authOptions } from "./api/auth/[...nextauth]"
 
 import Image from "next/image"
 import { useSession } from "next-auth/react"
-import { ScrollArea } from "@components/radix/scroll-area"
 import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { capitalizeFirstLetter, toISO } from "@utils/general"
@@ -40,8 +38,6 @@ interface Props {
 export const resultsPerPage = 30
 
 const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, initMetaData }) => {
-
-    const router = useRouter()
 
     // we use the context API to store search parameters
     // so they can be shared between components,
@@ -62,7 +58,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
         setInitSearchParamsLoaded
     } = useContext(Context)
 
-    const itemType = searchParams.item as string ?? "fiches"
+    const itemType = searchParams.item?.toString() ?? "fiches"
 
 
     // load the search params from the URL query
@@ -84,17 +80,6 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
     const [searchResults, setSearchResults] = useState(results)
     
     // useEffect(() => console.log(searchResults), [searchResults])
-
-    // when the item type changes, 
-    // update the search params
-
-    useEffect(() => {
-        if(!initSearchParamsLoaded) return
-        setSearchParams({
-            ...searchParams,
-            item: itemType
-        })
-    }, [itemType])
 
     // useEffect(() => console.log(searchParams), [searchParams])
 
@@ -308,7 +293,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
                 <div className={cn(
                     "w-full flex items-center justify-between gap-[16px] flex-wrap sticky top-[80px]",
                     "border-b border-blue-600/10",
-                    "bg-neutral-50/20 backdrop-blur-2xl",
+                    "bg-neutral-50/40 backdrop-blur-3xl",
                     "px-[2.5vw] py-[16px]"
                 )}>
                     {

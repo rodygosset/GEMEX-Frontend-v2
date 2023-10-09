@@ -8,14 +8,12 @@ import TimeDeltaFilter from "@components/search-filters/time-delta-filter";
 import { apiURLs } from "@conf/api/conf";
 import { Context } from "@utils/context";
 import { defaultOperator, hasNumberOperatorParam } from "@utils/form-elements/time-delta-input";
-import { toSearchFiltersObject, toURLQuery } from "@utils/search-utils";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { ScrollArea } from "./scroll-area";
 import { SearchFilters } from "@conf/api/search";
 
 interface Props {
     className?: string;
-    clearTrigger?: number;
     searchFilters: SearchFilters;
     setSearchFilters: (searchFilters: SearchFilters) => void;
 }
@@ -23,7 +21,6 @@ interface Props {
 const SearchFilters = (
     {
         className,
-        clearTrigger,
         searchFilters,
         setSearchFilters
     }: Props

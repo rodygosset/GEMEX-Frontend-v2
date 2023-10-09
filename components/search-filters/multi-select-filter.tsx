@@ -54,9 +54,10 @@ const MultiSelectFilter = (
 
     const handleChange: OnSelectHandler<string[]> = optionValue => onChange(name, optionValue)
 
-    const [selectedOptions, setSelectedOptions] = useState<SelectOption[]>([])
+    const [selectedOptions, setSelectedOptions] = useState<SelectOption[]>()
 
     useEffect(() => {
+        if(!selectedOptions) return
         handleChange(selectedOptions.map(option => option.label))
     }, [selectedOptions])
 
@@ -91,7 +92,7 @@ const MultiSelectFilter = (
             <ItemMultiSelectCombobox
                 itemType={conf.item}
                 onSelect={setSelectedOptions}
-                selected={selectedOptions.map(option => option.value as number)}
+                selected={selectedOptions?.map(option => option.value as number)}
             />
         </FilterWrapper>
     ) : <></>
