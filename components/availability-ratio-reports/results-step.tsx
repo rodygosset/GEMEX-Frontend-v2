@@ -233,7 +233,6 @@ const ResultsStep = (
                                             itemType={"fiches"}
                                             data={failureReport}
                                             globalMetaData={metaData}
-                                            listView
                                         />
                                     ))
                                 }

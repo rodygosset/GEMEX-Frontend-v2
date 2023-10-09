@@ -1,5 +1,5 @@
-import BarChart from "@components/charts/bar-chart"
-import { Fiche } from "@conf/api/data-types/fiche"
+// import BarChart from "@components/charts/bar-chart"
+import BarChart from "@components/charts/bar-chart-modern"
 import { MySession } from "@conf/utility-types"
 import useAPIRequest from "@hook/useAPIRequest"
 import { cn } from "@utils/tailwind"
@@ -27,7 +27,7 @@ const OperationReportsChartCard = () => {
         return await makeAPIRequest<{nb_results: number}, number>(
             session,
             "post",
-            "fiches",
+            type == "Systématique" ? "fiches_systematiques" : "fiches",
             "search/nb",
             {
                 groups: session.user.groups.length > 0 ? [session.user.groups[0]] : [],
@@ -59,7 +59,7 @@ const OperationReportsChartCard = () => {
 
     return (
         <section className={cn(
-            "w-full min-w-[320px] max-w-[656px] flex-1 h-[416px] p-[32px] rounded-[8px] border border-blue-600/20 shadow-2xl shadow-blue-600/20",
+            "w-full min-w-[320px] flex-1 h-[416px] p-[32px] rounded-[8px] border border-blue-600/20 shadow-2xl shadow-blue-600/20",
             "flex flex-col gap-[16px]"
         )}>
             <div className="flex flex-col">
@@ -68,19 +68,7 @@ const OperationReportsChartCard = () => {
             </div>
             <div className="w-full flex flex-col items-center justify-center min-h-[200px] h-full">
                 <BarChart
-                    options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 20
-                            }
-                        }
-                    }}
-                    label="Nombre de fiches"
-                    data={data}
-                    labels={labels}
+                    data={data.map((value, index) => ({ name: labels[index], value }))}
                 />
             </div>
         </section>

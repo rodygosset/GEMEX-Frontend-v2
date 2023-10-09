@@ -45,8 +45,6 @@ const BarChart = (
 
     const chartRef = useRef<ChartJSOrUndefined<"bar">>(null)
 
-    // effects
-
     // render 
 
     return (

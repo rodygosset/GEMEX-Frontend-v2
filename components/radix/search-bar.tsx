@@ -139,7 +139,7 @@ const SearchBar = (
             </DialogTrigger>
             <DialogContent
                 className={cn(
-                    "max-w-screen-sm max-sm:bottom-0 bg-neutral-50/20 backdrop-blur-2xl",
+                    "max-w-screen-sm max-sm:bottom-0 bg-neutral-50/40 backdrop-blur-3xl",
                     "ring-4 ring-blue-600/30 flex flex-col",
                     "max-h-[600px] flex flex-col max-sm:h-full",
                     "max-sm:top-auto max-sm:bottom-0 max-sm:translate-y-0",

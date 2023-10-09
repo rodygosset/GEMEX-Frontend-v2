@@ -140,7 +140,7 @@ const Header = () => {
             <header className={cn(
                 styles.header,
                 "border-b border-blue-600/10",
-                "bg-neutral-50/20 backdrop-blur-2xl"
+                "bg-neutral-50/40 backdrop-blur-3xl"
             )}>
                 <Link href="/" className={styles.logoContainer}> 
                     <FontAwesomeIcon icon={faGem} />

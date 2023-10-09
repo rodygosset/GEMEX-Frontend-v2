@@ -1,5 +1,5 @@
 import OperationReportCard from "@components/cards/operation-report-card";
-import { Fiche } from "@conf/api/data-types/fiche";
+import { Fiche, FicheSystematique } from "@conf/api/data-types/fiche";
 import { FigureCardType, MySession } from "@conf/utility-types";
 import { faBox, faChartPie, faHourglassHalf, faPlus, faSquareCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -104,26 +104,26 @@ const Home: NextPage<Props> = (
                         // todo : fix flex layout
                     */}
                     <div className="flex-1 flex max-md:flex-wrap gap-[16px]">
-                        <div className="max-md:flex-1 flex flex-col gap-[16px]">
+                        <div className="max-[1153px]:flex-1 flex flex-col gap-[16px]">
                         {
                             figureCards
                             .slice(0, 2)
                             .map(figureCard => (
                                 <FigureCard 
-                                    className="max-md:w-full"
+                                    className="max-[1153px]:w-full"
                                     key={figureCard.title} 
                                     figureCard={figureCard}
                                 />
                             ))
                         }
                         </div>
-                        <div className="max-md:flex-1 flex flex-col gap-[16px]">
+                        <div className="max-[1153px]:flex-1 flex flex-col gap-[16px]">
                         {
                             figureCards
                             .slice(2)
                             .map(figureCard => (
                                 <FigureCard 
-                                    className="max-md:w-full"
+                                    className="max-[1153px]:w-full"
                                     key={figureCard.title} 
                                     figureCard={figureCard} 
                                 />
@@ -164,7 +164,53 @@ export const getServerSideProps: GetServerSideProps<Props> = async ctx => {
         onSuccess: res => res.data
     })
 
-    // todo: get the data for the data cards
+    // get the data for the figure cards
+
+    const values = [
+        // malfunctions
+        (await SSRmakeAPIRequest<{nb_results: number}, number>({
+            session,
+            verb: "post",
+            itemType: "fiches",
+            additionalPath: "search/nb",
+            data: {
+                tags: ["Panne"],
+                date_debut: toISO(new Date()),
+                is_active: true
+            },
+            onSuccess: res => res.data.nb_results
+        })) ?? 0,
+        // todo: quality assessments
+        0,
+        // periodic reports to be assigned
+        (await SSRmakeAPIRequest<{nb_results: number}, number>({
+            session,
+            verb: "post",
+            itemType: "fiches_systematiques",
+            additionalPath: "search/nb",
+            data: {
+                is_active: true,
+                tags: [TO_BE_ASSIGNED_TAG],
+                groups: session.user.groups.length > 0 ? [session.user.groups[0]] : []
+            },
+            onSuccess: res => res.data.nb_results
+        })) ?? 0,
+        // periodic reports to be completed
+        (await SSRmakeAPIRequest<FicheSystematique[], number>({
+            session,
+            verb: "post",
+            itemType: "fiches_systematiques",
+            additionalPath: "search/",
+            data: {
+                is_active: true,
+                user_en_charge_id: session.user.id
+            },
+            onSuccess: res => {
+                // filter out reports that have the TO_BE_ASSIGNED_TAG
+                return res.data.filter(fiche => !fiche.tags.includes(TO_BE_ASSIGNED_TAG)).length
+            }
+        })) ?? 0
+    ]
 
     const figureCardsData: FigureCardType[] = [
         {
@@ -172,28 +218,32 @@ export const getServerSideProps: GetServerSideProps<Props> = async ctx => {
             caption: "Pannes en cours",
             color: "from-fuchsia-700 to-red-600",
             icon: faBox,
-            link: `/search?item=fiches&tags=Panne&date_debut=${toISO(new Date())}`
+            link: `/search?item=fiches&tags=Panne&date_debut=${toISO(new Date())}`,
+            value: values[0]
         },
         {
             title: "Évaluations qualité à réaliser",
             caption: "Au total",
             color: "from-violet-700 to-fuchsia-700",
             icon: faChartPie,
-            link: "/quality-assessments-dashboard"
+            link: "/quality-assessments-dashboard",
+            value: values[1]
         },
         {
             title: "Fiches systématiques en attente de distribution",
             caption: "Au sein de votre équipe",
             color: "from-blue-600 to-emerald-600",
             icon: faHourglassHalf,
-            link: `/search?item=fiches_systematiques&is_active=true&tags=${TO_BE_ASSIGNED_TAG}${session.user.groups.length > 0 ? "&groups=" + session.user.groups[0] : ""}`
+            link: `/search?item=fiches_systematiques&is_active=true&tags=${TO_BE_ASSIGNED_TAG}${session.user.groups.length > 0 ? "&groups=" + session.user.groups[0] : ""}`,
+            value: values[2]
         },
         {
             title: "Fiche systématiques à réaliser",
             caption: "Au total",
             color: "from-blue-600 to-emerald-600",
             icon: faSquareCheck,
-            link: `/search?item=fiches_systematiques&is_active=true&user_en_charge_id=${session.user.id}`
+            link: `/search?item=fiches_systematiques&is_active=true&user_en_charge_id=${session.user.id}`,
+            value: values[3]
         }
     ]
 
