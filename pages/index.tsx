@@ -98,7 +98,7 @@ const Home: NextPage<Props> = (
                     <h3 className="text-2xl font-semibold text-blue-600">Données</h3>
                     <span className="text-base font-normal text-blue-600/60">Informations utiles sur les opérations en cours</span>
                 </div>
-                <div className="w-full flex flex-wrap-reverse gap-[16px]">
+                <div className="w-full flex md:flex-wrap-reverse max-md:flex-col-reverse gap-[16px]">
                     <OperationReportsChartCard />
                     {/* 
                         // todo : fix flex layout
