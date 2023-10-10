@@ -13,6 +13,7 @@ import OperationReportsChartCard from "@components/cards/operation-reports-chart
 import { toISO } from "@utils/general";
 import { TO_BE_ASSIGNED_TAG } from "@conf/api/conf";
 import FigureCard from "@components/cards/figure-card";
+import { useEffect } from "react";
 
 
 
@@ -27,6 +28,12 @@ const Home: NextPage<Props> = (
         figureCards
     }: Props
 ) => {
+
+
+    useEffect(() => {
+        console.log("figureCards", figureCards)
+        console.log("fiches", fiches)
+    }, [])
 
 
     // render
@@ -154,6 +161,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async ctx => {
         onSuccess: res => res.data
     })
 
+    console.log("fiches", fiches)
+
     // get the data for the figure cards
 
     const values = [
@@ -201,6 +210,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async ctx => {
             }
         })) ?? 0
     ]
+
+    console.log("values", values)
 
     const figureCardsData: FigureCardType[] = [
         {

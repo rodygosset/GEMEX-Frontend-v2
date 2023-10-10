@@ -1,5 +1,6 @@
 
 import styles from "@styles/components/form-elements/expo-opening-period-input.module.scss"
+import { cn } from "@utils/tailwind";
 import { APIDateRange } from "@utils/types"
 
 interface Props {
@@ -16,31 +17,28 @@ const ExpoOpeningPeriodsList = (
     // render
 
     return (
-        <div 
-            style={{
-                width: "100%"
-            }}
-            className={styles.container}>
+        <ul className="w-full flex flex-col rounded-[8px] border border-blue-600/20">
         {
             value.length > 0 ?
-            <ul>
-            {
-                    value.map((period, i) => (
-                        <li key={`period-${i}`}>
-                        {
-                            period.date_fin ?
-                            <p>Du <span>{new Date(period.date_debut).toLocaleDateString("fr")}</span> au <span>{new Date(period.date_fin).toLocaleDateString("fr")}</span></p>
-                            :
-                            <p>À partir du <span>{new Date(period.date_debut).toLocaleDateString("fr")}</span></p>
-                        }
-                        </li>
-                    ))
+            value.map((period, i) => (
+                <li 
+                    className={cn(
+                        "flex-1 p-[16px] text-sm font-normal text-blue-600/80",
+                        i == value.length - 1 ? "" : "border-b border-blue-600/20"
+                    )}
+                    key={i}>
+                {
+                    period.date_fin ?
+                    <span>Du <span className="font-semibold text-blue-600">{new Date(period.date_debut).toLocaleDateString("fr")}</span> au <span className="font-semibold text-blue-600">{new Date(period.date_fin).toLocaleDateString("fr")}</span></span>
+                    :
+                    <span>À partir du <span className="font-semibold text-blue-600">{new Date(period.date_debut).toLocaleDateString("fr")}</span></span>
                 }
-            </ul>
+                </li>
+            ))
             :
-            <p className={styles.noData}>Aucune période d'ouverture</p>
+            <li className="flex-1 p-[16px] text-sm font-normal text-blue-600/80">Aucune période d'ouverture</li>
         }
-        </div>
+        </ul>
     )
 
 }

@@ -38,13 +38,6 @@ const ContentItem = (
 ) => {
 
     const router = useRouter()
-
-    const fullWidthAttributes = [
-        "textArea",
-        "itemList",
-        "fiches_status",
-        "expoOpeningPeriod"
-    ]
     
     const getContent = () => {
         let textValue = ""
@@ -52,18 +45,29 @@ const ContentItem = (
         switch(conf.type) {
             case "boolean":
                 // unmutable checkbox
-                return <Switch checked={data} onChange={() => {}}/>
+                return <Switch disabled checked={data} onChange={() => {}}/>
             case "date":
                 // display dates in a readable format
-                if(data == null) {
-                    return <p>Non précisé(e)</p>
-                }
-                const asDate = new Date(data)
-                textValue = capitalizeEachWord(asDate.toLocaleDateString('fr-fr', dateOptions))
-                return <p>{textValue}</p>
+                textValue = data ? capitalizeEachWord((new Date(data)).toLocaleDateString('fr-fr', dateOptions)) : "Non précisée"
+                return (
+                    <span className={cn(
+                        "w-full px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
+                        "text-sm font-normal text-blue-600",
+                        textValue == "Non précisée" ? "text-opacity-80" : ""
+                    )}>
+                        {textValue}
+                    </span>
+                )
             case "timeDelta":
                 textValue = deltaToString(numberToDelta(data))
-                return <p>{textValue}</p>
+                return (
+                    <span className={cn(
+                        "w-full px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
+                        "text-sm font-normal text-blue-600"
+                    )}>
+                        {textValue}
+                    </span>
+                )
             case "text":
             case "textArea":
             case "number":
@@ -72,7 +76,11 @@ const ContentItem = (
                 // display it as is otherwise
                 textValue = typeof data === 'string' && !data ? "Non précisé(e)" : data  
                 return (
-                    <span>
+                    <span className={cn(
+                        "w-full px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
+                        "text-sm font-normal text-blue-600",
+                        textValue == "Non précisé(e)" ? "text-opacity-80" : ""
+                    )}>
                         {textValue}
                     </span>
                 )
@@ -81,11 +89,15 @@ const ContentItem = (
                 // aka database models having an attribute like `${itemType}_id`
                 const itemLink = `/search?item=${name}&${(conf as LinkAttribute).searchParam}=${router.query.id}`
                 return (
-                    <ul>
-                        <li onClick={() => router.push(itemLink)}>
-                            <Link href={itemLink}>{getFilterLabel(name, conf)}</Link>
-                        </li>
-                    </ul>
+                    <Link 
+                        className={cn(
+                            "text-sm text-blue-600 w-fit",
+                            "px-[16px] py-[8px] rounded-full border border-blue-600/20",
+                            "hover:bg-blue-600/10 transition-all duration-300 ease-in-out"
+                        )}
+                        href={itemLink}>
+                        {getFilterLabel(name, conf)}
+                    </Link>
                 )
             case "fiches_status":
                 return <FicheStatus ficheData={itemData as Fiche} status={data}/>
@@ -121,10 +133,16 @@ const ContentItem = (
                 // in case the data is a link to another item
                 // build a link & return it
                 return (
-                    <p>
+                    <span 
+                        className={cn(
+                            "flex items-center gap-[8px] px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
+                            "text-purple-600 text-sm font-normal",
+                            "hover:bg-blue-600/10 transition-all duration-300 ease-in-out cursor-pointer"
+                        )}
+                        onClick={() => router.push(getLink())}>
                         <FontAwesomeIcon icon={faLink}/>
-                        <Link href={getLink()}>{data.label}</Link>
-                    </p>
+                        <Link className="flex-1" href={getLink()}>{data.label}</Link>
+                    </span>
                 )
         }
     }
@@ -152,7 +170,7 @@ const ContentItem = (
     return (
         <li className="w-full flex flex-col gap-[8px]">
 
-            <span className="text-base font-semibold text-blue-600">{getFilterLabel(name, conf)}</span>
+            <span className="text-sm font-medium text-blue-600">{getFilterLabel(name, conf)}</span>
             {
                 getContent()
             }

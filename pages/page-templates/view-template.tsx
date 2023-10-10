@@ -77,15 +77,15 @@ const ViewTemplate = (
                         <div className="flex flex-1 flex-col sm:min-w-[350px]">
                             <h1 className={cn(
                                 "text-xl min-[400px]:text-2xl sm:text-3xl font-semibold text-blue-600",
-                                (itemData as Fiche).tags[0] == "Relance" ? "text-yellow-600" : "",
-                                (itemData as Fiche).tags[0] == "Panne" ? "text-red-600" : "",
-                                (itemData as Fiche).tags[0] == "Systématique" ? "text-emerald-600" : "",
+                                itemType == "fiches" && (itemData as Fiche).tags[0] == "Relance" ? "text-yellow-600" : "",
+                                itemType == "fiches" && (itemData as Fiche).tags[0] == "Panne" ? "text-red-600" : "",
+                                itemType == "fiches_systematiques" ? "text-emerald-600" : "",
                             )}>{itemTitle}</h1>
                             <p className={cn(
                                 "text-sm font-normal text-opacity-60 text-blue-600",
-                                (itemData as Fiche).tags[0] == "Relance" ? "text-yellow-600" : "",
-                                (itemData as Fiche).tags[0] == "Panne" ? "text-red-600" : "",
-                                (itemData as Fiche).tags[0] == "Systématique" ? "text-emerald-600" : "",
+                                itemType == "fiches" && (itemData as Fiche).tags[0] == "Relance" ? "text-yellow-600" : "",
+                                itemType == "fiches" && (itemData as Fiche).tags[0] == "Panne" ? "text-red-600" : "",
+                                itemType == "fiches_systematiques" ? "text-emerald-600" : "",
                             )}>
                                 { getItemTypeLabel() }
                             </p>

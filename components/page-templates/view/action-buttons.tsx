@@ -181,7 +181,7 @@ const ActionButtons = (
         <>
         {
             showActionButtons ?
-            <div className="flex items-center gap-[16px]">
+            <div className="flex items-center flex-wrap gap-[16px]">
             {
                 // determine whether the button should be visible
                 shouldShowFicheCreationButton() ?

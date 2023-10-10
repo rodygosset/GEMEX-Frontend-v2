@@ -119,7 +119,12 @@ const OperationReportCard = (
             <div className="w-full flex items-center gap-[16px]">
                 <div className="w-[192px] flex flex-col">
                     <h4 className="text-xl font-semibold text-blue-600 w-full whitespace-nowrap overflow-hidden text-ellipsis">{fiche.nom}</h4>
-                    <span className="text-sm font-normal text-purple-500">{item.nom}</span>
+                    <span className={cn(
+                        "text-sm font-normal text-purple-500",
+                        "whitespace-nowrap overflow-hidden text-ellipsis"
+                    )}>
+                        {item.nom}
+                    </span>
                 </div>
                 <Link
                     className="w-[48px] h-[48px] aspect-square rounded-[32px] flex items-center justify-center border border-blue-600/20 hover:bg-blue-600/10 transition-colors"
