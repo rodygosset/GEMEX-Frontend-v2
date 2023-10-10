@@ -1,12 +1,13 @@
 
-import Button from "@components/button";
 import DeleteDialog from "@components/modals/delete-dialog";
 import PeriodicTaskHistoryModal from "@components/modals/periodic-task-history-modal";
+import { Button, buttonVariants } from "@components/radix/button";
 import { itemTypesPermissions } from "@conf/api/conf";
 import { APPROVED_STATUS_ID, Fiche, FicheSystematique } from "@conf/api/data-types/fiche";
 import { MySession } from "@conf/utility-types";
-import { faClockRotateLeft, faFileLines, faPenToSquare, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import styles from "@styles/page-templates/view/action-buttons.module.scss"
+import { faClockRotateLeft, faEdit, faFileCirclePlus, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { cn } from "@utils/tailwind";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router"
@@ -180,18 +181,16 @@ const ActionButtons = (
         <>
         {
             showActionButtons ?
-            <div id={styles.actionButtons}>
+            <div className="flex items-center gap-[16px]">
             {
                 // determine whether the button should be visible
                 shouldShowFicheCreationButton() ?
-                <Button
-                    role="tertiary"
-                    icon={faFileLines}
-                    onClick={handleCreateFicheClick}>
-                    <Link href={getCreateFicheLink()}>
+                <Link
+                    className={cn(buttonVariants({variant: "outline"}), "flex gap-[8px] items-center")} 
+                    href={getCreateFicheLink()}>
+                        <FontAwesomeIcon icon={faFileCirclePlus} />
                         Créer une fiche
-                    </Link>
-                </Button>
+                </Link>
                 :
                 <></>
             }
@@ -199,10 +198,13 @@ const ActionButtons = (
                 // determine whether the button should be visible
                 shouldShowHistoryButton() ?
                 <Button
-                    role="tertiary"
-                    icon={faClockRotateLeft}
-                    status="success"
+                    variant="outline"
+                    className={cn(
+                        "flex gap-[8px] items-center",
+                        "text-emerald-600 border-emerald-600/20 hover:bg-emerald-600/10"
+                    )}
                     onClick={handleHistoryClick}>
+                    <FontAwesomeIcon icon={faClockRotateLeft} />
                     Historique
                 </Button>
                 :
@@ -211,14 +213,12 @@ const ActionButtons = (
             {
                 // determine whether the button should be visible
                 shouldShowEditButton() ?
-                <Button
-                    role="tertiary"
-                    icon={faPenToSquare}
-                    onClick={handleEditClick}>
-                    <Link href={getEditLink()}>
-                        Modifier
-                    </Link>
-                </Button>
+                <Link
+                    className={cn(buttonVariants({variant: "outline"}), "flex gap-[8px] items-center")} 
+                    href={getEditLink()}>
+                    <FontAwesomeIcon icon={faEdit} />
+                    Modifier
+                </Link>
                 :
                 <></>
             }
@@ -226,10 +226,13 @@ const ActionButtons = (
                 // determine whether the button should be visible
                 shouldShowDeleteButton() ?
                 <Button
-                    role="tertiary"
-                    status="danger"
-                    icon={faTrashAlt}
+                    variant="outline"
+                    className={cn(
+                        "flex gap-[8px] items-center",
+                        "text-red-600 border-red-600/20 hover:bg-red-600/10"
+                    )}
                     onClick={handleDeleteClick}>
+                    <FontAwesomeIcon icon={faTrashAlt} />
                     Supprimer
                 </Button>
                 :

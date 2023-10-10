@@ -86,13 +86,13 @@ const Content = (
     // render
 
     return (
-        <div className={styles.contentContainer}>
-            <ul className={styles.column}>
+        <div className="mt-[16px] w-full flex gap-x-[32px] max-md:flex-col">
+            <ul className="flex flex-col gap-[16px] flex-1">
             {
                 renderList(firstColumnItems)
             }
             </ul>
-            <ul className={styles.column}>
+            <ul className="flex flex-col gap-[16px] flex-1">
             {
                 renderList(secondColumnItems)
             }

@@ -8,6 +8,7 @@ import { Fiche } from "@conf/api/data-types/fiche"
 import { itemTypes } from "@conf/api/search"
 import styles from "@styles/page-templates/view-template.module.scss"
 import { toSingular } from "@utils/general"
+import { cn } from "@utils/tailwind"
 
 
 interface Props {
@@ -64,38 +65,55 @@ const ViewTemplate = (
     // render
 
     return (
-        <main id={styles.container}>
-            <div className={styles.backButtonContainer}>
-                <GoBackButton className={getClassName()}/>
-            </div>
-            <section>
-                <div id={styles.itemTitle} className={getClassName()}>
-                    <h1>{itemTitle}</h1>
-                    <p>{ getItemTypeLabel() }</p>
+        <>
+            <div className={cn(
+                "w-full flex gap-[32px] sticky top-[80px]",
+                "border-b border-blue-600/10",
+                "bg-neutral-50/40 backdrop-blur-3xl",
+                "px-[2.5vw] py-[16px]"
+            )}>
+                    <GoBackButton />
+                    <div className="w-full flex flex-wrap gap-[16px] max-sm:flex-col">
+                        <div className="flex flex-1 flex-col sm:min-w-[350px]">
+                            <h1 className={cn(
+                                "text-xl min-[400px]:text-2xl sm:text-3xl font-semibold text-blue-600",
+                                (itemData as Fiche).tags[0] == "Relance" ? "text-yellow-600" : "",
+                                (itemData as Fiche).tags[0] == "Panne" ? "text-red-600" : "",
+                                (itemData as Fiche).tags[0] == "Systématique" ? "text-emerald-600" : "",
+                            )}>{itemTitle}</h1>
+                            <p className={cn(
+                                "text-sm font-normal text-opacity-60 text-blue-600",
+                                (itemData as Fiche).tags[0] == "Relance" ? "text-yellow-600" : "",
+                                (itemData as Fiche).tags[0] == "Panne" ? "text-red-600" : "",
+                                (itemData as Fiche).tags[0] == "Systématique" ? "text-emerald-600" : "",
+                            )}>
+                                { getItemTypeLabel() }
+                            </p>
+                        </div>
+                        <ActionButtons itemType={itemType} itemData={itemData}/>
+                    </div>
                 </div>
-                <ActionButtons itemType={itemType} itemData={itemData}/>
-                <HorizontalSeperator/>
-                <ScrollArea className={styles.contentScrollContainer}>
-                    <Content 
+            <main className="w-full h-full flex-1 flex flex-col gap-16 px-[7%] gap-y-[32px] pt-6">
+                <Content 
+                    itemType={itemType} 
+                    itemData={itemData} 
+                    extraData={extraData}
+                    hidden={hidden}
+                />
+                {
+                    // only render the file cards 
+                    // if the current item contains a list of file names
+                    itemTypeHasFiles() ?
+                    <ViewFiles 
                         itemType={itemType} 
-                        itemData={itemData} 
-                        extraData={extraData}
-                        hidden={hidden}
+                        itemData={itemData}
                     />
-                    {
-                        // only render the file cards 
-                        // if the current item contains a list of file names
-                        itemTypeHasFiles() ?
-                        <ViewFiles 
-                            itemType={itemType} 
-                            itemData={itemData}
-                        />
-                        :
-                        <></>
-                    }
-                </ScrollArea>
-            </section>
-        </main>
+                    :
+                    <></>
+                }
+            </main>
+        </>
+        
     )
 }
 

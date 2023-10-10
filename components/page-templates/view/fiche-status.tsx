@@ -1,11 +1,13 @@
 import styles from "@styles/page-templates/view/fiche-status.module.scss"
-import Button from "@components/button";
 import { APPROVED_STATUS_ID, DONE_STATUS_ID, Fiche, INIT_STATUS_ID, REQUEST_STATUS_ID } from "@conf/api/data-types/fiche";
 import { MySession } from "@conf/utility-types";
 import { useSession } from "next-auth/react";
 import { faCheck, faSpinner, faXmark } from "@fortawesome/free-solid-svg-icons";
 import useAPIRequest from "@hook/useAPIRequest";
 import { useRouter } from "next/router";
+import { cn } from "@utils/tailwind";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button } from "@components/radix/button";
 
 
 // this component allows the user to visualize
@@ -122,16 +124,24 @@ const FicheStatus = (
     // buttons shown are different depending on the current status
 
     return (
-        <div className={styles.container}>
-            <span className={getClassName()}>{status.label}</span>
+        <div className="w-full flex flex-wrap gap-[16px]">
+            <span className={cn(
+                "text-sm text-blue-600",
+                "px-[16px] py-[8px] rounded-full border border-blue-600/20",
+                "hover:bg-blue-600/10 transition-all duration-300 ease-in-out cursor-default",
+                status.id == REQUEST_STATUS_ID ? "text-yellow-600 border-yellow-600/20 hover:bg-yellow-600/10" : "",
+                status.id == DONE_STATUS_ID ? "text-purple-600 border-purple-600/20 hover:bg-purple-600/10" : "",
+                status.id == APPROVED_STATUS_ID ? "text-emerald-600 border-emerald-600/20 hover:bg-emerald-600/10" : "",
+            )}>
+                {status.label}
+            </span>
         {
             shouldAllowAcceptOrClose() ?
             <Button
-                icon={faCheck}
-                bigBorderRadius
-                role="tertiary"
-                className={styles.primary}
+                variant="outline"
+                className="flex items-center gap-[8px] rounded-full"
                 onClick={handleAccept}>
+                <FontAwesomeIcon icon={faCheck} />
                 Accepter
             </Button>
             :
@@ -140,12 +150,14 @@ const FicheStatus = (
         {
             shouldAllowAcceptOrClose() ?
             <Button
-                icon={faXmark}
-                bigBorderRadius
-                role="tertiary"
-                status="danger"
-                className={styles.error}
+                variant="outline"
+                className={cn(
+                    "flex items-center gap-[8px]",
+                    "rounded-full text-red-600 border border-red-600/20",
+                    "hover:bg-red-600/10 transition-all duration-300 ease-in-out"
+                )}
                 onClick={handleClose}>
+                <FontAwesomeIcon icon={faXmark} />
                 Fermer
             </Button>
             :
@@ -154,11 +166,13 @@ const FicheStatus = (
         {
             shouldAllowMarkAsInit() ?
             <Button
-                icon={faSpinner}
-                bigBorderRadius
-                role="tertiary"
-                className={styles.primary}
+                variant="outline"
+                className={cn(
+                    "flex items-center gap-[8px]",
+                    "rounded-full border border-blue-600/20"
+                )}
                 onClick={handleAccept}>
+                <FontAwesomeIcon icon={faSpinner} />
                 Marquer en cours
             </Button>
             :
@@ -167,12 +181,14 @@ const FicheStatus = (
         {
             shouldAllowMarkAsDone() ?
             <Button
-                icon={faCheck}
-                bigBorderRadius
-                role="tertiary"
-                status="progress"
-                className={styles.progress}
+                variant="outline"
+                className={cn(
+                    "flex items-center gap-[8px]",
+                    "rounded-full text-purple-600 border border-purple-600/20",
+                    "hover:bg-purple-600/10 transition-all duration-300 ease-in-out"
+                )}
                 onClick={handleMarkAsDone}>
+                <FontAwesomeIcon icon={faCheck} />
                 Marquer comme fait
             </Button>
             :
@@ -181,12 +197,14 @@ const FicheStatus = (
         {
             shouldAllowMarkAsApproved() ?
             <Button
-                icon={faCheck}
-                bigBorderRadius
-                role="tertiary"
-                status="success"
-                className={styles.success}
+                variant="outline"
+                className={cn(
+                    "flex items-center gap-[8px]",
+                    "rounded-full text-emerald-600 border border-emerald-600/20",
+                    "hover:bg-emerald-600/10 transition-all duration-300 ease-in-out"
+                )}
                 onClick={handleMarkAsApproved}>
+                <FontAwesomeIcon icon={faCheck} />
                 Valider
             </Button>
             :

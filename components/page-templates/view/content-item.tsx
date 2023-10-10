@@ -12,6 +12,9 @@ import { Fiche } from "@conf/api/data-types/fiche";
 import FilterCheckBox from "@components/search-filters/filter-checkbox";
 import { deltaToString, numberToDelta } from "@utils/form-elements/time-delta-input";
 import ExpoOpeningPeriodsList from "@components/expo-opening-periods-list";
+import { cn } from "@utils/tailwind";
+import { Checkbox } from "@components/radix/checkbox";
+import { Switch } from "@components/radix/switch";
 
 // this component is used in the View page
 // to display each item's attribute according to its type
@@ -42,8 +45,6 @@ const ContentItem = (
         "fiches_status",
         "expoOpeningPeriod"
     ]
-
-    const isFullWidth = fullWidthAttributes.includes(conf.type)
     
     const getContent = () => {
         let textValue = ""
@@ -51,8 +52,7 @@ const ContentItem = (
         switch(conf.type) {
             case "boolean":
                 // unmutable checkbox
-                // return <CheckBox value={data} onChange={() => {}}/>
-                return <FilterCheckBox value={data} onChange={() => {}} />    
+                return <Switch checked={data} onChange={() => {}}/>
             case "date":
                 // display dates in a readable format
                 if(data == null) {
@@ -71,7 +71,11 @@ const ContentItem = (
                 // let the user know it's empty
                 // display it as is otherwise
                 textValue = typeof data === 'string' && !data ? "Non précisé(e)" : data  
-                return <p>{textValue}</p>
+                return (
+                    <span>
+                        {textValue}
+                    </span>
+                )
             case "link":
                 // represents a link to items that refer to this item type
                 // aka database models having an attribute like `${itemType}_id`
@@ -91,15 +95,21 @@ const ContentItem = (
                 // list of items
                 // like tags or categories
                 return (
-                    <ul>
+                    <ul className="w-full flex flex-wrap gap-[16px]">
                     {
                         (data as Array<string>).map((item, index) => {
                             const itemLink = getItemListLink(item)
                             return (
-                                <li 
-                                    key={`${item}_${index}`}
-                                    onClick={() => router.push(itemLink)}>
-                                    <Link href={itemLink}>{item}</Link>
+                                <li key={`${item}_${index}`}>
+                                    <Link 
+                                        className={cn(
+                                            "text-sm text-blue-600",
+                                            "px-[16px] py-[8px] rounded-full border border-blue-600/20",
+                                            "hover:bg-blue-600/10 transition-all duration-300 ease-in-out"
+                                        )}
+                                        href={itemLink}>
+                                        {item}
+                                    </Link>
                                 </li>
                             )
                         })
@@ -135,22 +145,14 @@ const ContentItem = (
 
     const getItemListLink = (item: string) => `/search?item=${itemType}&${name}=${item}`
 
-    const getClassNames = () => {
-        let classNames = ""
-        classNames += isFullWidth ?  styles.isFullWidth : ""
-        return classNames
-    }
-
     // render
 
     if(conf.type in apiURLs && data.label == "Erreur") return <></>
 
     return (
-        <li className={getClassNames()}>
-            <div className={styles.itemLabel}>    
-                {/* <FontAwesomeIcon icon={conf.icon}/> */}
-                <h5>{getFilterLabel(name, conf)}</h5>
-            </div>
+        <li className="w-full flex flex-col gap-[8px]">
+
+            <span className="text-base font-semibold text-blue-600">{getFilterLabel(name, conf)}</span>
             {
                 getContent()
             }
