@@ -15,7 +15,6 @@ import { AxiosResponse } from "axios"
 import { GetServerSideProps, NextPage } from "next"
 import { getServerSession } from "next-auth"
 import Head from "next/head"
-import { useRouter } from "next/router"
 import { Fragment, useContext, useEffect, useRef, useState } from "react"
 import { authOptions } from "./api/auth/[...nextauth]"
 
@@ -94,7 +93,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
     const getMetaData = useGetMetaData()
 
     useEffect(() => {
-        if(!session) return
+        if(!session || !initSearchParamsLoaded) return
 
         getMetaData(session, itemType, searchResults).then(metaData => {
             if(metaData) setMetaData(metaData)
@@ -125,7 +124,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
     // & compute the total number of pages
 
     const getNbResults = () => {
-        if(!session) return
+        if(!session || !initSearchParamsLoaded) return
 
         // make a request to our API to get the number of search results
         // & divide that by the number of results per page 
@@ -157,7 +156,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 
     useEffect(() => {
 
-        if(!session) return
+        if(!session || !initSearchParamsLoaded) return
 
         // let the user know we're fetching data
 

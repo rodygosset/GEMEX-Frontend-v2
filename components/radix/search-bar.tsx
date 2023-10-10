@@ -5,7 +5,7 @@ import { cn } from "@utils/tailwind"
 import { Button } from "./button"
 import SearchFilters from "./search-filters"
 import { itemTypes, searchConf } from "@conf/api/search"
-import { KeyboardEventHandler, use, useContext, useEffect, useState } from "react"
+import { KeyboardEventHandler, useContext, useEffect, useState } from "react"
 import { Context } from "@utils/context"
 import Combobox from "./combobox"
 import { useRouter } from "next/router"
@@ -24,7 +24,7 @@ const SearchBar = (
     const { searchParams, setSearchParams, navHistory, setNavHistory, initSearchParamsLoaded } = useContext(Context)
 
     useEffect(() => {
-        if(!searchParams.hasOwnProperty("item")) setSearchParams({ ...searchParams, item: "fiches" })
+        if(!searchParams.hasOwnProperty("item") && initSearchParamsLoaded) setSearchParams({ ...searchParams, item: "fiches" })
         if(!initSearchParamsLoaded) setSearchFilters(toSearchFiltersObject(searchParams["item"]?.toString() ?? "fiches", {}))
     }, [])
 
@@ -40,7 +40,9 @@ const SearchBar = (
 
     // update the filters depending on the item type
 
-    useEffect(() => setSearchFilters(toSearchFiltersObject(searchParams["item"]?.toString(), searchParams)), [searchParams["item"]])
+    useEffect(() => {
+        if(initSearchParamsLoaded) setSearchFilters(toSearchFiltersObject(searchParams["item"]?.toString(), searchParams))
+    }, [searchParams["item"]])
 
     // clear the filters when the clearTrigger changes
 

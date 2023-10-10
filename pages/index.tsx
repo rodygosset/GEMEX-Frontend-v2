@@ -8,7 +8,6 @@ import { cn } from "@utils/tailwind";
 import { GetServerSideProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect } from "react";
 import Image from "next/image";
 import OperationReportsChartCard from "@components/cards/operation-reports-chart-card";
 import { toISO } from "@utils/general";
@@ -28,12 +27,6 @@ const Home: NextPage<Props> = (
         figureCards
     }: Props
 ) => {
-
-    useEffect(() => {
-
-        console.log("fiches : ", fiches)
-
-    }, [fiches])
 
 
     // render
@@ -100,9 +93,6 @@ const Home: NextPage<Props> = (
                 </div>
                 <div className="w-full flex md:flex-wrap-reverse max-md:flex-col-reverse gap-[16px]">
                     <OperationReportsChartCard />
-                    {/* 
-                        // todo : fix flex layout
-                    */}
                     <div className="flex-1 flex max-md:flex-wrap gap-[16px]">
                         <div className="max-[1153px]:flex-1 flex flex-col gap-[16px]">
                         {
@@ -218,7 +208,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ctx => {
             caption: "Pannes en cours",
             color: "from-fuchsia-700 to-red-600",
             icon: faBox,
-            link: `/search?item=fiches&tags=Panne&date_debut=${toISO(new Date())}`,
+            link: `/search?item=fiches&tags=Panne&date_debut=${toISO(new Date())}&is_active=true`,
             value: values[0]
         },
         {

@@ -47,8 +47,6 @@ const OperationReportsChartCard = () => {
                 getFicheTypeCount("Systématique")
             ])
 
-            console.log("fiches count : ", fiches)
-
             setData(fiches.map(fiche => fiche && !(fiche instanceof Error) ? fiche : 0))
         }
 
