@@ -1,267 +1,193 @@
-
-import DeleteDialog from "@components/modals/delete-dialog";
-import PeriodicTaskHistoryModal from "@components/modals/periodic-task-history-modal";
-import { Button, buttonVariants } from "@components/radix/button";
-import { itemTypesPermissions } from "@conf/api/conf";
-import { APPROVED_STATUS_ID, Fiche, FicheSystematique } from "@conf/api/data-types/fiche";
-import { MySession } from "@conf/utility-types";
-import { faClockRotateLeft, faEdit, faFileCirclePlus, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { cn } from "@utils/tailwind";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
+import DeleteDialog from "@components/modals/delete-dialog"
+import PeriodicTaskHistoryModal from "@components/modals/periodic-task-history-modal"
+import { Button, buttonVariants } from "@components/radix/button"
+import { itemTypesPermissions } from "@conf/api/conf"
+import { APPROVED_STATUS_ID, Fiche, FicheSystematique } from "@conf/api/data-types/fiche"
+import { MySession } from "@conf/utility-types"
+import { faClockRotateLeft, faEdit, faFileCirclePlus, faTrashAlt } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { cn } from "@utils/tailwind"
+import { useSession } from "next-auth/react"
+import Link from "next/link"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 
-
-// this component handles the logic 
+// this component handles the logic
 // to decide which buttons to show the user on the view page
 // & the logic for each button
 
 interface Props {
-    itemType: string;
-    itemData: any;
+	itemType: string
+	itemData: any
 }
 
-const ActionButtons = (
-    {
-        itemType,
-        itemData
-    }: Props
-) => {
+const ActionButtons = ({ itemType, itemData }: Props) => {
+	const router = useRouter()
 
-    
+	// user privileges
+	// impacts which action buttons to show
 
-    const router = useRouter()
+	const [hasFicheCreationPrivileges, setHasFicheCreationPrivileges] = useState(false)
+	const [hasHistoryPrivileges, setHasHistoryPrivileges] = useState(false)
+	const [hasItemPrivileges, setHasItemPrivileges] = useState(false)
+	const [hasItemDeletionPrivileges, setHasItemDeletionPrivileges] = useState(false)
+	const [showActionButtons, setShowActionButtons] = useState(false)
 
-    // user privileges
-    // impacts which action buttons to show
+	// determine which permissions the user has
 
-    const [hasFicheCreationPrivileges, setHasFicheCreationPrivileges] = useState(false)
-    const [hasHistoryPrivileges, setHasHistoryPrivileges] = useState(false)
-    const [hasItemPrivileges, setHasItemPrivileges] = useState(false)
-    const [hasItemDeletionPrivileges, setHasItemDeletionPrivileges] = useState(false)
-    const [showActionButtons, setShowActionButtons] = useState(false)
+	const session = useSession().data as MySession | null
+	const user = session?.user
+	const userRole = session?.userRole
 
-    // determine which permissions the user has
+	useEffect(() => {
+		if (!userRole) return
+		setHasFicheCreationPrivileges(userRole.permissions.includes("fiches"))
+		setHasHistoryPrivileges(userRole.permissions.includes("historique"))
+		setHasItemPrivileges(userRole.permissions.includes(itemTypesPermissions[itemType]))
+		setHasItemDeletionPrivileges(userRole.suppression.includes(itemTypesPermissions[itemType]))
+	}, [session])
 
-    const session = useSession().data as MySession | null
-    const user = session?.user
-    const userRole = session?.userRole
+	useEffect(() => {
+		setShowActionButtons(shouldShowFicheCreationButton() || shouldShowHistoryButton() || shouldShowEditButton() || shouldShowDeleteButton() ? true : false)
+	}, [hasFicheCreationPrivileges, hasHistoryPrivileges, hasItemPrivileges, hasItemDeletionPrivileges])
 
-    useEffect(() => {
-        if(!userRole) return
-        setHasFicheCreationPrivileges(userRole.permissions.includes("fiches"))
-        setHasHistoryPrivileges(userRole.permissions.includes("historique"))
-        setHasItemPrivileges(userRole.permissions.includes(itemTypesPermissions[itemType]))
-        setHasItemDeletionPrivileges(userRole.suppression.includes(itemTypesPermissions[itemType]))
-    }, [session])
+	// action buttons handlers
 
-    useEffect(() => {
-        setShowActionButtons(
-            (shouldShowFicheCreationButton() ||
-            shouldShowHistoryButton() ||
-            shouldShowEditButton() ||
-            shouldShowDeleteButton()) ? true : false
-        )
-    }, [hasFicheCreationPrivileges, 
-        hasHistoryPrivileges, 
-        hasItemPrivileges,
-        hasItemDeletionPrivileges
-    ])
-    
-    // action buttons handlers
+	// create fiche item
 
-    // create fiche item
-    
-    const getCreateFicheLink = () => `/create/fiches?itemType=${itemType}&itemId=${router.query.id}`
+	const getCreateFicheLink = () => `/create/fiches?itemType=${itemType}&itemId=${router.query.id}`
 
-    const handleCreateFicheClick = () => router.push(getCreateFicheLink())
+	const handleCreateFicheClick = () => router.push(getCreateFicheLink())
 
-    // Fiche Systématique History button
-    
-    const [showHistoryModal, setShowHistoryModal] = useState(false)
+	// Fiche Systématique History button
 
-    const handleHistoryClick = () => setShowHistoryModal(true)
+	const [showHistoryModal, setShowHistoryModal] = useState(false)
 
-    // edit current item
+	const handleHistoryClick = () => setShowHistoryModal(true)
 
-    const getEditLink = () => `/edit/${itemType.replace("_", "/")}/${router.query.id}`
+	// edit current item
 
-    const handleEditClick = () => router.push(getEditLink())
+	const getEditLink = () => `/edit/${itemType.replace("_", "/")}/${router.query.id}`
 
-    // delete current item
+	const handleEditClick = () => router.push(getEditLink())
 
-    // modal logic
+	// delete current item
 
-    const [showDeleteModal, setShowDeleteModal] = useState(false)
-    
-    // show delete dialog
+	// modal logic
 
-    const handleDeleteClick = () => setShowDeleteModal(true)
+	const [showDeleteModal, setShowDeleteModal] = useState(false)
 
+	// show delete dialog
 
-    // logic used to determine which buttons to show
+	const handleDeleteClick = () => setShowDeleteModal(true)
 
-    // only show the Fiche item creation button if:
-    // - the user has the privileges to do so
-    // - the current item type is a valid one
-    //   to use as the subject of a Fiche item
+	// logic used to determine which buttons to show
 
-    const ficheItemTypes = [
-        "expositions",
-        "elements"
-    ]
+	// only show the Fiche item creation button if:
+	// - the user has the privileges to do so
+	// - the current item type is a valid one
+	//   to use as the subject of a Fiche item
 
-    const shouldShowFicheCreationButton = () => hasFicheCreationPrivileges && ficheItemTypes.includes(itemType)
+	const ficheItemTypes = ["expositions", "elements"]
 
-    // only show the Fiche Systématique History button if:
-    // - the user has the privileges to add to the history of a Fiche Systématique item
-    // - the current item type is "fiches_systematiques"
+	const shouldShowFicheCreationButton = () => hasFicheCreationPrivileges && ficheItemTypes.includes(itemType)
 
-    const shouldShowHistoryButton = () => hasHistoryPrivileges && itemType == "fiches_systematiques"
+	// only show the Fiche Systématique History button if:
+	// - the user has the privileges to add to the history of a Fiche Systématique item
+	// - the current item type is "fiches_systematiques"
 
+	const shouldShowHistoryButton = () => hasHistoryPrivileges && itemType == "fiches_systematiques"
 
-    // only show the edit button if:
-    // - the user has edit privileges on the current item type
-    // - the current item type is anything but "fiches"
-    // -  or the current item type is "fiches" &:
-    //      - the user is the author, a manager or was assigned the task
-    //      - the status is anything but "Validée"
+	// only show the edit button if:
+	// - the user has edit privileges on the current item type
+	// - the current item type is anything but "fiches"
+	// -  or the current item type is "fiches" &:
+	//      - the user is the author, a manager or was assigned the task
+	//      - the status is anything but "Validée"
 
-    const userCanEditFicheItem = () => {
-        let ficheData = itemData as Fiche
-        return (
-            user && userRole &&
-            (
-                userRole.permissions.includes("manage") ||
-                ficheData.auteur_id == user.id ||
-                ficheData.user_en_charge_id == user.id
-            )
-        ) && ficheData.status_id != APPROVED_STATUS_ID
-    }
+	const userCanEditFicheItem = () => {
+		let ficheData = itemData as Fiche
+		return user && userRole && (userRole.permissions.includes("manage") || ficheData.auteur_id == user.id || ficheData.user_en_charge_id == user.id) && ficheData.status_id != APPROVED_STATUS_ID
+	}
 
-    const shouldShowEditButton = () => {
-        return (
-            hasItemPrivileges && 
-            (itemType == "fiches" ? userCanEditFicheItem() : true)
-        )
-    }
+	const shouldShowEditButton = () => {
+		return hasItemPrivileges && (itemType == "fiches" ? userCanEditFicheItem() : true)
+	}
 
-    // only show the delete button if:
-    // - the user has deletion privileges on the current item type
-    // - the current item type is not "fiches"
-    // - the current item type is "fiches" &:
-    //      - the user is the author & the status is anything but "validée"
-    //      - the user is the author & a manager & the status is "validée"
+	// only show the delete button if:
+	// - the user has deletion privileges on the current item type
+	// - the current item type is not "fiches"
+	// - the current item type is "fiches" &:
+	//      - the user is the author & the status is anything but "validée"
+	//      - the user is the author & a manager & the status is "validée"
 
+	const userCanDeleteFicheItem = () => {
+		let ficheData = itemData as Fiche
+		return user && userRole && ficheData.auteur_id == user.id && (ficheData.status_id != APPROVED_STATUS_ID || userRole.permissions.includes("manage"))
+	}
 
-    const userCanDeleteFicheItem = () => {
-        let ficheData = itemData as Fiche
-        return (
-            user && userRole &&
-            ficheData.auteur_id == user.id &&
-            (
-                ficheData.status_id != APPROVED_STATUS_ID ||
-                userRole.permissions.includes("manage")
-            )
-        )
-    }
+	const shouldShowDeleteButton = () => {
+		return hasItemDeletionPrivileges || (itemType == "fiches" && userCanDeleteFicheItem())
+	}
 
-    const shouldShowDeleteButton = () => {
-        return (
-            hasItemDeletionPrivileges || 
-            (itemType == "fiches" && userCanDeleteFicheItem())
-        )
-    }
+	// render
 
-    // render
-
-    return (
-        <>
-        {
-            showActionButtons ?
-            <div className="flex items-center flex-wrap gap-[16px]">
-            {
-                // determine whether the button should be visible
-                shouldShowFicheCreationButton() ?
-                <Link
-                    className={cn(buttonVariants({variant: "outline"}), "flex gap-[8px] items-center")} 
-                    href={getCreateFicheLink()}>
-                        <FontAwesomeIcon icon={faFileCirclePlus} />
-                        Créer une fiche
-                </Link>
-                :
-                <></>
-            }
-            {
-                // determine whether the button should be visible
-                shouldShowHistoryButton() ?
-                <Button
-                    variant="outline"
-                    className={cn(
-                        "flex gap-[8px] items-center",
-                        "text-emerald-600 border-emerald-600/20 hover:bg-emerald-600/10"
-                    )}
-                    onClick={handleHistoryClick}>
-                    <FontAwesomeIcon icon={faClockRotateLeft} />
-                    Historique
-                </Button>
-                :
-                <></>
-            }
-            {
-                // determine whether the button should be visible
-                shouldShowEditButton() ?
-                <Link
-                    className={cn(buttonVariants({variant: "outline"}), "flex gap-[8px] items-center")} 
-                    href={getEditLink()}>
-                    <FontAwesomeIcon icon={faEdit} />
-                    Modifier
-                </Link>
-                :
-                <></>
-            }
-            {
-                // determine whether the button should be visible
-                shouldShowDeleteButton() ?
-                <Button
-                    variant="outline"
-                    className={cn(
-                        "flex gap-[8px] items-center",
-                        "text-red-600 border-red-600/20 hover:bg-red-600/10"
-                    )}
-                    onClick={handleDeleteClick}>
-                    <FontAwesomeIcon icon={faTrashAlt} />
-                    Supprimer
-                </Button>
-                :
-                <></>
-            }
-            <DeleteDialog 
-                isVisible={showDeleteModal}
-                closeDialog={() => setShowDeleteModal(false)}
-                itemType={itemType}
-                itemTitle={itemData.nom}
-            />
-            {
-                shouldShowHistoryButton() ?
-                <PeriodicTaskHistoryModal 
-                    isVisible={showHistoryModal}
-                    closeModal={() => setShowHistoryModal(false)}
-                    task={itemData as FicheSystematique}
-                />
-                :
-                <></>
-            }
-            </div> 
-            : 
-            <></>
-        }
-        </>
-    )
+	return (
+		<>
+			{showActionButtons ? (
+				<div className="flex flex-wrap items-center gap-[16px]">
+					{
+						// determine whether the button should be visible
+						shouldShowFicheCreationButton() ? (
+							<Link className={cn(buttonVariants({ variant: "outline" }), "flex items-center gap-[8px]")} href={getCreateFicheLink()}>
+								<FontAwesomeIcon icon={faFileCirclePlus} />
+								Créer une fiche
+							</Link>
+						) : (
+							<></>
+						)
+					}
+					{
+						// determine whether the button should be visible
+						shouldShowHistoryButton() ? (
+							<Button variant="outline" className={cn("flex items-center gap-[8px]", "border-emerald-600/20 text-emerald-600 hover:bg-emerald-600/10")} onClick={handleHistoryClick}>
+								<FontAwesomeIcon icon={faClockRotateLeft} />
+								Historique
+							</Button>
+						) : (
+							<></>
+						)
+					}
+					{
+						// determine whether the button should be visible
+						shouldShowEditButton() ? (
+							<Link className={cn(buttonVariants({ variant: "outline" }), "flex items-center gap-[8px]")} href={getEditLink()}>
+								<FontAwesomeIcon icon={faEdit} />
+								Modifier
+							</Link>
+						) : (
+							<></>
+						)
+					}
+					{
+						// determine whether the button should be visible
+						shouldShowDeleteButton() ? (
+							<Button variant="outline" className={cn("flex items-center gap-[8px]", "border-red-600/20 text-red-600 hover:bg-red-600/10")} onClick={handleDeleteClick}>
+								<FontAwesomeIcon icon={faTrashAlt} />
+								Supprimer
+							</Button>
+						) : (
+							<></>
+						)
+					}
+					<DeleteDialog isVisible={showDeleteModal} closeDialog={() => setShowDeleteModal(false)} itemType={itemType} itemTitle={itemData.nom} />
+					{shouldShowHistoryButton() ? <PeriodicTaskHistoryModal isVisible={showHistoryModal} closeModal={() => setShowHistoryModal(false)} task={itemData as FicheSystematique} /> : <></>}
+				</div>
+			) : (
+				<></>
+			)}
+		</>
+	)
 }
-
-
 
 export default ActionButtons

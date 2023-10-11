@@ -1,182 +1,165 @@
-import styles from "@styles/page-templates/view-template.module.scss"
-import { getFilterLabel, searchConf } from "@conf/api/search";
+import { getFilterLabel } from "@conf/api/search"
 import { Attribute, LinkAttribute, viewableItemTypes } from "@conf/view"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { capitalizeEachWord, dateOptions } from "@utils/general";
-import { apiURLs } from "@conf/api/conf";
-import Link from "next/link";
-import { faLink } from "@fortawesome/free-solid-svg-icons";
-import { useRouter } from "next/router";
-import FicheStatus from "./fiche-status";
-import { Fiche } from "@conf/api/data-types/fiche";
-import FilterCheckBox from "@components/search-filters/filter-checkbox";
-import { deltaToString, numberToDelta } from "@utils/form-elements/time-delta-input";
-import ExpoOpeningPeriodsList from "@components/expo-opening-periods-list";
-import { cn } from "@utils/tailwind";
-import { Checkbox } from "@components/radix/checkbox";
-import { Switch } from "@components/radix/switch";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { capitalizeEachWord, dateOptions } from "@utils/general"
+import { apiURLs } from "@conf/api/conf"
+import Link from "next/link"
+import { faLink } from "@fortawesome/free-solid-svg-icons"
+import { useRouter } from "next/router"
+import FicheStatus from "./fiche-status"
+import { Fiche } from "@conf/api/data-types/fiche"
+import { deltaToString, numberToDelta } from "@utils/form-elements/time-delta-input"
+import ExpoOpeningPeriodsList from "@components/expo-opening-periods-list"
+import { cn } from "@utils/tailwind"
+import { Switch } from "@components/radix/switch"
 
 // this component is used in the View page
 // to display each item's attribute according to its type
 
 interface Props {
-    name: string;
-    conf: Attribute;
-    data: any;
-    itemType: string;
-    itemData: any;
+	name: string
+	conf: Attribute
+	data: any
+	itemType: string
+	itemData: any
 }
 
-const ContentItem = (
-    {
-        name,
-        conf,
-        data,
-        itemType,
-        itemData
-    }: Props
-) => {
+const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
+	const router = useRouter()
 
-    const router = useRouter()
-    
-    const getContent = () => {
-        let textValue = ""
-        
-        switch(conf.type) {
-            case "boolean":
-                // unmutable checkbox
-                return <Switch disabled checked={data} onChange={() => {}}/>
-            case "date":
-                // display dates in a readable format
-                textValue = data ? capitalizeEachWord((new Date(data)).toLocaleDateString('fr-fr', dateOptions)) : "Non précisée"
-                return (
-                    <span className={cn(
-                        "w-full px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
-                        "text-sm font-normal text-blue-600",
-                        textValue == "Non précisée" ? "text-opacity-80" : ""
-                    )}>
-                        {textValue}
-                    </span>
-                )
-            case "timeDelta":
-                textValue = deltaToString(numberToDelta(data))
-                return (
-                    <span className={cn(
-                        "w-full px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
-                        "text-sm font-normal text-blue-600"
-                    )}>
-                        {textValue}
-                    </span>
-                )
-            case "text":
-            case "textArea":
-            case "number":
-                // if the data is an empty string
-                // let the user know it's empty
-                // display it as is otherwise
-                textValue = typeof data === 'string' && !data ? "Non précisé(e)" : data  
-                return (
-                    <span className={cn(
-                        "w-full px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
-                        "text-sm font-normal text-blue-600",
-                        textValue == "Non précisé(e)" ? "text-opacity-80" : ""
-                    )}>
-                        {textValue}
-                    </span>
-                )
-            case "link":
-                // represents a link to items that refer to this item type
-                // aka database models having an attribute like `${itemType}_id`
-                const itemLink = `/search?item=${name}&${(conf as LinkAttribute).searchParam}=${router.query.id}`
-                return (
-                    <Link 
-                        className={cn(
-                            "text-sm text-blue-600 w-fit",
-                            "px-[16px] py-[8px] rounded-full border border-blue-600/20",
-                            "hover:bg-blue-600/10 transition-all duration-300 ease-in-out"
-                        )}
-                        href={itemLink}>
-                        {getFilterLabel(name, conf)}
-                    </Link>
-                )
-            case "fiches_status":
-                return <FicheStatus ficheData={itemData as Fiche} status={data}/>
-            case "expoOpeningPeriod":
-                return <ExpoOpeningPeriodsList value={data}/>
-            case "itemList":
-                // list of items
-                // like tags or categories
-                return (
-                    <ul className="w-full flex flex-wrap gap-[16px]">
-                    {
-                        (data as Array<string>).map((item, index) => {
-                            const itemLink = getItemListLink(item)
-                            return (
-                                <li key={`${item}_${index}`}>
-                                    <Link 
-                                        className={cn(
-                                            "text-sm text-blue-600",
-                                            "px-[16px] py-[8px] rounded-full border border-blue-600/20",
-                                            "hover:bg-blue-600/10 transition-all duration-300 ease-in-out"
-                                        )}
-                                        href={itemLink}>
-                                        {item}
-                                    </Link>
-                                </li>
-                            )
-                        })
-                    }
-                    </ul>
-                )
-            default:
-                if(!(conf.type in apiURLs)) return data
-                // in case the data is a link to another item
-                // build a link & return it
-                return (
-                    <span 
-                        className={cn(
-                            "flex items-center gap-[8px] px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
-                            "text-purple-600 text-sm font-normal",
-                            "hover:bg-blue-600/10 transition-all duration-300 ease-in-out cursor-pointer"
-                        )}
-                        onClick={() => router.push(getLink())}>
-                        <FontAwesomeIcon icon={faLink}/>
-                        <Link className="flex-1" href={getLink()}>{data.label}</Link>
-                    </span>
-                )
-        }
-    }
+	const getContent = () => {
+		let textValue = ""
 
-    // utils
+		switch (conf.type) {
+			case "boolean":
+				// unmutable checkbox
+				return <Switch disabled checked={data} onChange={() => {}} />
+			case "date":
+				// display dates in a readable format
+				textValue = data ? capitalizeEachWord(new Date(data).toLocaleDateString("fr-fr", dateOptions)) : "Non précisée"
+				return (
+					<span
+						className={cn(
+							"w-full px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
+							"text-sm font-normal text-blue-600",
+							textValue == "Non précisée" ? "text-opacity-80" : ""
+						)}>
+						{textValue}
+					</span>
+				)
+			case "timeDelta":
+				textValue = deltaToString(numberToDelta(data))
+				return (
+					<span className={cn("w-full px-[16px] py-[8px] rounded-[8px] border border-blue-600/20", "text-sm font-normal text-blue-600")}>
+						{textValue}
+					</span>
+				)
+			case "text":
+			case "textArea":
+			case "number":
+				// if the data is an empty string
+				// let the user know it's empty
+				// display it as is otherwise
+				textValue = typeof data === "string" && !data ? "Non précisé(e)" : data
+				return (
+					<span
+						className={cn(
+							"w-full px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
+							"text-sm font-normal text-blue-600",
+							textValue == "Non précisé(e)" ? "text-opacity-80" : ""
+						)}>
+						{textValue}
+					</span>
+				)
+			case "link":
+				// represents a link to items that refer to this item type
+				// aka database models having an attribute like `${itemType}_id`
+				const itemLink = `/search?item=${name}&${(conf as LinkAttribute).searchParam}=${router.query.id}`
+				return (
+					<Link
+						className={cn(
+							"text-sm text-blue-600 w-fit",
+							"px-[16px] py-[8px] rounded-full border border-blue-600/20",
+							"hover:bg-blue-600/10 transition-all duration-300 ease-in-out"
+						)}
+						href={itemLink}>
+						{getFilterLabel(name, conf)}
+					</Link>
+				)
+			case "fiches_status":
+				return <FicheStatus ficheData={itemData as Fiche} status={data} />
+			case "expoOpeningPeriod":
+				return <ExpoOpeningPeriodsList value={data} />
+			case "itemList":
+				// list of items
+				// like tags or categories
+				return (
+					<ul className="w-full flex flex-wrap gap-[16px]">
+						{(data as Array<string>).map((item, index) => {
+							const itemLink = getItemListLink(item)
+							return (
+								<li key={`${item}_${index}`}>
+									<Link
+										className={cn(
+											"text-sm text-blue-600",
+											"px-[16px] py-[8px] rounded-full border border-blue-600/20",
+											"hover:bg-blue-600/10 transition-all duration-300 ease-in-out"
+										)}
+										href={itemLink}>
+										{item}
+									</Link>
+								</li>
+							)
+						})}
+					</ul>
+				)
+			default:
+				if (!(conf.type in apiURLs)) return data
+				// in case the data is a link to another item
+				// build a link & return it
+				return (
+					<span
+						className={cn(
+							"flex items-center gap-[8px] px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
+							"text-purple-600 text-sm font-normal",
+							"hover:bg-blue-600/10 transition-all duration-300 ease-in-out cursor-pointer"
+						)}
+						onClick={() => router.push(getLink())}>
+						<FontAwesomeIcon icon={faLink} />
+						<Link className="flex-1" href={getLink()}>
+							{data.label}
+						</Link>
+					</span>
+				)
+		}
+	}
 
-    // build a link in case the data is a link to an item
+	// utils
 
-    const getLink = () => {
-        if(viewableItemTypes.includes(conf.type)) {
-            return `/view/${conf.type}/${data.id}`
-        } else {
-            return `/search?item=${itemType}&${name}=${data.id}`
-        }
-    }
+	// build a link in case the data is a link to an item
 
-    // logic differs for itemList attributes
+	const getLink = () => {
+		if (viewableItemTypes.includes(conf.type)) {
+			return `/view/${conf.type}/${data.id}`
+		} else {
+			return `/search?item=${itemType}&${name}=${data.id}`
+		}
+	}
 
-    const getItemListLink = (item: string) => `/search?item=${itemType}&${name}=${item}`
+	// logic differs for itemList attributes
 
-    // render
+	const getItemListLink = (item: string) => `/search?item=${itemType}&${name}=${item}`
 
-    if(conf.type in apiURLs && data.label == "Erreur") return <></>
+	// render
 
-    return (
-        <li className="w-full flex flex-col gap-[8px]">
+	if (conf.type in apiURLs && data.label == "Erreur") return <></>
 
-            <span className="text-sm font-medium text-blue-600">{getFilterLabel(name, conf)}</span>
-            {
-                getContent()
-            }
-        </li>
-    )
-
+	return (
+		<li className="w-full flex flex-col gap-[8px]">
+			<span className="text-sm font-medium text-blue-600">{getFilterLabel(name, conf)}</span>
+			{getContent()}
+		</li>
+	)
 }
 
 export default ContentItem
