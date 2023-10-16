@@ -102,7 +102,6 @@ const FileCard = ({ file, multiSelectionMode, isSelected, isSearchResult, isList
 							role="tertiary"
 							onClick={(e) => {
 								e.stopPropagation()
-								// setIsModalVisible(true)
 							}}>
 							{""}
 						</Button>

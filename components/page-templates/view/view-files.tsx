@@ -1,6 +1,6 @@
 import { Fichier } from "@conf/api/data-types/fichier"
 import { useEffect, useState } from "react"
-import FileCard from "@components/cards/file-card"
+import FileCard from "@components/radix/file-card"
 import useAPIRequest from "@hook/useAPIRequest"
 import { itemTypetoAttributeName } from "@utils/general"
 import { MySession } from "@conf/utility-types"

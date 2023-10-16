@@ -129,6 +129,7 @@ const Header = () => {
 				</div>
 			</header>
 			<FilePicker
+				isExplorer
 				open={showFileExplorer}
 				onOpenChange={setShowFileExplorer}
 			/>

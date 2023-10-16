@@ -1,254 +1,236 @@
-import { Fichier } from "@conf/api/data-types/fichier";
-import useAPIRequest from "@hook/useAPIRequest";
+import { Fichier } from "@conf/api/data-types/fichier"
+import useAPIRequest from "@hook/useAPIRequest"
 import styles from "@styles/components/form-elements/file-input.module.scss"
-import { ChangeEvent, useEffect, useRef, useState } from "react";
-import FileCard from "@components/cards/file-card";
-import Button from "@components/button";
-import { faCloud, faLaptop } from "@fortawesome/free-solid-svg-icons";
-import Image from "next/image";
-import GenericModalDialog from "@components/modals/generic-modal-dialog";
-import FilePicker from "@components/modals/file-picker";
-import { useSession } from "next-auth/react";
-import { MySession } from "@conf/utility-types";
+import { ChangeEvent, useEffect, useRef, useState } from "react"
+import Button from "@components/button"
+import { faCloud, faLaptop } from "@fortawesome/free-solid-svg-icons"
+import Image from "next/image"
+import GenericModalDialog from "@components/modals/generic-modal-dialog"
+import FilePicker from "@components/radix/file-picker"
+import { useSession } from "next-auth/react"
+import { MySession } from "@conf/utility-types"
+import FileCard from "@components/radix/file-card"
 
 interface Props {
-    value: string[];
-    onChange: (newValue: string[]) => void;
+	value: string[]
+	onChange: (newValue: string[]) => void
 }
 
-const FileInput = (
-    {
-        value,
-        onChange
-    }: Props
-) => {
+const FileInput = ({ value, onChange }: Props) => {
+	// state
 
-    // state
+	const [fichiers, setFichiers] = useState<Fichier[]>([])
 
-    const [fichiers, setFichiers] = useState<Fichier[]>([])
+	const isFileLoaded = (fileName: string, fileList: Fichier[]) => fileList.map((f) => f.nom).includes(fileName)
 
-    const isFileLoaded = (fileName: string, fileList: Fichier[]) => fileList.map(f => f.nom).includes(fileName)
+	// value being a list of file names we want to render in cards
+	// we need to get info on each file from the API
+	// by making an API request
 
+	const makeAPIRequest = useAPIRequest()
 
-    // value being a list of file names we want to render in cards
-    // we need to get info on each file from the API
-    // by making an API request
+	const { data, status } = useSession()
 
-    const makeAPIRequest = useAPIRequest()
+	const session = data as MySession | null
 
-    const { data, status } = useSession()
+	const getFiles = () => {
+		if (!session) return
+		setFichiers([])
+		for (const fileName of value) {
+			makeAPIRequest<Fichier[], void>(
+				session,
+				"post",
+				"fichiers",
+				"search/",
+				{
+					nom: fileName
+				},
+				(res) => {
+					// make sure we don't load the same file twice
+					setFichiers((currentList) => {
+						if (isFileLoaded(res.data[0].nom, currentList)) return currentList
+						return [...currentList, ...res.data]
+					})
+				}
+			)
+		}
+	}
 
-    const session = (data as MySession | null)
+	// keep fichiers up to date with value
 
-    const getFiles = () => {
-        if(!session) return
-        setFichiers([])
-        for(const fileName of value) {
-            makeAPIRequest<Fichier[], void>(
-                session,
-                "post",
-                "fichiers",
-                "search/",
-                {
-                    nom: fileName
-                },
-                res => {
-                    // make sure we don't load the same file twice
-                    setFichiers((currentList) => {
-                        if(isFileLoaded(res.data[0].nom, currentList)) return currentList
-                        return [...currentList, ...res.data]
-                    })
-                }
-            )
-        }
-    }
+	useEffect(() => getFiles(), [value, session])
 
-    // keep fichiers up to date with value
+	// manage local file upload
 
-    useEffect(() => getFiles(), [value, session])
+	const [localFile, setLocalFile] = useState<File | undefined>()
 
-    // manage local file upload
+	// open the dialog when the user clicks on the upload button
 
-    const [localFile, setLocalFile] = useState<File | undefined>()
+	const fileInputRef = useRef<HTMLInputElement>(null)
 
-    // open the dialog when the user clicks on the upload button
+	const handleUploadClick = () => {
+		if (!fileInputRef.current) return
+		fileInputRef.current.click()
+	}
 
-    const fileInputRef = useRef<HTMLInputElement>(null)
+	// the native HTML file input handles letting the user choose a file
+	// so we only have to get back the chosen file's info
 
-    const handleUploadClick = () => {
-        if(!fileInputRef.current) return
-        fileInputRef.current.click()
-    }
+	const handleLocalFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+		if (!e.target.files) return
+		setLocalFile(e.target.files[0])
+	}
 
-    // the native HTML file input handles letting the user choose a file
-    // so we only have to get back the chosen file's info
+	// upload confirmation dialog
 
-    const handleLocalFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if(!e.target.files) return
-        setLocalFile(e.target.files[0])
-    }
+	const [showConfirmationDialog, setShowConfirmationDialog] = useState(false)
 
-    // upload confirmation dialog
+	// if the file isn't empty,
+	// show the confirmation dialog
 
-    const [showConfirmationDialog, setShowConfirmationDialog] = useState(false)
+	useEffect(() => {
+		setShowConfirmationDialog(localFile ? true : false)
+	}, [localFile])
 
-    // if the file isn't empty,
-    // show the confirmation dialog
+	// upload the file selected by the user
 
-    useEffect(() => {
-        setShowConfirmationDialog(localFile ? true : false)
-    }, [localFile])
-    
-    // upload the file selected by the user
+	const uploadLocalFile = () => {
+		if (!localFile || !session) return
+		// we need to create a form data object
+		// so we can upload the file over HTTP to our API
+		const formData = new FormData()
+		formData.append("new_fichier", localFile)
 
-    const uploadLocalFile = () => {
-        if(!localFile || !session) return
-        // we need to create a form data object
-        // so we can upload the file over HTTP to our API
-        const formData = new FormData()
-        formData.append('new_fichier', localFile)
+		// upload
 
-        // upload
+		makeAPIRequest<Fichier, void>(
+			session,
+			"post",
+			"fichiers",
+			undefined,
+			formData,
+			// when the file is done uploading,
+			// add it to the list of selected files
+			(res) => {
+				onChange([...value, res.data.nom])
+				setLocalFile(undefined)
+			}
+		)
+	}
 
-        makeAPIRequest<Fichier, void>(
-            session,
-            "post", 
-            "fichiers", 
-            undefined, 
-            formData, 
-            // when the file is done uploading, 
-            // add it to the list of selected files
-            res => {
-                onChange([...value, res.data.nom])
-                setLocalFile(undefined)
-            }
-        )
-    }
+	// manage GEMEX file picker modal
 
+	const [showFilePicker, setShowFilePicker] = useState(false)
 
-    // manage GEMEX file picker modal
+	const handleFileSelect = (fileName: string) => {
+		// don't include the same file more than once in the list
+		if (value.includes(fileName)) return
+		onChange([...value, fileName])
+	}
 
-    const [showFilePicker, setShowFilePicker] = useState(false)
+	// make sure there are files that have been selected
+	// & that we have gotten the info we need
+	// before rendering the list of files in to cards
 
-    const handleFileSelect = (fileName: string) => {
-        // don't include the same file more than once in the list
-        if(value.includes(fileName)) return
-        onChange([...value, fileName])
-    }
+	const fileListIsEmpty = () => !value || fichiers.length == 0 || fichiers.length != value.length
 
-    // make sure there are files that have been selected
-    // & that we have gotten the info we need
-    // before rendering the list of files in to cards
+	// allow the user to de-select files
 
-    const fileListIsEmpty = () => !value || fichiers.length == 0 || fichiers.length != value.length
-    
-    // allow the user to de-select files
+	const handleDeSelect = (fileName: string) => onChange(value.filter((f) => f != fileName))
 
-    const handleDeSelect = (fileName: string) => onChange(value.filter(f => f != fileName))
+	// render
 
-
-    // render
-
-    return (
-        <>
-            <div className={styles.container}>
-                <h4>Fichiers</h4>
-                <div className={styles.fileListContainer}>
-                {
-                    !fileListIsEmpty() ?
-                    // if files have been selected
-                    <ul className={styles.fileList}>
-                    {
-                        fichiers.map(file => { 
-                            return (
-                                <FileCard 
-                                    key={file.nom + "_file_input"} 
-                                    file={file}
-                                    multiSelectionMode
-                                    onDeSelect={() => handleDeSelect(file.nom)}
-                                />
-                            )
-                        })
-                    }
-                    </ul>
-                    :
-                    <></>
-                }
-                    <div className={styles.noFilesContainer}>
-                    {
-                        
-                        // in case there's no files yet
-                        fileListIsEmpty() ?
-                        <div className={styles.illustrationContainer}>
-                            <Image 
-                                quality={100}
-                                src={'/images/void.svg'} 
-                                alt={"Aucun fichier"} 
-                                priority
-                                fill
-                                style={{ 
-                                    objectFit: "contain", 
-                                    top: "auto"
-                                }}
-                            />
-                        </div>
-                        :
-                        <></>
-                    } 
-                        <div className={styles.textContent}>
-                            {
-                                // in case there's no files yet
-                                fileListIsEmpty() ?
-                                <p>Aucun fichier sélectionné</p>
-                                :
-                                <></>
-                            }
-                            <Button
-                                icon={faLaptop}
-                                role="tertiary"
-                                type="button"
-                                onClick={handleUploadClick}>
-                                <input 
-                                    type="file" 
-                                    id="file" 
-                                    hidden 
-                                    ref={fileInputRef}
-                                    onClick={e => e.stopPropagation()}
-                                    onChange={handleLocalFileChange} 
-                                />
-                                <span>Ajouter un fichier local</span>
-                            </Button>
-                            <Button
-                                icon={faCloud}
-                                role="tertiary"
-                                type="button"
-                                onClick={() => setShowFilePicker(true)}>
-                                Choisir un fichier dans GEMEX
-                            </Button>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-            <GenericModalDialog
-                isVisible={showConfirmationDialog}
-                title="Ajouter un fichier local"
-                question="Sauvegarder ce fichier dans GEMEX ?"
-                yesOption='Sauvegarder'
-                noOption='Annuler'
-                onYesClick={uploadLocalFile}
-                onNoClick={() => setLocalFile(undefined)}
-                closeModal={() => setShowConfirmationDialog(false)}
-            />
-            <FilePicker
-                isVisible={showFilePicker}
-                onSelect={handleFileSelect}
-                closeModal={() => setShowFilePicker(false)}
-            />
-        </>
-        
-    )
+	return (
+		<>
+			<div className={styles.container}>
+				<h4>Fichiers</h4>
+				<div className={styles.fileListContainer}>
+					{!fileListIsEmpty() ? (
+						// if files have been selected
+						<ul className={styles.fileList}>
+							{fichiers.map((file) => {
+								return (
+									<FileCard
+										key={file.nom + "_file_input"}
+										file={file}
+										multiSelectionMode
+										onDeSelect={() => handleDeSelect(file.nom)}
+									/>
+								)
+							})}
+						</ul>
+					) : (
+						<></>
+					)}
+					<div className={styles.noFilesContainer}>
+						{
+							// in case there's no files yet
+							fileListIsEmpty() ? (
+								<div className={styles.illustrationContainer}>
+									<Image
+										quality={100}
+										src={"/images/void.svg"}
+										alt={"Aucun fichier"}
+										priority
+										fill
+										style={{
+											objectFit: "contain",
+											top: "auto"
+										}}
+									/>
+								</div>
+							) : (
+								<></>
+							)
+						}
+						<div className={styles.textContent}>
+							{
+								// in case there's no files yet
+								fileListIsEmpty() ? <p>Aucun fichier sélectionné</p> : <></>
+							}
+							<Button
+								icon={faLaptop}
+								role="tertiary"
+								type="button"
+								onClick={handleUploadClick}>
+								<input
+									type="file"
+									id="file"
+									hidden
+									ref={fileInputRef}
+									onClick={(e) => e.stopPropagation()}
+									onChange={handleLocalFileChange}
+								/>
+								<span>Ajouter un fichier local</span>
+							</Button>
+							<Button
+								icon={faCloud}
+								role="tertiary"
+								type="button"
+								onClick={() => setShowFilePicker(true)}>
+								Choisir un fichier dans GEMEX
+							</Button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<GenericModalDialog
+				isVisible={showConfirmationDialog}
+				title="Ajouter un fichier local"
+				question="Sauvegarder ce fichier dans GEMEX ?"
+				yesOption="Sauvegarder"
+				noOption="Annuler"
+				onYesClick={uploadLocalFile}
+				onNoClick={() => setLocalFile(undefined)}
+				closeModal={() => setShowConfirmationDialog(false)}
+			/>
+			<FilePicker
+				open={showFilePicker}
+				onOpenChange={setShowFilePicker}
+				onSelect={handleFileSelect}
+			/>
+		</>
+	)
 }
-
 
 export default FileInput

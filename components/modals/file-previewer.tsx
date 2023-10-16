@@ -16,9 +16,11 @@ interface Props {
 	fileName: string
 	fileInfo: FileInfo
 	ownerFullName: string
+	open?: boolean
+	onOpenChange?: (open: boolean) => void
 }
 
-const FilePreviewer = ({ children, fileName, fileInfo, ownerFullName }: Props) => {
+const FilePreviewer = ({ children, fileName, fileInfo, ownerFullName, open, onOpenChange }: Props) => {
 	// the following function computes how to render the file's content
 
 	const renderFilePreview = () => {
@@ -55,7 +57,9 @@ const FilePreviewer = ({ children, fileName, fileInfo, ownerFullName }: Props) =
 	// render
 
 	return (
-		<Dialog>
+		<Dialog
+			open={open}
+			onOpenChange={onOpenChange}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent
 				className={cn(
