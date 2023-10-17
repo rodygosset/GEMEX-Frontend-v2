@@ -64,7 +64,7 @@ const FileCard = ({ className, file, selected, multiSelectionMode, isSearchResul
 			ownerFullName={getUserFullName(fileOwner)}
 			open={open}
 			// if the card is in multi selection mode or a search result, don't open the previewer on click
-			onOpenChange={(multiSelectionMode || isSearchResult) && !open ? undefined : setOpen}>
+			onOpenChange={isSearchResult && !open ? undefined : setOpen}>
 			<li
 				onClick={(e) => {
 					e.stopPropagation()
@@ -74,7 +74,7 @@ const FileCard = ({ className, file, selected, multiSelectionMode, isSearchResul
 					"w-full flex items-center gap-[16px] p-[16px] cursor-pointer ",
 					isSearchResult ? "" : "border border-blue-600/20 rounded-[8px]",
 					"hover:bg-blue-600/10 duration-200 transition-all",
-					"min-w-[320px] max-[918px]:flex-1",
+					"min-w-[320px] flex-1",
 					className,
 					selected ? "border-[2px] border-blue-600 bg-blue-600/5 rounded-[8px]" : ""
 				)}>
@@ -96,7 +96,7 @@ const FileCard = ({ className, file, selected, multiSelectionMode, isSearchResul
 						className="text-blue-600 text-2xl"
 					/>
 					<div className="flex flex-col flex-1">
-						<span className="text-base font-medium text-blue-600">
+						<span className="w-full max-w-[200px] text-base font-medium text-blue-600 whitespace-nowrap overflow-hidden text-ellipsis">
 							{fileInfo.fileName}
 							{
 								// don't display the count if it ain't at least one
@@ -107,7 +107,10 @@ const FileCard = ({ className, file, selected, multiSelectionMode, isSearchResul
 					</div>
 					{isSearchResult ? (
 						<button
-							onClick={() => setOpen(true)}
+							onClick={(e) => {
+								e.stopPropagation()
+								setOpen(true)
+							}}
 							className={cn(
 								"h-[48px] w-[48px] flex items-center justify-center rounded-[8px] border border-blue-600/20",
 								"text-blue-600 text-xl hover:bg-blue-600/10 transition-all cursor-pointer"

@@ -181,7 +181,8 @@ const FilePicker = ({ open, onOpenChange, onSelect, isExplorer }: Props) => {
 						) : files.length > 0 ? (
 							<ScrollArea
 								className="w-full h-full max-h-[60vh] sm:max-h-[430px] min-h-0 flex flex-col border border-blue-600/20 rounded-[8px]"
-								onClick={() => !isExplorer && setSelectedFileName("")}>
+								//onClick={() => !isExplorer && setSelectedFileName("")}
+							>
 								<ul className="w-full h-full flex-1 flex flex-col min-h-0">
 									{files.map((file) => (
 										<FileCard

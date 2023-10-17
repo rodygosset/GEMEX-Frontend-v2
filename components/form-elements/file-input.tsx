@@ -1,8 +1,6 @@
 import { Fichier } from "@conf/api/data-types/fichier"
 import useAPIRequest from "@hook/useAPIRequest"
-import styles from "@styles/components/form-elements/file-input.module.scss"
 import { ChangeEvent, useEffect, useRef, useState } from "react"
-import Button from "@components/button"
 import { faCloud, faLaptop } from "@fortawesome/free-solid-svg-icons"
 import Image from "next/image"
 import GenericModalDialog from "@components/modals/generic-modal-dialog"
@@ -10,6 +8,8 @@ import FilePicker from "@components/radix/file-picker"
 import { useSession } from "next-auth/react"
 import { MySession } from "@conf/utility-types"
 import FileCard from "@components/radix/file-card"
+import { Button } from "@components/radix/button"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 interface Props {
 	value: string[]
@@ -142,12 +142,12 @@ const FileInput = ({ value, onChange }: Props) => {
 
 	return (
 		<>
-			<div className={styles.container}>
-				<h4>Fichiers</h4>
-				<div className={styles.fileListContainer}>
+			<div className="flex flex-col gap-[32px] w-full">
+				<span className="text-sm text-blue-600 font-medium">Fichiers</span>
+				<div className="flex flex-wrap gap-[16px]">
 					{!fileListIsEmpty() ? (
 						// if files have been selected
-						<ul className={styles.fileList}>
+						<ul className="flex flex-wrap items-center gap-[16px]">
 							{fichiers.map((file) => {
 								return (
 									<FileCard
@@ -162,11 +162,11 @@ const FileInput = ({ value, onChange }: Props) => {
 					) : (
 						<></>
 					)}
-					<div className={styles.noFilesContainer}>
+					<div className="flex flex-wrap items-center gap-[32px] w-full">
 						{
 							// in case there's no files yet
 							fileListIsEmpty() ? (
-								<div className={styles.illustrationContainer}>
+								<div className="relative w-[128px] aspect-square">
 									<Image
 										quality={100}
 										src={"/images/void.svg"}
@@ -183,31 +183,33 @@ const FileInput = ({ value, onChange }: Props) => {
 								<></>
 							)
 						}
-						<div className={styles.textContent}>
+						<div className="flex flex-col justify-center gap-[16px] max-sm:w-full">
 							{
 								// in case there's no files yet
-								fileListIsEmpty() ? <p>Aucun fichier sélectionné</p> : <></>
+								fileListIsEmpty() ? <span className="text-sm font-normal text-blue-600/60">Aucun fichier sélectionné</span> : <></>
 							}
 							<Button
-								icon={faLaptop}
-								role="tertiary"
+								className="flex sm:justify-start gap-[8px] w-full"
+								variant="outline"
 								type="button"
 								onClick={handleUploadClick}>
 								<input
 									type="file"
 									id="file"
-									hidden
 									ref={fileInputRef}
+									hidden
 									onClick={(e) => e.stopPropagation()}
 									onChange={handleLocalFileChange}
 								/>
+								<FontAwesomeIcon icon={faLaptop} />
 								<span>Ajouter un fichier local</span>
 							</Button>
 							<Button
-								icon={faCloud}
-								role="tertiary"
+								className="flex sm:justify-start items-center gap-[8px] min-w-[256px]"
+								variant="outline"
 								type="button"
 								onClick={() => setShowFilePicker(true)}>
+								<FontAwesomeIcon icon={faCloud} />
 								Choisir un fichier dans GEMEX
 							</Button>
 						</div>

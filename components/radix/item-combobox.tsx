@@ -11,167 +11,147 @@ import { capitalizeEachWord } from "@utils/general"
 import { SelectOption } from "@utils/react-select/types"
 import { ControllerRenderProps } from "react-hook-form"
 import { ScrollArea } from "./scroll-area"
+import { cn } from "@utils/tailwind"
 
 interface Props {
-    itemType: string;
-    searchParams?: any;
-    onChange: (value: number) => void;
-    field?: ControllerRenderProps<any, any>;
-    selected?: number;
+	className?: string
+	name?: string
+	itemType: string
+	searchParams?: any
+	onChange: (value: number) => void
+	field?: ControllerRenderProps<any, any>
+	selected?: number
 }
 
-const ItemComboBox = (
-    {
-        itemType,
-        searchParams,
-        onChange,
-        field,
-        selected
-    }: Props
-) => {
+const ItemComboBox = ({ className, name, itemType, searchParams, onChange, field, selected }: Props) => {
+	const [isOpen, setIsOpen] = useState(false)
+	const [isLoading, setIsLoading] = useState(true)
+	const [options, setOptions] = useState<SelectOption<number>[]>([])
 
+	// Fetch the data from the API
+	// & convert it into a list of options
 
-    const [isOpen, setIsOpen] = useState(false) 
-    const [isLoading, setIsLoading] = useState(true)
-    const [options, setOptions] = useState<SelectOption<number>[]>([])
+	const makeAPIRequest = useAPIRequest()
 
-    // Fetch the data from the API 
-    // & convert it into a list of options
+	const session = useSession().data as MySession | null
 
-    const makeAPIRequest = useAPIRequest()
+	useEffect(() => {
+		if (!session) return
 
-    const session = useSession().data as MySession | null
+		// start with making a request to the API
 
+		const handleReqSucess = (res: AxiosResponse<any[]>) => {
+			setIsLoading(false)
+			// convert the array of objects into an array of select options
 
-    useEffect(() => {
+			if (!Array.isArray(res.data)) {
+				return
+			}
 
-        if(!session) return
+			if (res.data.length == 0) setOptions([{ value: 0, label: "Sélectionner..." }])
 
-        // start with making a request to the API
+			// get the object property we'll use as the label
+			let mainAttr = ""
+			if ("username" in res.data[0]) {
+				mainAttr = "username"
+			} else if ("titre" in res.data[0]) {
+				mainAttr = "titre"
+			} else if ("nom" in res.data[0]) {
+				mainAttr = "nom"
+			} else {
+				mainAttr = "id"
+			}
 
-        const handleReqSucess = (res: AxiosResponse<any[]>) => {
-            setIsLoading(false)
-            // convert the array of objects into an array of select options
+			const selectOptions = res.data.map((item) => {
+				// if our options are users
+				// display their full name
+				let optionLabel: string = item[mainAttr]
+				if (mainAttr == "username") {
+					optionLabel = capitalizeEachWord(item["prenom"] + " " + item["nom"])
+				}
+				return { value: item.id, label: optionLabel }
+			})
 
-            if(!Array.isArray(res.data)) { return }
+			setOptions([{ value: 0, label: "Sélectionner..." }, ...selectOptions])
+		}
 
-            if(res.data.length == 0) setOptions([ { value: 0, label: "Sélectionner..." } ])
+		// in case there was an error with our request
 
+		const handleReqFailure = (res: Error | AxiosError<unknown, any>) => {
+			setIsLoading(false)
+		}
 
-            // get the object property we'll use as the label
-            let mainAttr = '';
-            if('username' in res.data[0]) { mainAttr = 'username' }
-            else if('titre' in res.data[0]) { mainAttr = 'titre' }
-            else if('nom' in res.data[0]) { mainAttr = 'nom' }
-            else { mainAttr = 'id' }
+		// make our API request
 
-            const selectOptions = res.data.map(item => {
-                // if our options are users
-                // display their full name
-                let optionLabel: string = item[mainAttr]
-                if(mainAttr == 'username') {
-                    optionLabel = capitalizeEachWord(item['prenom'] + ' ' + item['nom'])
-                }
-                return { value: item.id, label: optionLabel }
-            })
+		searchParams
+			? makeAPIRequest(session, "post", itemType, "search/", searchParams, handleReqSucess, handleReqFailure)
+			: makeAPIRequest(session, "get", itemType, undefined, undefined, handleReqSucess, handleReqFailure)
+	}, [session, searchParams])
 
-            setOptions([ { value: 0, label: "Sélectionner..." }, ...selectOptions ])
-        }
+	const getLabel = () => {
+		if (selected) return options.find((option) => option.value == selected)?.label ?? "Sélectionner..."
+		else if (field?.value) return options.find((option) => option.value == field.value)?.label ?? "Sélectionner..."
+		else return "Sélectionner..."
+	}
 
-        // in case there was an error with our request
+	// render
 
-        const handleReqFailure = (res: Error | AxiosError<unknown, any>) => {
-            setIsLoading(false)
-        }
-
-        // make our API request
-
-        searchParams ?
-        makeAPIRequest(
-            session,
-            "post",
-            itemType,
-            "search/",
-            searchParams,
-            handleReqSucess,
-            handleReqFailure,
-        )
-        :
-        makeAPIRequest(
-            session,
-            "get",
-            itemType,
-            undefined,
-            undefined,
-            handleReqSucess,
-            handleReqFailure,
-        )
-
-    }, [session, searchParams])    
-
-    const getLabel = () => {
-        if(selected) return options.find(option => option.value == selected)?.label ?? "Sélectionner..."
-        else if(field?.value) return options.find(option => option.value == field.value)?.label ?? "Sélectionner..."
-        else return "Sélectionner..."
-    }
-
-
-    // render
-
-
-    return (
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
-            <PopoverTrigger asChild>
-                <button 
-                    role="combobox"
-                    className={`flex flex-row justify-between items-center gap-4 px-[16px] py-[8px] rounded-[8px] w-full
+	return (
+		<Popover
+			open={isOpen}
+			onOpenChange={setIsOpen}>
+			<PopoverTrigger asChild>
+				<button
+					name={name}
+					role="combobox"
+					className={cn(
+						`flex flex-row justify-between items-center gap-4 px-[16px] py-[8px] rounded-[8px] w-full
                                  text-left overflow-hidden overflow-ellipsis border border-blue-600/20
-                                text-sm ${!field?.value && !selected ? "text-blue-600/60" : "text-blue-600"} `}>
-                {
-                    getLabel()
-                }
-                <FontAwesomeIcon icon={faChevronDown} className="text-blue-600" />
-                </button>
-            </PopoverTrigger>
-            <PopoverContentScroll className="w-[250px] p-0">
-                <Command>
-                    <CommandInput placeholder="Rechercher..." />
-                    <ScrollArea className="flex max-h-[280px] flex-col gap-4">
-                        <CommandEmpty>
-                            Aucun résultat
-                        </CommandEmpty>
-                        <CommandGroup>
-                            
-                            {
-                                options.map((option) => (
-                                    <Fragment key={option.value}>
-                                        <CommandItem 
-                                            className="flex flex-row justify-between items-center"
-                                            onSelect={currentValue => {
-                                                const option = options.find(option => option.label.toLowerCase() == currentValue)
-                                                if(option) {
-                                                    setIsOpen(false)
-                                                    onChange(option.value)
-                                                }
-                                            }}
-                                        >
-                                            {option.label}
-                                            {
-                                                (selected && option.value == selected && selected != 0) ||
-                                                (option.value == field?.value && field.value != 0) ?
-                                                <FontAwesomeIcon icon={faCheck} className="text-blue-600" />
-                                                : <></>
-                                            }
-                                        </CommandItem>
-                                    </Fragment>
-                                ))
-                            }
-                        </CommandGroup>
-                    </ScrollArea>
-                </Command>
-            </PopoverContentScroll>
-        </Popover>
-    )
+                                text-sm ${!field?.value && !selected ? "text-blue-600/60" : "text-blue-600"} `,
+						className
+					)}>
+					{getLabel()}
+					<FontAwesomeIcon
+						icon={faChevronDown}
+						className="text-blue-600"
+					/>
+				</button>
+			</PopoverTrigger>
+			<PopoverContentScroll className="w-[250px] p-0">
+				<Command>
+					<CommandInput placeholder="Rechercher..." />
+					<ScrollArea className="flex max-h-[280px] flex-col gap-4">
+						<CommandEmpty>Aucun résultat</CommandEmpty>
+						<CommandGroup>
+							{options.map((option) => (
+								<Fragment key={option.value}>
+									<CommandItem
+										className="flex flex-row justify-between items-center"
+										onSelect={(currentValue) => {
+											const option = options.find((option) => option.label.toLowerCase() == currentValue)
+											if (option) {
+												setIsOpen(false)
+												onChange(option.value)
+											}
+										}}>
+										{option.label}
+										{(selected && option.value == selected && selected != 0) || (option.value == field?.value && field.value != 0) ? (
+											<FontAwesomeIcon
+												icon={faCheck}
+												className="text-blue-600"
+											/>
+										) : (
+											<></>
+										)}
+									</CommandItem>
+								</Fragment>
+							))}
+						</CommandGroup>
+					</ScrollArea>
+				</Command>
+			</PopoverContentScroll>
+		</Popover>
+	)
 }
 
 export default ItemComboBox

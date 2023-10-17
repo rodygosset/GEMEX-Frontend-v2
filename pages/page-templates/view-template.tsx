@@ -4,7 +4,6 @@ import Content from "@components/page-templates/view/content"
 import ViewFiles from "@components/page-templates/view/view-files"
 import { Fiche } from "@conf/api/data-types/fiche"
 import { itemTypes } from "@conf/api/search"
-import styles from "@styles/page-templates/view-template.module.scss"
 import { toSingular } from "@utils/general"
 import { cn } from "@utils/tailwind"
 
@@ -34,7 +33,13 @@ const ViewTemplate = ({ itemType, itemTitle, itemData, extraData, hidden }: Prop
 
 	return (
 		<>
-			<div className={cn("w-full flex gap-[32px] sticky top-[80px]", "border-b border-blue-600/10", "bg-neutral-50/40 backdrop-blur-3xl", "px-[2.5vw] py-[16px]")}>
+			<div
+				className={cn(
+					"w-full flex gap-[32px] sticky top-[80px]",
+					"border-b border-blue-600/10",
+					"bg-neutral-50/40 backdrop-blur-3xl",
+					"px-[2.5vw] py-[16px]"
+				)}>
 				<GoBackButton />
 				<div className="w-full flex flex-wrap gap-[16px] max-sm:flex-col">
 					<div className="flex flex-1 flex-col sm:min-w-[350px]">
@@ -57,15 +62,30 @@ const ViewTemplate = ({ itemType, itemTitle, itemData, extraData, hidden }: Prop
 							{getItemTypeLabel()}
 						</p>
 					</div>
-					<ActionButtons itemType={itemType} itemData={itemData} />
+					<ActionButtons
+						itemType={itemType}
+						itemData={itemData}
+					/>
 				</div>
 			</div>
 			<main className="w-full h-full flex-1 flex flex-col gap-16 px-[7%] gap-y-[32px] pt-6">
-				<Content itemType={itemType} itemData={itemData} extraData={extraData} hidden={hidden} />
+				<Content
+					itemType={itemType}
+					itemData={itemData}
+					extraData={extraData}
+					hidden={hidden}
+				/>
 				{
 					// only render the file cards
 					// if the current item contains a list of file names
-					itemTypeHasFiles() ? <ViewFiles itemType={itemType} itemData={itemData} /> : <></>
+					itemTypeHasFiles() ? (
+						<ViewFiles
+							itemType={itemType}
+							itemData={itemData}
+						/>
+					) : (
+						<></>
+					)
 				}
 			</main>
 		</>

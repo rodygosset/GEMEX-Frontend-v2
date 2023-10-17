@@ -16,11 +16,15 @@ import { useEffect, useState } from "react"
 import { StylesConfig } from "react-select"
 import CreateForm from "@components/forms/create-form"
 import { fichesCreateConf } from "@conf/api/data-types/fiche"
-import Button from "@components/button"
 import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons"
 import { MySession } from "@conf/utility-types"
 import { useSession } from "next-auth/react"
 import { ScrollArea } from "@components/radix/scroll-area"
+import { cn } from "@utils/tailwind"
+import { Input } from "@components/radix/input"
+import Combobox from "@components/radix/combobox"
+import { Button } from "@components/radix/button"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 // custom styles for the fiche type select
 
@@ -342,25 +346,8 @@ const CreateTemplate = ({ itemType, hidden, defaultValues }: Props) => {
 		return itemType?.split("_").length > 1 ? toSingular(itemType) : label || ""
 	}
 
-	const getClassName = () => {
-		if (itemType == "fiches") {
-			// change the color depending on the fiche type
-			switch (ficheType) {
-				case "relance":
-					return styles.relance
-				case "panne":
-					return styles.panne
-				case "systématique":
-					return styles.systematique
-				default:
-					return ""
-			}
-		}
-		return ""
-	}
-
 	const getTitlePlaceHolder = () => {
-		if (!(itemType in createFormConf)) return
+		if (!(itemType in createFormConf)) return "Nom..."
 		return createFormConf[itemType].nom.label
 	}
 
@@ -391,60 +378,69 @@ const CreateTemplate = ({ itemType, hidden, defaultValues }: Props) => {
 
 	return (
 		<>
-			<main id={styles.container}>
-				<div className={styles.backButtonContainer}>
-					<GoBackButton className={getClassName()} />
-				</div>
-				<section>
-					<div className={styles.header}>
-						<div
-							id={styles.itemTitle}
-							className={getClassName()}>
-							<TextInput
-								className={styles.titleInput}
-								placeholder={getTitlePlaceHolder()}
-								onChange={handleTitleChange}
-								isInErrorState={formData?.nom.isInErrorState}
-							/>
-							<div className={styles.itemTypeContainer}>
-								<p>{getItemTypeLabel()}</p>
+			<div
+				className={cn(
+					"w-full flex flex-wrap gap-[32px] sticky top-[80px]",
+					"border-b border-blue-600/10",
+					"bg-neutral-50/40 backdrop-blur-3xl",
+					"px-[2.5vw] py-[16px]"
+				)}>
+				<GoBackButton />
+				<div className="flex-1 flex flex-wrap gap-[16px] max-sm:flex-col">
+					<div className="flex flex-1 flex-col min-w-[350px] gap-[16px]">
+						<Input
+							className={cn(
+								"placeholder:text-blue-600/60 bg-transparent",
+								"text-xl min-[400px]:text-2xl sm:text-3xl text-blue-600",
+								"border border-blue-600/20 ring-offset-blue-600/20",
+								itemType == "fiches" && ficheType == "relance" ? "text-yellow-600 border-yellow-600/20 placeholder:text-yellow-600/60" : "",
+								itemType == "fiches" && ficheType == "panne" ? "text-red-600 border-red-600/20 placeholder:text-red-600/60" : "",
+								itemType == "fiches" && ficheType == "systématique"
+									? "text-emerald-600 border-emerald-600/20 placeholder:text-emerald-600/60"
+									: "",
+								formData?.nom?.isInErrorState ? "border-red-600 ring-red-600" : ""
+							)}
+							placeholder={getTitlePlaceHolder()}
+							onChange={(e) => handleTitleChange(e.target.value)}
+							value={formData?.nom?.value ?? ""}
+						/>
+						<div className="w-full flex flex-wrap items-center justify-between gap-[16px]">
+							<div className="flex items-center gap-[16px]">
+								<span className="text-sm uppercase tracking-widest text-blue-600/60">{getItemTypeLabel()}</span>
 								{itemType == "fiches" ? (
-									<Select
-										name="Type de fiche"
-										customStyles={customSelectStyles}
+									<Combobox
+										className="w-fit"
 										options={getFicheTypeOptions()}
-										value={ficheType}
-										defaultValue={ficheTypeOptions[0].value}
-										onChange={setFicheType}
-										isSearchable={false}
+										onChange={(option) => setFicheType(option.value as string)}
+										selected={ficheTypeOptions.find((option) => option.value == ficheType)}
 									/>
 								) : (
 									<></>
 								)}
 							</div>
-							{validationError ? <p className={styles.formErrorMessage}>{errorMessage}</p> : <></>}
+							<Button
+								onClick={handleSubmit}
+								className="flex items-center gap-[8px]">
+								<FontAwesomeIcon icon={faFloppyDisk} />
+								Créer
+							</Button>
 						</div>
-						<Button
-							icon={faFloppyDisk}
-							onClick={handleSubmit}>
-							Créer
-						</Button>
+						{validationError ? <span className="text-red-700 text-sm font-normal">{errorMessage}</span> : <></>}
 					</div>
-					<HorizontalSeperator />
-					<ScrollArea className={styles.contentScrollContainer}>
-						{formData ? (
-							<CreateForm
-								itemType={getFormItemType()}
-								formData={formData}
-								onChange={updateField}
-								hidden={getHiddenFields()}
-								onSubmit={handleSubmit}
-							/>
-						) : (
-							<></>
-						)}
-					</ScrollArea>
-				</section>
+				</div>
+			</div>
+			<main className="w-full h-full flex-1 flex flex-col gap-16 px-[7%] gap-y-[32px] pt-6">
+				{formData ? (
+					<CreateForm
+						itemType={getFormItemType()}
+						formData={formData}
+						onChange={updateField}
+						hidden={getHiddenFields()}
+						onSubmit={handleSubmit}
+					/>
+				) : (
+					<></>
+				)}
 			</main>
 		</>
 	)
