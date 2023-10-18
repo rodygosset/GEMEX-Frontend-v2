@@ -21,9 +21,10 @@ interface Props {
 	onChange: (value: number) => void
 	field?: ControllerRenderProps<any, any>
 	selected?: number
+	disabled?: boolean
 }
 
-const ItemComboBox = ({ className, name, itemType, searchParams, onChange, field, selected }: Props) => {
+const ItemComboBox = ({ className, name, itemType, searchParams, onChange, field, selected, disabled }: Props) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const [isLoading, setIsLoading] = useState(true)
 	const [options, setOptions] = useState<SelectOption<number>[]>([])
@@ -104,10 +105,12 @@ const ItemComboBox = ({ className, name, itemType, searchParams, onChange, field
 				<button
 					name={name}
 					role="combobox"
+					disabled={disabled}
 					className={cn(
 						`flex flex-row justify-between items-center gap-4 px-[16px] py-[8px] rounded-[8px] w-full
                                  text-left overflow-hidden overflow-ellipsis border border-blue-600/20
                                 text-sm ${!field?.value && !selected ? "text-blue-600/60" : "text-blue-600"} `,
+						"disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed",
 						className
 					)}>
 					{getLabel()}
