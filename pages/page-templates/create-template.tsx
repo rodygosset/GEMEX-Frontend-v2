@@ -207,7 +207,8 @@ const CreateTemplate = ({ itemType, hidden, defaultValues }: Props) => {
 	const buildSubmitData = () => {
 		let submitData: DynamicObject = {}
 		for (const field in formData) {
-			submitData[field] = formData[field].value
+			if (field == "nom") submitData[field] = (formData[field].value as string).trim()
+			else submitData[field] = formData[field].value
 		}
 		return submitData
 	}
@@ -372,7 +373,7 @@ const CreateTemplate = ({ itemType, hidden, defaultValues }: Props) => {
 	// make sure the main field doesn't have spaces at the beginning or the end of it
 	// to avoid bugs in communicating with the backend API
 
-	const handleTitleChange = (newTitle: string) => updateField("nom", newTitle.trim())
+	const handleTitleChange = (newTitle: string) => updateField("nom", newTitle)
 
 	// render
 

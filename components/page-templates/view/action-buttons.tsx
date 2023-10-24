@@ -1,11 +1,12 @@
 import DeleteDialog from "@components/modals/delete-dialog"
 import PeriodicTaskHistoryModal from "@components/modals/periodic-task-history-modal"
 import { Button, buttonVariants } from "@components/radix/button"
-import { itemTypesPermissions } from "@conf/api/conf"
+import { TO_BE_ASSIGNED_TAG, itemTypesPermissions } from "@conf/api/conf"
 import { APPROVED_STATUS_ID, Fiche, FicheSystematique } from "@conf/api/data-types/fiche"
 import { MySession } from "@conf/utility-types"
-import { faClockRotateLeft, faEdit, faFileCirclePlus, faTrashAlt } from "@fortawesome/free-solid-svg-icons"
+import { faClockRotateLeft, faEdit, faFileCirclePlus, faThumbTack, faTrashAlt } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import useAPIRequest from "@hook/useAPIRequest"
 import { cn } from "@utils/tailwind"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
@@ -57,19 +58,58 @@ const ActionButtons = ({ itemType, itemData }: Props) => {
 
 	const getCreateFicheLink = () => `/create/fiches?itemType=${itemType}&itemId=${router.query.id}`
 
-	const handleCreateFicheClick = () => router.push(getCreateFicheLink())
-
 	// Fiche Systématique History button
 
 	const [showHistoryModal, setShowHistoryModal] = useState(false)
 
 	const handleHistoryClick = () => setShowHistoryModal(true)
 
+	// Fiche Systématique Assign button
+
+	const makeAPIRequest = useAPIRequest()
+
+	const handleAssignClick = () => {
+		if (!session) return
+
+		if ((itemData as FicheSystematique).user_en_charge_id == user?.id) {
+			// if the current user is already assigned to the task, unassign them
+			// then reassign them to the task for it to be effective
+			makeAPIRequest<FicheSystematique, void>(
+				session,
+				"put",
+				"fiches_systematiques",
+				(itemData as FicheSystematique).nom,
+				{
+					user_en_charge_id: 1
+				},
+				() =>
+					makeAPIRequest<FicheSystematique, void>(
+						session,
+						"put",
+						"fiches_systematiques",
+						(itemData as FicheSystematique).nom,
+						{
+							user_en_charge_id: user?.id
+						},
+						() => router.reload()
+					)
+			)
+		} else
+			makeAPIRequest<FicheSystematique, void>(
+				session,
+				"put",
+				"fiches_systematiques",
+				(itemData as FicheSystematique).nom,
+				{
+					user_en_charge_id: user?.id
+				},
+				() => router.reload()
+			)
+	}
+
 	// edit current item
 
 	const getEditLink = () => `/edit/${itemType.replace("_", "/")}/${router.query.id}`
-
-	const handleEditClick = () => router.push(getEditLink())
 
 	// delete current item
 
@@ -107,7 +147,12 @@ const ActionButtons = ({ itemType, itemData }: Props) => {
 
 	const userCanEditFicheItem = () => {
 		let ficheData = itemData as Fiche
-		return user && userRole && (userRole.permissions.includes("manage") || ficheData.auteur_id == user.id || ficheData.user_en_charge_id == user.id) && ficheData.status_id != APPROVED_STATUS_ID
+		return (
+			user &&
+			userRole &&
+			(userRole.permissions.includes("manage") || ficheData.auteur_id == user.id || ficheData.user_en_charge_id == user.id) &&
+			ficheData.status_id != APPROVED_STATUS_ID
+		)
 	}
 
 	const shouldShowEditButton = () => {
@@ -139,7 +184,9 @@ const ActionButtons = ({ itemType, itemData }: Props) => {
 					{
 						// determine whether the button should be visible
 						shouldShowFicheCreationButton() ? (
-							<Link className={cn(buttonVariants({ variant: "outline" }), "flex items-center gap-[8px]")} href={getCreateFicheLink()}>
+							<Link
+								className={cn(buttonVariants({ variant: "outline" }), "flex items-center gap-[8px]")}
+								href={getCreateFicheLink()}>
 								<FontAwesomeIcon icon={faFileCirclePlus} />
 								Créer une fiche
 							</Link>
@@ -149,8 +196,25 @@ const ActionButtons = ({ itemType, itemData }: Props) => {
 					}
 					{
 						// determine whether the button should be visible
+						shouldShowHistoryButton() && (itemData as FicheSystematique).tags.includes(TO_BE_ASSIGNED_TAG) ? (
+							<Button
+								variant="outline"
+								className={cn("flex items-center gap-[8px]", "border-emerald-600/20 text-emerald-600 hover:bg-emerald-600/10")}
+								onClick={handleAssignClick}>
+								<FontAwesomeIcon icon={faThumbTack} />
+								Me l'attribuer
+							</Button>
+						) : (
+							<></>
+						)
+					}
+					{
+						// determine whether the button should be visible
 						shouldShowHistoryButton() ? (
-							<Button variant="outline" className={cn("flex items-center gap-[8px]", "border-emerald-600/20 text-emerald-600 hover:bg-emerald-600/10")} onClick={handleHistoryClick}>
+							<Button
+								variant="outline"
+								className={cn("flex items-center gap-[8px]", "border-emerald-600/20 text-emerald-600 hover:bg-emerald-600/10")}
+								onClick={handleHistoryClick}>
 								<FontAwesomeIcon icon={faClockRotateLeft} />
 								Historique
 							</Button>
@@ -161,7 +225,9 @@ const ActionButtons = ({ itemType, itemData }: Props) => {
 					{
 						// determine whether the button should be visible
 						shouldShowEditButton() ? (
-							<Link className={cn(buttonVariants({ variant: "outline" }), "flex items-center gap-[8px]")} href={getEditLink()}>
+							<Link
+								className={cn(buttonVariants({ variant: "outline" }), "flex items-center gap-[8px]")}
+								href={getEditLink()}>
 								<FontAwesomeIcon icon={faEdit} />
 								Modifier
 							</Link>
@@ -172,7 +238,10 @@ const ActionButtons = ({ itemType, itemData }: Props) => {
 					{
 						// determine whether the button should be visible
 						shouldShowDeleteButton() ? (
-							<Button variant="outline" className={cn("flex items-center gap-[8px]", "border-red-600/20 text-red-600 hover:bg-red-600/10")} onClick={handleDeleteClick}>
+							<Button
+								variant="outline"
+								className={cn("flex items-center gap-[8px]", "border-red-600/20 text-red-600 hover:bg-red-600/10")}
+								onClick={handleDeleteClick}>
 								<FontAwesomeIcon icon={faTrashAlt} />
 								Supprimer
 							</Button>
@@ -180,8 +249,21 @@ const ActionButtons = ({ itemType, itemData }: Props) => {
 							<></>
 						)
 					}
-					<DeleteDialog isVisible={showDeleteModal} closeDialog={() => setShowDeleteModal(false)} itemType={itemType} itemTitle={itemData.nom} />
-					{shouldShowHistoryButton() ? <PeriodicTaskHistoryModal isVisible={showHistoryModal} closeModal={() => setShowHistoryModal(false)} task={itemData as FicheSystematique} /> : <></>}
+					<DeleteDialog
+						open={showDeleteModal}
+						onOpenChange={setShowDeleteModal}
+						itemType={itemType}
+						itemTitle={itemData.nom}
+					/>
+					{shouldShowHistoryButton() ? (
+						<PeriodicTaskHistoryModal
+							isVisible={showHistoryModal}
+							closeModal={() => setShowHistoryModal(false)}
+							task={itemData as FicheSystematique}
+						/>
+					) : (
+						<></>
+					)}
 				</div>
 			) : (
 				<></>

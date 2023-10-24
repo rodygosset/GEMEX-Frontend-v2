@@ -13,6 +13,7 @@ import OperationReportsChartCard from "@components/cards/operation-reports-chart
 import { toISO } from "@utils/general"
 import { TO_BE_ASSIGNED_TAG } from "@conf/api/conf"
 import FigureCard from "@components/cards/figure-card"
+import { Evaluation } from "@conf/api/data-types/quality-module"
 
 interface Props {
 	fiches: Fiche[]
@@ -150,8 +151,16 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 			},
 			onSuccess: (res) => res.data.nb_results
 		})) ?? 0,
-		// todo: quality assessments
-		0,
+		(await SSRmakeAPIRequest<Evaluation[], number>({
+			session,
+			verb: "post",
+			itemType: "evaluations",
+			additionalPath: "search",
+			data: {
+				user_id: session.user.id
+			},
+			onSuccess: (res) => res.data.filter((e) => !e.approved).length
+		})) ?? 0,
 		// periodic reports to be assigned
 		(await SSRmakeAPIRequest<{ nb_results: number }, number>({
 			session,

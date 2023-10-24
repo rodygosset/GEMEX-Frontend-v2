@@ -1,7 +1,7 @@
 import { cn } from "@utils/tailwind"
 import { Dialog, DialogContent } from "./dialog"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faSearch } from "@fortawesome/free-solid-svg-icons"
+import { faSearch, faTrash } from "@fortawesome/free-solid-svg-icons"
 import { useEffect, useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs"
 import { Fichier } from "@conf/api/data-types/fichier"
@@ -12,6 +12,7 @@ import { ScrollArea } from "./scroll-area"
 import FileCard from "./file-card"
 import FileCardSkeleton from "./file-card-skeleton"
 import { Button } from "./button"
+import DeleteDialog from "@components/modals/delete-dialog"
 
 interface FileCategory {
 	id: number
@@ -60,6 +61,9 @@ const FilePicker = ({ open, onOpenChange, onSelect, isExplorer }: Props) => {
 	// state
 
 	const [q, setQ] = useState("")
+	const [refreshTrigger, setRefreshTrigger] = useState(0)
+
+	const refresh = () => setRefreshTrigger(refreshTrigger == 1 ? 2 : 1)
 
 	const [currentCategory, setCurrentCategory] = useState<FileCategory>(fileCategories[0])
 
@@ -70,6 +74,7 @@ const FilePicker = ({ open, onOpenChange, onSelect, isExplorer }: Props) => {
 	// file picking state
 
 	const [selectedFileName, setSelectedFileName] = useState("")
+	const [selectedFileNames, setSelectedFileNames] = useState<string[]>([])
 
 	// get the files from the API
 
@@ -83,7 +88,7 @@ const FilePicker = ({ open, onOpenChange, onSelect, isExplorer }: Props) => {
 		return searchParams
 	}
 
-	useEffect(() => {
+	const getSearchResults = () => {
 		if (!session) return
 
 		setLoading(true)
@@ -98,7 +103,17 @@ const FilePicker = ({ open, onOpenChange, onSelect, isExplorer }: Props) => {
 			setFiles(res.data)
 			setLoading(false)
 		})
+	}
+
+	useEffect(() => {
+		if (!session) return
+		getSearchResults()
 	}, [q, currentCategory, session])
+
+	useEffect(() => {
+		if (!session || refreshTrigger == 0) return
+		getSearchResults()
+	}, [refreshTrigger, session])
 
 	// reset the state when the dialog closes
 
@@ -112,7 +127,14 @@ const FilePicker = ({ open, onOpenChange, onSelect, isExplorer }: Props) => {
 	// file selection logic
 
 	const toggleSelection = (fileName: string) => {
-		if (isExplorer) return
+		if (isExplorer) {
+			if (selectedFileNames.includes(fileName)) {
+				setSelectedFileNames(selectedFileNames.filter((name) => name !== fileName))
+			} else {
+				setSelectedFileNames([...selectedFileNames, fileName])
+			}
+			return
+		}
 
 		if (selectedFileName === fileName) {
 			setSelectedFileName("")
@@ -121,90 +143,124 @@ const FilePicker = ({ open, onOpenChange, onSelect, isExplorer }: Props) => {
 		}
 	}
 
+	const isSelected = (fileName: string) => {
+		if (isExplorer) return selectedFileNames.includes(fileName)
+		return selectedFileName === fileName
+	}
+
+	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+
 	// render
 
 	return (
-		<Dialog
-			open={open}
-			onOpenChange={handleOpenChange}>
-			<DialogContent
-				className={cn(
-					"max-w-screen-sm max-sm:bottom-0 bg-neutral-50/40 backdrop-blur-3xl",
-					"ring-4 ring-blue-600/30 flex flex-col",
-					"sm:max-h-[600px] flex flex-col h-full max-h-[80vh]",
-					"max-sm:top-auto max-sm:bottom-0 max-sm:translate-y-0"
-				)}>
-				<div className={cn("w-full flex items-center gap-[8px] p-[16px] h-[64px] rounded-t-[8px]", "border-b border-blue-600/10")}>
-					<FontAwesomeIcon
-						icon={faSearch}
-						className="text-sm text-blue-600"
-					/>
-					<input
-						className={cn("w-full bg-transparent focus:outline-none", "text-sm font-normal text-blue-600", "placeholder:text-blue-600/60")}
-						value={q}
-						onChange={(e) => setQ(e.target.value)}
-						placeholder="Rechercher par nom de fichier..."
-					/>
-				</div>
-				<Tabs
-					className="h-full flex flex-col gap-[16px] items-start p-[16px] flex-1"
-					value={currentCategory.name}
-					onValueChange={(v) => setCurrentCategory(fileCategories.find((category) => category.name === v) as FileCategory)}>
-					<div className="w-full flex gap-[16px] items-center justify-between">
-						<TabsList>
-							{fileCategories.map((category) => (
-								<TabsTrigger
-									key={category.id}
-									value={category.name}>
-									{category.name}
-								</TabsTrigger>
-							))}
-						</TabsList>
-						{!isExplorer ? (
-							<Button
-								onClick={() => {
-									if (onSelect) onSelect(selectedFileName)
-									handleOpenChange(false)
-								}}
-								disabled={!selectedFileName}>
-								Sélectionner
-							</Button>
-						) : (
-							<></>
-						)}
+		<>
+			<Dialog
+				open={open}
+				onOpenChange={handleOpenChange}>
+				<DialogContent
+					className={cn(
+						"max-w-screen-sm max-sm:bottom-0 bg-neutral-50/40 backdrop-blur-3xl",
+						"ring-4 ring-blue-600/30 flex flex-col",
+						"sm:max-h-[600px] flex flex-col h-full max-h-[80vh]",
+						"max-sm:top-auto max-sm:bottom-0 max-sm:translate-y-0"
+					)}>
+					<div className={cn("w-full flex items-center gap-[8px] p-[16px] h-[64px] rounded-t-[8px]", "border-b border-blue-600/10")}>
+						<FontAwesomeIcon
+							icon={faSearch}
+							className="text-sm text-blue-600"
+						/>
+						<input
+							className={cn("w-full bg-transparent focus:outline-none", "text-sm font-normal text-blue-600", "placeholder:text-blue-600/60")}
+							value={q}
+							onChange={(e) => setQ(e.target.value)}
+							placeholder="Rechercher par nom de fichier..."
+						/>
 					</div>
-					<TabsContent
-						className="w-full h-full flex-1 min-h-0 m-0"
-						value={currentCategory.name}>
-						{loading ? (
-							<LoadingState />
-						) : files.length > 0 ? (
-							<ScrollArea
-								className="w-full h-full max-h-[60vh] sm:max-h-[430px] min-h-0 flex flex-col border border-blue-600/20 rounded-[8px]"
-								//onClick={() => !isExplorer && setSelectedFileName("")}
-							>
-								<ul className="w-full h-full flex-1 flex flex-col min-h-0">
-									{files.map((file) => (
-										<FileCard
-											className="border-b border-blue-600/20"
-											key={file.id}
-											file={file}
-											selected={file.nom === selectedFileName}
-											isSearchResult
-											onClick={() => toggleSelection(file.nom)}
-										/>
-									))}
-								</ul>
-							</ScrollArea>
-						) : (
-							<div className="flex-1 h-full flex items-center justify-center">
-								<p className="text-blue-600/60 text-sm">Aucun fichier trouvé</p>
-							</div>
-						)}
-					</TabsContent>
-				</Tabs>
-			</DialogContent>
-		</Dialog>
+					<Tabs
+						className="h-full flex flex-col gap-[16px] items-start p-[16px] flex-1"
+						value={currentCategory.name}
+						onValueChange={(v) => setCurrentCategory(fileCategories.find((category) => category.name === v) as FileCategory)}>
+						<div className="w-full flex flex-wrap gap-[16px] items-center justify-between">
+							<TabsList>
+								{fileCategories.map((category) => (
+									<TabsTrigger
+										key={category.id}
+										value={category.name}>
+										{category.name}
+									</TabsTrigger>
+								))}
+							</TabsList>
+							{isExplorer && selectedFileNames.length > 0 ? (
+								<Button
+									onClick={() => setIsDeleteDialogOpen(true)}
+									variant="destructive"
+									className="flex items-center justify-center gap-[8px]"
+									disabled={!selectedFileNames[0]}>
+									<FontAwesomeIcon icon={faTrash} />
+									Supprimer
+								</Button>
+							) : (
+								<></>
+							)}
+							{!isExplorer ? (
+								<Button
+									onClick={() => {
+										if (onSelect) onSelect(selectedFileName)
+										handleOpenChange(false)
+									}}
+									disabled={!selectedFileName}>
+									Sélectionner
+								</Button>
+							) : (
+								<></>
+							)}
+						</div>
+						<TabsContent
+							className="w-full h-full flex-1 min-h-0 m-0"
+							value={currentCategory.name}>
+							{loading ? (
+								<LoadingState />
+							) : files.length > 0 ? (
+								<ScrollArea
+									className="w-full h-full max-h-[60vh] sm:max-h-[430px] min-h-0 flex flex-col border border-blue-600/20 rounded-[8px]"
+									//onClick={() => !isExplorer && setSelectedFileName("")}
+								>
+									<ul className="w-full h-full flex-1 flex flex-col min-h-0">
+										{files.map((file) => (
+											<FileCard
+												className={cn("border-b border-blue-600/20")}
+												key={file.id}
+												file={file}
+												selected={isSelected(file.nom)}
+												isSearchResult
+												onClick={() => toggleSelection(file.nom)}
+											/>
+										))}
+									</ul>
+								</ScrollArea>
+							) : (
+								<div className="flex-1 h-full flex items-center justify-center">
+									<p className="text-blue-600/60 text-sm">Aucun fichier trouvé</p>
+								</div>
+							)}
+						</TabsContent>
+					</Tabs>
+				</DialogContent>
+			</Dialog>
+			<DeleteDialog
+				itemType="fichiers"
+				itemTitle={selectedFileNames.length > 1 ? `les ${selectedFileNames.length} fichiers séléctionnés` : selectedFileNames[0]}
+				isMulti
+				itemIDList={selectedFileNames}
+				open={isDeleteDialogOpen}
+				onOpenChange={setIsDeleteDialogOpen}
+				onSuccess={() => {
+					setSelectedFileNames([])
+					// refresh
+					refresh()
+				}}
+			/>
+		</>
 	)
 }
 

@@ -15,17 +15,17 @@ It showcases the user interface and provides a visual representation of the app'
 
 The frontend is built with the following technologies:
 
-- Next.js / React JS
-- NextAuth.js
-- HTML5 / CSS3 / SCSS
-- JavaScript
+-   Next.js / React JS
+-   NextAuth.js
+-   HTML5 / CSS3 / SCSS
+-   JavaScript
 
 ## Features
 
-- Allows technicians to create and edit different types of records (operations, malfunctions, etc.) to inform the team of operations within the museum.
-- Provides a list and search functionality for elements (Expositions, Expo Elements, Records, etc.) to access information about them.
-- Displays ongoing operations to keep track of tasks that need to be performed.
-- Enables exporting information about different elements in PDF format for sharing or use in other software.
+-   Allows technicians to create and edit different types of records (operations, malfunctions, etc.) to inform the team of operations within the museum.
+-   Provides a list and search functionality for elements (Expositions, Expo Elements, Records, etc.) to access information about them.
+-   Displays ongoing operations to keep track of tasks that need to be performed.
+-   Enables exporting information about different elements in PDF format for sharing or use in other software.
 
 ---
 

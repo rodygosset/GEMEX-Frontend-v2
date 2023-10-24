@@ -268,8 +268,8 @@ const FilePicker = ({ isVisible, isExplorer, onSelect, closeModal }: Props) => {
 				)}
 			</section>
 			<DeleteDialog
-				isVisible={showDeleteDialog}
-				closeDialog={() => setShowDeleteDialog(false)}
+				open={showDeleteDialog}
+				onOpenChange={setShowDeleteDialog}
 				itemType={"fichiers"}
 				itemTitle={selectedFiles.length - 1 > 1 ? `${selectedFiles.length - 1} fichiers` : selectedFiles[1]}
 				isMulti

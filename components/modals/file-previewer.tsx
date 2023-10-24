@@ -1,4 +1,4 @@
-import { apiURLs, dockerAPIURL } from "@conf/api/conf"
+import { apiURLs } from "@conf/api/conf"
 import { faDownload } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/components/modals/file-previewer.module.scss"
@@ -32,27 +32,49 @@ const FilePreviewer = ({ children, fileName, fileInfo, ownerFullName, open, onOp
 			case "gif":
 				return (
 					<div className="relative w-full h-full max-h-[60vh]">
-						<Image
+						{/* <Image
 							src={getFileURL()}
 							alt={fileInfo.fileName}
 							fill
 							style={{
 								objectFit: "contain"
 							}}
-							className={styles.image}
+							className="w-full h-full"
+						/> */}
+						<img
+							className="w-full h-full object-contain"
+							src={getFileURL()}
+							alt={`${fileInfo.fileName} (${fileInfo.count}) preview`}
 						/>
 					</div>
 				)
-			case "pdf":
-				return <MyPDFViewer URL={getFileURL()} />
+			// case "pdf":
+			// 	return <MyPDFViewer URL={getFileURL()} />
 			default:
-				return <span className="text-sm font-normal text-blue-600/60">Pas d&apos;aperçue disponible pour ce type de fichier.</span>
+				return (
+					<div className="flex-1 w-full h-full flex flex-col gap-[32px] justify-center items-center">
+						<div className="relative w-full max-w-[340px] aspect-square">
+							<Image
+								quality={100}
+								src={"/images/void.svg"}
+								alt={"Aucun fichier"}
+								priority
+								fill
+								style={{
+									objectFit: "contain",
+									top: "auto"
+								}}
+							/>
+						</div>
+						<span className="text-sm font-normal text-blue-600/60">Pas d&apos;aperçue disponible pour ce type de fichier.</span>
+					</div>
+				)
 		}
 	}
 
 	// utils
 
-	const getFileURL = () => `${dockerAPIURL}${apiURLs["fichiers"]}${fileName}`
+	const getFileURL = () => `${apiURLs["fichiers"]}${fileName}/`
 
 	// render
 

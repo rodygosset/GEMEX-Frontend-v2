@@ -13,6 +13,7 @@ import NumberInput from "@components/radix/number-input"
 import ItemComboBox from "@components/radix/item-combobox"
 import ItemMultiSelectCombobox from "@components/radix/item-multi-select-combobox"
 import { SelectOption } from "@utils/react-select/types"
+import { Switch } from "@components/radix/switch"
 
 interface Props {
 	itemType: string
@@ -75,8 +76,8 @@ const FormField = ({ itemType, fieldName, formData, onChange }: Props) => {
 				)
 			case "boolean":
 				return (
-					<CheckBox
-						value={formData[fieldName].value}
+					<Switch
+						checked={formData[fieldName].value}
 						onChange={handleChange}
 					/>
 				)

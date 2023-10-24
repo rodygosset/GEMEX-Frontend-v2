@@ -22,10 +22,12 @@ import SearchResultsCard from "@components/cards/quality-module/search-results-c
 import { searchConf } from "@conf/api/search"
 import { capitalizeFirstLetter, toISO } from "@utils/general"
 import { apiURLs } from "@conf/api/conf"
+import ItemComboBox from "@components/radix/item-combobox"
 
 interface EvaluationSearchParams {
 	thematiques: number[]
 	expositions: number[]
+	user_id?: number
 }
 
 export interface SearchResultsByMonth {
@@ -40,7 +42,8 @@ interface Props {
 
 const searchFormSchema = z.object({
 	thematiques: z.array(z.number()),
-	expositions: z.array(z.number())
+	expositions: z.array(z.number()),
+	user_id: z.number().optional()
 })
 
 export const resultsPerPage = 30
@@ -52,7 +55,8 @@ const Search: NextPage<Props> = ({ initSearchParams, initSearchResults }: Props)
 		resolver: zodResolver(searchFormSchema),
 		defaultValues: {
 			thematiques: initSearchParams.thematiques,
-			expositions: initSearchParams.expositions
+			expositions: initSearchParams.expositions,
+			user_id: initSearchParams.user_id
 		}
 	})
 
@@ -64,6 +68,7 @@ const Search: NextPage<Props> = ({ initSearchParams, initSearchResults }: Props)
 		let params: any = {}
 		if (searchParams.thematiques && searchParams.thematiques.length > 0) params.thematiques = searchParams.thematiques
 		if (searchParams.expositions && searchParams.expositions.length > 0) params.expositions = searchParams.expositions
+		if (searchParams.user_id) params.user_id = searchParams.user_id
 		return params
 	}
 
@@ -256,7 +261,10 @@ const Search: NextPage<Props> = ({ initSearchParams, initSearchResults }: Props)
                         group hover:bg-blue-600 hover:shadow-2xl hover:shadow-primary/40 transition duration-300 ease-in-out cursor-pointer
                     "
 					href="/quality">
-					<FontAwesomeIcon className="text-blue-600 group-hover:text-white text-base transition duration-300 ease-in-out" icon={faChevronLeft} />
+					<FontAwesomeIcon
+						className="text-blue-600 group-hover:text-white text-base transition duration-300 ease-in-out"
+						icon={faChevronLeft}
+					/>
 				</Link>
 				<div className="flex flex-col flex-1 min-w-[350px]">
 					<h1 className="text-2xl text-blue-600 font-semibold h-fit whitespace-nowrap">Historique</h1>
@@ -279,7 +287,9 @@ const Search: NextPage<Props> = ({ initSearchParams, initSearchResults }: Props)
 			</div>
 			<div className="w-full flex items-center flex-wrap gap-[16px]">
 				<Form {...searchForm}>
-					<form onSubmit={searchForm.handleSubmit(refresh)} className="w-full flex flex-wrap gap-[16px]">
+					<form
+						onSubmit={searchForm.handleSubmit(refresh)}
+						className="w-full flex flex-wrap gap-[16px]">
 						<FormField
 							control={searchForm.control}
 							name="thematiques"
@@ -324,6 +334,23 @@ const Search: NextPage<Props> = ({ initSearchParams, initSearchResults }: Props)
 								</FormItem>
 							)}
 						/>
+						<FormField
+							control={searchForm.control}
+							name="user_id"
+							render={({ field }) => (
+								<FormItem className="flex-1 min-w-[250px]">
+									<FormLabel>Évaluateur</FormLabel>
+									<FormControl>
+										<ItemComboBox
+											itemType="users"
+											selected={field.value}
+											onChange={(value) => searchForm.setValue(field.name, value)}
+										/>
+									</FormControl>
+									<FormDescription>Sélectionnez l'utilisateur dont vous souhaitez consulter les évaluations</FormDescription>
+								</FormItem>
+							)}
+						/>
 					</form>
 				</Form>
 			</div>
@@ -333,7 +360,13 @@ const Search: NextPage<Props> = ({ initSearchParams, initSearchResults }: Props)
 					<p className="text-base text-blue-600 text-opacity-40">Chargement des résultats...</p>
 				</div>
 			) : results.length > 0 ? (
-				results.map((result) => <SearchResultsCard {...result} key={result.mois_cycle_id} onRefresh={refresh} />)
+				results.map((result) => (
+					<SearchResultsCard
+						{...result}
+						key={result.mois_cycle_id}
+						onRefresh={refresh}
+					/>
+				))
 			) : (
 				<div className="w-full flex flex-col items-center justify-center gap-[32px] p-[16px]">
 					<div className="w-full max-w-[400px] aspect-[1.193] relative">
@@ -353,7 +386,11 @@ const Search: NextPage<Props> = ({ initSearchParams, initSearchResults }: Props)
 				</div>
 			)}
 			<div className="w-full flex items-center">
-				<Pagination currentPageNb={currentPageNb} totalPagesNb={totalPagesNb} setPageNb={setCurrentPageNb} />
+				<Pagination
+					currentPageNb={currentPageNb}
+					totalPagesNb={totalPagesNb}
+					setPageNb={setCurrentPageNb}
+				/>
 			</div>
 		</main>
 	)

@@ -372,7 +372,7 @@ const EditTemplate = ({ itemType, excluded, defaultValues }: Props) => {
 								onClick={handleSubmit}
 								className="flex items-center gap-[8px]">
 								<FontAwesomeIcon icon={faFloppyDisk} />
-								Créer
+								Sauvegarder
 							</Button>
 						</div>
 						{validationError ? <span className="text-red-700 text-sm font-normal">{getValidationErrorMessage()}</span> : <></>}

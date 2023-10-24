@@ -3,18 +3,54 @@ import useAPIRequest from "@hook/useAPIRequest"
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { faCloud, faLaptop } from "@fortawesome/free-solid-svg-icons"
 import Image from "next/image"
-import GenericModalDialog from "@components/modals/generic-modal-dialog"
 import FilePicker from "@components/radix/file-picker"
 import { useSession } from "next-auth/react"
 import { MySession } from "@conf/utility-types"
 import FileCard from "@components/radix/file-card"
 import { Button } from "@components/radix/button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle
+} from "@components/radix/alert-dialog"
 
 interface Props {
 	value: string[]
 	onChange: (newValue: string[]) => void
 }
+
+interface UploadConfirmationDialogProps {
+	open: boolean
+	onOpenChange: (open: boolean) => void
+	fileName: string
+	onUpload: () => void
+	onCancel: () => void
+}
+
+const UploadConfirmationDialog = ({ open, onOpenChange, fileName, onUpload, onCancel }: UploadConfirmationDialogProps) => (
+	<AlertDialog
+		open={open}
+		onOpenChange={onOpenChange}>
+		<AlertDialogContent>
+			<AlertDialogHeader>
+				<AlertDialogTitle>Ajouter un fichier local</AlertDialogTitle>
+				<AlertDialogDescription>
+					Sauvegarder le fichier <span className="font-medium text-blue-600">{fileName}</span> dans GEMEX ?
+				</AlertDialogDescription>
+			</AlertDialogHeader>
+			<AlertDialogFooter>
+				<AlertDialogCancel onClick={onCancel}>Annuler</AlertDialogCancel>
+				<AlertDialogAction onClick={onUpload}>Sauvegarder</AlertDialogAction>
+			</AlertDialogFooter>
+		</AlertDialogContent>
+	</AlertDialog>
+)
 
 const FileInput = ({ value, onChange }: Props) => {
 	// state
@@ -216,15 +252,12 @@ const FileInput = ({ value, onChange }: Props) => {
 					</div>
 				</div>
 			</div>
-			<GenericModalDialog
-				isVisible={showConfirmationDialog}
-				title="Ajouter un fichier local"
-				question="Sauvegarder ce fichier dans GEMEX ?"
-				yesOption="Sauvegarder"
-				noOption="Annuler"
-				onYesClick={uploadLocalFile}
-				onNoClick={() => setLocalFile(undefined)}
-				closeModal={() => setShowConfirmationDialog(false)}
+			<UploadConfirmationDialog
+				open={showConfirmationDialog}
+				onOpenChange={setShowConfirmationDialog}
+				fileName={localFile ? localFile.name : ""}
+				onUpload={uploadLocalFile}
+				onCancel={() => setLocalFile(undefined)}
 			/>
 			<FilePicker
 				open={showFilePicker}

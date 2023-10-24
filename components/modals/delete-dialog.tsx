@@ -1,175 +1,156 @@
-import Button from "@components/button";
-import useAPIRequest from "@hook/useAPIRequest";
-import styles from "@styles/components/modals/delete-dialog.module.scss"
-import { Context } from "@utils/context";
-import { useRouter } from "next/router";
-import { useContext, useState } from "react";
-import ModalContainer from "./modal-container";
-import { MySession } from "@conf/utility-types";
-import { useSession } from "next-auth/react";
+import useAPIRequest from "@hook/useAPIRequest"
+import { Context } from "@utils/context"
+import { useRouter } from "next/router"
+import { useContext, useState } from "react"
+import { MySession } from "@conf/utility-types"
+import { useSession } from "next-auth/react"
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle
+} from "@components/radix/alert-dialog"
 
 interface Props {
-    isVisible: boolean;
-    isMulti?: boolean;
-    closeDialog: () => void;
-    itemType: string;
-    customItemID?: string;
-    itemTitle: string;
-    itemIDList?: string[];
-    onSuccess?: () => void;
-    goBackOnSuccess?: boolean;
+	open: boolean
+	isMulti?: boolean
+	onOpenChange: (open: boolean) => void
+	itemType: string
+	customItemID?: string
+	itemTitle: string
+	itemIDList?: string[]
+	onSuccess?: () => void
+	goBackOnSuccess?: boolean
 }
 
-const DeleteDialog = (
-    {
-        isVisible,
-        isMulti,
-        closeDialog,
-        itemType,
-        customItemID,
-        itemTitle,
-        itemIDList,
-        onSuccess,
-        goBackOnSuccess = true
-    }: Props
-) => {
+const DeleteDialog = ({ open, isMulti, onOpenChange, itemType, customItemID, itemTitle, itemIDList, onSuccess, goBackOnSuccess = true }: Props) => {
+	// state
 
-    // state
+	const [showConfirmationDialog, setShowConfirmationDialog] = useState(false)
 
-    const [showConfirmationDialog, setShowConfirmationDialog] = useState(false)
+	// when the user clicks on yes
+	// open the confirmation dialog
 
-    // on cancel
+	const handleYesClick = () => setShowConfirmationDialog(true)
 
-    const handleNoClick = () => closeDialog()
+	// if the user cancels when asked to confirm
 
-    // when the user clicks on yes
-    // open the confirmation dialog
+	const handleCancellation = () => {
+		setShowConfirmationDialog(false)
+		onOpenChange(false)
+	}
 
-    const handleYesClick = () => setShowConfirmationDialog(true)
+	// if the user confirms they intend to delete the item
 
+	const makeAPIRequest = useAPIRequest()
 
-    // if the user cancels when asked to confirm
+	const session = useSession().data as MySession | null
 
-    const handleCancellation = () => {
-        setShowConfirmationDialog(false)
-        closeDialog()
-    }
+	const makeDeleteRequest = (itemID: string) => {
+		if (!session) return
+		return makeAPIRequest(session, "delete", itemType, `${itemID}/`, undefined)
+	}
 
-    // if the user confirms they intend to delete the item
+	const handleDeleteSuccess = () => {
+		// on success
+		// close both modals
+		handleCancellation()
+		// if a success handler was provided
+		if (onSuccess) onSuccess()
+		// go to the previous URL
+		if (goBackOnSuccess) goBack()
+	}
 
-    const makeAPIRequest = useAPIRequest()
+	const handleDelete = async () => {
+		if (isMulti && itemIDList) {
+			for (const itemID of itemIDList) {
+				await makeDeleteRequest(itemID)
+			}
+			handleDeleteSuccess()
+		} else {
+			const itemID = customItemID ?? itemTitle
+			// make a single DELETE request to our API
+			makeDeleteRequest(itemID)?.then(handleDeleteSuccess)
+		}
+	}
 
-    const session = useSession().data as MySession | null
+	// utils
 
-    const makeDeleteRequest = (itemID: string) => {
-        if (!session) return
-        return makeAPIRequest(
-            session,
-            "delete",
-            itemType,
-            `${itemID}`,
-            undefined
-        )
-    }
+	const { navHistory, setNavHistory } = useContext(Context)
 
-    const handleDeleteSuccess = () => {
-        // on success
-        // close both modals
-        handleCancellation()
-        // if a success handler was provided
-        if(onSuccess) onSuccess()
-        // go to the previous URL
-        if(goBackOnSuccess) goBack()
-    }
+	const router = useRouter()
 
-    const handleDelete = async () => {
+	const getPreviousRoute = () => {
+		// if navHistory is empty
+		// go back to the home page
+		if (navHistory.length < 2) return "/"
+		// otherwise, go back to the last page
+		return navHistory[navHistory.length - 2]
+	}
 
-        if(isMulti && itemIDList) {
-            for(const itemID of itemIDList) {
-                await makeDeleteRequest(itemID)
-            }
-            handleDeleteSuccess()
-        }
-        else {
-            const itemID = customItemID ?? itemTitle
-            // make a single DELETE request to our API
-            makeDeleteRequest(itemID)?.then(handleDeleteSuccess)
-        }
-    }
+	const goBack = () => {
+		// clear the nav history of the current route
+		// & of the one we're going back to
+		setNavHistory(navHistory.slice(0, navHistory.length - 2))
+		router.push(getPreviousRoute())
+	}
 
-    // utils
+	// render
 
-    const { navHistory, setNavHistory } = useContext(Context)
-
-    const router = useRouter()
-
-    const getPreviousRoute = () => {
-        // if navHistory is empty
-        // go back to the home page
-        if(navHistory.length < 2) return '/'
-        // otherwise, go back to the last page
-        return navHistory[navHistory.length - 2]
-    }
-
-    const goBack = () => {
-        // clear the nav history of the current route
-        // & of the one we're going back to
-        setNavHistory(navHistory.slice(0, navHistory.length - 2))
-        router.push(getPreviousRoute())
-    }
-
-
-    // render
-
-    return (
-        <>
-            <ModalContainer isVisible={isVisible && !showConfirmationDialog}>
-                <section className={styles.modal}>
-                    <h4>Supprimer un item</h4>
-                    <p>Êtes-vous sûr(e) de vouloir supprimer <span>{itemTitle}</span> ?</p>
-                    <div className={styles.buttonsContainer}>
-                        <Button
-                            onClick={handleNoClick}
-                            role="secondary"
-                            animateOnHover={false}
-                            fullWidth>
-                            Annuler
-                        </Button>
-                        <Button
-                            onClick={handleYesClick}
-                            role="primary"
-                            status="danger"
-                            fullWidth>
-                            Supprimer
-                        </Button>
-                    </div>
-                </section>
-            </ModalContainer>
-            <ModalContainer isVisible={showConfirmationDialog}>
-                <section className={styles.modal}>
-                    <h4>Confirmation</h4>
-                    <p>Confirmez la suppression de <span>{itemTitle}</span></p>
-                    <div className={styles.buttonsContainer}>
-                        <Button
-                            onClick={handleCancellation}
-                            role="secondary"
-                            animateOnHover={false}
-                            fullWidth>
-                            Annuler
-                        </Button>
-                        <Button
-                            onClick={handleDelete}
-                            role="primary"
-                            status="danger"
-                            fullWidth>
-                            Supprimer
-                        </Button>
-                    </div>
-                </section>
-            </ModalContainer>
-        </>
-    )
-
+	return (
+		<>
+			<AlertDialog
+				open={open}
+				onOpenChange={onOpenChange}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Supprimer un item</AlertDialogTitle>
+						<AlertDialogDescription>
+							Êtes-vous sûr(e) de vouloir supprimer <span className="font-semibold text-blue-600">{itemTitle}</span> ?
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel>Annuler</AlertDialogCancel>
+						<AlertDialogAction
+							className="bg-red-600 hover:shadow-red-600/20"
+							onClick={handleYesClick}>
+							Continuer
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
+			<AlertDialog
+				open={showConfirmationDialog}
+				onOpenChange={setShowConfirmationDialog}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Confirmation</AlertDialogTitle>
+						<AlertDialogDescription>
+							Confirmer la suppression de <span className="font-semibold text-blue-600">{itemTitle}</span> ?
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel
+							onClick={() => {
+								setShowConfirmationDialog(false)
+								onOpenChange(false)
+							}}>
+							Annuler
+						</AlertDialogCancel>
+						<AlertDialogAction
+							className="bg-red-600 hover:shadow-red-600/20"
+							onClick={handleDelete}>
+							Supprimer
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
+		</>
+	)
 }
 
 export default DeleteDialog
