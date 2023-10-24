@@ -28,13 +28,13 @@ export const authOptions: AuthOptions = {
 				// If no error and we have the JWT, return the access token
 				if (res.status == 200) {
 					// get user data
-					const { data: userData } = await axios.get<User>("http://127.0.0.1:3000/api/backend/users/me", {
+					const { data: userData } = await axios.get<User>(`${apiURL}/api/users/me`, {
 						headers: {
 							Authorization: `bearer ${res.data.access_token}`
 						}
 					})
 					// get user role
-					const { data: userRole } = await axios.get<UserRole>(`http://127.0.0.1:3000/api/backend/users/roles/id/${userData.role_id}`, {
+					const { data: userRole } = await axios.get<UserRole>(`${apiURL}/api/users/roles/id/${userData.role_id}`, {
 						headers: {
 							Authorization: `bearer ${res.data.access_token}`
 						}
