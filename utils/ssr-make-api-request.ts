@@ -20,7 +20,7 @@ export type SSRAPIRequestFunction = <T, U>(args: SSRAPIRequestArgs<T, U>) => Pro
 const SSRmakeAPIRequest = async <T, U>({ session, verb, itemType, additionalPath, data, onSuccess, onFailure, abortSignal }: SSRAPIRequestArgs<T, U>) => {
 	const itemTypeURL = apiURLs[itemType].replace("/api/backend", "/api")
 	const baseURL = `${apiURL}${itemTypeURL}${additionalPath ? additionalPath : ""}`
-	console.log(`Making request to ${baseURL}`)
+	// console.log(`Making request to ${baseURL}`)
 
 	if (!session) {
 		return

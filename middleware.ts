@@ -70,7 +70,7 @@ export default withAuth(
 					// if the request succeeds
 					return response.status == 200
 				} catch (error) {
-					console.log("Error while sending a request to the API", error)
+					console.log(`Error while sending a request to the API -- ${apiURL}`, error)
 					return false
 				}
 			}

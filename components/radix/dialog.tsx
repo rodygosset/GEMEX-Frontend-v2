@@ -37,8 +37,12 @@ const DialogOverlay = React.forwardRef<React.ElementRef<typeof DialogPrimitive.O
 )
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
-const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Content>, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>>(
-	({ className, children, ...props }, ref) => (
+type DialogContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+	hideCloseButton?: boolean
+}
+
+const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Content>, DialogContentProps>(
+	({ className, children, hideCloseButton, ...props }, ref) => (
 		<DialogPortal>
 			<DialogOverlay />
 			<DialogPrimitive.Content
@@ -53,12 +57,16 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 				)}
 				{...props}>
 				{children}
-				<DialogPrimitive.Close
-					className="absolute right-[16px] top-[16px] rounded-[8px] w-[32px] h-[32px] outline-none p-[8px] disabled:pointer-events-none
+				{!hideCloseButton ? (
+					<DialogPrimitive.Close
+						className="absolute right-[16px] top-[16px] rounded-[8px] w-[32px] h-[32px] outline-none p-[8px] disabled:pointer-events-none
         hover:bg-blue-600/10 border border-primary/10 flex justify-center items-center text-blue-600 text-base">
-					<FontAwesomeIcon icon={faXmark} />
-					<span className="sr-only">Close</span>
-				</DialogPrimitive.Close>
+						<FontAwesomeIcon icon={faXmark} />
+						<span className="sr-only">Close</span>
+					</DialogPrimitive.Close>
+				) : (
+					<></>
+				)}
 			</DialogPrimitive.Content>
 		</DialogPortal>
 	)

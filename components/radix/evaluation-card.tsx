@@ -129,6 +129,8 @@ const EvaluationCard = ({ evaluation, onChange }: Props) => {
 				open={formIsOpen}
 				onOpenChange={setFormIsOpen}
 				evaluation={evaluation}
+				elementName={elementName}
+				expoName={expoName}
 				onSubmit={onChange}
 			/>
 		</>
