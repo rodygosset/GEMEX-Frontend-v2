@@ -16,7 +16,7 @@ import DeleteDialog from "@components/modals/delete-dialog"
 import { AxiosResponse } from "axios"
 import Pagination from "@components/pagination"
 
-export const resultsPerPage = 30
+export const resultsPerPage = 3
 
 interface FileCategory {
 	id: number
@@ -141,6 +141,7 @@ const FilePicker = ({ open, onOpenChange, onSelect, isExplorer }: Props) => {
 		// clear the selected file
 
 		setSelectedFileName("")
+		setSelectedFileNames([])
 
 		// cancel previous request if it exists
 

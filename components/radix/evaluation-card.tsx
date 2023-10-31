@@ -11,6 +11,7 @@ import EvaluationForm from "./evaluation-form"
 import { Button } from "./button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faEdit } from "@fortawesome/free-solid-svg-icons"
+import EvaluationViewModal from "./evaluation-view-modal"
 
 interface Props {
 	evaluation: Evaluation
@@ -114,7 +115,10 @@ const EvaluationCard = ({ evaluation, onChange }: Props) => {
 						</span>
 						{evaluation.date_rendu_reelle && !evaluation.approved ? (
 							<Button
-								onClick={() => setFormIsOpen(true)}
+								onClick={(e) => {
+									e.stopPropagation()
+									setFormIsOpen(true)
+								}}
 								variant="outline"
 								className="text-sm h-[32px] aspect-square">
 								<FontAwesomeIcon icon={faEdit} />
@@ -132,6 +136,13 @@ const EvaluationCard = ({ evaluation, onChange }: Props) => {
 				elementName={elementName}
 				expoName={expoName}
 				onSubmit={onChange}
+			/>
+			<EvaluationViewModal
+				open={viewerIsOpen}
+				onOpenChange={setViewerIsOpen}
+				evaluation={evaluation}
+				elementName={elementName}
+				expoName={expoName}
 			/>
 		</>
 	) : (

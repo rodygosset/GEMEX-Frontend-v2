@@ -2,19 +2,19 @@ import { SelectOption } from "@utils/react-select/types"
 import { cn } from "@utils/tailwind"
 
 interface GradeRadioGroupItemProps {
-	name: string
+	name?: string
 	label: string
 	description: string
 	value: string
 	selected: boolean
-	onClick: () => void
+	onClick?: () => void
 }
 
 export const GradeRadioGroupItem = ({ name, label, description, value, selected, onClick }: GradeRadioGroupItemProps) => (
 	<div
 		className={cn(
 			"min-w-[120px] flex-1 flex flex-col p-[16px] rounded-[8px] gap-[4px] border border-blue-600/20",
-			"cursor-pointer hover:bg-blue-600/5 transition-colors duration-200",
+			onClick ? "cursor-pointer hover:bg-blue-600/5 transition-colors duration-200" : "cursor-not-allowed",
 			selected && "border-2 border-blue-600 bg-blue-600/5"
 		)}
 		onClick={onClick}>
@@ -25,7 +25,7 @@ export const GradeRadioGroupItem = ({ name, label, description, value, selected,
 			checked={selected}
 			className="sr-only"
 			onChange={(e) => {
-				if (e.target.checked) onClick()
+				if (e.target.checked && onClick) onClick()
 			}}
 		/>
 		<span className="text-md font-bold text-blue-600">{label}</span>
@@ -35,9 +35,9 @@ export const GradeRadioGroupItem = ({ name, label, description, value, selected,
 
 interface GradeRadioGroupProps {
 	className?: string
-	name: string
+	name?: string
 	selected: string
-	onSelect: (value: string) => void
+	onSelect?: (value: string) => void
 }
 
 interface GradeOption extends SelectOption<string> {
@@ -62,7 +62,7 @@ export const GradeRadioGroup = ({ className, name, selected, onSelect }: GradeRa
 				description={gradeOption.description}
 				value={gradeOption.value}
 				selected={selected === gradeOption.value}
-				onClick={() => onSelect(gradeOption.value)}
+				onClick={onSelect ? () => onSelect(gradeOption.value) : undefined}
 			/>
 		))}
 	</div>

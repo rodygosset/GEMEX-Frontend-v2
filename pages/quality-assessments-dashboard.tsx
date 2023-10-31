@@ -16,6 +16,8 @@ interface Category {
 	getEvaluations: (evaluations: Evaluation[]) => Evaluation[]
 }
 
+const sortByDate = (a: Evaluation, b: Evaluation) => new Date(a.date_rendu).getTime() - new Date(b.date_rendu).getTime()
+
 const categories: Category[] = [
 	{
 		id: 1,
@@ -84,7 +86,7 @@ const QualityAssessmentsDashboard: NextPage<Props> = ({ initEvaluations }: Props
 									key={evaluation.id}
 									evaluation={evaluation}
 									onChange={(evaluation) => {
-										setEvaluations(evaluations.map((e) => (e.id == evaluation.id ? evaluation : e)))
+										setEvaluations(evaluations.map((e) => (e.id == evaluation.id ? evaluation : e)).sort(sortByDate))
 									}}
 								/>
 							))}
@@ -106,7 +108,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 	const session = (await getSession(ctx)) as MySession | null
 
 	if (!session) return { props: emptyProps }
-
 	// get the user's evaluations
 
 	const evaluations = await SSRmakeAPIRequest<Evaluation[], Evaluation[]>({
@@ -117,7 +118,16 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 		data: {
 			user_id: session.user.id
 		},
-		onSuccess: (res) => res.data
+		onSuccess: (res) => {
+			const evals = res.data
+			const unapproved = evals.filter((evaluation) => !evaluation.approved)
+			// keep max 10 approved evaluations
+			const approved = evals
+				.filter((evaluation) => evaluation.approved)
+				.sort(sortByDate)
+				.slice(0, 10)
+			return [...unapproved, ...approved].sort(sortByDate)
+		}
 	})
 
 	return {

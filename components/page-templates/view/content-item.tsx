@@ -33,7 +33,13 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 		switch (conf.type) {
 			case "boolean":
 				// unmutable checkbox
-				return <Switch disabled checked={data} onChange={() => {}} />
+				return (
+					<Switch
+						disabled
+						checked={data}
+						onChange={() => {}}
+					/>
+				)
 			case "date":
 				// display dates in a readable format
 				textValue = data ? capitalizeEachWord(new Date(data).toLocaleDateString("fr-fr", dateOptions)) : "Non précisée"
@@ -61,7 +67,7 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 				// let the user know it's empty
 				// display it as is otherwise
 				textValue = typeof data === "string" && !data ? "Non précisé(e)" : data
-				return (
+				return conf.type == "number" ? (
 					<span
 						className={cn(
 							"w-full px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
@@ -70,6 +76,14 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 						)}>
 						{textValue}
 					</span>
+				) : (
+					<pre
+						className={cn(
+							"text-base font-normal text-blue-600/80 font-sans p-[16px] border border-blue-600/20 rounded-[8px]",
+							textValue == "Non précisé(e)" ? "text-opacity-80" : ""
+						)}>
+						{textValue}
+					</pre>
 				)
 			case "link":
 				// represents a link to items that refer to this item type
@@ -87,7 +101,12 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 					</Link>
 				)
 			case "fiches_status":
-				return <FicheStatus ficheData={itemData as Fiche} status={data} />
+				return (
+					<FicheStatus
+						ficheData={itemData as Fiche}
+						status={data}
+					/>
+				)
 			case "expoOpeningPeriod":
 				return <ExpoOpeningPeriodsList value={data} />
 			case "itemList":
@@ -126,7 +145,9 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 						)}
 						onClick={() => router.push(getLink())}>
 						<FontAwesomeIcon icon={faLink} />
-						<Link className="flex-1" href={getLink()}>
+						<Link
+							className="flex-1"
+							href={getLink()}>
 							{data.label}
 						</Link>
 					</span>

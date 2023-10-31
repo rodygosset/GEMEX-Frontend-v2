@@ -9,6 +9,7 @@ import useAPIRequest from "@hook/useAPIRequest"
 import { MySession } from "@conf/utility-types"
 import { Exposition } from "@conf/api/data-types/exposition"
 import { Element } from "@conf/api/data-types/element"
+import EvaluationViewModal from "@components/radix/evaluation-view-modal"
 
 interface Props {
 	description: string
@@ -25,6 +26,7 @@ const EvaluationsTable = ({ description, evaluations, onRefresh }: Props) => {
 	const [evaluationFormIsVisible, setEvaluationFormIsVisible] = useState(false)
 	const [evaluationFormExpoName, setEvaluationFormExpoName] = useState("")
 	const [evaluationFormElementName, setEvaluationFormElementName] = useState("")
+	const [evaluationViewModalIsVisible, setEvaluationViewModalIsVisible] = useState(false)
 
 	// utils
 
@@ -76,11 +78,17 @@ const EvaluationsTable = ({ description, evaluations, onRefresh }: Props) => {
 								await getEvaluationFormData(evaluation)
 								setEvaluationFormIsVisible(true)
 							}}
+							onOpenViewModal={async () => {
+								setSelectedEvaluation(evaluation)
+								await getEvaluationFormData(evaluation)
+								setEvaluationViewModalIsVisible(true)
+							}}
 							onDelete={(title) => {
 								setSelectedEvaluation(evaluation)
 								setSelectedEvaluationTitle(title)
 								setDeleteDialogIsVisible(true)
 							}}
+							onRefresh={onRefresh}
 						/>
 					))}
 				</TableBody>
@@ -101,6 +109,13 @@ const EvaluationsTable = ({ description, evaluations, onRefresh }: Props) => {
 				onSubmit={onRefresh}
 				expoName={evaluationFormExpoName}
 				elementName={evaluationFormElementName}
+			/>
+			<EvaluationViewModal
+				evaluation={selectedEvaluation}
+				open={evaluationViewModalIsVisible}
+				expoName={evaluationFormExpoName}
+				elementName={evaluationFormElementName}
+				onOpenChange={setEvaluationViewModalIsVisible}
 			/>
 		</>
 	)

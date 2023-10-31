@@ -24,13 +24,13 @@ const evalStatus: EvalStatusType[] = [
 		id: 1,
 		name: "En cours",
 		description: "Evaluations attribuées en attente d’être réalisées",
-		getEvaluations: (moisCycle) => moisCycle.evaluations.filter((evaluation) => evaluation.note === null)
+		getEvaluations: (moisCycle) => moisCycle.evaluations.filter((evaluation) => evaluation.note === null && !evaluation.approved)
 	},
 	{
 		id: 2,
 		name: "Complétées",
 		description: "Evaluations réalisées et complétées par les évaluateurs",
-		getEvaluations: (moisCycle) => moisCycle.evaluations.filter((evaluation) => evaluation.note !== null)
+		getEvaluations: (moisCycle) => moisCycle.evaluations.filter((evaluation) => evaluation.note !== null && !evaluation.approved)
 	},
 	{
 		id: 3,

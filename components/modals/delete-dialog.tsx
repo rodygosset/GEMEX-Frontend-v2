@@ -123,7 +123,7 @@ const DeleteDialog = ({ open, isMulti, onOpenChange, itemType, customItemID, ite
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			</AlertDialog>
-			<AlertDialog
+			{/* <AlertDialog
 				open={showConfirmationDialog}
 				onOpenChange={setShowConfirmationDialog}>
 				<AlertDialogContent>
@@ -148,7 +148,7 @@ const DeleteDialog = ({ open, isMulti, onOpenChange, itemType, customItemID, ite
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
-			</AlertDialog>
+			</AlertDialog> */}
 		</>
 	)
 }

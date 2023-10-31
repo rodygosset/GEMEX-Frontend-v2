@@ -17,7 +17,9 @@ interface Props {
 	evaluation: Evaluation
 	className?: string
 	onOpenEvaluationForm: () => void
+	onOpenViewModal: () => void
 	onDelete: (evaluationTitle: string) => void
+	onRefresh: () => void
 }
 
 interface EvaluationRowData {
@@ -45,7 +47,7 @@ const menuOptions: {
 		label: "Modifier",
 		value: "edit",
 		icon: faEdit,
-		hidden: () => false
+		hidden: (evaluation) => evaluation.approved
 	},
 	{
 		label: "Ouvrir",
@@ -76,7 +78,7 @@ const ContextDropdown = ({ className, evaluation, onSelect }: ContextDropdownPro
 	/>
 )
 
-const EvaluationTableRow = ({ evaluation, className, onOpenEvaluationForm, onDelete }: Props) => {
+const EvaluationTableRow = ({ evaluation, className, onOpenViewModal, onOpenEvaluationForm, onDelete, onRefresh }: Props) => {
 	const router = useRouter()
 
 	// get the row's data
@@ -129,14 +131,23 @@ const EvaluationTableRow = ({ evaluation, className, onOpenEvaluationForm, onDel
 
 	// handlers
 
+	const handleApprove = () => {
+		if (!session) return
+
+		makeAPIRequest<Evaluation, void>(session, "put", "evaluations", `id/${evaluation.id}`, { approved: true }, () => onRefresh())
+	}
+
 	const onContextSelect = (value: string) => {
 		if (!rowData) return
 		switch (value) {
+			case "approve":
+				handleApprove()
+				break
 			case "edit":
 				onOpenEvaluationForm()
 				break
 			case "open":
-				// todo
+				onOpenViewModal()
 				break
 			case "delete":
 				onDelete(`l'évaluation "${rowData.thematique} - ${rowData.element}" attribuée à ${rowData.evaluateur}`)
