@@ -2,7 +2,7 @@ import { cn } from "@utils/tailwind"
 import { Dialog, DialogContent } from "./dialog"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSearch, faTrash } from "@fortawesome/free-solid-svg-icons"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs"
 import { Fichier } from "@conf/api/data-types/fichier"
 import { useSession } from "next-auth/react"
@@ -13,6 +13,10 @@ import FileCard from "./file-card"
 import FileCardSkeleton from "./file-card-skeleton"
 import { Button } from "./button"
 import DeleteDialog from "@components/modals/delete-dialog"
+import { AxiosResponse } from "axios"
+import Pagination from "@components/pagination"
+
+export const resultsPerPage = 30
 
 interface FileCategory {
 	id: number
@@ -71,6 +75,47 @@ const FilePicker = ({ open, onOpenChange, onSelect, isExplorer }: Props) => {
 
 	const [loading, setLoading] = useState(false)
 
+	// we need to cancel on-going search requests
+	// after a new one has been made
+	// for that purpose, we use the native AbortController
+
+	const reqController = useRef<AbortController>()
+
+	const [currentPageNb, setCurrentPageNb] = useState(1)
+	const [nbResults, setNbResults] = useState(0)
+	const [totalPagesNb, setTotalPagesNb] = useState(1)
+
+	// on each search request, get the number of results
+	// & compute the total number of pages
+
+	const getNbResults = () => {
+		if (!session) return
+
+		// make a request to our API to get the number of search results
+		// & divide that by the number of results per page
+		makeAPIRequest<{ nb_results: number }, void>(
+			session,
+			"post",
+			"fichiers",
+			"search/nb",
+			getSearchParams(),
+			(res: AxiosResponse<{ nb_results: number }>) => setNbResults(res.data.nb_results),
+			() => console.log("search params => ", getSearchParams())
+		)
+	}
+
+	useEffect(getNbResults, [files, session])
+
+	useEffect(() => setTotalPagesNb(Math.ceil(nbResults / resultsPerPage)), [nbResults])
+
+	// go back to the first page
+	// when the search parameters change
+
+	useEffect(() => {
+		setCurrentPageNb(1)
+		getNbResults()
+	}, [currentCategory, q])
+
 	// file picking state
 
 	const [selectedFileName, setSelectedFileName] = useState("")
@@ -97,18 +142,34 @@ const FilePicker = ({ open, onOpenChange, onSelect, isExplorer }: Props) => {
 
 		setSelectedFileName("")
 
+		// cancel previous request if it exists
+
+		if (typeof reqController.current != "undefined") reqController.current.abort()
+
+		// new abort controller for the new request we're going to make
+
+		reqController.current = new AbortController()
+
 		// make the API call
 
-		makeAPIRequest<Fichier[], void>(session, "post", "fichiers", "search/", getSearchParams(), (res) => {
-			setFiles(res.data)
-			setLoading(false)
-		})
+		makeAPIRequest<Fichier[], void>(
+			session,
+			"post",
+			"fichiers",
+			`search/?skip=${(currentPageNb - 1) * resultsPerPage}&max=${resultsPerPage}`,
+			getSearchParams(),
+			(res) => {
+				setFiles(res.data)
+				setLoading(false)
+				reqController.current = undefined
+			}
+		)
 	}
 
 	useEffect(() => {
 		if (!session) return
 		getSearchResults()
-	}, [q, currentCategory, session])
+	}, [q, currentCategory, currentPageNb, open, session])
 
 	useEffect(() => {
 		if (!session || refreshTrigger == 0) return
@@ -190,6 +251,15 @@ const FilePicker = ({ open, onOpenChange, onSelect, isExplorer }: Props) => {
 									</TabsTrigger>
 								))}
 							</TabsList>
+							{nbResults > resultsPerPage ? (
+								<Pagination
+									currentPageNb={currentPageNb}
+									totalPagesNb={totalPagesNb}
+									setPageNb={setCurrentPageNb}
+								/>
+							) : (
+								<></>
+							)}
 							{isExplorer && selectedFileNames.length > 0 ? (
 								<Button
 									onClick={() => setIsDeleteDialogOpen(true)}

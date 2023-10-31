@@ -85,7 +85,7 @@ const EvaluationCard = ({ evaluation, onChange }: Props) => {
 	return elementName && expoName && thematiqueName ? (
 		<>
 			<li className="w-full">
-				<button
+				<div
 					onClick={() => (evaluation.date_rendu_reelle ? setViewerIsOpen(!viewerIsOpen) : setFormIsOpen(!formIsOpen))}
 					className={cn(
 						"w-full flex flex-col items-start text-start gap-[8px] p-[16px] rounded-[8px] border border-blue-600/20",
@@ -101,7 +101,7 @@ const EvaluationCard = ({ evaluation, onChange }: Props) => {
 						<span
 							className={cn(
 								"px-[16px] py-[8px] flex items-center justify-center rounded-[8px] bg-fuchsia-600/10",
-								"text-xs font-medium text-fuchsia-600 max-w-[128px]"
+								"h-fit text-xs font-medium text-fuchsia-600 max-w-[128px]"
 							)}>
 							{thematiqueName}
 						</span>
@@ -123,7 +123,7 @@ const EvaluationCard = ({ evaluation, onChange }: Props) => {
 							<></>
 						)}
 					</div>
-				</button>
+				</div>
 			</li>
 			<EvaluationForm
 				open={formIsOpen}

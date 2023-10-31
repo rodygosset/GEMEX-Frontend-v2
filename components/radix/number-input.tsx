@@ -5,6 +5,7 @@ import { ChangeEvent, KeyboardEventHandler } from "react"
 
 interface Props {
 	className?: string
+	inputClassName?: string
 	name?: string
 	embed?: boolean
 	value?: number
@@ -13,7 +14,7 @@ interface Props {
 	onChange: (newValue: number) => void
 }
 
-const NumberInput = ({ className, name, embed, value, min, max, onChange }: Props) => {
+const NumberInput = ({ className, inputClassName, name, embed, value, min, max, onChange }: Props) => {
 	// lifecycle
 
 	// handlers
@@ -82,7 +83,11 @@ const NumberInput = ({ className, name, embed, value, min, max, onChange }: Prop
 		<div className={cn("flex items-center", embed ? "" : " rounded-[8px] border border-blue-600/20", className)}>
 			<button
 				type="button"
-				onClick={handleDecrease}
+				onClick={(e) => {
+					e.preventDefault()
+					e.stopPropagation()
+					handleDecrease()
+				}}
 				className={cn(
 					"text-xs w-[32px] h-[32px] text-blue-600 flex justify-center items-center",
 					"hover:bg-blue-600/10 transition-colors duration-300 ease-in-out",
@@ -95,18 +100,24 @@ const NumberInput = ({ className, name, embed, value, min, max, onChange }: Prop
 				className={cn(
 					embed ? "w-[64px]" : "w-[128px]",
 					"flex-1 h-[32px] text-sm font-normal text-blue-600 placeholder:text-blue-600/60",
-					"bg-transparent text-center"
+					"bg-transparent text-center",
+					inputClassName
 				)}
 				placeholder="0"
 				min={min}
 				max={max}
 				value={value}
+				onClick={(e) => e.stopPropagation()}
 				onChange={handleChange}
 				onKeyDown={handleKeyDown}
 			/>
 			<button
 				type="button"
-				onClick={handleIncrease}
+				onClick={(e) => {
+					e.preventDefault()
+					e.stopPropagation()
+					handleIncrease()
+				}}
 				className={cn(
 					"text-xs w-[32px] h-[32px] text-blue-600 flex justify-center items-center",
 					"hover:bg-blue-600/10 transition-colors duration-300 ease-in-out",

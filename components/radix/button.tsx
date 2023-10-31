@@ -4,11 +4,11 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@utils/tailwind"
 
 const buttonVariants = cva(
-	"inline-flex items-center justify-center rounded-[8px] text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+	"inline-flex whitespace-nowrap items-center justify-center rounded-[8px] text-sm font-medium focus:ring-2 focus:ring-offset-2 ring-offset-blue-600/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/20 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
 	{
 		variants: {
 			variant: {
-				default: "bg-blue-600 text-white hover:shadow-xl hover:shadow-blue-600/40 transition-shadow duration-300 ease-in-out",
+				default: "bg-blue-600 text-white hover:shadow-xl hover:shadow-blue-600/40 focus:bg-blue-700 transition-shadow duration-300 ease-in-out",
 				destructive: "bg-red-600 text-white hover:shadow-xl hover:shadow-red-600/40 transition-shadow duration-300 ease-in-out",
 				outline: "border border-primary/20 bg-transparent hover:bg-blue-600/10 text-blue-600",
 				secondary: "bg-purple-600 text-white hover:bg-purple-600/80",

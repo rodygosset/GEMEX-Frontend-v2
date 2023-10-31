@@ -13,14 +13,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs"
 import { Alert, AlertDescription, AlertTitle } from "./alert"
 import GradeCountInput from "./evaluation-form-elements/grade-count-input"
 import { z } from "zod"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormField, FormItem } from "./form"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "./form"
+import { GradeRadioGroup } from "./evaluation-form-elements/grade-radio-group"
+import { Textarea } from "./textarea"
 
 interface Props {
 	open: boolean
 	onOpenChange: (open: boolean) => void
-	evaluation: Evaluation
+	evaluation?: Evaluation
 	elementName: string
 	expoName: string
 	onSubmit: (evaluation: Evaluation) => void
@@ -38,7 +40,12 @@ const evaluationFormSchema = z.object({
 	reponses: z.array(
 		z.object({
 			question_id: z.number().min(1),
-			grade: z.number().min(4).max(20)
+			note: z.number().min(4).max(20).optional(),
+			note_a: z.number().min(0).max(100).optional(),
+			note_b: z.number().min(0).max(100).optional(),
+			note_c: z.number().min(0).max(100).optional(),
+			note_d: z.number().min(0).max(100).optional(),
+			note_e: z.number().min(0).max(100).optional()
 		})
 	),
 	commentaire: z.string().max(1000)
@@ -54,7 +61,7 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 	const makeAPIRequest = useAPIRequest()
 
 	const getThematique = () => {
-		if (!session) return
+		if (!session || !evaluation) return
 
 		makeAPIRequest<Thematique, void>(session, "get", "thematiques", `id/${evaluation.thematique_id}`, undefined, (res) => setThematique(res.data))
 	}
@@ -67,7 +74,7 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 	// handle navigation
 
 	const goBack = () => {
-		if (currentTab == "intro") onOpenChange(false)
+		if (currentTab == "intro") onClose()
 		// if the current tab is the mainQuestion tab, go back to the last question
 		else if (currentTab == "mainQuestion") {
 			const lastQuestion = thematique?.questions.length ? thematique.questions[thematique.questions.length - 1] : undefined
@@ -105,34 +112,117 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 	const form = useForm<z.infer<typeof evaluationFormSchema>>({
 		resolver: zodResolver(evaluationFormSchema),
 		defaultValues: {
-			note_a: evaluation.note_a ?? 0,
-			note_b: evaluation.note_b ?? 0,
-			note_c: evaluation.note_c ?? 0,
-			note_d: evaluation.note_d ?? 0,
-			note_e: evaluation.note_e ?? 0,
-			question_note: evaluation.question_note ?? 0,
-			reponses: evaluation.reponses,
-			commentaire: evaluation.commentaire
+			note_a: evaluation?.note_a ?? 0,
+			note_b: evaluation?.note_b ?? 0,
+			note_c: evaluation?.note_c ?? 0,
+			note_d: evaluation?.note_d ?? 0,
+			note_e: evaluation?.note_e ?? 0,
+			question_note: evaluation?.question_note ?? 0,
+			reponses: evaluation?.reponses,
+			commentaire: evaluation?.commentaire
 		}
 	})
 
+	// update form state when evaluation changes
+
+	useEffect(() => {
+		form.reset({
+			note_a: evaluation?.note_a ?? 0,
+			note_b: evaluation?.note_b ?? 0,
+			note_c: evaluation?.note_c ?? 0,
+			note_d: evaluation?.note_d ?? 0,
+			note_e: evaluation?.note_e ?? 0,
+			question_note: evaluation?.question_note ?? 0,
+			reponses: evaluation?.reponses,
+			commentaire: evaluation?.commentaire
+		})
+	}, [evaluation])
+
+	const formData = useWatch({ control: form.control })
+
+	useEffect(() => {
+		console.log(formData)
+	}, [formData])
+
+	// util
+
+	const numberToLetter = (number?: number) => {
+		if (!number) return ""
+		if (number == 20) return "a"
+		else if (number >= 15) return "b"
+		else if (number >= 10) return "c"
+		else if (number >= 5) return "d"
+		else if (number >= 0) return "e"
+		else return ""
+	}
+
+	const letterToNumber: Record<string, number> = {
+		a: 20,
+		b: 16,
+		c: 12,
+		d: 8,
+		e: 4
+	}
+
+	const allowContinue = () => {
+		if (currentTab == "intro") {
+			// make sure at least one grade is not 0 in note_a, note_b, note_c, note_d, note_e
+			return (
+				(formData.note_a && formData.note_a > 0) ||
+				(formData.note_b && formData.note_b > 0) ||
+				(formData.note_c && formData.note_c > 0) ||
+				(formData.note_d && formData.note_d > 0) ||
+				(formData.note_e && formData.note_e > 0)
+			)
+		} else if (currentTab == "mainQuestion") {
+			// make sure the question_note is not 0
+			return formData.question_note && formData.question_note > 0
+		} else if (parseInt(currentTab)) {
+			// make sure there's a grade selected
+			const question_id = parseInt(currentTab.replace("question_", ""))
+			const question = thematique?.questions.find((question) => question.id == question_id)
+			if (!question || question.optional) return true
+			const reponse = formData.reponses?.find((reponse) => reponse.question_id == question.id)
+			if (!reponse) return false
+			return reponse.note && reponse.note > 0
+		} else return true
+	}
+
 	// handle submit
 
-	const onSubmitHandler = () => {
-		// todo: submit the evaluation
+	const onClose = () => {
+		// reset form data
+		form.reset()
+		// close the form
 		onOpenChange(false)
 		setCurrentTab("intro")
 	}
 
+	const onSubmitHandler = async () => {
+		if (!session || !evaluation) return
+		// submit the evaluation to the API endpoint
+		const submittedEval = await makeAPIRequest<Evaluation, Evaluation>(
+			session,
+			"put",
+			"evaluations",
+			`id/${evaluation.id}/submit/`,
+			formData,
+			(res) => res.data
+		)
+		if (!submittedEval || submittedEval instanceof Error) return
+		onSubmit(submittedEval)
+		onClose()
+	}
+
 	// render
-	return thematique ? (
+	return thematique && evaluation ? (
 		<Dialog open={open}>
 			<DialogContent
 				hideCloseButton
 				className={cn(
-					"w-full sm:max-w-[600px] max-h-[80vh] sm:max-h-[576px] h-full bg-neutral-50 p-[32px]",
-					"max-sm:top-auto max-sm:bottom-0 max-sm:translate-y-0 max-sm:max-w-full",
-					"flex flex-col gap-[32px]"
+					"w-full md:max-w-[760px] max-h-[90vh] min-h-[576px] md:h-fit max-md:h-full bg-neutral-50 p-[32px]",
+					"max-md:top-auto max-md:bottom-0 max-md:translate-y-0 max-md:max-w-full",
+					"flex flex-col gap-[32px] overflow-scroll"
 				)}>
 				<div className="w-full flex flex-wrap gap-[32px] items-start">
 					<div className="relative w-[100px] sm:w-[165px] aspect-[1.375]">
@@ -163,38 +253,192 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 						<form
 							className="flex-1 w-full flex flex-col gap-[16px]"
 							onSubmit={form.handleSubmit(onSubmitHandler)}>
-							<TabsContent
-								value="intro"
-								className="m-0 flex-1 w-full flex flex-col gap-[16px]">
-								<Alert variant="default">
-									<FontAwesomeIcon
-										icon={faInfoCircle}
-										className="text-blue-600 text-[16px]"
+							{currentTab == "intro" && (
+								<TabsContent
+									value="intro"
+									className="m-0 flex-1 w-full flex flex-col gap-[16px]">
+									<Alert variant="default">
+										<FontAwesomeIcon
+											icon={faInfoCircle}
+											className="text-blue-600 text-[16px]"
+										/>
+										<AlertTitle>Description</AlertTitle>
+										<AlertDescription>{thematique.description}</AlertDescription>
+									</Alert>
+									{thematique.grille_de_notes ? (
+										<>
+											<div className="w-full flex flex-col gap-[4px]">
+												{thematique.question_grille ? (
+													<span className="text-base font-medium text-blue-600">{thematique.question_grille}</span>
+												) : (
+													<></>
+												)}
+												<span className="text-sm font-normal text-blue-600/80">
+													Indiquer votre appréciation par une note allant de A, très bien, à E, très mauvais.
+												</span>
+											</div>
+											<div className="w-full flex flex-wrap gap-[16px]">
+												{["a", "b", "c", "d", "e"].map((letter) => (
+													<FormField
+														key={letter}
+														control={form.control}
+														// @ts-ignore
+														name={`note_${letter}`}
+														render={({ field }) => (
+															<FormItem className="flex-1">
+																<FormControl>
+																	<GradeCountInput
+																		className="flex-1"
+																		grade={letter.toUpperCase()}
+																		count={field.value as number}
+																		// @ts-ignore
+																		onChange={(value) => form.setValue(`note_${letter}`, value)}
+																		min={0}
+																		max={100}
+																	/>
+																</FormControl>
+																<FormDescription>
+																	Nombre de <span className="uppercase">{letter}</span>
+																</FormDescription>
+															</FormItem>
+														)}
+													/>
+												))}
+											</div>
+										</>
+									) : (
+										<></>
+									)}
+									<span className="text-sm font-normal text-blue-600/60">
+										Au cours de votre évaluation vous indiquerez également vos remarques et commentaires à la fin de ce questionnaire.
+									</span>
+								</TabsContent>
+							)}
+							<FormField
+								control={form.control}
+								name="reponses"
+								render={() => (
+									<>
+										{thematique.questions.map(
+											(question, id) =>
+												currentTab == question.id.toString() && (
+													<TabsContent
+														key={question.id}
+														value={question.id.toString()}
+														className="m-0 flex-1 w-full flex flex-col gap-[24px]">
+														<div className="w-full flex flex-col gap-[4px]">
+															<span className="text-xl font-bold text-blue-600">{question.titre ?? "Question"}</span>
+															{question.description ? (
+																<span className="text-sm font-normal text-blue-600/60">{question.description}</span>
+															) : (
+																<></>
+															)}
+															<span className="text-base font-semibold text-blue-600">{question.question}</span>
+														</div>
+														{question.grille ? (
+															<div className="w-full flex flex-wrap gap-[16px]">
+																{["a", "b", "c", "d", "e"].map((letter) => (
+																	<FormField
+																		key={letter}
+																		control={form.control}
+																		// @ts-ignore
+																		name={`reponses.${id}.note_${letter}`}
+																		render={({ field }) => (
+																			<FormItem className="flex-1">
+																				<FormControl>
+																					<GradeCountInput
+																						className="flex-1"
+																						grade={letter.toUpperCase()}
+																						count={(field.value as number) ?? 0}
+																						onChange={(value) =>
+																							// @ts-ignore
+																							form.setValue(`reponses.${id}`, {
+																								...form.getValues(`reponses.${id}`),
+																								question_id: question.id,
+																								[`note_${letter}`]: value
+																							})
+																						}
+																						min={0}
+																						max={100}
+																					/>
+																				</FormControl>
+																				<FormDescription>
+																					Nombre de <span className="uppercase">{letter}</span>
+																				</FormDescription>
+																			</FormItem>
+																		)}
+																	/>
+																))}
+															</div>
+														) : (
+															<GradeRadioGroup
+																name={`question_${question.id}`}
+																selected={numberToLetter(form.watch(`reponses.${id}.note`))}
+																onSelect={(value) =>
+																	form.setValue(`reponses.${id}`, { question_id: question.id, note: letterToNumber[value] })
+																}
+															/>
+														)}
+													</TabsContent>
+												)
+										)}
+									</>
+								)}
+							/>
+							{currentTab == "mainQuestion" && (
+								<TabsContent
+									value="mainQuestion"
+									className="m-0 flex-1 w-full flex flex-col gap-[24px]">
+									<div className="w-full flex flex-col gap-[4px]">
+										<span className="text-xl font-bold text-blue-600">Question d'impression générale</span>
+										<span className="text-sm font-normal text-blue-600/60">
+											Afin de compléter votre évaluation, vous répondrez à la question suivante par une note allant de A (très bien) à E
+											(très mauvais)
+										</span>
+										<span className="text-base font-semibold text-blue-600">{thematique.question}</span>
+									</div>
+
+									<GradeRadioGroup
+										name="question_note"
+										selected={numberToLetter(form.watch(`question_note`))}
+										onSelect={(value) => form.setValue(`question_note`, letterToNumber[value])}
 									/>
-									<AlertTitle>Description</AlertTitle>
-									<AlertDescription>{thematique.description}</AlertDescription>
-								</Alert>
-								<div className="w-full flex flex-wrap gap-[16px] justify-between">
+								</TabsContent>
+							)}
+							{currentTab == "comments" && (
+								<TabsContent
+									value="comments"
+									className="m-0 flex-1 w-full flex flex-col gap-[24px]">
+									{/* <div className="w-full flex flex-col gap-[4px]">
+										<span className="text-xl font-bold text-blue-600">Remarque</span>
+										<span className="text-sm font-normal text-blue-600/60"></span>
+									</div> */}
 									<FormField
+										name="commentaire"
 										control={form.control}
-										name="note_a"
 										render={({ field }) => (
-											<FormItem>
+											<FormItem className="flex-1">
+												<div className="flex flex-col w-full gap-[4px]">
+													<FormLabel>Commentaire</FormLabel>
+													<FormDescription>Vous pouvez laisser vos commentaires et vos remarques dans ce champ</FormDescription>
+												</div>
 												<FormControl>
-													<GradeCountInput
-														grade="A"
-														count={field.value}
-														onChange={(value) => form.setValue("note_a", value)}
+													<Textarea
+														{...field}
+														className="flex-1"
+														placeholder="Remarques sur l'évaluation..."
+														rows={4}
+														maxLength={1000}
 													/>
 												</FormControl>
 											</FormItem>
 										)}
 									/>
-								</div>
-								<div className="flex-1 w-full">&nbsp;</div>
-							</TabsContent>
+								</TabsContent>
+							)}
 							<div className="w-full flex gap-[16px]">
 								<Button
+									type="button"
 									variant="outline"
 									className="flex-1 flex items-center gap-[16px]"
 									onClick={goBack}>
@@ -211,6 +455,8 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 									)}
 								</Button>
 								<Button
+									type="button"
+									disabled={!allowContinue()}
 									className="flex-1 flex items-center gap-[16px]"
 									onClick={goForward}>
 									<FontAwesomeIcon

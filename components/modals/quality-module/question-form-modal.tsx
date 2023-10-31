@@ -1,138 +1,141 @@
-import { QuestionCreate } from "@conf/api/data-types/quality-module";
-import ModalContainer from "../modal-container";
-import { useEffect, useState } from "react";
-import Button from "@components/button";
-import { faEdit, faPlus } from "@fortawesome/free-solid-svg-icons";
-import FieldContainer from "@components/form-elements/field-container";
-import Label from "@components/form-elements/label";
-import TextInput from "@components/form-elements/text-input";
-import CheckBox from "@components/form-elements/checkbox";
-
+import { QuestionCreate } from "@conf/api/data-types/quality-module"
+import ModalContainer from "../modal-container"
+import { useEffect, useState } from "react"
+import Button from "@components/button"
+import { faEdit, faPlus } from "@fortawesome/free-solid-svg-icons"
+import FieldContainer from "@components/form-elements/field-container"
+import Label from "@components/form-elements/label"
+import TextInput from "@components/form-elements/text-input"
+import CheckBox from "@components/form-elements/checkbox"
 
 interface Props {
-    question?: QuestionCreate;
-    isOpen: boolean;
-    onClose: () => void;
-    onSubmit: (q: QuestionCreate) => void;
+	question?: QuestionCreate
+	isOpen: boolean
+	onClose: () => void
+	onSubmit: (q: QuestionCreate) => void
 }
 
-const QuestionFormModal = (
-    {
-        question,
-        isOpen,
-        onClose,
-        onSubmit
-    }: Props
-) => {
+const QuestionFormModal = ({ question, isOpen, onClose, onSubmit }: Props) => {
+	// form state
 
+	const [titre, setTitre] = useState<string | undefined>("")
+	const [q, setQ] = useState<string>("")
+	const [description, setDescription] = useState<string>("")
+	const [grille, setGrille] = useState(false)
+	const [optional, setOptional] = useState<boolean>(false)
 
-    // form state
+	useEffect(() => {
+		if (!question) return
 
-    const [titre, setTitre] = useState<string | undefined>("")
-    const [q, setQ] = useState<string>("")
-    const [optional, setOptional] = useState<boolean>(false)
+		setTitre(question.titre)
+		setQ(question.question)
+		setDescription(question.description)
+		setGrille(question.grille)
+		setOptional(question.optional)
+	}, [question, isOpen])
 
+	// utils
 
-    useEffect(() => {
-        if(!question) return
+	const clearFormFields = () => {
+		setTitre("")
+		setQ("")
+		setOptional(false)
+	}
 
-        setTitre(question.titre)
-        setQ(question.question)
-        setOptional(question.optional)
-    }, [question, isOpen])
+	const getUniqueId = () => {
+		// generate random id & return it
+		return Math.floor(Math.random() * 1000)
+	}
 
-    // utils
+	// handlers
 
-    const clearFormFields = () => {
-        setTitre("")
-        setQ("")
-        setOptional(false)
-    }
+	const handleClose = () => {
+		clearFormFields()
+		onClose()
+	}
 
-    const getUniqueId = () => {
-        // generate random id & return it
-        return Math.floor(Math.random() * 1000)
-    }
+	const handleSubmit = () => {
+		onSubmit({
+			id: question ? question.id : getUniqueId(),
+			titre,
+			question: q,
+			description,
+			grille,
+			optional
+		})
+		handleClose()
+	}
 
-    // handlers
+	// render
 
-    const handleClose = () => {
-        clearFormFields()
-        onClose()
-    }
-
-    const handleSubmit = () => {
-        onSubmit({
-            id: question ? question.id : getUniqueId(),
-            titre,
-            question: q,
-            optional
-        })
-        handleClose()
-    }
-
-    // render
-
-
-    return (
-        <ModalContainer isVisible={isOpen}>
-            <form
-                className="flex flex-col gap-8 min-w-[400px] overflow-auto bg-white rounded-2xl p-[32px]"
-                name="question-form">
-
-                <h3 className="text-xl font-bold text-blue-600 flex-1">
-                    {
-                        question ? "Modifier la question" : "Nouvelle question"
-                    }
-                </h3>
-                <div className="w-full h-[1px] bg-blue-600/10"></div>
-                <FieldContainer fullWidth>
-                    <Label>Titre (optionnel)</Label>
-                    <TextInput
-                        fullWidth
-                        placeholder="Qualité de l'exposition..."
-                        currentValue={titre}
-                        onChange={t => setTitre(t)}
-                    />
-                </FieldContainer>
-                <FieldContainer fullWidth>
-                    <Label>Question</Label>
-                    <TextInput
-                        isTextArea
-                        fullWidth
-                        placeholder="Comment trouvez-vous la qualité de l'exposition ?"
-                        currentValue={q}
-                        onChange={value => setQ(value)}
-                    />
-                </FieldContainer>
-                <FieldContainer fullWidth>
-                    <Label>La question est-elle optionnelle ?</Label>
-                    <CheckBox
-                        value={optional}
-                        onChange={o => setOptional(o)}
-                    />
-                </FieldContainer>
-                <div className="flex flex-row gap-4 w-full">
-                    <Button
-                        fullWidth
-                        role="secondary"
-                        onClick={handleClose}>
-                        Annuler
-                    </Button>
-                    <Button
-                        active={q ? true : false}
-                        fullWidth
-                        icon={question ? faEdit : faPlus}
-                        onClick={handleSubmit}>
-                    {
-                        question ? "Modifier" : "Ajouter"
-                    }
-                    </Button>
-                </div>
-            </form>
-        </ModalContainer>
-    )
-
+	return (
+		<ModalContainer isVisible={isOpen}>
+			<form
+				className="flex flex-col gap-8 min-w-[400px] overflow-auto bg-white rounded-2xl p-[32px]"
+				name="question-form">
+				<h3 className="text-xl font-bold text-blue-600 flex-1">{question ? "Modifier la question" : "Nouvelle question"}</h3>
+				<div className="w-full h-[1px] bg-blue-600/10"></div>
+				<FieldContainer fullWidth>
+					<Label>Titre (optionnel)</Label>
+					<TextInput
+						fullWidth
+						placeholder="Qualité de l'exposition..."
+						currentValue={titre}
+						onChange={(t) => setTitre(t)}
+					/>
+				</FieldContainer>
+				<FieldContainer fullWidth>
+					<Label>Description</Label>
+					<TextInput
+						isTextArea
+						fullWidth
+						placeholder="Donnez plus d'informations sur la question..."
+						currentValue={description}
+						onChange={(value) => setDescription(value)}
+					/>
+				</FieldContainer>
+				<FieldContainer fullWidth>
+					<Label>Question</Label>
+					<TextInput
+						isTextArea
+						fullWidth
+						placeholder="Comment trouvez-vous la qualité de l'exposition ?"
+						currentValue={q}
+						onChange={(value) => setQ(value)}
+					/>
+				</FieldContainer>
+				<FieldContainer fullWidth>
+					<Label>La question est-elle optionnelle ?</Label>
+					<CheckBox
+						value={optional}
+						onChange={(o) => setOptional(o)}
+					/>
+				</FieldContainer>
+				<FieldContainer fullWidth>
+					<Label>La réponses est elle sous forme d'une grille d'évaluation ?</Label>
+					<CheckBox
+						value={grille}
+						onChange={(o) => setGrille(o)}
+					/>
+				</FieldContainer>
+				<div className="flex flex-row gap-4 w-full">
+					<Button
+						fullWidth
+						role="secondary"
+						onClick={handleClose}>
+						Annuler
+					</Button>
+					<Button
+						active={q ? true : false}
+						fullWidth
+						icon={question ? faEdit : faPlus}
+						onClick={handleSubmit}>
+						{question ? "Modifier" : "Ajouter"}
+					</Button>
+				</div>
+			</form>
+		</ModalContainer>
+	)
 }
 
 export default QuestionFormModal
