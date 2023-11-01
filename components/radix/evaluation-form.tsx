@@ -158,10 +158,10 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 
 	const letterToNumber: Record<string, number> = {
 		a: 20,
-		b: 16,
-		c: 12,
-		d: 8,
-		e: 4
+		b: 15,
+		c: 10,
+		d: 5,
+		e: 0
 	}
 
 	const allowContinue = () => {
@@ -175,8 +175,8 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 				(formData.note_e && formData.note_e > 0)
 			)
 		} else if (currentTab == "mainQuestion") {
-			// make sure the question_note is not 0
-			return formData.question_note && formData.question_note > 0
+			// make sure the question_note is not none
+			return typeof formData.question_note == "number"
 		} else if (parseInt(currentTab)) {
 			// make sure there's a grade selected
 			const question_id = parseInt(currentTab.replace("question_", ""))

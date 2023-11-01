@@ -1,4 +1,3 @@
-import Button from "@components/button"
 import { Element } from "@conf/api/data-types/element"
 import EvaluationFormModal from "@components/modals/quality-module/evaluation-form-modal"
 import ChartWidget from "@components/quality-module/widgets/monthly-assessment-page/chart-widget"
@@ -9,7 +8,7 @@ import { DatePicker } from "@components/radix/date-picker"
 import { Dialog, DialogTrigger } from "@components/radix/dialog"
 import { Cycle, Evaluation, MoisCycle } from "@conf/api/data-types/quality-module"
 import { MySession } from "@conf/utility-types"
-import { faChevronLeft, faDownload, faPlus } from "@fortawesome/free-solid-svg-icons"
+import { faCheck, faChevronLeft, faDownload, faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import useAPIRequest from "@hook/useAPIRequest"
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
@@ -17,6 +16,8 @@ import { GetServerSideProps, NextPage } from "next"
 import { getSession, useSession } from "next-auth/react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { Button } from "@components/radix/button"
+import { useRouter } from "next/router"
 
 interface Props {
 	data: MoisCycle | null
@@ -134,6 +135,19 @@ const MonthlyAssessmentPage: NextPage<Props> = ({ data }: Props) => {
 		evaluationsCommentsToCSV().then((res) => setEvaluationsCommentsCSV(res))
 	}, [moisCycle, session])
 
+	// handlers
+
+	const router = useRouter()
+
+	const handleValidation = async () => {
+		// make a request to the api setting the "done" attribute of the cycle to true
+		if (!session || !moisCycle) return
+
+		makeAPIRequest<MoisCycle, void>(session, "put", "mois_cycle", `id/${moisCycle.id}`, { done: true }, () => {
+			router.reload()
+		})
+	}
+
 	// render
 
 	return moisCycle ? (
@@ -152,6 +166,19 @@ const MonthlyAssessmentPage: NextPage<Props> = ({ data }: Props) => {
 				<div className="flex flex-col flex-1">
 					<h1 className="text-2xl text-blue-600 font-semibold h-fit whitespace-nowrap">{monthAndYear}</h1>
 					<p className="text-base text-blue-600 uppercase text-opacity-40 tracking-widest whitespace-nowrap">évaluation mensuelle</p>
+				</div>
+				<div className="flex-1 flex items-center justify-end gap-[16px]">
+					{!moisCycle.done ? (
+						<Button
+							className="flex items-center gap-[8px] text-emerald-600 border-emerald-600/20 hover:bg-emerald-600/10"
+							variant="outline"
+							onClick={handleValidation}>
+							<FontAwesomeIcon icon={faCheck} />
+							Valider
+						</Button>
+					) : (
+						<></>
+					)}
 				</div>
 			</div>
 			<div className="w-full flex flex-row max-lg:flex-col gap-4">

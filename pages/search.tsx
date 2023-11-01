@@ -200,7 +200,12 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 	const searchResultsToCSV = async () => {
 		if (!session) return
 		// get the label for each attribute
-		const labels = Object.entries(searchConf[itemType].searchParams).map(([key, value]) => capitalizeFirstLetter(value.label ?? key))
+		const labels = Object.entries(searchConf[itemType].searchParams)
+			.filter(([key]) => {
+				if (!searchResults.length) return true
+				return Object.keys(searchResults[0]).includes(key)
+			})
+			.map(([key, value]) => capitalizeFirstLetter(value.label ?? key))
 		// start building the CSV string
 		let csv = "data:text/csv;charset=utf-8," + "\ufeff"
 		csv += labels.join(";") + "\n"

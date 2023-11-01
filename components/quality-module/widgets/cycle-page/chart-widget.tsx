@@ -110,14 +110,14 @@ const ChartWidget = ({ cycle }: Props) => {
 				</div>
 				<div className="flex flex-col items-end max-[480px]:items-start">
 					<span>
-						<b className={`text-3xl ${getAverage(cycle) < 10 ? "text-error" : getAverage(cycle) < 15 ? "text-warning" : "text-success"}`}>
-							{getAverage(cycle).toFixed(2)}
+						<b className={`text-3xl ${(cycle.note ?? 0) < 10 ? "text-error" : (cycle.note ?? 0) < 15 ? "text-warning" : "text-success"}`}>
+							{cycle.note?.toFixed(2) ?? 0}
 						</b>
 						<span className="text-sm font-normal text-blue-600/80">/20</span>
 					</span>
 					<span className="text-end max-[480px]:text-start">
-						<b className={`text-sm ${getDistanceToGoal(getAverage(cycle)) < 0 ? "text-error" : "text-success"}`}>
-							{getDistanceToGoal(getAverage(cycle)).toFixed(2)}
+						<b className={`text-sm ${getDistanceToGoal(cycle.note ?? 0) < 0 ? "text-error" : "text-success"}`}>
+							{getDistanceToGoal(cycle.note ?? 0).toFixed(2)}
 						</b>
 						<span className="text-sm font-normal text-blue-600/80"> par rapport à l'objectif</span>
 					</span>

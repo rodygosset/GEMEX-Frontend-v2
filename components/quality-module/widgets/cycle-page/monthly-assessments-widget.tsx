@@ -1,8 +1,13 @@
 import SectionContainer from "@components/layout/quality/section-container"
+import { Button } from "@components/radix/button"
 import { Cycle, MoisCycle } from "@conf/api/data-types/quality-module"
-import { faCircle } from "@fortawesome/free-solid-svg-icons"
+import { MySession } from "@conf/utility-types"
+import { faCircle, faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import useAPIRequest from "@hook/useAPIRequest"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
+import { useRouter } from "next/router"
 
 interface Props {
 	cycle: Cycle
@@ -37,13 +42,35 @@ const MonthlyAssessmentsWidget = ({ cycle }: Props) => {
 		return mois.mois === latestMonth.mois
 	}
 
+	// handlers
+
+	const router = useRouter()
+
+	const session = useSession().data as MySession | null
+	const makeAPIRequest = useAPIRequest()
+
+	const handleNewMonthlyAssessment = () => {
+		if (!session) return
+
+		makeAPIRequest<MoisCycle, void>(session, "post", "cycles", `id/${cycle.id}/mois/next/`, undefined, () => router.reload())
+	}
+
 	// render
 
 	return (
 		<SectionContainer heightFit>
-			<div className="flex flex-col">
-				<h3 className="text-xl font-semibold text-blue-600">Évaluations mensuelles</h3>
-				<p className="text-base font-normal text-blue-600/60">Résultats des évaluations des mois passés</p>
+			<div className="w-full flex justify-between items-center flex-wrap gap-[16px]">
+				<div className="flex flex-col">
+					<h3 className="text-xl font-semibold text-blue-600">Évaluations mensuelles</h3>
+					<p className="text-base font-normal text-blue-600/60">Résultats des évaluations des mois passés</p>
+				</div>
+				<Button
+					className="flex items-center gap-[8px]"
+					variant="outline"
+					onClick={handleNewMonthlyAssessment}>
+					<FontAwesomeIcon icon={faPlus} />
+					Nouvelle évaluation mensuelle
+				</Button>
 			</div>
 			<ul className="w-full gap-4 mt-4 grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))]">
 				{cycle.mois_cycle.length > 0 ? (
