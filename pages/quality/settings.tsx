@@ -59,7 +59,7 @@ const Settings: NextPage<Props> = ({ initDomaines }: Props) => {
 	}
 
 	const getLinkToCSV = () => {
-		const csv = "data:text/csv;charset=utf-8," + thematiquesToCSV(domaines)
+		const csv = "data:text/csv;charset=utf-8," + "\ufeff" + thematiquesToCSV(domaines)
 		return encodeURI(csv)
 	}
 

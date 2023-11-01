@@ -58,10 +58,8 @@ const ChartWidget = ({ moisCycle }: Props) => {
 			(res) => {
 				const evals = res.data.filter((e) => e.note && currentCycle.mois_cycle.find((moisCycle) => moisCycle.id === e.mois_cycle_id))
 				const latestMonthlyAssessmentId = Math.max(...evals.map((e) => e.mois_cycle_id))
-				return (
-					evals.filter((e) => e.mois_cycle_id == latestMonthlyAssessmentId).reduce((acc, curr) => acc + (curr.note || 0), 0) /
-					currentCycle.mois_cycle.length
-				)
+				const latestEvals = evals.filter((e) => e.mois_cycle_id == latestMonthlyAssessmentId)
+				return latestEvals.reduce((acc, curr) => acc + (curr.note ?? 0), 0) / latestEvals.length
 			}
 		)
 
@@ -72,9 +70,10 @@ const ChartWidget = ({ moisCycle }: Props) => {
 		if (!session) return
 
 		const getNote = (moisCycle: MoisCycle, thematiqueId: number) => {
-			let note = moisCycle.thematiques.find((moisCycleThematique) => moisCycleThematique.thematique_id === thematiqueId)?.note
-			if (typeof note === "number") return note
-			return getThematiqueNote(thematiqueId)
+			const thematiqueMoisCycleEvaluations = moisCycle.evaluations.filter((evaluation) => evaluation.thematique_id === thematiqueId)
+			if (thematiqueMoisCycleEvaluations.length == 0) return getThematiqueNote(thematiqueId)
+			const completedEvals = thematiqueMoisCycleEvaluations.filter((evaluation) => typeof evaluation.note == "number")
+			return completedEvals.reduce((acc, curr) => acc + (curr.note ?? 0), 0) / completedEvals.length
 		}
 
 		getThematiques().then(async (thematiques) => {
@@ -108,10 +107,10 @@ const ChartWidget = ({ moisCycle }: Props) => {
 	const dataToCSV = () => {
 		const data = getChartData()
 		const labels = getLabels()
-		let csv = "data:text/csv;charset=utf-8,"
-		csv += "Thématique,Note qualité\n"
+		let csv = "data:text/csv;charset=utf-8," + "\ufeff"
+		csv += "Thématique;Note qualité\n"
 		for (let i = 0; i < data.length; i++) {
-			csv += labels[i] + "," + data[i] + "\n"
+			csv += labels[i] + ";" + data[i] + "\n"
 		}
 		return encodeURI(csv)
 	}

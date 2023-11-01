@@ -1,4 +1,4 @@
-import { faChartSimple, faFileLines, faFolderOpen, faGem, faHome, faUsers } from "@fortawesome/free-solid-svg-icons"
+import { faChartPie, faChartSimple, faFileLines, faFolderOpen, faGem, faHome, faUsers } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from "@styles/layout/header.module.scss"
 import { useRouter } from "next/router"
@@ -54,7 +54,7 @@ const Header = () => {
 	const shouldShouldAvailabilityRatioModuleLink = () => userRole && userRole.permissions.includes("rapports")
 
 	const manageQualityItem: NavMenuItemType = {
-		icon: faChartSimple,
+		icon: faChartPie,
 		label: "Qualité",
 		href: "/quality",
 		value: "quality",

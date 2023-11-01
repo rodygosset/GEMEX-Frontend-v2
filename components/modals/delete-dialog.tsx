@@ -12,7 +12,8 @@ import {
 	AlertDialogDescription,
 	AlertDialogFooter,
 	AlertDialogHeader,
-	AlertDialogTitle
+	AlertDialogTitle,
+	AlertDialogTrigger
 } from "@components/radix/alert-dialog"
 
 interface Props {
@@ -105,7 +106,10 @@ const DeleteDialog = ({ open, isMulti, onOpenChange, itemType, customItemID, ite
 		<>
 			<AlertDialog
 				open={open}
-				onOpenChange={onOpenChange}>
+				onOpenChange={(open) => {
+					setTimeout(() => (document.body.style.pointerEvents = ""), 500)
+					onOpenChange(open)
+				}}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>Supprimer un item</AlertDialogTitle>
@@ -123,7 +127,7 @@ const DeleteDialog = ({ open, isMulti, onOpenChange, itemType, customItemID, ite
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			</AlertDialog>
-			{/* <AlertDialog
+			<AlertDialog
 				open={showConfirmationDialog}
 				onOpenChange={setShowConfirmationDialog}>
 				<AlertDialogContent>
@@ -148,7 +152,7 @@ const DeleteDialog = ({ open, isMulti, onOpenChange, itemType, customItemID, ite
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
-			</AlertDialog> */}
+			</AlertDialog>
 		</>
 	)
 }

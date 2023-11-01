@@ -113,11 +113,11 @@ const MonthlyAssessmentPage: NextPage<Props> = ({ data }: Props) => {
 		if (!moisCycle) return ""
 		const data = await Promise.all(moisCycle.evaluations.map((evaluation) => getEvalData(evaluation)))
 		const labels = ["Thématique", "Exposition", "Élément évalué", "Évaluateur", "Commentaire"]
-		let csv = "data:text/csv;charset=utf-8,"
-		csv += labels.join(",") + "\n"
+		let csv = "data:text/csv;charset=utf-8," + "\ufeff"
+		csv += labels.join(";") + "\n"
 		for (const row of data) {
 			if (!row) continue
-			csv += Object.values(row).join(",") + "\n"
+			csv += Object.values(row).join(";") + "\n"
 		}
 		return encodeURI(csv)
 	}

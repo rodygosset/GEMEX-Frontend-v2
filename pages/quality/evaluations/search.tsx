@@ -186,8 +186,8 @@ const Search: NextPage<Props> = ({ initSearchParams, initSearchResults }: Props)
 		// get the label for each attribute
 		const labels = Object.entries(searchConf["evaluations"].searchParams).map(([key, value]) => capitalizeFirstLetter(value.label ?? key))
 		// start building the CSV string
-		let csv = "data:text/csv;charset=utf-8,"
-		csv += labels.join(",") + "\n"
+		let csv = "data:text/csv;charset=utf-8," + "\ufeff"
+		csv += labels.join(";") + "\n"
 		// now insert each row into the CSV string
 		for (const result of results.flatMap((result) => result.evaluations)) {
 			// for each attribute
@@ -242,7 +242,7 @@ const Search: NextPage<Props> = ({ initSearchParams, initSearchResults }: Props)
 							}"`
 					)
 				)
-			csv += row.join(",") + "\n"
+			csv += row.join(";") + "\n"
 		}
 		return encodeURI(csv)
 	}

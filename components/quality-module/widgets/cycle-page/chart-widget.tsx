@@ -91,10 +91,10 @@ const ChartWidget = ({ cycle }: Props) => {
 	const dataToCSV = (cycle: Cycle) => {
 		const data = getChartData(cycle)
 		const labels = getLabels(cycle)
-		let csv = "data:text/csv;charset=utf-8,"
-		csv += "Mois,Note qualité\n"
+		let csv = "data:text/csv;charset=utf-8," + "\ufeff"
+		csv += "Mois;Note qualité\n"
 		for (let i = 0; i < data.length; i++) {
-			csv += labels[i] + "," + data[i] + "\n"
+			csv += labels[i] + ";" + data[i] + "\n"
 		}
 		return encodeURI(csv)
 	}

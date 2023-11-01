@@ -40,24 +40,6 @@ export interface MoisCycle {
 	mois: number
 	note?: number
 	done: boolean
-	thematiques: {
-		mois_cycle_id: number
-		thematique_id: number
-		note?: number
-		id: number
-	}[]
-	expositions: {
-		mois_cycle_id: number
-		exposition_id: number
-		note?: number
-		id: number
-	}[]
-	elements: {
-		mois_cycle_id: number
-		element_id: number
-		note?: number
-		id: number
-	}[]
 	evaluations: Evaluation[]
 }
 
@@ -128,18 +110,18 @@ export const thematiquesToCSV = (domaines: Domaine[]) => {
 
 	// now, create the CSV string
 
-	let csv = "Nom,Description,Periodicite en mois,Ponderateur,Question générale,Ponderateur question générale,Domaine d'évaluation"
+	let csv = "Nom;Description;Periodicite en mois;Ponderateur;Question générale;Ponderateur question générale;Domaine d'évaluation"
 	for (let i = 0; i < maxQuestions; i++) {
-		csv += `,Question ${i + 1}`
+		csv += `;Question ${i + 1}`
 	}
 
 	csv += "\n"
 
 	for (const domaine of domaines) {
 		for (const thematique of domaine.thematiques) {
-			csv += `"${thematique.nom}","${thematique.description}",${thematique.periodicite},${thematique.ponderateur},"${thematique.question}",${thematique.question_ponderateur},"${domaine.nom}"`
+			csv += `"${thematique.nom}";"${thematique.description}";${thematique.periodicite};${thematique.ponderateur};"${thematique.question}";${thematique.question_ponderateur};"${domaine.nom}"`
 			for (let i = 0; i < maxQuestions; i++) {
-				csv += `,${thematique.questions[i]?.question ?? ""}`
+				csv += `;${thematique.questions[i]?.question ?? ""}`
 			}
 			csv += "\n"
 		}

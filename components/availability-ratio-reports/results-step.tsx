@@ -121,7 +121,7 @@ const ResultsStep = ({ report }: Props) => {
 
 	const getLinkToCSV = () => {
 		if (!report || report.taux === null) return ""
-		const csv = "data:text/csv;charset=utf-8," + rapportToCSV(report)
+		const csv = "data:text/csv;charset=utf-8," + "\ufeff" + rapportToCSV(report)
 		return encodeURI(csv)
 	}
 

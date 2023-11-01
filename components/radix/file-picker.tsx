@@ -16,7 +16,7 @@ import DeleteDialog from "@components/modals/delete-dialog"
 import { AxiosResponse } from "axios"
 import Pagination from "@components/pagination"
 
-export const resultsPerPage = 3
+export const resultsPerPage = 15
 
 interface FileCategory {
 	id: number
