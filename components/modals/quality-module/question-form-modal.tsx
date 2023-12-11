@@ -10,12 +10,13 @@ import CheckBox from "@components/form-elements/checkbox"
 
 interface Props {
 	question?: QuestionCreate
+	order: number
 	isOpen: boolean
 	onClose: () => void
 	onSubmit: (q: QuestionCreate) => void
 }
 
-const QuestionFormModal = ({ question, isOpen, onClose, onSubmit }: Props) => {
+const QuestionFormModal = ({ question, order, isOpen, onClose, onSubmit }: Props) => {
 	// form state
 
 	const [titre, setTitre] = useState<string | undefined>("")
@@ -58,6 +59,7 @@ const QuestionFormModal = ({ question, isOpen, onClose, onSubmit }: Props) => {
 		onSubmit({
 			id: question ? question.id : getUniqueId(),
 			titre,
+			ordre: question ? question.ordre : order,
 			question: q,
 			description,
 			grille,

@@ -149,6 +149,7 @@ const ThematiqueFormModal = ({ thematique, isOpen, domaineId, onClose, onSubmit 
 					{
 						thematique_id: thematique.id,
 						titre: question.titre,
+						ordre: question.ordre,
 						question: question.question,
 						description: question.description,
 						grille: question.grille,
@@ -235,6 +236,14 @@ const ThematiqueFormModal = ({ thematique, isOpen, domaineId, onClose, onSubmit 
 				})
 			}
 		)
+	}
+
+	const getHighestQuestionOrder = () => {
+		if (questions.length === 0) return 0
+		return questions.reduce((acc, curr) => {
+			if (curr.ordre > acc) return curr.ordre
+			return acc
+		}, 0)
 	}
 
 	// render
@@ -403,12 +412,14 @@ const ThematiqueFormModal = ({ thematique, isOpen, domaineId, onClose, onSubmit 
 			</ModalContainer>
 			<QuestionFormModal
 				isOpen={questionModalIsOpen}
+				order={getHighestQuestionOrder() + 1}
 				onClose={() => setQuestionModalIsOpen(false)}
 				onSubmit={(q) => setQuestions([...questions, q])}
 			/>
 			<QuestionFormModal
 				question={questions[selectedQuestionId]}
 				isOpen={questionEditModalIsOpen}
+				order={getHighestQuestionOrder() + 1}
 				onClose={() => setQuestionEditModalIsOpen(false)}
 				onSubmit={(q) => {
 					const newQuestions = [...questions]

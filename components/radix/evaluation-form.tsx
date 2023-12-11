@@ -165,7 +165,7 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 	}
 
 	const allowContinue = () => {
-		if (currentTab == "intro") {
+		if (currentTab == "intro" && thematique?.grille_de_notes) {
 			// make sure at least one grade is not 0 in note_a, note_b, note_c, note_d, note_e
 			return (
 				(formData.note_a && formData.note_a > 0) ||

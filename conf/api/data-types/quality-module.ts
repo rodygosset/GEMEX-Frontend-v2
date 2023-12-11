@@ -58,6 +58,7 @@ export interface Cycle {
 export interface QuestionCreate {
 	id: number
 	titre?: string
+	ordre: number
 	question: string
 	description: string
 	grille: boolean
@@ -74,6 +75,7 @@ export interface Thematique {
 	ponderateur: number
 	questions: {
 		titre?: string
+		ordre: number
 		question: string
 		description: string
 		grille: boolean
