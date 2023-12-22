@@ -79,7 +79,7 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 				) : (
 					<pre
 						className={cn(
-							"text-base font-normal text-blue-600/80 font-sans p-[16px] border border-blue-600/20 rounded-[8px]",
+							"text-base whitespace-break-spaces break-words font-normal text-blue-600/80 font-sans p-[16px] border border-blue-600/20 rounded-[8px]",
 							textValue == "Non précisé(e)" ? "text-opacity-80" : ""
 						)}>
 						{textValue}
