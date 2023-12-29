@@ -102,7 +102,9 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 		// otherwise go to the next question
 		else {
 			const index = thematique?.questions.findIndex((question) => question.id.toString() == currentTab) ?? -1
-			if (index != 1 && thematique && index < thematique.questions.length - 1) setCurrentTab(thematique.questions[index + 1].id.toString())
+			console.log("current question", thematique?.questions[index])
+			console.log("current question index", index)
+			if (index > -1 && thematique && index < thematique.questions.length - 1) setCurrentTab(thematique.questions[index + 1].id.toString())
 			else setCurrentTab("mainQuestion")
 		}
 	}
@@ -140,14 +142,10 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 
 	const formData = useWatch({ control: form.control })
 
-	useEffect(() => {
-		console.log(formData)
-	}, [formData])
-
 	// util
 
 	const numberToLetter = (number?: number) => {
-		if (!number) return ""
+		if (typeof number != "number") return ""
 		if (number == 20) return "a"
 		else if (number >= 15) return "b"
 		else if (number >= 10) return "c"
@@ -184,7 +182,7 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 			if (!question || question.optional) return true
 			const reponse = formData.reponses?.find((reponse) => reponse.question_id == question.id)
 			if (!reponse) return false
-			return reponse.note && reponse.note > 0
+			return typeof reponse.note == "number"
 		} else return true
 	}
 
