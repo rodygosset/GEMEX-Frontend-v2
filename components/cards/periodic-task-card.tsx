@@ -70,7 +70,7 @@ const PeriodicTaskCard = ({ task, showAssignButton, onTaskAssign }: Props) => {
 						status="success"
 						role="secondary"
 						onClick={handleAssignToMeClick}>
-						Me l'attribuer
+						Me l&apos;attribuer
 					</Button>
 				) : (
 					<></>

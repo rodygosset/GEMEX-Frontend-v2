@@ -80,7 +80,7 @@ const Settings: NextPage<Props> = ({ initDomaines }: Props) => {
 						/>
 					</Link>
 					<div className="flex flex-col flex-1">
-						<h1 className="text-3xl font-medium text-purple-600 whitespace-nowrap">Domaines d'évaluation</h1>
+						<h1 className="text-3xl font-medium text-purple-600 whitespace-nowrap">Domaines d&apos;évaluation</h1>
 						<p className="text-base font-normal text-blue-600/60 tracking-widest whitespace-nowrap uppercase">Liste des thématiques</p>
 					</div>
 					<div className="flex flex-row flex-wrap gap-4">
@@ -153,7 +153,7 @@ const Settings: NextPage<Props> = ({ initDomaines }: Props) => {
 								}}
 							/>
 						</div>
-						<p className="text-base font-normal text-blue-600/60">Aucun domaine d'évaluation</p>
+						<p className="text-base font-normal text-blue-600/60">Aucun domaine d&apos;évaluation</p>
 					</div>
 				)}
 			</main>

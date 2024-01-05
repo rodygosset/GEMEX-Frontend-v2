@@ -151,7 +151,7 @@ const EvaluationViewModal = ({ evaluation, elementName, expoName, open, onOpenCh
 					<div className="flex flex-col">
 						<span className="text-xl font-bold text-blue-600">Questions</span>
 						<span className="text-sm font-normal text-blue-600/60">
-							Réponses aux questions spécifiques à la thématique <span className="text-blue-600 font-semibold">"{thematique.nom}"</span>
+							Réponses aux questions spécifiques à la thématique <span className="text-blue-600 font-semibold">&quot;{thematique.nom}&quot;</span>
 						</span>
 					</div>
 					<ul className="w-full flex flex-col gap-[32px]">
@@ -175,7 +175,7 @@ const EvaluationViewModal = ({ evaluation, elementName, expoName, open, onOpenCh
 				<div className="w-full flex flex-col gap-[16px]">
 					<div className="flex flex-col">
 						<span className="text-xl font-bold text-blue-600">Question générale</span>
-						<span className="text-sm font-normal text-blue-600/60">Réponse de l'évaluateur à la question d'opinion générale</span>
+						<span className="text-sm font-normal text-blue-600/60">Réponse de l&apos;évaluateur à la question d&apos;opinion générale</span>
 					</div>
 					<span className="text-xl font-bold text-blue-600">{thematique.question ?? "Question"}</span>
 					<GradeRadioGroup selected={numberToLetter(evaluation.question_note ?? 0)} />
@@ -184,7 +184,7 @@ const EvaluationViewModal = ({ evaluation, elementName, expoName, open, onOpenCh
 				<div className="w-full flex flex-col gap-[16px]">
 					<div className="flex flex-col">
 						<span className="text-xl font-bold text-blue-600">Commentaires</span>
-						<span className="text-sm font-normal text-blue-600/60">Remarques et commentaires laissés par l'évaluateur</span>
+						<span className="text-sm font-normal text-blue-600/60">Remarques et commentaires laissés par l&apos;évaluateur</span>
 					</div>
 					<pre className="text-base font-normal text-blue-600/80 font-sans p-[16px] border border-blue-600/20 rounded-[8px]">
 						{evaluation.commentaire}

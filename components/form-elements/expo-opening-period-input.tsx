@@ -44,7 +44,7 @@ const OpeningPeriodForm = ({ name, value, onSubmit }: FormProps) => {
 
 	return (
 		<div className="flex flex-col items-stretch gap-[16px] rounded-[8px]">
-			<span className="text-sm font-medium text-blue-600/60">{value ? "Modifier" : "Ajouter"} une période d'ouverture</span>
+			<span className="text-sm font-medium text-blue-600/60">{value ? "Modifier" : "Ajouter"} une période d&apos;ouverture</span>
 			<DateRangeInput
 				name={name}
 				value={dateRange}
@@ -177,7 +177,7 @@ const ExpoOpeningPeriodInput = ({ name, value, onChange }: Props) => {
 					))}
 				</ul>
 			) : (
-				<span className="p-[16px] border-b border-blue-600/20 text-sm font-normal text-blue-600/60">Aucune période d'ouverture</span>
+				<span className="p-[16px] border-b border-blue-600/20 text-sm font-normal text-blue-600/60">Aucune période d&apos;ouverture</span>
 			)}
 			<Popover>
 				<PopoverTrigger asChild>

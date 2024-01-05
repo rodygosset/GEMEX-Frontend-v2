@@ -167,7 +167,7 @@ const EvaluationFormModal = ({ mois_cycle_id, evaluation, onSubmit }: Props) => 
 												field={field}
 											/>
 										</FormControl>
-										<FormDescription>Choisir l'évaluateur</FormDescription>
+										<FormDescription>Choisir l&apos;évaluateur</FormDescription>
 										<FormMessage />
 									</FormItem>
 								)}
@@ -200,7 +200,7 @@ const EvaluationFormModal = ({ mois_cycle_id, evaluation, onSubmit }: Props) => 
 										<FormControl>
 											<>
 												<div className="flex flex-col gap-2 flex-1">
-													<span className="text-sm text-blue-600/60">Séléctionner l'exposition de l'élément</span>
+													<span className="text-sm text-blue-600/60">Séléctionner l&apos;exposition de l&apos;élément</span>
 													<ItemComboBox
 														selected={expositionId}
 														itemType="expositions"
@@ -219,7 +219,7 @@ const EvaluationFormModal = ({ mois_cycle_id, evaluation, onSubmit }: Props) => 
 												</div>
 											</>
 										</FormControl>
-										<FormDescription>Choisir l'élément à évaluer</FormDescription>
+										<FormDescription>Choisir l&apos;élément à évaluer</FormDescription>
 										<FormMessage />
 									</FormItem>
 								)}

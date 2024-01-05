@@ -104,7 +104,7 @@ const ThematiquesWidget = ({ moisCycle }: Props) => {
 												})}
 											</span>
 										) : (
-											<span className="text-base max-md:text-sm font-normal text-blue-600/80 flex-1">Pas d'évaluation</span>
+											<span className="text-base max-md:text-sm font-normal text-blue-600/80 flex-1">Pas d&apos;évaluation</span>
 										)}
 										<span className="text-base max-md:text-sm font-normal text-blue-600/80 flex-1">
 											À évaluer

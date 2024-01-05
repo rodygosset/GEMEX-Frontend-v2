@@ -167,7 +167,7 @@ const ResultsStep = ({ report }: Props) => {
 							icon={faDownload}
 							role="secondary"
 							onClick={handleGroupChartDownload}>
-							Télécharger l'image
+							Télécharger l&apos;image
 						</Button>
 					</div>
 					<div className={styles.selectSectionHeader}>
@@ -197,7 +197,7 @@ const ResultsStep = ({ report }: Props) => {
 									icon={faDownload}
 									role="secondary"
 									onClick={handleExposChartDownload}>
-									Télécharger l'image
+									Télécharger l&apos;image
 								</Button>
 							</div>
 							<div className={styles.selectSectionHeader}>

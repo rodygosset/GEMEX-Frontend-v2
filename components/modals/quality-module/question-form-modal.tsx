@@ -114,7 +114,7 @@ const QuestionFormModal = ({ question, order, isOpen, onClose, onSubmit }: Props
 					/>
 				</FieldContainer>
 				<FieldContainer fullWidth>
-					<Label>La réponses est elle sous forme d'une grille d'évaluation ?</Label>
+					<Label>La réponses est elle sous forme d&apos;une grille d&apos;évaluation ?</Label>
 					<CheckBox
 						value={grille}
 						onChange={(o) => setGrille(o)}

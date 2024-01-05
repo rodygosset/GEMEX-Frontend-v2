@@ -119,7 +119,7 @@ const ChartWidget = ({ cycle }: Props) => {
 						<b className={`text-sm ${getDistanceToGoal(cycle.note ?? 0) < 0 ? "text-error" : "text-success"}`}>
 							{getDistanceToGoal(cycle.note ?? 0).toFixed(2)}
 						</b>
-						<span className="text-sm font-normal text-blue-600/80"> par rapport à l'objectif</span>
+						<span className="text-sm font-normal text-blue-600/80"> par rapport à l&apos;objectif</span>
 					</span>
 				</div>
 			</div>
@@ -156,7 +156,7 @@ const ChartWidget = ({ cycle }: Props) => {
 							<b className={getDistanceToGoal(getLatestMonthData(cycle)) < 0 ? "text-error" : "text-success"}>
 								{getDistanceToGoal(getLatestMonthData(cycle)).toFixed(2)}
 							</b>{" "}
-							{getDistanceToGoal(getLatestMonthData(cycle)) > 0 ? "au-dessus" : "points en-dessous"} de l'objectif
+							{getDistanceToGoal(getLatestMonthData(cycle)) > 0 ? "au-dessus" : "points en-dessous"} de l&apos;objectif
 						</span>
 					</div>
 				) : (
@@ -172,7 +172,7 @@ const ChartWidget = ({ cycle }: Props) => {
 							icon={faDownload}
 							className="text-blue-600"
 						/>
-						<span className="font-normal text-sm text-blue-600 whitespace-nowrap">Télécharger l'image</span>
+						<span className="font-normal text-sm text-blue-600 whitespace-nowrap">Télécharger l&apos;image</span>
 					</a>
 					<a
 						className="w-full bg-blue-600 rounded-[8px] px-[16px] py-[8px] 

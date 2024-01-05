@@ -49,7 +49,7 @@ const ExpoOpeningPeriodsList = ({ value }: Props) => {
 					</li>
 				))
 			) : (
-				<li className="flex-1 p-[16px] text-sm font-normal text-blue-600/80">Aucune période d'ouverture</li>
+				<li className="flex-1 p-[16px] text-sm font-normal text-blue-600/80">Aucune période d&apos;ouverture</li>
 			)}
 		</ul>
 	)

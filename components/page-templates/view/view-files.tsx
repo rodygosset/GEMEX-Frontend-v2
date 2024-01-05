@@ -57,7 +57,7 @@ const ViewFiles = ({ itemType, itemData }: Props) => {
 				</ul>
 			) : (
 				<span className="text-sm font-normal text-blue-600/60 p-[16px] rounded-[8px] border border-blue-600/20">
-					Aucun fichier n'est associé à cet item
+					Aucun fichier n&apos;est associé à cet item
 				</span>
 			)}
 		</div>

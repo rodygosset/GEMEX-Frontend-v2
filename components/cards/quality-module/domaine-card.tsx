@@ -185,7 +185,7 @@ const DomaineCard = ({ domaine, onEdit, onDelete, onNewThematique, onEditThemati
 													?.date?.toLocaleDateString("fr-fr", { year: "numeric", month: "long", day: "numeric" })}
 											</span>
 										) : (
-											<span className="text-base max-md:text-sm font-normal text-blue-600/80 flex-1">Pas d'évaluation</span>
+											<span className="text-base max-md:text-sm font-normal text-blue-600/80 flex-1">Pas d&apos;évaluation</span>
 										)}
 										<span className="text-base max-md:text-sm font-normal text-blue-600/80 flex-1">
 											À évaluer

@@ -128,7 +128,7 @@ const FicheTargetSelect = ({ currentItemType, value, isInErrorState, onChange }:
 							selected={selectedExpoId}
 							onChange={(id) => setSelectedExpoId(id)}
 						/>
-						<span className="text-sm text-blue-600/60">Séléctionner l'exposition à associer à la fiche</span>
+						<span className="text-sm text-blue-600/60">Séléctionner l&apos;exposition à associer à la fiche</span>
 					</TabsContent>
 					<TabsContent
 						value={targetItemTypes[1]}
@@ -151,7 +151,7 @@ const FicheTargetSelect = ({ currentItemType, value, isInErrorState, onChange }:
 								selected={selectedElementId}
 								onChange={(id) => setSelectedElementId(id)}
 							/>
-							<span className="text-sm text-blue-600/60">Séléctionner l'élément à associer à la fiche</span>
+							<span className="text-sm text-blue-600/60">Séléctionner l&apos;élément à associer à la fiche</span>
 						</div>
 					</TabsContent>
 				</Tabs>

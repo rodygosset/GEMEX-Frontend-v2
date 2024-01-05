@@ -122,7 +122,7 @@ const ChartWidget = ({ moisCycle }: Props) => {
 			<div className="w-full flex flex-row justify-between max-[480px]:flex-col">
 				<div className="flex flex-col">
 					<h3 className="text-xl font-semibold text-blue-600">Taux qualité</h3>
-					<p className="text-base font-normal text-blue-600/60">Pour l'évaluation mensuelle</p>
+					<p className="text-base font-normal text-blue-600/60">Pour l&apos;évaluation mensuelle</p>
 				</div>
 				<div className="flex flex-col items-end max-[480px]:items-start">
 					<span>
@@ -135,7 +135,7 @@ const ChartWidget = ({ moisCycle }: Props) => {
 						<b className={`text-sm ${getDistanceToGoal(moisCycle.note ?? 0) < 0 ? "text-error" : "text-success"}`}>
 							{getDistanceToGoal(moisCycle.note ?? 0).toFixed(2)}
 						</b>
-						<span className="text-sm font-normal text-blue-600/80"> par rapport à l'objectif</span>
+						<span className="text-sm font-normal text-blue-600/80"> par rapport à l&apos;objectif</span>
 					</span>
 				</div>
 			</div>
@@ -166,7 +166,7 @@ const ChartWidget = ({ moisCycle }: Props) => {
 							icon={faDownload}
 							className="text-blue-600"
 						/>
-						<span className="font-normal text-sm text-blue-600 whitespace-nowrap">Télécharger l'image</span>
+						<span className="font-normal text-sm text-blue-600 whitespace-nowrap">Télécharger l&apos;image</span>
 					</a>
 					<a
 						className="w-full bg-blue-600 rounded-[8px] px-[16px] py-[8px] 

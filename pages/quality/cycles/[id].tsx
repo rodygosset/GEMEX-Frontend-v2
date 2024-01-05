@@ -58,7 +58,7 @@ const CyclePage: NextPage<Props> = ({ data }: Props) => {
 				</Link>
 				<div className="flex flex-col flex-1">
 					<h1 className="text-2xl text-blue-600 font-semibold h-fit whitespace-nowrap">{getCycleYear()}</h1>
-					<p className="text-base text-blue-600 uppercase text-opacity-40 tracking-widest whitespace-nowrap">Cycle d'évaluation qualité</p>
+					<p className="text-base text-blue-600 uppercase text-opacity-40 tracking-widest whitespace-nowrap">Cycle d&apos;évaluation qualité</p>
 					<p className="text-sm text-blue-600">
 						Du {getLocaleDateString(cycle.date_debut)} au {getLocaleDateString(cycle.date_fin)}
 					</p>

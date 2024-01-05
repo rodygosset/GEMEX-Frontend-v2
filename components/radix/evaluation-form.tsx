@@ -388,7 +388,7 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 									value="mainQuestion"
 									className="m-0 flex-1 w-full flex flex-col gap-[24px]">
 									<div className="w-full flex flex-col gap-[4px]">
-										<span className="text-xl font-bold text-blue-600">Question d'impression générale</span>
+										<span className="text-xl font-bold text-blue-600">Question d&apos;impression générale</span>
 										<span className="text-sm font-normal text-blue-600/60">
 											Afin de compléter votre évaluation, vous répondrez à la question suivante par une note allant de A (très bien) à E
 											(très mauvais)

@@ -347,7 +347,7 @@ const Search: NextPage<Props> = ({ initSearchParams, initSearchResults }: Props)
 											onChange={(value) => searchForm.setValue(field.name, value)}
 										/>
 									</FormControl>
-									<FormDescription>Sélectionnez l'utilisateur dont vous souhaitez consulter les évaluations</FormDescription>
+									<FormDescription>Sélectionnez l&apos;utilisateur dont vous souhaitez consulter les évaluations</FormDescription>
 								</FormItem>
 							)}
 						/>

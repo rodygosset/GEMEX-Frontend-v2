@@ -80,7 +80,7 @@ const LoginPage: NextPage = () => {
 						<span className="text-xl font-normal text-white">GEMEX</span>
 					</span>
 					<div className="h-full flex flex-col justify-center gap-0">
-						<h1 className="text-3xl font-semibold text-white ">Gestion de l'exploitation</h1>
+						<h1 className="text-3xl font-semibold text-white ">Gestion de l&apos;exploitation</h1>
 						<p className="text-base font-normal text-white/60">et de la maintenance technique des expositions à Universcience</p>
 					</div>
 				</section>
@@ -100,7 +100,7 @@ const LoginPage: NextPage = () => {
 							onSubmit={form.handleSubmit(SubmitHandler)}>
 							<div className="flex flex-col w-full">
 								<h2 className="text-3xl font-semibold text-white">Vous revoilà</h2>
-								<p className="text-base font-normal text-white/60">Connectez-vous avec votre nom d'utilisateur et votre matricule.</p>
+								<p className="text-base font-normal text-white/60">Connectez-vous avec votre nom d&apos;utilisateur et votre matricule.</p>
 							</div>
 
 							<div className="flex flex-col gap-[32px]">
@@ -109,12 +109,12 @@ const LoginPage: NextPage = () => {
 									name="username"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel className="text-white/80 text-base font-normal">Nom d'utilisateur</FormLabel>
+											<FormLabel className="text-white/80 text-base font-normal">Nom d&apos;utilisateur</FormLabel>
 											<FormControl>
 												<Input {...field} />
 											</FormControl>
 											<FormDescription className="text-white/60 text-sm font-normal">
-												Votre nom d'utilisateur est votre prénom suivi de votre nom de famille.
+												Votre nom d&apos;utilisateur est votre prénom suivi de votre nom de famille.
 											</FormDescription>
 											<FormMessage className="text-red-400 text-sm font-normal" />
 										</FormItem>

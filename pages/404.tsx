@@ -30,7 +30,7 @@ const My404 = () => {
 				className={cn(buttonVariants({ variant: "outline" }), "flex items-center gap-[8px]")}
 				href="/">
 				<FontAwesomeIcon icon={faHome} />
-				Retour à l'accueil
+				Retour à l&apos;accueil
 			</Link>
 		</main>
 	)

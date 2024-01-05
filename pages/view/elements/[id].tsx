@@ -10,146 +10,118 @@ import Head from "next/head"
 import { authOptions } from "pages/api/auth/[...nextauth]"
 import ViewTemplate from "pages/page-templates/view-template"
 
-
 // this page displays information about a given Exposition object
 // the data is retrieved in getServerSideProps
 
 const itemType = "elements"
 
 interface Props {
-    data: Element | null;
-    extra: {
-        exposition: string;
-        etat: string;
-        exploitation: string;
-        localisation: string;
-    } | null
+	data: Element | null
+	extra: {
+		exposition: string
+		etat: string
+		exploitation: string
+		localisation: string
+	} | null
 }
 
+const ViewElements: NextPage<Props> = ({ data, extra }) => {
+	// useEffect(() => console.log(data, extra), [])
 
+	// in order to
 
-const ViewElements: NextPage<Props> = (
-    {
-        data,
-        extra
-    }
-) => {
+	// render
 
-    // useEffect(() => console.log(data, extra), [])
+	return data && extra ? (
+		<>
+			<Head>
+				<title>{data.nom} (Element)</title>
+				<meta
+					name="description"
+					content={`Informations sur l'élement d'exposition ${data.nom}`}
+				/>
+			</Head>
 
-    // in order to 
-
-    // render
-
-    return (
-        data && extra ?
-        <>
-            <Head>
-                <title>{data.nom} (Element)</title>
-                <meta name="description" content={`Informations sur l'élement d'exposition ${data.nom}`} />
-            </Head>
-                
-            <ViewTemplate
-                itemType={itemType}
-                itemTitle={data.nom}
-                itemData={data}
-                extraData={extra}
-            />
-        </>
-        :
-        // if we couldn't retrive the data
-        // let the user know there was a problem
-        <></>
-    )
+			<ViewTemplate
+				itemType={itemType}
+				itemTitle={data.nom}
+				itemData={data}
+				extraData={extra}
+			/>
+		</>
+	) : (
+		// if we couldn't retrive the data
+		// let the user know there was a problem
+		<></>
+	)
 }
-
 
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
+	// retrive the data about the expo by making a request to our backend API
 
-    // retrive the data about the expo by making a request to our backend API
+	// start with getting the expo's DB id
 
-    // start with getting the expo's DB id
+	const elementId = context.query.id
 
-    const elementId = context.query.id
+	// retrieve the session, containing the user's auth token
 
-    // retrieve the session, containing the user's auth token
+	const session = (await getServerSession(context.req, context.res, authOptions)) as MySession | null
 
-    const session = (await getServerSession(context.req, context.res, authOptions)) as MySession | null
+	// return empty props if we don't have an auth token
+	// because if means we have no way to retrieve the data
 
-    // return empty props if we don't have an auth token
-    // because if means we have no way to retrieve the data
+	if (session == null) return { props: { data: null, extra: null } }
 
-    if(session == null) return { props: { data: null, extra: null } }
+	// make the API request
 
-    // make the API request
+	let is404 = false
+	let is401 = false
+	let isError = false
 
-    let is404 = false
-    let is401 = false
-    let isError = false
+	const data = await SSRmakeAPIRequest<Element, Element>({
+		session: session,
+		verb: "get",
+		itemType: itemType,
+		additionalPath: `id/${elementId}`,
+		onSuccess: (res) => res.data,
+		onFailure: (error) => {
+			if (isAuthError(error)) is401 = true
+			else if (axios.isAxiosError(error) && error.response?.status == 404) {
+				is404 = true
+			} else {
+				isError = true
+			}
+		}
+	})
 
-    const data = await SSRmakeAPIRequest<Element, Element>({
-        session: session,
-        verb: "get",
-        itemType: itemType,
-        additionalPath: `id/${elementId}`, 
-        onSuccess: res => res.data,
-        onFailure: error => {
-            if(isAuthError(error)) is401 = true
-            else if(axios.isAxiosError(error) && error.response?.status == 404) {
-                is404 = true
-            } else {
-                isError = true
-            }
-        }
-    })
+	if (is401 || isError) return { props: { data: null, extra: null } }
+	// in case the provided exposition_id doesn't exist in the database
+	else if (is404) return { notFound: true } // show the 404 page
 
-    if(is401 || isError) return { props: { data: null, extra: null } }
+	// retrieving the extra data we need to display
 
-    // in case the provided exposition_id doesn't exist in the database
+	const exposition = await getExtraSSRData(session, "expositions", (data as Element).exposition_id)
 
-    else if(is404) return { notFound: true } // show the 404 page
+	const etat = await getExtraSSRData(session, "etats_elements", (data as Element).etat_id)
 
-    // retrieving the extra data we need to display
+	const exploitation = await getExtraSSRData(session, "exploitations_elements", (data as Element).exploitation_id)
 
-    const exposition = await getExtraSSRData(
-        session, 
-        "expositions", 
-        (data as Element).exposition_id
-    )
+	const localisation = await getExtraSSRData(session, "localisations_elements", (data as Element).localisation_id)
 
-    const etat = await getExtraSSRData(
-        session, 
-        "etats_elements", 
-        (data as Element).etat_id
-    )
+	// if everything went well
+	// return the data as Props
 
-    const exploitation = await getExtraSSRData(
-        session, 
-        "exploitations_elements", 
-        (data as Element).exploitation_id
-    )
-
-    const localisation = await getExtraSSRData(
-        session, 
-        "localisations_elements", 
-        (data as Element).localisation_id
-    )
-
-    // if everything went well
-    // return the data as Props
-
-    return {
-        props: {
-            data: data ? data : null,
-            extra: {
-                exposition: exposition ? exposition : "Erreur",
-                etat: etat ? etat : "Erreur",
-                exploitation: exploitation ? exploitation : "Erreur",
-                localisation: localisation ? localisation : "Erreur"
-            }
-        }
-    }
-
+	return {
+		props: {
+			data: data ? data : null,
+			extra: {
+				exposition: exposition ? exposition : "Erreur",
+				etat: etat ? etat : "Erreur",
+				exploitation: exploitation ? exploitation : "Erreur",
+				localisation: localisation ? localisation : "Erreur"
+			}
+		}
+	}
 }
 
 export default ViewElements

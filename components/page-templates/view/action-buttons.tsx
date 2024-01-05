@@ -202,7 +202,7 @@ const ActionButtons = ({ itemType, itemData }: Props) => {
 								className={cn("flex items-center gap-[8px]", "border-emerald-600/20 text-emerald-600 hover:bg-emerald-600/10")}
 								onClick={handleAssignClick}>
 								<FontAwesomeIcon icon={faThumbTack} />
-								Me l'attribuer
+								Me l&apos;attribuer
 							</Button>
 						) : (
 							<></>

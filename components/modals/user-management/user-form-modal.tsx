@@ -309,7 +309,7 @@ const UserFormModal = ({ isVisible, closeModal, data, refresh }: Props) => {
 				</div>
 				<div className={styles.row}>
 					<FieldContainer fullWidth>
-						<Label>Nom d'utilisateur</Label>
+						<Label>Nom d&apos;utilisateur</Label>
 						<TextInput
 							name="username"
 							placeholder="jeandupont"

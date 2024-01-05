@@ -99,7 +99,9 @@ const MonthlyAssessmentsWidget = ({ cycle }: Props) => {
 									<b className={getDistanceToGoal(mois.note || 0) > 0 ? "text-success" : "text-error"}>
 										{getDistanceToGoal(mois.note || 0).toFixed(2)}
 									</b>
-									<span className="text-blue-600/60">{getDistanceToGoal(mois.note || 0) > 0 ? "au-dessus" : "en-dessous"} de l'objectif</span>
+									<span className="text-blue-600/60">
+										{getDistanceToGoal(mois.note || 0) > 0 ? "au-dessus" : "en-dessous"} de l&apos;objectif
+									</span>
 								</span>
 							</Link>
 						</li>
