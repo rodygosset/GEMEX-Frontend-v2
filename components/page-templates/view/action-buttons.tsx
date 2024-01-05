@@ -78,7 +78,7 @@ const ActionButtons = ({ itemType, itemData }: Props) => {
 				session,
 				"put",
 				"fiches_systematiques",
-				(itemData as FicheSystematique).nom,
+				`id/${(itemData as FicheSystematique).id}`,
 				{
 					user_en_charge_id: 1
 				},
@@ -87,7 +87,7 @@ const ActionButtons = ({ itemType, itemData }: Props) => {
 						session,
 						"put",
 						"fiches_systematiques",
-						(itemData as FicheSystematique).nom,
+						`id/${(itemData as FicheSystematique).id}`,
 						{
 							user_en_charge_id: user?.id
 						},
@@ -99,7 +99,7 @@ const ActionButtons = ({ itemType, itemData }: Props) => {
 				session,
 				"put",
 				"fiches_systematiques",
-				(itemData as FicheSystematique).nom,
+				`id/${(itemData as FicheSystematique).id}`,
 				{
 					user_en_charge_id: user?.id
 				},
@@ -254,6 +254,7 @@ const ActionButtons = ({ itemType, itemData }: Props) => {
 						onOpenChange={setShowDeleteModal}
 						itemType={itemType}
 						itemTitle={itemData.nom}
+						customItemID={itemType == "fiches" || itemType == "fiches_systematiques" ? `id/${(itemData as Fiche).id}` : undefined}
 					/>
 					{shouldShowHistoryButton() ? (
 						<PeriodicTaskHistoryModal

@@ -10,7 +10,7 @@ import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
 import { GetServerSideProps, NextPage } from "next"
 import { getSession, useSession } from "next-auth/react"
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import useAPIRequest from "@hook/useAPIRequest"
 
 interface Props {
@@ -19,6 +19,10 @@ interface Props {
 
 const CyclePage: NextPage<Props> = ({ data }: Props) => {
 	const [cycle, setCycle] = useState<Cycle | null>(data)
+
+	useEffect(() => {
+		console.log("cycle updated", cycle)
+	}, [cycle])
 
 	// utils
 

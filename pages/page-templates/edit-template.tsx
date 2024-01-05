@@ -269,7 +269,11 @@ const EditTemplate = ({ itemType, excluded, defaultValues }: Props) => {
 
 		// PUT the data
 
-		makeAPIRequest(session.data as MySession, "put", itemType, defaultValues["nom"], submitData, handleSuccess)
+		if (itemType == "fiches" || itemType == "fiches_systematiques") {
+			makeAPIRequest(session.data as MySession, "put", itemType, `id/${defaultValues["id"]}`, submitData, handleSuccess)
+		} else {
+			makeAPIRequest(session.data as MySession, "put", itemType, defaultValues["nom"], submitData, handleSuccess)
+		}
 	}
 
 	// utils
