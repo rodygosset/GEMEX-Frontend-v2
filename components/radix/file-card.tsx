@@ -71,14 +71,14 @@ const FileCard = ({ className, file, selected, multiSelectionMode, isSearchResul
 					if (onClick) onClick()
 				}}
 				className={cn(
-					"w-full flex items-center gap-[16px] p-[16px] cursor-pointer ",
+					"w-full flex items-center gap-4 p-4 cursor-pointer ",
 					isSearchResult ? "" : "border border-blue-600/20 rounded-[8px]",
 					"hover:bg-blue-600/10 duration-200 transition-all",
 					"min-w-[320px] flex-1",
 					className,
 					selected ? "border-[2px] border-blue-600 bg-blue-600/5 rounded-[8px]" : ""
 				)}>
-				<article className="w-full flex items-center gap-[16px]">
+				<article className="w-full flex items-center gap-4">
 					{multiSelectionMode && onDeSelect ? (
 						<button
 							className={cn(

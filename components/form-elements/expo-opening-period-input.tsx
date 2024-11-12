@@ -43,14 +43,14 @@ const OpeningPeriodForm = ({ name, value, onSubmit }: FormProps) => {
 	// render
 
 	return (
-		<div className="flex flex-col items-stretch gap-[16px] rounded-[8px]">
+		<div className="flex flex-col items-stretch gap-4 rounded-[8px]">
 			<span className="text-sm font-medium text-blue-600/60">{value ? "Modifier" : "Ajouter"} une période d&apos;ouverture</span>
 			<DateRangeInput
 				name={name}
 				value={dateRange}
 				onChange={setDateRange}
 			/>
-			<div className="flex justify-between items-center w-full gap-[16px]">
+			<div className="flex justify-between items-center w-full gap-4">
 				{value ? (
 					<Button
 						type="button"
@@ -112,7 +112,7 @@ const ExpoOpeningPeriodInput = ({ name, value, onChange }: Props) => {
 				<ul className="w-full flex flex-col items-stretch">
 					{value.map((period, i) => (
 						<li
-							className="flex items-center justify-between gap-[16px] p-[16px] border-b border-blue-600/20 text-sm font-normal text-blue-600/60"
+							className="flex items-center justify-between gap-4 p-4 border-b border-blue-600/20 text-sm font-normal text-blue-600/60"
 							key={`period-${i}`}>
 							{period.date_fin ? (
 								<span>
@@ -177,13 +177,13 @@ const ExpoOpeningPeriodInput = ({ name, value, onChange }: Props) => {
 					))}
 				</ul>
 			) : (
-				<span className="p-[16px] border-b border-blue-600/20 text-sm font-normal text-blue-600/60">Aucune période d&apos;ouverture</span>
+				<span className="p-4 border-b border-blue-600/20 text-sm font-normal text-blue-600/60">Aucune période d&apos;ouverture</span>
 			)}
 			<Popover>
 				<PopoverTrigger asChild>
 					<button
 						className={cn(
-							"w-full flex items-center gap-[8px] p-[16px]",
+							"w-full flex items-center gap-[8px] p-4",
 							"text-sm font-medium text-blue-600 hover:bg-blue-600/5 transition-all duration-300 ease-in-out cursor-pointer"
 						)}
 						onClick={() => setShowPopover(!showPopover)}>

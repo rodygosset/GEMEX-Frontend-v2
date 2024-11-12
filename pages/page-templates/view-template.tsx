@@ -38,10 +38,10 @@ const ViewTemplate = ({ itemType, itemTitle, itemData, extraData, hidden }: Prop
 					"w-full flex gap-[32px] sticky top-[80px]",
 					"border-b border-blue-600/10",
 					"bg-neutral-50/40 backdrop-blur-3xl",
-					"px-[2.5vw] py-[16px]"
+					"px-[2.5vw] py-4"
 				)}>
 				<GoBackButton />
-				<div className="w-full flex flex-wrap gap-[16px] max-sm:flex-col">
+				<div className="w-full flex flex-wrap gap-4 max-sm:flex-col">
 					<div className="flex flex-1 flex-col sm:min-w-[350px]">
 						<h1
 							className={cn(

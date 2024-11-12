@@ -18,7 +18,7 @@ const DateRangeInput = ({ name, value, showLocaleDate, format = "dd/MM/yyyy", mi
 	// render
 
 	return (
-		<div className="w-full flex flex-col gap-[16px]">
+		<div className="w-full flex flex-col gap-4">
 			<FieldContainer fullWidth>
 				<Label>Date de début</Label>
 				<DateInput

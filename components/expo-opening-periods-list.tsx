@@ -13,7 +13,7 @@ const ExpoOpeningPeriodsList = ({ value }: Props) => {
 			{value.length > 0 ? (
 				value.map((period, i) => (
 					<li
-						className={cn("flex-1 p-[16px] text-sm font-normal text-blue-600/80", i == value.length - 1 ? "" : "border-b border-blue-600/20")}
+						className={cn("flex-1 p-4 text-sm font-normal text-blue-600/80", i == value.length - 1 ? "" : "border-b border-blue-600/20")}
 						key={i}>
 						{period.date_fin ? (
 							<span>
@@ -49,7 +49,7 @@ const ExpoOpeningPeriodsList = ({ value }: Props) => {
 					</li>
 				))
 			) : (
-				<li className="flex-1 p-[16px] text-sm font-normal text-blue-600/80">Aucune période d&apos;ouverture</li>
+				<li className="flex-1 p-4 text-sm font-normal text-blue-600/80">Aucune période d&apos;ouverture</li>
 			)}
 		</ul>
 	)

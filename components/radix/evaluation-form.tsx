@@ -239,26 +239,24 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 					<div className="flex flex-col flex-1">
 						<span className="text-base font-bold text-blue-600">{elementName}</span>
 						<span className="text-sm font-medium text-blue-600/60">{expoName}</span>
-						<span className="text-xs font-medium text-fuchsia-600 bg-fuchsia-600/10 px-[16px] py-[8px] rounded-[8px] w-fit mt-[16px]">
-							{thematique.nom}
-						</span>
+						<span className="text-xs font-medium text-fuchsia-600 bg-fuchsia-600/10 px-4 py-[8px] rounded-[8px] w-fit mt-4">{thematique.nom}</span>
 					</div>
 				</div>
 				<Tabs
-					className="flex-1 w-full flex flex-col gap-[16px]"
+					className="flex-1 w-full flex flex-col gap-4"
 					value={currentTab}>
 					<Form {...form}>
 						<form
-							className="flex-1 w-full flex flex-col gap-[16px]"
+							className="flex-1 w-full flex flex-col gap-4"
 							onSubmit={form.handleSubmit(onSubmitHandler)}>
 							{currentTab == "intro" && (
 								<TabsContent
 									value="intro"
-									className="m-0 flex-1 w-full flex flex-col gap-[16px]">
+									className="m-0 flex-1 w-full flex flex-col gap-4">
 									<Alert variant="default">
 										<FontAwesomeIcon
 											icon={faInfoCircle}
-											className="text-blue-600 text-[16px]"
+											className="text-blue-600 text-4"
 										/>
 										<AlertTitle>Description</AlertTitle>
 										<AlertDescription>{thematique.description}</AlertDescription>
@@ -275,7 +273,7 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 													Indiquer votre appréciation par une note allant de A, très bien, à E, très mauvais.
 												</span>
 											</div>
-											<div className="w-full flex flex-wrap gap-[16px]">
+											<div className="w-full flex flex-wrap gap-4">
 												{["a", "b", "c", "d", "e"].map((letter) => (
 													<FormField
 														key={letter}
@@ -334,7 +332,7 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 															<span className="text-base font-semibold text-blue-600">{question.question}</span>
 														</div>
 														{question.grille ? (
-															<div className="w-full flex flex-wrap gap-[16px]">
+															<div className="w-full flex flex-wrap gap-4">
 																{["a", "b", "c", "d", "e"].map((letter) => (
 																	<FormField
 																		key={letter}
@@ -434,11 +432,11 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 									/>
 								</TabsContent>
 							)}
-							<div className="w-full flex gap-[16px]">
+							<div className="w-full flex gap-4">
 								<Button
 									type="button"
 									variant="outline"
-									className="flex-1 flex items-center gap-[16px]"
+									className="flex-1 flex items-center gap-4"
 									onClick={goBack}>
 									{currentTab == "intro" ? (
 										"Annuler"
@@ -455,7 +453,7 @@ const EvaluationForm = ({ open, onOpenChange, evaluation, elementName, expoName,
 								<Button
 									type="button"
 									disabled={!allowContinue()}
-									className="flex-1 flex items-center gap-[16px]"
+									className="flex-1 flex items-center gap-4"
 									onClick={goForward}>
 									<FontAwesomeIcon
 										icon={faArrowRight}

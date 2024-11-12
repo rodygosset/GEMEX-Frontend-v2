@@ -110,11 +110,11 @@ const FicheStatus = ({ ficheData, status }: Props) => {
 	// buttons shown are different depending on the current status
 
 	return (
-		<div className="w-full flex flex-wrap gap-[16px]">
+		<div className="w-full flex flex-wrap gap-4">
 			<span
 				className={cn(
 					"text-sm text-blue-600",
-					"px-[16px] py-[8px] rounded-full border border-blue-600/20",
+					"px-4 py-[8px] rounded-full border border-blue-600/20",
 					"hover:bg-blue-600/10 transition-all duration-300 ease-in-out cursor-default",
 					status.id == REQUEST_STATUS_ID ? "text-yellow-600 border-yellow-600/20 hover:bg-yellow-600/10" : "",
 					status.id == DONE_STATUS_ID ? "text-purple-600 border-purple-600/20 hover:bg-purple-600/10" : "",

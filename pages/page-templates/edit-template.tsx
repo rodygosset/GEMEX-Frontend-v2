@@ -347,11 +347,11 @@ const EditTemplate = ({ itemType, excluded, defaultValues }: Props) => {
 					"w-full flex flex-wrap gap-[32px] sticky top-[80px]",
 					"border-b border-blue-600/10",
 					"bg-neutral-50/40 backdrop-blur-3xl",
-					"px-[2.5vw] py-[16px]"
+					"px-[2.5vw] py-4"
 				)}>
 				<GoBackButton />
-				<div className="flex-1 flex flex-wrap gap-[16px] max-sm:flex-col">
-					<div className="flex flex-1 flex-col min-w-[350px] gap-[16px]">
+				<div className="flex-1 flex flex-wrap gap-4 max-sm:flex-col">
+					<div className="flex flex-1 flex-col min-w-[350px] gap-4">
 						<Input
 							className={cn(
 								"placeholder:text-blue-600/60 bg-transparent",
@@ -370,7 +370,7 @@ const EditTemplate = ({ itemType, excluded, defaultValues }: Props) => {
 							onChange={(e) => handleTitleChange(e.target.value)}
 							value={formData?.nom?.value ?? ""}
 						/>
-						<div className="w-full flex flex-wrap items-center justify-between gap-[16px]">
+						<div className="w-full flex flex-wrap items-center justify-between gap-4">
 							<span className="text-sm uppercase tracking-widest text-blue-600/60">{getItemTypeLabel()}</span>
 							<Button
 								onClick={handleSubmit}

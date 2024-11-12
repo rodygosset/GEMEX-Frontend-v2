@@ -164,7 +164,7 @@ const ChartWidget = ({ cycle }: Props) => {
 				)}
 				<div className="w-full flex flex-row gap-4 max-[480px]:flex-wrap">
 					<a
-						className="w-full bg-blue-600/10 rounded-[8px] px-[16px] py-[8px] 
+						className="w-full bg-blue-600/10 rounded-[8px] px-4 py-[8px] 
                         flex flex-row justify-center items-center gap-4 hover:bg-blue-600/20 transition duration-300 ease-in-out cursor-pointer"
 						download={`graphique-taux-qualite-${cycle.date_debut}-${cycle.date_fin}.png`}
 						href={imageLink}>
@@ -175,7 +175,7 @@ const ChartWidget = ({ cycle }: Props) => {
 						<span className="font-normal text-sm text-blue-600 whitespace-nowrap">Télécharger l&apos;image</span>
 					</a>
 					<a
-						className="w-full bg-blue-600 rounded-[8px] px-[16px] py-[8px] 
+						className="w-full bg-blue-600 rounded-[8px] px-4 py-[8px] 
                         flex flex-row justify-center items-center gap-4 hover:shadow-2xl hover:shadow-primary transition duration-300 ease-in-out cursor-pointer"
 						download={`resultats-taux-qualite-${cycle.date_debut}-${cycle.date_fin}.csv`}
 						href={dataToCSV(cycle)}>

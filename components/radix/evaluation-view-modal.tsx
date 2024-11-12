@@ -97,12 +97,10 @@ const EvaluationViewModal = ({ evaluation, elementName, expoName, open, onOpenCh
 					<div className="flex flex-col flex-1">
 						<span className="text-base font-bold text-blue-600">{elementName}</span>
 						<span className="text-sm font-medium text-blue-600/60">{expoName}</span>
-						<span className="text-xs font-medium text-fuchsia-600 bg-fuchsia-600/10 px-[16px] py-[8px] rounded-[8px] w-fit mt-[16px]">
-							{thematique.nom}
-						</span>
+						<span className="text-xs font-medium text-fuchsia-600 bg-fuchsia-600/10 px-4 py-[8px] rounded-[8px] w-fit mt-4">{thematique.nom}</span>
 					</div>
 				</div>
-				<div className="w-full flex items-center gap-[16px]">
+				<div className="w-full flex items-center gap-4">
 					<div className="flex-1 flex flex-col gap-[8px]">
 						<span className="text-xl font-bold text-blue-600">Résultat</span>
 						<div className="flex flex-col w-full gap-[4px]">
@@ -125,7 +123,7 @@ const EvaluationViewModal = ({ evaluation, elementName, expoName, open, onOpenCh
 				<div className="w-full h-[1px] bg-blue-600/20">&nbsp;</div>
 				{thematique.grille_de_notes ? (
 					<>
-						<div className="w-full flex flex-col gap-[16px]">
+						<div className="w-full flex flex-col gap-4">
 							<div className="flex flex-col">
 								<span className="text-xl font-bold text-blue-600">Grille de notes</span>
 								<span className="text-sm font-normal text-blue-600/60">
@@ -147,7 +145,7 @@ const EvaluationViewModal = ({ evaluation, elementName, expoName, open, onOpenCh
 				) : (
 					<></>
 				)}
-				<div className="w-full flex flex-col gap-[16px]">
+				<div className="w-full flex flex-col gap-4">
 					<div className="flex flex-col">
 						<span className="text-xl font-bold text-blue-600">Questions</span>
 						<span className="text-sm font-normal text-blue-600/60">
@@ -157,7 +155,7 @@ const EvaluationViewModal = ({ evaluation, elementName, expoName, open, onOpenCh
 					<ul className="w-full flex flex-col gap-[32px]">
 						{thematique.questions.map((question) => (
 							<Fragment key={question.id}>
-								<li className="w-full flex flex-col gap-[16px]">
+								<li className="w-full flex flex-col gap-4">
 									<div className="w-full flex flex-col gap-[4px]">
 										<span className="text-xl font-bold text-blue-600">{question.titre ?? "Question"}</span>
 										{question.description ? <span className="text-sm font-normal text-blue-600/60">{question.description}</span> : <></>}
@@ -172,7 +170,7 @@ const EvaluationViewModal = ({ evaluation, elementName, expoName, open, onOpenCh
 						))}
 					</ul>
 				</div>
-				<div className="w-full flex flex-col gap-[16px]">
+				<div className="w-full flex flex-col gap-4">
 					<div className="flex flex-col">
 						<span className="text-xl font-bold text-blue-600">Question générale</span>
 						<span className="text-sm font-normal text-blue-600/60">Réponse de l&apos;évaluateur à la question d&apos;opinion générale</span>
@@ -181,14 +179,12 @@ const EvaluationViewModal = ({ evaluation, elementName, expoName, open, onOpenCh
 					<GradeRadioGroup selected={numberToLetter(evaluation.question_note ?? 0)} />
 				</div>
 				<div className="w-full h-[1px] bg-blue-600/20">&nbsp;</div>
-				<div className="w-full flex flex-col gap-[16px]">
+				<div className="w-full flex flex-col gap-4">
 					<div className="flex flex-col">
 						<span className="text-xl font-bold text-blue-600">Commentaires</span>
 						<span className="text-sm font-normal text-blue-600/60">Remarques et commentaires laissés par l&apos;évaluateur</span>
 					</div>
-					<pre className="text-base font-normal text-blue-600/80 font-sans p-[16px] border border-blue-600/20 rounded-[8px]">
-						{evaluation.commentaire}
-					</pre>
+					<pre className="text-base font-normal text-blue-600/80 font-sans p-4 border border-blue-600/20 rounded-[8px]">{evaluation.commentaire}</pre>
 				</div>
 			</DialogContent>
 		</Dialog>

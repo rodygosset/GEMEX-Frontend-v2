@@ -43,7 +43,7 @@ const NavItem = ({ item }: NavItemProps) => {
 			className={`flex flex-row gap-4 items-center w-full  focus:outline-none ${
 				isCurrentRoute() ? "text-white bg-white/10" : "text-white/60"
 			} hover:bg-white/10 focus:bg-white/10
-        py-[8px] px-[16px] text-sm font-normal rounded-[8px] transition duration-300 ease-in-out cursor-pointer`}>
+        py-[8px] px-4 text-sm font-normal rounded-[8px] transition duration-300 ease-in-out cursor-pointer`}>
 			{item.icon ? (
 				<FontAwesomeIcon
 					icon={item.icon}
@@ -106,10 +106,10 @@ const NavSheet = ({ navItems }: Props) => {
 						/>
 					)
 				)}
-				<SheetFooter className="flex-1 justify-end gap-8 pb-[32px] px-[16px]">
+				<SheetFooter className="flex-1 justify-end gap-8 pb-[32px] px-4">
 					<button
 						className="text-sm font-normal text-white/60 hover:text-white transition duration-300 ease-in-out hover:bg-white/10
-                                flex flex-row gap-4 px-[16px] py-[8px] rounded-[8px] items-center focus:outline-none border border-white/10"
+                                flex flex-row gap-4 px-4 py-[8px] rounded-[8px] items-center focus:outline-none border border-white/10"
 						onClick={() => signOut()}>
 						<FontAwesomeIcon icon={faRightFromBracket} />
 						Se déconnecter

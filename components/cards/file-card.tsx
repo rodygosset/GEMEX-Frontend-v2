@@ -63,7 +63,7 @@ const FileCard = ({ file, multiSelectionMode, isSelected, isSearchResult, isList
 			ownerFullName={getUserFullName(fileOwner)}>
 			<li
 				className={cn(
-					"flex items-center gap-[16px] p-[16px]",
+					"flex items-center gap-4 p-4",
 					"border border-blue-600/20 rounded-[8px] cursor-pointer",
 					"hover:bg-blue-600/10 duration-200 transition-all",
 					"min-w-[320px] max-[918px]:flex-1"

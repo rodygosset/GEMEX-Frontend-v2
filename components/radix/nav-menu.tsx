@@ -35,7 +35,7 @@ const NavMenuItem = ({ item }: NavMenuItemProps) => {
 	) : (
 		<DropdownMenuPrimitive.Item
 			className={`flex flex-row gap-4 items-center w-full  focus:outline-none text-blue-600 hover:bg-blue-600/10 focus:bg-blue-600/10
-            py-[8px] px-[16px] text-sm rounded-md transition duration-300 ease-in-out cursor-pointer`}
+            py-[8px] px-4 text-sm rounded-md transition duration-300 ease-in-out cursor-pointer`}
 			onSelect={item.onClick}>
 			{item.icon ? (
 				<FontAwesomeIcon

@@ -13,7 +13,7 @@ interface GradeRadioGroupItemProps {
 export const GradeRadioGroupItem = ({ name, label, description, value, selected, onClick }: GradeRadioGroupItemProps) => (
 	<div
 		className={cn(
-			"min-w-[120px] flex-1 flex flex-col p-[16px] rounded-[8px] gap-[4px] border border-blue-600/20",
+			"min-w-[120px] flex-1 flex flex-col p-4 rounded-[8px] gap-[4px] border border-blue-600/20",
 			onClick ? "cursor-pointer hover:bg-blue-600/5 transition-colors duration-200" : "cursor-not-allowed",
 			selected && "border-2 border-blue-600 bg-blue-600/5"
 		)}
@@ -53,7 +53,7 @@ const grades: GradeOption[] = [
 ]
 
 export const GradeRadioGroup = ({ className, name, selected, onSelect }: GradeRadioGroupProps) => (
-	<div className={cn("flex flex-wrap gap-[16px] items-center", className)}>
+	<div className={cn("flex flex-wrap gap-4 items-center", className)}>
 		{grades.map((gradeOption) => (
 			<GradeRadioGroupItem
 				key={gradeOption.value}

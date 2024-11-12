@@ -1,10 +1,7 @@
 import SectionContainer from "@components/layout/quality/section-container"
-import { Table, TableBody, TableCaption, TableHead, TableHeader, TableRow } from "@components/radix/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/radix/tabs"
 import { Evaluation, MoisCycle } from "@conf/api/data-types/quality-module"
 import { useState } from "react"
-import EvaluationTableRow from "./evaluation-table-row"
-import DeleteDialog from "@components/modals/delete-dialog"
 import EvaluationsTable from "./evaluations-table"
 
 interface Props {

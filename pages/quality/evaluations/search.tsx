@@ -276,7 +276,7 @@ const Search: NextPage<Props> = ({ initSearchParams, initSearchResults }: Props)
 					<Link
 						download={`resultats-recherche-historique-evaluation-${new Date().toLocaleDateString("fr-fr")}.csv`}
 						href={csv}
-						className="text-sm text-blue-600 bg-blue-600/10 h-fit flex items-center gap-4 px-[16px] py-[8px] rounded-[8px] 
+						className="text-sm text-blue-600 bg-blue-600/10 h-fit flex items-center gap-4 px-4 py-[8px] rounded-[8px] 
                     hover:bg-blue-600/20 transition-colors duration-300 ease-in-out">
 						<FontAwesomeIcon icon={faDownload} />
 						Export Excel
@@ -285,11 +285,11 @@ const Search: NextPage<Props> = ({ initSearchParams, initSearchResults }: Props)
 					<Skeleton className="w-[150px] h-[40px]" />
 				)}
 			</div>
-			<div className="w-full flex items-center flex-wrap gap-[16px]">
+			<div className="w-full flex items-center flex-wrap gap-4">
 				<Form {...searchForm}>
 					<form
 						onSubmit={searchForm.handleSubmit(refresh)}
-						className="w-full flex flex-wrap gap-[16px]">
+						className="w-full flex flex-wrap gap-4">
 						<FormField
 							control={searchForm.control}
 							name="thematiques"
@@ -368,7 +368,7 @@ const Search: NextPage<Props> = ({ initSearchParams, initSearchResults }: Props)
 					/>
 				))
 			) : (
-				<div className="w-full flex flex-col items-center justify-center gap-[32px] p-[16px]">
+				<div className="w-full flex flex-col items-center justify-center gap-[32px] p-4">
 					<div className="w-full max-w-[400px] aspect-[1.193] relative">
 						<Image
 							quality={100}

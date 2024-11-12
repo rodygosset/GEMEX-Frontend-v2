@@ -25,13 +25,13 @@ const Home: NextPage<Props> = ({ fiches, figureCards }: Props) => {
 
 	return (
 		<main className="flex flex-col px-[7%] gap-[32px] pt-[32px]">
-			<section className="w-full flex flex-col gap-[16px]">
+			<section className="w-full flex flex-col gap-4">
 				<div className="flex flex-col">
 					<h3 className="text-2xl font-semibold text-blue-600">En cours</h3>
 					<span className="text-base font-normal text-blue-600/60">Fiches en cours de traitement dont vous êtes en charge</span>
 				</div>
 				<div className="w-screen overflow-x-scroll pl-[7%] py-[32px] ml-[-7%] no-scrollbar">
-					<ul className="w-full flex items-center gap-[16px]">
+					<ul className="w-full flex items-center gap-4">
 						{fiches.length > 0 ? (
 							fiches.map((fiche) => (
 								<li key={fiche.id}>
@@ -42,7 +42,7 @@ const Home: NextPage<Props> = ({ fiches, figureCards }: Props) => {
 							<li
 								className={cn(
 									"w-[320px] min-w-[320px] h-[200px]  rounded-[8px]",
-									"flex flex-col items-center justify-center gap-[16px]",
+									"flex flex-col items-center justify-center gap-4",
 									"border-dashed border-2 border-blue-600/20"
 								)}>
 								<div className="h-[120px] w-full relative aspect-[1.226]">
@@ -66,7 +66,7 @@ const Home: NextPage<Props> = ({ fiches, figureCards }: Props) => {
 								href="/create/fiches"
 								className={cn(
 									"w-[320px] h-[200px]  rounded-[8px]",
-									"flex flex-col items-center justify-center gap-[16px]",
+									"flex flex-col items-center justify-center gap-4",
 									"border-dashed border-2 border-blue-600/20",
 									"text-base text-blue-600",
 									"hover:bg-blue-600/5 transition-all duration-300 ease-in-out"
@@ -78,15 +78,15 @@ const Home: NextPage<Props> = ({ fiches, figureCards }: Props) => {
 					</ul>
 				</div>
 			</section>
-			<section className="w-full flex flex-col gap-[16px]">
+			<section className="w-full flex flex-col gap-4">
 				<div className="flex flex-col">
 					<h3 className="text-2xl font-semibold text-blue-600">Données</h3>
 					<span className="text-base font-normal text-blue-600/60">Informations utiles sur les opérations en cours</span>
 				</div>
-				<div className="w-full flex md:flex-wrap-reverse max-md:flex-col-reverse gap-[16px]">
+				<div className="w-full flex md:flex-wrap-reverse max-md:flex-col-reverse gap-4">
 					<OperationReportsChartCard />
-					<div className="flex-1 flex max-md:flex-wrap gap-[16px]">
-						<div className="max-[1153px]:flex-1 flex flex-col gap-[16px]">
+					<div className="flex-1 flex max-md:flex-wrap gap-4">
+						<div className="max-[1153px]:flex-1 flex flex-col gap-4">
 							{figureCards.slice(0, 2).map((figureCard) => (
 								<FigureCard
 									className="max-[1153px]:w-full"
@@ -95,7 +95,7 @@ const Home: NextPage<Props> = ({ fiches, figureCards }: Props) => {
 								/>
 							))}
 						</div>
-						<div className="max-[1153px]:flex-1 flex flex-col gap-[16px]">
+						<div className="max-[1153px]:flex-1 flex flex-col gap-4">
 							{figureCards.slice(2).map((figureCard) => (
 								<FigureCard
 									className="max-[1153px]:w-full"

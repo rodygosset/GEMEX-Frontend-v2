@@ -18,7 +18,7 @@ const GradeCountInput = ({ className, grade, count, onChange, max, min }: Props)
 			<div
 				onClick={handleIncrement}
 				className={cn(
-					"flex flex-col items-center justify-center text-xl font-semibold text-blue-600 p-[16px] rounded-[8px] border border-blue-600/20 cursor-pointer",
+					"flex flex-col items-center justify-center text-xl font-semibold text-blue-600 p-4 rounded-[8px] border border-blue-600/20 cursor-pointer",
 					"focus:ring-2 focus:ring-offset-2 ring-offset-blue-600/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/20 focus-visible:ring-offset-2"
 				)}>
 				{grade}

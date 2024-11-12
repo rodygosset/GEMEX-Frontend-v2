@@ -59,7 +59,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 				{children}
 				{!hideCloseButton ? (
 					<DialogPrimitive.Close
-						className="absolute right-[16px] top-[16px] rounded-[8px] w-[32px] h-[32px] outline-none p-[8px] disabled:pointer-events-none
+						className="absolute right-4 top-4 rounded-[8px] w-[32px] h-[32px] outline-none p-[8px] disabled:pointer-events-none
         hover:bg-blue-600/10 border border-primary/10 flex justify-center items-center text-blue-600 text-base">
 						<FontAwesomeIcon icon={faXmark} />
 						<span className="sr-only">Close</span>
@@ -75,7 +75,7 @@ DialogContent.displayName = DialogPrimitive.Content.displayName
 
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
 	<div
-		className={cn("flex flex-col space-y-1.5 border-b pb-[16px] border-primary/10", className)}
+		className={cn("flex flex-col space-y-1.5 border-b pb-4 border-primary/10", className)}
 		{...props}
 	/>
 )

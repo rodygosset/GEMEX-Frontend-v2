@@ -77,7 +77,7 @@ const ThematiquesWidget = ({ moisCycle }: Props) => {
 					{thematiques.length > 0 ? (
 						thematiques.map((thematique, index) => (
 							<Fragment key={thematique.id}>
-								<li className="w-full flex flex-row items-center gap-4 py-[16px]">
+								<li className="w-full flex flex-row items-center gap-4 py-4">
 									<div
 										className="w-full flex flex-row items-center flex-1
                                             max-md:flex-col max-md:items-start">

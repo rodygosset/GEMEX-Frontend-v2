@@ -86,12 +86,12 @@ const FilePreviewer = ({ children, fileName, fileInfo, ownerFullName, open, onOp
 			<DialogContent
 				className={cn(
 					"max-h-[90vh]  h-full w-screen sm:w-full sm:max-w-[90vw] max-sm:max-w-full p-[32px] pt-[64px]",
-					"flex flex-col gap-[16px]",
+					"flex flex-col gap-4",
 					"max-sm:top-auto max-sm:bottom-0 max-sm:translate-y-0"
 				)}>
-				<div className="w-full flex justify-between gap-[16px]">
+				<div className="w-full flex justify-between gap-4">
 					<div className="flex flex-col justify-center w-full">
-						<div className="flex items-center gap-[16px] text-xl md:text-2xl text-blue-600">
+						<div className="flex items-center gap-4 text-xl md:text-2xl text-blue-600">
 							<FontAwesomeIcon icon={fileInfo.icon} />
 							<span>
 								{fileInfo.fileName}

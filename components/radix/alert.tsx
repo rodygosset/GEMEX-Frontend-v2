@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@utils/tailwind"
 
 const alertVariants = cva(
-	"relative w-full rounded-[8px] border border-blue-600/20 p-[16px] [&>svg~*]:pl-[28px] [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-[16px] [&>svg]:top-[16px] [&>svg]:text-foreground",
+	"relative w-full rounded-[8px] border border-blue-600/20 p-4 [&>svg~*]:pl-[28px] [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
 	{
 		variants: {
 			variant: {

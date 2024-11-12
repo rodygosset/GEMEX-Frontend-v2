@@ -57,7 +57,7 @@ const SearchResultsCard = ({ mois_cycle_id, evaluations, onRefresh }: Props) => 
 	// render
 
 	return monthAndYear ? (
-		<div className="w-full flex flex-col gap-[32px] bg-white/10 shadow-2xl shadow-primary/20 p-[32px] rounded-[16px]">
+		<div className="w-full flex flex-col gap-[32px] bg-white/10 shadow-2xl shadow-primary/20 p-[32px] rounded-4">
 			<h3 className="text-xl font-semibold text-blue-600">{monthAndYear}</h3>
 			<EvaluationsTable
 				evaluations={evaluations}

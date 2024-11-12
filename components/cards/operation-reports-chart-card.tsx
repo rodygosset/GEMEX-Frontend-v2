@@ -50,7 +50,7 @@ const OperationReportsChartCard = () => {
 		<section
 			className={cn(
 				"w-full min-w-[320px] flex-1 h-[416px] p-[32px] rounded-[8px] border border-blue-600/20 shadow-2xl shadow-blue-600/20",
-				"flex flex-col gap-[16px]"
+				"flex flex-col gap-4"
 			)}>
 			<div className="flex flex-col">
 				<h3 className="text-base font-semibold text-blue-600">Vue d&apos;ensemble</h3>

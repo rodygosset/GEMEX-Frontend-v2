@@ -180,7 +180,7 @@ const ActionButtons = ({ itemType, itemData }: Props) => {
 	return (
 		<>
 			{showActionButtons ? (
-				<div className="flex flex-wrap items-center gap-[16px]">
+				<div className="flex flex-wrap items-center gap-4">
 					{
 						// determine whether the button should be visible
 						shouldShowFicheCreationButton() ? (

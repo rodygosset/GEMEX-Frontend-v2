@@ -58,7 +58,7 @@ const MultiSelectCombobox = ({ className, name, placeholder, selected, options, 
 					ref={ref}
 					className={cn(
 						"flex flex-wrap items-center gap-4 min-h-[53px]",
-						"px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
+						"px-4 py-[8px] rounded-[8px] border border-blue-600/20",
 						"text-sm font-normal text-blue-600/80",
 						"ring-offset-primary/10 focus-within:ring-2 focus-within:ring-primary/5 focus-within:ring-offset-2",
 						className
@@ -67,7 +67,7 @@ const MultiSelectCombobox = ({ className, name, placeholder, selected, options, 
 						selected.map((option) => (
 							<div
 								key={option.value}
-								className="flex items-center gap-2 px-[16px] py-[8px] rounded-[8px] bg-blue-600/10">
+								className="flex items-center gap-2 px-4 py-[8px] rounded-[8px] bg-blue-600/10">
 								<button
 									type="button"
 									className="flex items-center justify-center h-[20px] w-[20px]  text-xs text-blue-600 hover:text-error rounded-[4px] bg-transparent hover:bg-error/10 transition-colors duration-300 ease-in-out"

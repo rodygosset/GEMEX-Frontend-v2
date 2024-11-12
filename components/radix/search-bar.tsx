@@ -125,7 +125,7 @@ const SearchBar = ({ hiddenItemTypes }: Props) => {
 			<DialogTrigger asChild>
 				<button
 					className={cn(
-						"flex gap-[8px] items-center px-[16px] py-[8px] rounded-[8px] h-[42px] md:w-[200px]",
+						"flex gap-[8px] items-center px-4 py-[8px] rounded-[8px] h-[42px] md:w-[200px]",
 						"border border-blue-600/10 md:hover:border-blue-600/20",
 						"text-sm font-normal text-blue-600 md:text-opacity-60 md:hover:text-blue-600/80 transition-colors duration-300 ease-in-out",
 						"md:shadow-2xl md:shadow-blue-600/20 transition-shadow duration-300 ease-in-out",
@@ -149,7 +149,7 @@ const SearchBar = ({ hiddenItemTypes }: Props) => {
 					"max-sm:top-auto max-sm:bottom-0 max-sm:translate-y-0"
 				)}>
 				{getDefaultSearchParam() ? (
-					<div className={cn("w-full flex items-center gap-[8px] p-[16px] h-[64px] rounded-t-[8px]", "border-b border-blue-600/10")}>
+					<div className={cn("w-full flex items-center gap-[8px] p-4 h-[64px] rounded-t-[8px]", "border-b border-blue-600/10")}>
 						<FontAwesomeIcon
 							icon={faSearch}
 							className="text-sm text-blue-600"
@@ -170,8 +170,8 @@ const SearchBar = ({ hiddenItemTypes }: Props) => {
 				) : (
 					<></>
 				)}
-				<div className="w-full flex-1 min-h-0 flex flex-col gap-[24px] p-[16px]">
-					<div className="w-full flex flex-col gap-[16px]">
+				<div className="w-full flex-1 min-h-0 flex flex-col gap-[24px] p-4">
+					<div className="w-full flex flex-col gap-4">
 						<label className="text-sm font-medium text-blue-600/60">Faire une recherches sur les</label>
 						<Combobox
 							className="w-full"
@@ -185,14 +185,14 @@ const SearchBar = ({ hiddenItemTypes }: Props) => {
 							selected={getItemTypes().find((itemType) => itemType.value == searchParams.item)}
 						/>
 					</div>
-					<div className="w-full flex-1 min-h-0 flex flex-col gap-[16px] h-full">
+					<div className="w-full flex-1 min-h-0 flex flex-col gap-4 h-full">
 						<label className="text-sm font-medium text-blue-600/60">Filtres</label>
 						<SearchFilters
 							searchFilters={searchFilters}
 							setSearchFilters={setSearchFilters}
 						/>
 					</div>
-					<div className="w-full flex items-center gap-[16px]">
+					<div className="w-full flex items-center gap-4">
 						<Button
 							onClick={clear}
 							className="flex-1"

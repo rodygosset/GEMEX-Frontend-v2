@@ -160,7 +160,7 @@ const DomaineCard = ({ domaine, onEdit, onDelete, onNewThematique, onEditThemati
 					{domaine.thematiques.length > 0 ? (
 						domaine.thematiques.map((thematique, index) => (
 							<Fragment key={thematique.id}>
-								<li className="w-full flex flex-row items-center gap-4 py-[16px]">
+								<li className="w-full flex flex-row items-center gap-4 py-4">
 									<div
 										className="w-full flex flex-row items-center flex-1
                                                 max-sm:flex-col max-sm:items-start">

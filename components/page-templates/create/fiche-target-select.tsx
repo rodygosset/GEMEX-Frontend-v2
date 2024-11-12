@@ -87,7 +87,7 @@ const FicheTargetSelect = ({ currentItemType, value, isInErrorState, onChange }:
 				<button
 					type="button"
 					className={cn(
-						"w-full px-[16px] py-[8px] rounded-[8px] flex justify-between items-center",
+						"w-full px-4 py-[8px] rounded-[8px] flex justify-between items-center",
 						"hover:bg-blue-600/10 focus:bg-blue-600/10 focus:outline-none focus:ring-offset-blue-600/60",
 						"focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
 						isInErrorState ? "border border-red-500" : "border border-blue-600/20"
@@ -106,9 +106,9 @@ const FicheTargetSelect = ({ currentItemType, value, isInErrorState, onChange }:
 					/>
 				</button>
 			</PopoverTrigger>
-			<PopoverContent className="w-fit flex flex-col gap-[16px]">
+			<PopoverContent className="w-fit flex flex-col gap-4">
 				<Tabs
-					className="w-full flex flex-col gap-[16px] items-start flex-1"
+					className="w-full flex flex-col gap-4 items-start flex-1"
 					value={currentTab}
 					onValueChange={(v) => setCurrentTab(v)}>
 					<TabsList>
@@ -132,7 +132,7 @@ const FicheTargetSelect = ({ currentItemType, value, isInErrorState, onChange }:
 					</TabsContent>
 					<TabsContent
 						value={targetItemTypes[1]}
-						className="w-full h-full flex-1 min-h-0 m-0 flex flex-col gap-[16px]">
+						className="w-full h-full flex-1 min-h-0 m-0 flex flex-col gap-4">
 						<div className="flex flex-col gap-[8px]">
 							<span className="text-sm text-blue-600">Exposition</span>
 							<ItemComboBox

@@ -226,7 +226,7 @@ const FilePicker = ({ open, onOpenChange, onSelect, isExplorer }: Props) => {
 						"sm:max-h-[600px] flex flex-col h-full max-h-[80vh]",
 						"max-sm:top-auto max-sm:bottom-0 max-sm:translate-y-0"
 					)}>
-					<div className={cn("w-full flex items-center gap-[8px] p-[16px] h-[64px] rounded-t-[8px]", "border-b border-blue-600/10")}>
+					<div className={cn("w-full flex items-center gap-[8px] p-4 h-[64px] rounded-t-[8px]", "border-b border-blue-600/10")}>
 						<FontAwesomeIcon
 							icon={faSearch}
 							className="text-sm text-blue-600"
@@ -239,10 +239,10 @@ const FilePicker = ({ open, onOpenChange, onSelect, isExplorer }: Props) => {
 						/>
 					</div>
 					<Tabs
-						className="h-full flex flex-col gap-[16px] items-start p-[16px] flex-1"
+						className="h-full flex flex-col gap-4 items-start p-4 flex-1"
 						value={currentCategory.name}
 						onValueChange={(v) => setCurrentCategory(fileCategories.find((category) => category.name === v) as FileCategory)}>
-						<div className="w-full flex flex-wrap gap-[16px] items-center justify-between">
+						<div className="w-full flex flex-wrap gap-4 items-center justify-between">
 							<TabsList>
 								{fileCategories.map((category) => (
 									<TabsTrigger

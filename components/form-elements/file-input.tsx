@@ -180,10 +180,10 @@ const FileInput = ({ value, onChange }: Props) => {
 		<>
 			<div className="flex flex-col gap-[32px] w-full">
 				<span className="text-sm text-blue-600 font-medium">Fichiers</span>
-				<div className="flex flex-wrap gap-[16px]">
+				<div className="flex flex-wrap gap-4">
 					{!fileListIsEmpty() ? (
 						// if files have been selected
-						<ul className="flex flex-wrap items-center gap-[16px]">
+						<ul className="flex flex-wrap items-center gap-4">
 							{fichiers.map((file) => {
 								return (
 									<FileCard
@@ -219,7 +219,7 @@ const FileInput = ({ value, onChange }: Props) => {
 								<></>
 							)
 						}
-						<div className="flex flex-col justify-center gap-[16px] max-sm:w-full">
+						<div className="flex flex-col justify-center gap-4 max-sm:w-full">
 							{
 								// in case there's no files yet
 								fileListIsEmpty() ? <span className="text-sm font-normal text-blue-600/60">Aucun fichier sélectionné</span> : <></>

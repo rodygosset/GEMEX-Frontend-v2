@@ -49,7 +49,7 @@ const CyclesWidget = ({ cycles, onRefresh }: Props) => {
 								className="flex-1 rounded-[8px] hover:bg-blue-600/10 transition duration-300 ease-in-out cursor-pointer"
 								key={cycle.id}>
 								<Link
-									className="w-full flex flex-col p-[16px] whitespace-nowrap"
+									className="w-full flex flex-col p-4 whitespace-nowrap"
 									href={`/quality/cycles/${cycle.id}`}>
 									<span className="flex flex-row items-center gap-4">
 										<span className="text-base font-semibold text-blue-600">{getCycleYear(cycle)}</span>

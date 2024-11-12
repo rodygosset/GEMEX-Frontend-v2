@@ -107,7 +107,7 @@ const ItemComboBox = ({ className, name, itemType, searchParams, onChange, field
 					role="combobox"
 					disabled={disabled}
 					className={cn(
-						`flex flex-row justify-between items-center gap-4 px-[16px] py-[8px] rounded-[8px] w-full
+						`flex flex-row justify-between items-center gap-4 px-4 py-[8px] rounded-[8px] w-full
                                  text-left overflow-hidden overflow-ellipsis border border-blue-600/20
                                 text-sm ${!field?.value && !selected ? "text-blue-600/60" : "text-blue-600"} `,
 						"disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed",

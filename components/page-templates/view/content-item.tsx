@@ -46,7 +46,7 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 				return (
 					<span
 						className={cn(
-							"w-full px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
+							"w-full px-4 py-[8px] rounded-[8px] border border-blue-600/20",
 							"text-sm font-normal text-blue-600",
 							textValue == "Non précisée" ? "text-opacity-80" : ""
 						)}>
@@ -56,9 +56,7 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 			case "timeDelta":
 				textValue = deltaToString(numberToDelta(data))
 				return (
-					<span className={cn("w-full px-[16px] py-[8px] rounded-[8px] border border-blue-600/20", "text-sm font-normal text-blue-600")}>
-						{textValue}
-					</span>
+					<span className={cn("w-full px-4 py-[8px] rounded-[8px] border border-blue-600/20", "text-sm font-normal text-blue-600")}>{textValue}</span>
 				)
 			case "text":
 			case "textArea":
@@ -70,7 +68,7 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 				return conf.type == "number" ? (
 					<span
 						className={cn(
-							"w-full px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
+							"w-full px-4 py-[8px] rounded-[8px] border border-blue-600/20",
 							"text-sm font-normal text-blue-600",
 							textValue == "Non précisé(e)" ? "text-opacity-80" : ""
 						)}>
@@ -79,7 +77,7 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 				) : (
 					<pre
 						className={cn(
-							"text-base whitespace-break-spaces break-words font-normal text-blue-600/80 font-sans p-[16px] border border-blue-600/20 rounded-[8px]",
+							"text-base whitespace-break-spaces break-words font-normal text-blue-600/80 font-sans p-4 border border-blue-600/20 rounded-[8px]",
 							textValue == "Non précisé(e)" ? "text-opacity-80" : ""
 						)}>
 						{textValue}
@@ -93,7 +91,7 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 					<Link
 						className={cn(
 							"text-sm text-blue-600 w-fit",
-							"px-[16px] py-[8px] rounded-full border border-blue-600/20",
+							"px-4 py-[8px] rounded-full border border-blue-600/20",
 							"hover:bg-blue-600/10 transition-all duration-300 ease-in-out"
 						)}
 						href={itemLink}>
@@ -113,7 +111,7 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 				// list of items
 				// like tags or categories
 				return (
-					<ul className="w-full flex flex-wrap gap-[16px]">
+					<ul className="w-full flex flex-wrap gap-4">
 						{(data as Array<string>).map((item, index) => {
 							const itemLink = getItemListLink(item)
 							return (
@@ -121,7 +119,7 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 									<Link
 										className={cn(
 											"text-sm text-blue-600",
-											"px-[16px] py-[8px] rounded-full border border-blue-600/20",
+											"px-4 py-[8px] rounded-full border border-blue-600/20",
 											"hover:bg-blue-600/10 transition-all duration-300 ease-in-out"
 										)}
 										href={itemLink}>
@@ -139,7 +137,7 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 				return (
 					<span
 						className={cn(
-							"flex items-center gap-[8px] px-[16px] py-[8px] rounded-[8px] border border-blue-600/20",
+							"flex items-center gap-[8px] px-4 py-[8px] rounded-[8px] border border-blue-600/20",
 							"text-purple-600 text-sm font-normal",
 							"hover:bg-blue-600/10 transition-all duration-300 ease-in-out cursor-pointer"
 						)}

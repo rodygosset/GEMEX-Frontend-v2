@@ -43,7 +43,7 @@ const TextInput = ({
 				<Textarea
 					className={cn(
 						className,
-						bigPadding ? "p-[16px]" : "py-[8px] px-[16px]",
+						bigPadding ? "p-4" : "py-[8px] px-4",
 						fullWidth ? "w-full" : "w-[240px]",
 						isInErrorState ? "border-red-600 border-2" : "border-blue-600/20"
 					)}
@@ -60,7 +60,7 @@ const TextInput = ({
 						"placeholder:text-blue-600/60 bg-transparent text-sm text-blue-600 ring-offset-blue-600/60",
 						"border",
 						className,
-						bigPadding ? "p-[16px]" : "py-[8px] px-[16px]",
+						bigPadding ? "p-4" : "py-[8px] px-4",
 						fullWidth ? "w-full" : "w-[240px]",
 						isInErrorState ? "border-red-600 border-2" : "border-blue-600/20"
 					)}

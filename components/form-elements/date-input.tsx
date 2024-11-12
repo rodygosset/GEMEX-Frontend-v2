@@ -191,7 +191,7 @@ const DateInput = ({
 				onChange={(event) => handleDateChange(new Date(event.target.value))}
 				hidden
 			/>
-			<div className={cn("flex justify-center items-center gap-[16px] p-[16px] rounded-[8px]", "min-w-[200px] border border-blue-600/20", className)}>
+			<div className={cn("flex justify-center items-center gap-4 p-4 rounded-[8px]", "min-w-[200px] border border-blue-600/20", className)}>
 				{strict && (
 					<FontAwesomeIcon
 						icon={faCalendar}

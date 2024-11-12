@@ -1,6 +1,6 @@
 import FileInput from "@components/form-elements/file-input"
 import { FormFieldsObj } from "@conf/create"
-import { useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import FormField from "./form-field"
 
 // this component is used to render the form elements
@@ -40,7 +40,7 @@ const CreateForm = ({ itemType, formData, onChange, onSubmit, hidden }: Props) =
 	const renderList = (fieldList: string[]) =>
 		fieldList.map((fieldName) =>
 			fieldName == "fichiers" ? (
-				<></>
+				<Fragment key={fieldName}></Fragment>
 			) : (
 				<FormField
 					key={fieldName}

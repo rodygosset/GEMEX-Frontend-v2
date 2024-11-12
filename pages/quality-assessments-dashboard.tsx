@@ -50,7 +50,7 @@ const QualityAssessmentsDashboard: NextPage<Props> = ({ initEvaluations }: Props
 
 	return (
 		<main className="flex flex-col px-[7%] gap-[32px] pt-[32px]">
-			<div className="w-full flex items-center gap-[16px] min-[480px]:gap-[32px]">
+			<div className="w-full flex items-center gap-4 min-[480px]:gap-[32px]">
 				<FontAwesomeIcon
 					icon={faChartPie}
 					className="text-3xl min-[480px]:text-5xl text-blue-600"
@@ -64,8 +64,8 @@ const QualityAssessmentsDashboard: NextPage<Props> = ({ initEvaluations }: Props
 				{categories.map((category) => (
 					<li
 						key={category.id}
-						className="flex-1 flex flex-col gap-[16px] sm:min-w-[340px]">
-						<div className="w-full flex gap-[16px] items-center">
+						className="flex-1 flex flex-col gap-4 sm:min-w-[340px]">
+						<div className="w-full flex gap-4 items-center">
 							<div
 								className={cn(
 									"h-[8px] aspect-square rounded-full",

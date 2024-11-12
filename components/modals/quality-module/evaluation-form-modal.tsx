@@ -117,7 +117,7 @@ const EvaluationFormModal = ({ mois_cycle_id, evaluation, onSubmit }: Props) => 
 			) : (
 				<DialogTrigger
 					onClick={() => setIsOpen(true)}
-					className="bg-blue-600 h-fit rounded-[8px] px-[16px] py-[8px] text-sm text-white flex flex-row gap-4 items-center
+					className="bg-blue-600 h-fit rounded-[8px] px-4 py-[8px] text-sm text-white flex flex-row gap-4 items-center
                             hover:shadow-primary/60 hover:shadow-2xl transition-shadow duration-200 cursor-pointer">
 					<FontAwesomeIcon icon={faPlus} />
 					Nouvelle évaluation
@@ -130,7 +130,7 @@ const EvaluationFormModal = ({ mois_cycle_id, evaluation, onSubmit }: Props) => 
 						{evaluation ? "Modifier les paramètres de l'évaluation" : "Renseigner les paramètres de l'évaluation"}
 					</DialogDescription>
 				</DialogHeader>
-				<div className="w-full h-[1px] bg-blue-600/10 my-[16px]" />
+				<div className="w-full h-[1px] bg-blue-600/10 my-4" />
 				<ScrollArea className="w-full h-[500px]">
 					<Form {...form}>
 						<form

@@ -44,10 +44,10 @@ const ViewFiles = ({ itemType, itemData }: Props) => {
 	// render
 
 	return (
-		<div className="flex flex-col items-stretch gap-[16px] pb-[16px]">
+		<div className="flex flex-col items-stretch gap-4 pb-4">
 			<span className="text-base font-medium text-blue-600">Fichiers</span>
 			{fichiers.length > 0 ? (
-				<ul className="flex flex-wrap gap-[16px]">
+				<ul className="flex flex-wrap gap-4">
 					{fichiers.map((file) => (
 						<FileCard
 							key={file.nom}
@@ -56,7 +56,7 @@ const ViewFiles = ({ itemType, itemData }: Props) => {
 					))}
 				</ul>
 			) : (
-				<span className="text-sm font-normal text-blue-600/60 p-[16px] rounded-[8px] border border-blue-600/20">
+				<span className="text-sm font-normal text-blue-600/60 p-4 rounded-[8px] border border-blue-600/20">
 					Aucun fichier n&apos;est associé à cet item
 				</span>
 			)}

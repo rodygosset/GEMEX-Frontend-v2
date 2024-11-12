@@ -159,7 +159,7 @@ const EvaluationTableRow = ({ evaluation, className, onOpenViewModal, onOpenEval
 
 	return rowData ? (
 		<>
-			<TableRow className={cn("flex items-center max-md:p-[16px] max-md:flex-col max-md:items-start max-md:gap-4", className)}>
+			<TableRow className={cn("flex items-center max-md:p-4 max-md:flex-col max-md:items-start max-md:gap-4", className)}>
 				<TableCell className="flex-1 max-w-[72px] max-md:p-0">
 					{typeof evaluation.note === "number" ? (
 						<span
@@ -189,7 +189,7 @@ const EvaluationTableRow = ({ evaluation, className, onOpenViewModal, onOpenEval
 					onClick={() => router.push(`/view/elements/${evaluation.element_id}`)}
 					className="flex-1 max-md:p-0 text-purple-600 hover:underline cursor-pointer">
 					<Link
-						className="w-full h-full flex items-center gap-[16px]"
+						className="w-full h-full flex items-center gap-4"
 						href={`/view/elements/${evaluation.element_id}`}>
 						{rowData.element}
 					</Link>

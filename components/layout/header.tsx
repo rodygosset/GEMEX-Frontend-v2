@@ -122,7 +122,7 @@ const Header = () => {
 					<FontAwesomeIcon icon={faGem} />
 					GEMEX
 				</Link>
-				<div className="flex items-center gap-[16px]">
+				<div className="flex items-center gap-4">
 					<SearchBar />
 					<NavSheet navItems={navItems} />
 					<UserCard className="max-md:hidden" />

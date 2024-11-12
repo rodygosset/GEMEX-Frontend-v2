@@ -70,9 +70,9 @@ const Content = ({ itemType, itemData, extraData, hidden }: Props) => {
 	// render
 
 	return (
-		<div className="mt-[16px] w-full flex flex-wrap gap-x-[32px] gap-[16px] max-md:flex-col">
-			<ul className="w-full flex flex-col gap-[16px] flex-1">{renderList(firstColumnItems)}</ul>
-			<ul className="w-full flex flex-col gap-[16px] flex-1">{renderList(secondColumnItems)}</ul>
+		<div className="mt-4 w-full flex flex-wrap gap-x-[32px] gap-4 max-md:flex-col">
+			<ul className="w-full flex flex-col gap-4 flex-1">{renderList(firstColumnItems)}</ul>
+			<ul className="w-full flex flex-col gap-4 flex-1">{renderList(secondColumnItems)}</ul>
 		</div>
 	)
 }

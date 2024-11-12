@@ -59,7 +59,7 @@ const MonthlyAssessmentsWidget = ({ cycle }: Props) => {
 
 	return (
 		<SectionContainer heightFit>
-			<div className="w-full flex justify-between items-center flex-wrap gap-[16px]">
+			<div className="w-full flex justify-between items-center flex-wrap gap-4">
 				<div className="flex flex-col">
 					<h3 className="text-xl font-semibold text-blue-600">Évaluations mensuelles</h3>
 					<p className="text-base font-normal text-blue-600/60">Résultats des évaluations des mois passés</p>
@@ -79,7 +79,7 @@ const MonthlyAssessmentsWidget = ({ cycle }: Props) => {
 							className="flex-1 rounded-[8px] hover:bg-blue-600/5 transition duration-300 ease-in-out cursor-pointer"
 							key={mois.id}>
 							<Link
-								className="w-full flex flex-col p-[16px] whitespace-nowrap"
+								className="w-full flex flex-col p-4 whitespace-nowrap"
 								href={`/quality/monthly-assessments/${mois.id}`}>
 								<span className="flex flex-row items-center gap-4">
 									<span className="text-base font-semibold text-blue-600">{getMonthAndYear(mois, new Date(cycle.date_debut))}</span>

@@ -167,7 +167,7 @@ const MonthlyAssessmentPage: NextPage<Props> = ({ data }: Props) => {
 					<h1 className="text-2xl text-blue-600 font-semibold h-fit whitespace-nowrap">{monthAndYear}</h1>
 					<p className="text-base text-blue-600 uppercase text-opacity-40 tracking-widest whitespace-nowrap">évaluation mensuelle</p>
 				</div>
-				<div className="flex-1 flex items-center justify-end gap-[16px]">
+				<div className="flex-1 flex items-center justify-end gap-4">
 					{!moisCycle.done ? (
 						<Button
 							className="flex items-center gap-[8px] text-emerald-600 border-emerald-600/20 hover:bg-emerald-600/10"
@@ -194,7 +194,7 @@ const MonthlyAssessmentPage: NextPage<Props> = ({ data }: Props) => {
 					<Link
 						download={`commentaires-evaluations-${monthAndYear}.csv`}
 						href={evaluationsCommentsCSV}
-						className="text-sm text-blue-600 bg-blue-600/10 flex items-center gap-4 px-[16px] py-[8px] rounded-[8px] 
+						className="text-sm text-blue-600 bg-blue-600/10 flex items-center gap-4 px-4 py-[8px] rounded-[8px] 
                                 hover:bg-blue-600/20 transition-colors duration-300 ease-in-out">
 						<FontAwesomeIcon icon={faDownload} />
 						Exporter les commentaires

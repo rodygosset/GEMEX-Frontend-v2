@@ -89,25 +89,25 @@ const EvaluationCard = ({ evaluation, onChange }: Props) => {
 				<div
 					onClick={() => (evaluation.date_rendu_reelle ? setViewerIsOpen(!viewerIsOpen) : setFormIsOpen(!formIsOpen))}
 					className={cn(
-						"w-full flex flex-col items-start text-start gap-[8px] p-[16px] rounded-[8px] border border-blue-600/20",
+						"w-full flex flex-col items-start text-start gap-[8px] p-4 rounded-[8px] border border-blue-600/20",
 						"cursor-pointer transition-shadow duration-300 ease-in-out",
 						"hover:shadow-blue-600/20 hover:shadow-xl focus:bg-blue-600/10 focus:outline-none focus:ring-offset-blue-600/60",
 						"focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
 					)}>
-					<div className="w-full flex flex-wrap gap-[16px] justify-between">
+					<div className="w-full flex flex-wrap gap-4 justify-between">
 						<div className="max-w-[296px] flex flex-col flex-1">
 							<span className="text-base font-medium text-blue-600 overflow-hidden whitespace-nowrap text-ellipsis">{elementName}</span>
 							<span className="text-sm font-normal text-blue-600/60 overflow-hidden whitespace-nowrap text-ellipsis">{expoName}</span>
 						</div>
 						<span
 							className={cn(
-								"px-[16px] py-[8px] flex items-center justify-center rounded-[8px] bg-fuchsia-600/10",
+								"px-4 py-[8px] flex items-center justify-center rounded-[8px] bg-fuchsia-600/10",
 								"h-fit text-xs font-medium text-fuchsia-600 max-w-[128px]"
 							)}>
 							{thematiqueName}
 						</span>
 					</div>
-					<div className="w-full flex flex-wrap justify-between items-center gap-[16px]">
+					<div className="w-full flex flex-wrap justify-between items-center gap-4">
 						<span className="flex-1 text-sm text-blue-600/80">
 							{evaluation.date_rendu_reelle
 								? new Date(evaluation.date_rendu_reelle).toLocaleDateString("fr-fr", dateOptions)
@@ -148,9 +148,9 @@ const EvaluationCard = ({ evaluation, onChange }: Props) => {
 	) : (
 		// skeleton while waiting for data
 		<li className="w-full">
-			<Skeleton className="w-full h-[128px] rounded-[8px] flex flex-col gap-[16px] p-[16px]">
-				<Skeleton className="w-full h-[16px] rounded-[8px]" />
-				<Skeleton className="w-[80%] h-[16px] rounded-[8px] opacity-60" />
+			<Skeleton className="w-full h-[128px] rounded-[8px] flex flex-col gap-4 p-4">
+				<Skeleton className="w-full h-4 rounded-[8px]" />
+				<Skeleton className="w-[80%] h-4 rounded-[8px] opacity-60" />
 				<div className="w-full flex justify-end">
 					<Skeleton className="h-[32px] aspect-square rounded-full " />
 				</div>

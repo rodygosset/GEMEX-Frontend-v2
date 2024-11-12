@@ -26,6 +26,14 @@ import { capitalizeFirstLetter, toISO } from "@utils/general"
 import { apiURLs } from "@conf/api/conf"
 import { Skeleton } from "@components/radix/skeleton"
 import { cn } from "@utils/tailwind"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@components/radix/dialog"
+import { Button } from "@components/radix/button"
+import { z } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@components/radix/form"
+import { Checkbox } from "@components/radix/checkbox"
+import { ScrollArea } from "@components/radix/scroll-area"
 
 interface Props {
 	queryItemType: string
@@ -276,6 +284,26 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 		searchResultsToCSV().then((csv) => setCSV(csv ?? ""))
 	}, [searchResults, metaData, itemType, session])
 
+	const exportFormSchema = z.object({
+		columns: z.array(z.string()).min(1)
+	})
+
+	const exportForm = useForm<z.infer<typeof exportFormSchema>>({
+		resolver: zodResolver(exportFormSchema),
+		defaultValues: {
+			columns: []
+		}
+	})
+
+	const columnOptions = Object.keys(searchConf[itemType].searchParams).map((field) => ({
+		label: searchConf[itemType].searchParams[field].label,
+		value: field
+	}))
+
+	const handleExportFormSubmit = (values: z.infer<typeof exportFormSchema>) => {
+		console.log(values)
+	}
+
 	// render
 
 	return (
@@ -292,20 +320,80 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 				searchResults.length > 0 && !isLoading ? (
 					<div
 						className={cn(
-							"w-full flex items-center justify-between gap-[16px] flex-wrap sticky top-[80px]",
+							"w-full flex items-center justify-between gap-4 flex-wrap sticky top-[80px]",
 							"border-b border-blue-600/10",
 							"bg-neutral-50/40 backdrop-blur-3xl",
-							"px-[2.5vw] py-[16px]"
+							"px-[2.5vw] py-4"
 						)}>
 						{csv ? (
-							<Link
-								download={`resultats-recherche-${itemType}-${new Date().toLocaleDateString("fr-fr")}.csv`}
-								href={csv}
-								className="text-sm text-blue-600 bg-blue-600/10 flex items-center gap-4 px-[16px] py-[8px] rounded-[8px] 
+							// 	<Link
+							// 		download={`resultats-recherche-${itemType}-${new Date().toLocaleDateString("fr-fr")}.csv`}
+							// 		href={csv}
+							// 		className="text-sm text-blue-600 bg-blue-600/10 flex items-center gap-4 px-4 py-[8px] rounded-[8px]
+							// hover:bg-blue-600/20 transition-colors duration-300 ease-in-out">
+							// 		<FontAwesomeIcon icon={faDownload} />
+							// 		Export Excel
+							// 	</Link>
+							<Dialog>
+								<DialogTrigger asChild>
+									<Button
+										variant="secondary"
+										className="text-sm text-blue-600 bg-blue-600/10 flex items-center gap-4 px-4 py-[8px] rounded-[8px] 
                         hover:bg-blue-600/20 transition-colors duration-300 ease-in-out">
-								<FontAwesomeIcon icon={faDownload} />
-								Export Excel
-							</Link>
+										<FontAwesomeIcon icon={faDownload} />
+										Export Excel
+									</Button>
+								</DialogTrigger>
+								<DialogContent className="p-10">
+									<DialogHeader>
+										<DialogTitle>Export Excel</DialogTitle>
+										<DialogDescription>Choississez les colonnes à inclure dans votre fichier Excel</DialogDescription>
+									</DialogHeader>
+									<Form {...exportForm}>
+										<form onSubmit={exportForm.handleSubmit(handleExportFormSubmit)}>
+											<FormField
+												control={exportForm.control}
+												name="columns"
+												render={() => (
+													<FormItem>
+														{columnOptions.map((col) => (
+															<FormField
+																key={col.value}
+																control={exportForm.control}
+																name="columns"
+																render={({ field }) => {
+																	return (
+																		<ScrollArea className="max-h-[200px] w-full">
+																			<FormItem
+																				key={col.value}
+																				className="flex flex-row items-start space-x-3 space-y-0">
+																				<FormControl>
+																					<Checkbox
+																						checked={field.value?.includes(col.value)}
+																						onCheckedChange={(checked) => {
+																							return checked
+																								? field.onChange([...field.value, col.value])
+																								: field.onChange(
+																										field.value?.filter((value) => value !== col.value)
+																									)
+																						}}
+																					/>
+																				</FormControl>
+																				<FormLabel className="font-normal">{col.label}</FormLabel>
+																			</FormItem>
+																		</ScrollArea>
+																	)
+																}}
+															/>
+														))}
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+										</form>
+									</Form>
+								</DialogContent>
+							</Dialog>
 						) : (
 							<Skeleton className="w-[150px] h-[40px]" />
 						)}
@@ -359,7 +447,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 						// if there aren't any results
 						// display the corresponding illustration
 						// & a message for the user
-						<div className="w-full h-full flex-1 flex flex-col justify-center items-center gap-[16px]">
+						<div className="w-full h-full flex-1 flex flex-col justify-center items-center gap-4">
 							<div className="w-full relative aspect-[1.226] max-w-[500px]">
 								<Image
 									quality={100}

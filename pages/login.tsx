@@ -85,7 +85,7 @@ const LoginPage: NextPage = () => {
 					</div>
 				</section>
 				<section
-					className="h-full flex-1 sm:rounded-[8px] bg-white/10 backdrop-blur-3xl  gap-[16px] shadow-2xl
+					className="h-full flex-1 sm:rounded-[8px] bg-white/10 backdrop-blur-3xl  gap-4 shadow-2xl
                                     flex flex-col p-[64px]">
 					<span className="flex items-center gap-4 lg:hidden">
 						<FontAwesomeIcon
@@ -143,7 +143,7 @@ const LoginPage: NextPage = () => {
 								/>
 							</div>
 							<button
-								className="w-full rounded-[8px] bg-blue-600 text-white text-sm font-normal p-[16px]
+								className="w-full rounded-[8px] bg-blue-600 text-white text-sm font-normal p-4
                                             hover:bg-blue-700 transition duration-300 ease-in-out"
 								onClick={form.handleSubmit(SubmitHandler)}>
 								Se connecter
