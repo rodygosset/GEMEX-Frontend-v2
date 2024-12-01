@@ -25,6 +25,8 @@ const OperationReportCard = ({ fiche }: Props) => {
 	// get the element from the API
 
 	const session = useSession().data as MySession | null
+
+	const dataSession = useSession()
 	const makeAPIRequest = useAPIRequest()
 
 	const getFicheItem = async () => {
@@ -62,6 +64,7 @@ const OperationReportCard = ({ fiche }: Props) => {
 
 	useEffect(() => {
 		getFicheItem().then((data) => {
+			console.log("data is", data)
 			if (data && !(data instanceof Error)) setItem(data)
 		})
 

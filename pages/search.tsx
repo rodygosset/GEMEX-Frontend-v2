@@ -26,7 +26,7 @@ import { capitalizeFirstLetter, toISO } from "@utils/general"
 import { apiURLs } from "@conf/api/conf"
 import { Skeleton } from "@components/radix/skeleton"
 import { cn } from "@utils/tailwind"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@components/radix/dialog"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@components/radix/dialog"
 import { Button } from "@components/radix/button"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
@@ -203,15 +203,22 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 
 	// generate a CSV file from the search results
 
-	const [csv, setCSV] = useState("")
-
-	const searchResultsToCSV = async () => {
+	const searchResultsToCSV = async (selectedColumns: string[]) => {
 		if (!session) return
 		// get the label for each attribute
 		const labels = Object.entries(searchConf[itemType].searchParams)
 			.filter(([key]) => {
 				if (!searchResults.length) return true
 				return Object.keys(searchResults[0]).includes(key)
+			})
+			// filter out attributes that are not in the selected columns
+			.filter(([key]) => selectedColumns.includes(key))
+			// sort by key to make sure the order is the same for each row
+			// in the order that the attributes are defined in the search conf
+			.sort(([key1], [key2]) => {
+				const key1Pos = Object.keys(searchConf[itemType].searchParams).indexOf(key1)
+				const key2Pos = Object.keys(searchConf[itemType].searchParams).indexOf(key2)
+				return key1Pos - key2Pos
 			})
 			.map(([key, value]) => capitalizeFirstLetter(value.label ?? key))
 		// start building the CSV string
@@ -224,6 +231,8 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 				Object.entries(result)
 					// filter out attributes that are not part of the search conf
 					.filter(([key]) => searchConf[itemType].searchParams.hasOwnProperty(key))
+					// filter out attributes that are not in the selected columns
+					.filter(([key]) => selectedColumns.includes(key))
 					// sort by key to make sure the order is the same for each row
 					// in the order that the attributes are defined in the search conf
 					.sort(([key1], [key2]) => {
@@ -280,28 +289,39 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 		return encodeURI(csv)
 	}
 
-	useEffect(() => {
-		searchResultsToCSV().then((csv) => setCSV(csv ?? ""))
-	}, [searchResults, metaData, itemType, session])
-
 	const exportFormSchema = z.object({
 		columns: z.array(z.string()).min(1)
 	})
 
-	const exportForm = useForm<z.infer<typeof exportFormSchema>>({
-		resolver: zodResolver(exportFormSchema),
-		defaultValues: {
-			columns: []
-		}
-	})
-
 	const columnOptions = Object.keys(searchConf[itemType].searchParams).map((field) => ({
-		label: searchConf[itemType].searchParams[field].label,
+		label: searchConf[itemType].searchParams[field].label ?? capitalizeFirstLetter(field),
 		value: field
 	}))
 
-	const handleExportFormSubmit = (values: z.infer<typeof exportFormSchema>) => {
+	const exportForm = useForm<z.infer<typeof exportFormSchema>>({
+		resolver: zodResolver(exportFormSchema),
+		defaultValues: {
+			columns: columnOptions.map((option) => option.value)
+		}
+	})
+
+	const handleExportFormSubmit = async (values: z.infer<typeof exportFormSchema>) => {
 		console.log(values)
+
+		// get the CSV string
+
+		const csv = await searchResultsToCSV(values.columns)
+
+		if (!csv) return
+
+		const fileName = `resultats-recherche-${itemType}-${new Date().toLocaleDateString("fr-fr")}.csv`
+
+		// create a tag with download attribute={fileName} & href={csv}
+
+		const link = document.createElement("a")
+		link.download = fileName
+		link.href = csv
+		link.click()
 	}
 
 	// render
@@ -325,78 +345,74 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 							"bg-neutral-50/40 backdrop-blur-3xl",
 							"px-[2.5vw] py-4"
 						)}>
-						{csv ? (
-							// 	<Link
-							// 		download={`resultats-recherche-${itemType}-${new Date().toLocaleDateString("fr-fr")}.csv`}
-							// 		href={csv}
-							// 		className="text-sm text-blue-600 bg-blue-600/10 flex items-center gap-4 px-4 py-[8px] rounded-[8px]
-							// hover:bg-blue-600/20 transition-colors duration-300 ease-in-out">
-							// 		<FontAwesomeIcon icon={faDownload} />
-							// 		Export Excel
-							// 	</Link>
-							<Dialog>
-								<DialogTrigger asChild>
-									<Button
-										variant="secondary"
-										className="text-sm text-blue-600 bg-blue-600/10 flex items-center gap-4 px-4 py-[8px] rounded-[8px] 
+						<Dialog>
+							<DialogTrigger asChild>
+								<Button
+									variant="secondary"
+									className="text-sm text-blue-600 bg-blue-600/10 flex items-center gap-4 px-4 py-[8px] rounded-[8px] 
                         hover:bg-blue-600/20 transition-colors duration-300 ease-in-out">
-										<FontAwesomeIcon icon={faDownload} />
-										Export Excel
-									</Button>
-								</DialogTrigger>
-								<DialogContent className="p-10">
-									<DialogHeader>
-										<DialogTitle>Export Excel</DialogTitle>
-										<DialogDescription>Choississez les colonnes à inclure dans votre fichier Excel</DialogDescription>
-									</DialogHeader>
-									<Form {...exportForm}>
-										<form onSubmit={exportForm.handleSubmit(handleExportFormSubmit)}>
-											<FormField
-												control={exportForm.control}
-												name="columns"
-												render={() => (
-													<FormItem>
-														{columnOptions.map((col) => (
-															<FormField
-																key={col.value}
-																control={exportForm.control}
-																name="columns"
-																render={({ field }) => {
-																	return (
-																		<ScrollArea className="max-h-[200px] w-full">
-																			<FormItem
-																				key={col.value}
-																				className="flex flex-row items-start space-x-3 space-y-0">
-																				<FormControl>
-																					<Checkbox
-																						checked={field.value?.includes(col.value)}
-																						onCheckedChange={(checked) => {
-																							return checked
-																								? field.onChange([...field.value, col.value])
-																								: field.onChange(
-																										field.value?.filter((value) => value !== col.value)
-																									)
-																						}}
-																					/>
-																				</FormControl>
-																				<FormLabel className="font-normal">{col.label}</FormLabel>
-																			</FormItem>
-																		</ScrollArea>
-																	)
-																}}
-															/>
-														))}
-														<FormMessage />
-													</FormItem>
-												)}
-											/>
-										</form>
-									</Form>
-								</DialogContent>
-							</Dialog>
-						) : (
-							<Skeleton className="w-[150px] h-[40px]" />
-						)}
+									<FontAwesomeIcon icon={faDownload} />
+									Export Excel
+								</Button>
+							</DialogTrigger>
+							<DialogContent className="p-10">
+								<Form {...exportForm}>
+									<form
+										className="flex flex-col gap-4"
+										onSubmit={exportForm.handleSubmit(handleExportFormSubmit)}>
+										<DialogHeader>
+											<DialogTitle>Export Excel</DialogTitle>
+											<DialogDescription>Choississez les colonnes à inclure dans votre fichier Excel</DialogDescription>
+										</DialogHeader>
+										<FormField
+											control={exportForm.control}
+											name="columns"
+											render={() => (
+												<FormItem>
+													{columnOptions.map((col) => (
+														<FormField
+															key={col.value}
+															control={exportForm.control}
+															name="columns"
+															render={({ field }) => {
+																return (
+																	<ScrollArea className="max-h-[200px] w-full">
+																		<FormItem
+																			key={col.value}
+																			className="flex flex-row items-start space-x-3 space-y-0">
+																			<FormControl>
+																				<Checkbox
+																					checked={field.value?.includes(col.value)}
+																					onCheckedChange={(checked) => {
+																						return checked
+																							? field.onChange([...field.value, col.value])
+																							: field.onChange(
+																									field.value?.filter((value) => value !== col.value)
+																								)
+																					}}
+																				/>
+																			</FormControl>
+																			<FormLabel className="font-normal">{col.label}</FormLabel>
+																		</FormItem>
+																	</ScrollArea>
+																)
+															}}
+														/>
+													))}
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<DialogFooter>
+											<DialogClose asChild>
+												<Button variant="outline">Annuler</Button>
+											</DialogClose>
+											<Button type="submit">Exporter</Button>
+										</DialogFooter>
+									</form>
+								</Form>
+							</DialogContent>
+						</Dialog>
 						<Pagination
 							currentPageNb={currentPageNb}
 							totalPagesNb={totalPagesNb}

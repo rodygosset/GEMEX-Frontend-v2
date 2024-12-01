@@ -14,8 +14,10 @@ export const authOptions: AuthOptions = {
 			id: "credentials",
 			// The name to display on the sign in form (e.g. 'Sign in with...')
 			name: "Credentials",
-			// @ts-ignore
-			async authorize(credentials: any) {
+			// @ts-expect-error
+			async authorize(credentials) {
+				if (!credentials) return null
+
 				// build the form data
 				const formData = new FormData()
 				formData.append("username", credentials.username)
@@ -28,13 +30,13 @@ export const authOptions: AuthOptions = {
 				// If no error and we have the JWT, return the access token
 				if (res.status == 200) {
 					// get user data
-					const { data: userData } = await axios.get<User>(`${apiURL}/api/users/me`, {
+					const { data: userData } = await axios.get<User>(`${apiURL}/api/users/me/`, {
 						headers: {
 							Authorization: `bearer ${res.data.access_token}`
 						}
 					})
 					// get user role
-					const { data: userRole } = await axios.get<UserRole>(`${apiURL}/api/users/roles/id/${userData.role_id}`, {
+					const { data: userRole } = await axios.get<UserRole>(`${apiURL}/api/users/roles/id/${userData.role_id}/`, {
 						headers: {
 							Authorization: `bearer ${res.data.access_token}`
 						}
@@ -80,6 +82,7 @@ export const authOptions: AuthOptions = {
 			session.user = token.user
 			// @ts-ignore
 			session.userRole = token.userRole
+
 			return session
 		}
 	},
