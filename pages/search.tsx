@@ -34,6 +34,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@components/radix/form"
 import { Checkbox } from "@components/radix/checkbox"
 import { ScrollArea } from "@components/radix/scroll-area"
+import { Loader } from "lucide-react"
 
 interface Props {
 	queryItemType: string
@@ -203,13 +204,13 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 
 	// generate a CSV file from the search results
 
-	const searchResultsToCSV = async (selectedColumns: string[]) => {
+	const searchResultsToCSV = async (data: any[], selectedColumns: string[]) => {
 		if (!session) return
 		// get the label for each attribute
 		const labels = Object.entries(searchConf[itemType].searchParams)
 			.filter(([key]) => {
-				if (!searchResults.length) return true
-				return Object.keys(searchResults[0]).includes(key)
+				if (!data.length) return true
+				return Object.keys(data[0]).includes(key)
 			})
 			// filter out attributes that are not in the selected columns
 			.filter(([key]) => selectedColumns.includes(key))
@@ -225,7 +226,7 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 		let csv = "data:text/csv;charset=utf-8," + "\ufeff"
 		csv += labels.join(";") + "\n"
 		// now insert each row into the CSV string
-		for (const result of searchResults) {
+		for (const result of data) {
 			// for each attribute
 			const row = await Promise.all(
 				Object.entries(result)
@@ -305,12 +306,33 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 		}
 	})
 
+	const getAllSearchResults = async () => {
+		if (!session) return
+
+		const results = await SSRmakeAPIRequest<any[], any[]>({
+			session: session,
+			verb: "post",
+			itemType: itemType,
+			additionalPath: "search/",
+			data: searchParams,
+			onSuccess: (res) => res.data
+		})
+
+		if (!results) return
+
+		return results
+	}
+
 	const handleExportFormSubmit = async (values: z.infer<typeof exportFormSchema>) => {
 		console.log(values)
 
+		const results = await getAllSearchResults()
+
+		if (!results) return
+
 		// get the CSV string
 
-		const csv = await searchResultsToCSV(values.columns)
+		const csv = await searchResultsToCSV(results, values.columns)
 
 		if (!csv) return
 
@@ -407,7 +429,16 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 											<DialogClose asChild>
 												<Button variant="outline">Annuler</Button>
 											</DialogClose>
-											<Button type="submit">Exporter</Button>
+											<Button
+												disabled={exportForm.formState.isSubmitting}
+												type="submit">
+												{exportForm.formState.isSubmitting ? (
+													<Loader className="animate-spin text-sm" />
+												) : (
+													<FontAwesomeIcon icon={faDownload} />
+												)}
+												<span>Exporter</span>
+											</Button>
 										</DialogFooter>
 									</form>
 								</Form>
@@ -494,11 +525,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 	// start by parsing the URL query into an object
 	// that contains valid search params for our API
 
-	console.log("context.query is", context.query)
-
 	const [itemType, searchParams] = parseURLQuery(context.query)
-
-	console.log("search params are", searchParams)
 
 	// in case something goes wrong
 
