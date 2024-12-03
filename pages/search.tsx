@@ -494,7 +494,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 	// start by parsing the URL query into an object
 	// that contains valid search params for our API
 
+	console.log("context.query is", context.query)
+
 	const [itemType, searchParams] = parseURLQuery(context.query)
+
+	console.log("search params are", searchParams)
 
 	// in case something goes wrong
 
