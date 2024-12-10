@@ -130,6 +130,8 @@ export const itemListSearchParam: SearchParam = {
 
 export const dateSearchParam: SearchParam = { type: "date" }
 
+export const dateRangeSearchParam: SearchParam = { type: "dateRange" }
+
 export const booleanSearchParam: SearchParam = { type: "boolean", defaultValue: false }
 
 // search configuration object type for a single type of data
@@ -284,6 +286,7 @@ export const searchConf: SearchConf = {
 			element_id: { ...itemSearchParam, type: "elements", label: "Élément" },
 			date_debut: { ...dateSearchParam, label: "Date de début" },
 			date_fin: { ...dateSearchParam, label: "Date de fin" },
+			periode: { ...dateRangeSearchParam, label: "Période" },
 			type_id: { ...itemSearchParam, type: "types_operations", label: "Type d'opération" },
 			nature_id: { ...itemSearchParam, type: "natures_operations", label: "Nature de l'opération" },
 			description: textSearchParam,
@@ -449,6 +452,12 @@ export const searchQueryParams: StringArrayObj = {
 		"annee_fin",
 		"mois_fin",
 		"jour_fin",
+		"annne_debut_periode",
+		"mois_debut_periode",
+		"jour_debut_periode",
+		"annee_fin_periode",
+		"mois_fin_periode",
+		"jour_fin_periode",
 		"type_id",
 		"nature_id",
 		"description",

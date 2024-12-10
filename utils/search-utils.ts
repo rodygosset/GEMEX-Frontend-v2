@@ -82,7 +82,7 @@ export const toSearchFiltersObject = (itemType: string, searchParams: DynamicObj
 		// if a value for the current search parameter
 		// was provided through the URL query string
 
-		const specialFilterTypes = ["date", "timeDelta", "numberOperator"]
+		const specialFilterTypes = ["date", "dateRange", "timeDelta", "numberOperator"]
 
 		if (param in searchParams) {
 			newSearchFilters[param].checked = true
@@ -114,6 +114,9 @@ export const toSearchFiltersObject = (itemType: string, searchParams: DynamicObj
 					break
 				case "date":
 					loadDateParam(param, newSearchFilters, searchParams)
+					break
+				case "dateRange":
+					loadDateRangeParam(param, newSearchFilters, searchParams)
 					break
 				default:
 					break
@@ -166,6 +169,65 @@ const loadDateParam = (param: string, newSearchFilters: SearchFilters, searchPar
 	if (!("year" in dateInputValue) || ("day" in dateInputValue && !("month" in dateInputValue))) return
 	// load the value
 	newSearchFilters[param].value = dateInputValue
+	newSearchFilters[param].checked = true
+}
+
+const loadDateRangeParam = (param: string, newSearchFilters: SearchFilters, searchParams: DynamicObject) => {
+	// param has to be one of those
+	const dateParams = [
+		// smthg => annee_debut_smthg
+		`annee_debut_${param}`,
+		// smthg => annee_fin_smthg
+		`annee_fin_${param}`,
+		// smthg => mois_debut_smthg
+		`mois_debut_${param}`,
+		// smthg => mois_fin_smthg
+		`mois_fin_${param}`,
+		// smthg => jour_debut_smthg
+		`jour_debut_${param}`,
+		// smthg => jour_fin_smthg
+		`jour_fin_${param}`
+	]
+
+	const getDateUnitFromParam = (param: string) => {
+		if (param.includes("annee")) return "year"
+		if (param.includes("mois")) return "month"
+		if (param.includes("jour")) return "day"
+	}
+
+	// create separate objects for start & end dates
+	let startDateValue: DateInputValue = {}
+	let endDateValue: DateInputValue = {}
+
+	// check each possible date param (year/month/day for both start and end)
+	for (const dateParam of dateParams) {
+		if (dateParam in searchParams) {
+			// determine if this is a start or end date param
+			const isStartDate = dateParam.includes("debut")
+
+			const dateUnit = getDateUnitFromParam(dateParam)
+
+			if (!dateUnit) continue
+
+			if (isStartDate) {
+				startDateValue[dateUnit] = searchParams[dateParam]
+			} else {
+				endDateValue[dateUnit] = searchParams[dateParam]
+			}
+		}
+	}
+
+	// validate that at least years are provided for both dates
+	if (!("year" in startDateValue) || !("year" in endDateValue)) return
+
+	// validate that if days are provided, months must also be provided
+	if (("day" in startDateValue && !("month" in startDateValue)) || ("day" in endDateValue && !("month" in endDateValue))) return
+
+	// load the validated values
+	newSearchFilters[param].value = {
+		start: startDateValue,
+		end: endDateValue
+	}
 	newSearchFilters[param].checked = true
 }
 
@@ -252,6 +314,12 @@ export const toURLQuery = (searchFilters: SearchFilters, searchParams: DynamicOb
 				}
 				dateToSearchParam(filterData.value, urlQuery, searchParamName)
 				continue
+			case "dateRange":
+				if (!filterData.value) {
+					continue
+				}
+				dateRangeToSearchParam(filterData.value, urlQuery, searchParamName)
+				continue
 		}
 
 		// once necessary adjustements have been made
@@ -298,5 +366,22 @@ const dateToSearchParam = (date: { day: number; month: number; year: number }, u
 	}
 	if ("year" in date) {
 		urlQuery[searchParamName.replace("date", "annee")] = date.year
+	}
+}
+
+const dateRangeToSearchParam = (dateRange: { start: DateInputValue; end: DateInputValue }, urlQuery: DynamicObject, searchParamName: string) => {
+	// do the same as above but for a date range (start & end)
+
+	if ("day" in dateRange.start && "day" in dateRange.end) {
+		urlQuery[`jour_debut_${searchParamName}`] = dateRange.start.day
+		urlQuery[`jour_fin_${searchParamName}`] = dateRange.end.day
+	}
+	if ("month" in dateRange.start && "month" in dateRange.end) {
+		urlQuery[`mois_debut_${searchParamName}`] = dateRange.start.month
+		urlQuery[`mois_fin_${searchParamName}`] = dateRange.end.month
+	}
+	if ("year" in dateRange.start && "year" in dateRange.end) {
+		urlQuery[`annee_debut_${searchParamName}`] = dateRange.start.year
+		urlQuery[`annee_fin_${searchParamName}`] = dateRange.end.year
 	}
 }

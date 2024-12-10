@@ -10,7 +10,8 @@ import { Context } from "@utils/context"
 import { defaultOperator, hasNumberOperatorParam } from "@utils/form-elements/time-delta-input"
 import { useContext } from "react"
 import { ScrollArea } from "./scroll-area"
-import { SearchFilters } from "@conf/api/search"
+import type { SearchFilters } from "@conf/api/search"
+import DateRangeFilter from "@components/search-filters/date-range-filter"
 
 interface Props {
 	className?: string
@@ -103,6 +104,14 @@ const SearchFilters = ({ className, searchFilters, setSearchFilters }: Props) =>
 								// date input
 								return (
 									<DateFilter
+										key={filterName}
+										{...filterProps}
+									/>
+								)
+							case "dateRange":
+								// date range input
+								return (
+									<DateRangeFilter
 										key={filterName}
 										{...filterProps}
 									/>

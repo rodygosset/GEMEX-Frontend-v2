@@ -204,6 +204,11 @@ const DateInput = ({
 						embed
 						selected={date ? date : undefined}
 						onSelect={(date) => handleDateChange(date ?? null)}
+						disabled={(date) => {
+							if (minDate && date < minDate) return true
+							if (maxDate && date > maxDate) return true
+							return false
+						}}
 					/>
 				) : (
 					<ReactDatePicker
