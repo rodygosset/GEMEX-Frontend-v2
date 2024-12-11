@@ -141,6 +141,7 @@ export interface ItemSearchConf {
 	defaultSearchParam: string
 	searchParams: { [propName: string]: SearchParam }
 	searchResultFields: string[]
+	sortBy?: string[]
 }
 
 // our entire search conf object
@@ -161,7 +162,8 @@ export const searchConf: SearchConf = {
 			groups: { ...itemListSearchParam, item: "groups", label: "Groupes" },
 			is_active: { ...booleanSearchParam, label: "Actif" }
 		},
-		searchResultFields: ["prenom", "nom", "email"]
+		searchResultFields: ["prenom", "nom", "email"],
+		sortBy: ["username", "nom", "prenom"]
 	},
 	roles: {
 		url: "/api/backend/users/roles/search/",
@@ -171,7 +173,8 @@ export const searchConf: SearchConf = {
 			permissions: { ...itemListSearchParam, label: "Permission" },
 			suppression: { ...itemListSearchParam, label: "Suppression" }
 		},
-		searchResultFields: []
+		searchResultFields: [],
+		sortBy: ["titre"]
 	},
 	groups: {
 		url: "/api/backend/users/groups/search/",
@@ -179,7 +182,8 @@ export const searchConf: SearchConf = {
 		searchParams: {
 			nom: textSearchParam
 		},
-		searchResultFields: []
+		searchResultFields: [],
+		sortBy: ["nom"]
 	},
 	fichiers: {
 		url: "/api/backend/fichiers/search/",
@@ -191,7 +195,8 @@ export const searchConf: SearchConf = {
 			article_id: { ...itemSearchParam, type: "articles", label: "Article" },
 			element_id: { ...itemSearchParam, type: "elements", label: "Élément" }
 		},
-		searchResultFields: []
+		searchResultFields: [],
+		sortBy: ["nom"]
 	},
 	expositions: {
 		url: "/api/backend/expositions/search/",
@@ -204,7 +209,8 @@ export const searchConf: SearchConf = {
 			commentaire: textSearchParam,
 			is_active: { ...booleanSearchParam, defaultValue: true, label: "Active" }
 		},
-		searchResultFields: ["regie_id", "annee"]
+		searchResultFields: ["regie_id", "annee"],
+		sortBy: ["nom", "annee", "date_creation"]
 	},
 	articles: {
 		url: "/api/backend/stocks/articles/search/",
@@ -221,7 +227,8 @@ export const searchConf: SearchConf = {
 			fournisseur: textSearchParam,
 			date_creation: { ...dateSearchParam, label: "Date de création" }
 		},
-		searchResultFields: ["categorie_id", "quantite"]
+		searchResultFields: ["categorie_id", "quantite"],
+		sortBy: ["nom", "date_creation"]
 	},
 	historiques_stocks: {
 		url: "/api/backend/stocks/historique/search/",
@@ -235,7 +242,8 @@ export const searchConf: SearchConf = {
 			quantite_operator: numberOperatorSearchParam,
 			date_creation: { ...dateSearchParam, label: "Date de création" }
 		},
-		searchResultFields: ["article_id", "quantite"]
+		searchResultFields: ["article_id", "quantite"],
+		sortBy: ["date_creation"]
 	},
 	stocks: {
 		url: "/api/backend/stocks/search/",
@@ -244,7 +252,8 @@ export const searchConf: SearchConf = {
 			nom: textSearchParam,
 			date_creation: { ...dateSearchParam, label: "Date de création" }
 		},
-		searchResultFields: []
+		searchResultFields: [],
+		sortBy: ["nom", "date_creation"]
 	},
 	elements: {
 		url: "/api/backend/expositions/elements/search/",
@@ -261,7 +270,8 @@ export const searchConf: SearchConf = {
 			categories: { ...itemListSearchParam, item: "categories_elements", label: "Catégories" },
 			date_creation: { ...dateSearchParam, label: "Date de création" }
 		},
-		searchResultFields: ["exposition_id", "numero"]
+		searchResultFields: ["exposition_id", "numero"],
+		sortBy: ["nom", "date_creation"]
 	},
 	constituents: {
 		url: "/api/backend/expositions/elements/constituents/search/",
@@ -274,7 +284,8 @@ export const searchConf: SearchConf = {
 			article_id: { ...itemSearchParam, type: "articles", label: "Article" },
 			date_creation: { ...dateSearchParam, label: "Date de création" }
 		},
-		searchResultFields: ["article_id", "quantite"]
+		searchResultFields: ["article_id", "quantite"],
+		sortBy: ["nom", "date_creation"]
 	},
 	fiches: {
 		url: "/api/backend/fiches/search/",
@@ -300,7 +311,8 @@ export const searchConf: SearchConf = {
 			tags: { ...itemListSearchParam, item: "tags" },
 			date_creation: { ...dateSearchParam, label: "Date de création" }
 		},
-		searchResultFields: ["user_en_charge_id", "exposition_id", "element_id"]
+		searchResultFields: ["user_en_charge_id", "exposition_id", "element_id"],
+		sortBy: ["nom", "date_debut", "date_fin", "date_creation"]
 	},
 	fiches_systematiques: {
 		url: "/api/backend/fiches/systematiques/search/",
@@ -325,7 +337,8 @@ export const searchConf: SearchConf = {
 			tags: { ...itemListSearchParam, item: "tags" },
 			date_creation: { ...dateSearchParam, label: "Date de création" }
 		},
-		searchResultFields: ["user_en_charge_id", "exposition_id", "element_id"]
+		searchResultFields: ["user_en_charge_id", "exposition_id", "element_id"],
+		sortBy: ["nom", "date_creation"]
 	},
 	historiques_fiches_systematiques: {
 		url: "/api/backend/fiches/systematiques/historique/search/",
@@ -336,7 +349,8 @@ export const searchConf: SearchConf = {
 			commentaire: textSearchParam,
 			date: dateSearchParam
 		},
-		searchResultFields: ["user_id", "fiche_id", "date"]
+		searchResultFields: ["user_id", "fiche_id", "date"],
+		sortBy: ["date"]
 	},
 	rapports: {
 		url: "/api/backend/rapports_taux_disponibilite/search/",
@@ -346,7 +360,8 @@ export const searchConf: SearchConf = {
 			date_fin: { ...dateSearchParam, label: "Date de fin", strict: true },
 			groupes_expositions: { ...itemListSearchParam, item: "groupes_expositions" }
 		},
-		searchResultFields: ["date_debut", "date_fin"]
+		searchResultFields: ["date_debut", "date_fin"],
+		sortBy: ["date_debut"]
 	},
 	evaluations: {
 		url: "/api/backend/qualite/evaluations/search",
@@ -368,7 +383,8 @@ export const searchConf: SearchConf = {
 			commentaire: textSearchParam,
 			approved: { ...booleanSearchParam, label: "Approuvé" }
 		},
-		searchResultFields: ["thematique_id", "note"]
+		searchResultFields: ["thematique_id", "note"],
+		sortBy: ["date_rendu"]
 	}
 }
 
@@ -377,11 +393,11 @@ export const searchConf: SearchConf = {
 export type StringArrayObj = { [key: string]: string[] }
 
 export const searchQueryParams: StringArrayObj = {
-	users: ["username", "prenom", "nom", "email", "role_id", "groups"],
-	roles: ["titre", "permissions", "suppression"],
-	groups: ["nom"],
-	fichiers: ["nom", "user_id", "exposition_id", "article_id", "element_id"],
-	expositions: ["nom", "regie_id", "annee", "annee_creation", "mois_creation", "jour_creation", "commentaire", "is_active"],
+	users: ["username", "prenom", "nom", "email", "role_id", "groups", "sort", "sort_direction"],
+	roles: ["titre", "permissions", "suppression", "sort_direction"],
+	groups: ["nom", "sort_direction"],
+	fichiers: ["nom", "user_id", "exposition_id", "article_id", "element_id", "sort_direction"],
+	expositions: ["nom", "regie_id", "annee", "annee_creation", "mois_creation", "jour_creation", "commentaire", "is_active", "sort", "sort_direction"],
 	articles: [
 		"nom",
 		"code",
@@ -397,7 +413,9 @@ export const searchQueryParams: StringArrayObj = {
 		"fournisseur",
 		"annee_creation",
 		"mois_creation",
-		"jour_creation"
+		"jour_creation",
+		"sort",
+		"sort_direction"
 	],
 	historiques_stocks: [
 		"article_id",
@@ -411,9 +429,10 @@ export const searchQueryParams: StringArrayObj = {
 		"quantite_sup_eg",
 		"annee_creation",
 		"mois_creation",
-		"jour_creation"
+		"jour_creation",
+		"sort_direction"
 	],
-	stocks: ["nom", "annee_creation", "mois_creation", "jour_creation"],
+	stocks: ["nom", "annee_creation", "mois_creation", "jour_creation", "sort", "sort_direction"],
 	elements: [
 		"numero",
 		"nom",
@@ -426,7 +445,9 @@ export const searchQueryParams: StringArrayObj = {
 		"categories",
 		"annee_creation",
 		"mois_creation",
-		"jour_creation"
+		"jour_creation",
+		"sort",
+		"sort_direction"
 	],
 	constituents: [
 		"nom",
@@ -439,7 +460,9 @@ export const searchQueryParams: StringArrayObj = {
 		"article_id",
 		"annee_creation",
 		"mois_creation",
-		"jour_creation"
+		"jour_creation",
+		"sort",
+		"sort_direction"
 	],
 	fiches: [
 		"nom",
@@ -471,7 +494,9 @@ export const searchQueryParams: StringArrayObj = {
 		"tags",
 		"annee_creation",
 		"mois_creation",
-		"jour_creation"
+		"jour_creation",
+		"sort",
+		"sort_direction"
 	],
 	fiches_systematiques: [
 		"nom",
@@ -503,8 +528,10 @@ export const searchQueryParams: StringArrayObj = {
 		"tags",
 		"annee_creation",
 		"mois_creation",
-		"jour_creation"
+		"jour_creation",
+		"sort",
+		"sort_direction"
 	],
-	historiques_fiches_systematiques: ["fiche_id", "user_id", "commentaire", "annee_date", "mois_date", "jour_date"],
-	rapports: ["date_debut", "date_fin", "groupes_expositions"]
+	historiques_fiches_systematiques: ["fiche_id", "user_id", "commentaire", "annee_date", "mois_date", "jour_date", "sort_direction"],
+	rapports: ["date_debut", "date_fin", "groupes_expositions", "sort_direction"]
 }

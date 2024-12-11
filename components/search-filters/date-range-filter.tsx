@@ -76,26 +76,30 @@ const DateRangeFilter = ({ name, filter, onChange, onToggle }: SearchFilterProps
 			label={getFilterLabel(name, conf)}
 			onCheckToggle={onToggle}
 			checked={filter.checked}>
-			<DateInput
-				className="max-sm:w-full"
-				name={name}
-				value={dateRangeValue?.start}
-				onChange={(date) => handleChange({ start: date, end: dateRangeValue?.end })}
-				strict={false}
-				format={format}
-				onFormatChange={setFormat}
-				maxDate={dateRangeValue?.end}
-			/>
-			<DateInput
-				className="max-sm:w-full"
-				name={name}
-				value={dateRangeValue?.end}
-				onChange={(date) => handleChange({ start: dateRangeValue?.start, end: date })}
-				strict={false}
-				format={format}
-				onFormatChange={setFormat}
-				minDate={dateRangeValue?.start}
-			/>
+			<div className="flex flex-col gap-2 w-full items-end">
+				<DateInput
+					// className="max-sm:w-full"
+					className="w-fit"
+					name={name}
+					value={dateRangeValue?.start}
+					onChange={(date) => handleChange({ start: date, end: dateRangeValue?.end })}
+					strict={false}
+					format={format}
+					onFormatChange={setFormat}
+					maxDate={dateRangeValue?.end}
+				/>
+				<DateInput
+					// className="max-sm:w-full"
+					className="w-fit"
+					name={name}
+					value={dateRangeValue?.end}
+					onChange={(date) => handleChange({ start: dateRangeValue?.start, end: date })}
+					strict={false}
+					format={format}
+					onFormatChange={setFormat}
+					minDate={dateRangeValue?.start}
+				/>
+			</div>
 		</FilterWrapper>
 	)
 }

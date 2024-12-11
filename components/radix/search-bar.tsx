@@ -11,6 +11,8 @@ import Combobox from "./combobox"
 import { useRouter } from "next/router"
 import { toSearchFiltersObject, toURLQuery } from "@utils/search-utils"
 
+// todo: sort & sort order component
+
 interface Props {
 	hiddenItemTypes?: string[]
 }
