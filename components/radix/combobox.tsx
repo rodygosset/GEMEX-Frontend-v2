@@ -9,13 +9,14 @@ import { cn } from "@utils/tailwind"
 
 interface Props {
 	embed?: boolean
+	placeholder?: string
 	className?: string
 	options: SelectOption[]
 	selected?: SelectOption
 	onChange: (value: SelectOption) => void
 }
 
-const Combobox = ({ embed = false, className, options, selected, onChange }: Props) => {
+const Combobox = ({ embed = false, className, options, selected, onChange, placeholder = "Sélectionner..." }: Props) => {
 	const [isOpen, setIsOpen] = useState(false)
 
 	// render
@@ -34,7 +35,7 @@ const Combobox = ({ embed = false, className, options, selected, onChange }: Pro
 						embed ? "border-none p-0 w-[96px] min-w-[96px]" : "",
 						className
 					)}>
-					{selected ? selected.label : "Sélectionner..."}
+					{selected ? selected.label : placeholder}
 					<FontAwesomeIcon
 						icon={faChevronDown}
 						className="text-blue-600"

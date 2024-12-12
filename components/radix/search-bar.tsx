@@ -33,9 +33,37 @@ const SortControl = () => {
 	const sortValue = searchParams.sort
 	const sortOrderValue = searchParams.sort_direction
 
+	const selectedSortOption = sortOptions?.find((sortOption) => sortOption.value == sortValue)
+	const selectedSortOrderOption = sortOrderOptions?.find((sortOrderOption) => sortOrderOption.value == sortOrderValue)
+
 	return (
 		<div className="w-full flex flex-col gap-4">
 			<label className="text-sm font-medium text-blue-600/60">Trier par</label>
+			{sortOptions && sortOptions.length > 1 && (
+				<Combobox
+					className="w-full"
+					options={sortOptions}
+					onChange={(selectedSortOption) => {
+						setSearchParams({
+							...searchParams,
+							sort: selectedSortOption.value
+						})
+					}}
+					selected={selectedSortOption}
+				/>
+			)}
+			<Combobox
+				className="w-full"
+				placeholder="Ordre"
+				options={sortOrderOptions}
+				onChange={(selectedSortOrderOption) => {
+					setSearchParams({
+						...searchParams,
+						sort_direction: selectedSortOrderOption.value
+					})
+				}}
+				selected={selectedSortOrderOption}
+			/>
 		</div>
 	)
 }
