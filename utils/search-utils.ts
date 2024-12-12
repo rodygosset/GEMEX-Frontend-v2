@@ -17,6 +17,12 @@ export const parseURLQuery = (query: ParsedUrlQuery): [string, DynamicObject] =>
 	// get the search parameters as they are, from the URL query
 
 	for (const param in query) {
+		// handle sort & sort direction
+		if (param == "sort" || param == "sort_direction") {
+			searchParams[param] = query[param]
+			continue
+		}
+
 		// don't include key / value pairs from the URL query
 		// which don't correspond to a search param in the API conf
 		if (!searchQueryParams[itemType].includes(param)) {
@@ -273,6 +279,15 @@ const loadNumberParam = (param: string, newSearchFilters: SearchFilters, searchP
 
 export const toURLQuery = (searchFilters: SearchFilters, searchParams: DynamicObject, itemType: string): DynamicObject => {
 	let urlQuery: DynamicObject = { item: itemType }
+
+	// handle sort & sort direction
+
+	if ("sort" in searchParams) {
+		urlQuery.sort = searchParams.sort
+	}
+	if ("sort_direction" in searchParams) {
+		urlQuery.sort_direction = searchParams.sort_direction
+	}
 
 	// iterate over the list of search filters to build the URL query
 

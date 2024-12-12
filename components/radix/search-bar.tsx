@@ -10,8 +10,35 @@ import { Context } from "@utils/context"
 import Combobox from "./combobox"
 import { useRouter } from "next/router"
 import { toSearchFiltersObject, toURLQuery } from "@utils/search-utils"
+import { capitalizeFirstLetter } from "@utils/general"
 
 // todo: sort & sort order component
+
+const SortControl = () => {
+	const { searchParams, setSearchParams } = useContext(Context)
+
+	const sortOptions = searchConf[searchParams.item].sortBy?.map((sortOption) => {
+		const label = searchConf[searchParams.item].searchParams[sortOption].label ?? capitalizeFirstLetter(sortOption)
+		return {
+			value: sortOption,
+			label: label
+		}
+	})
+
+	const sortOrderOptions = [
+		{ value: "asc", label: "Croissant" },
+		{ value: "desc", label: "Décroissant" }
+	]
+
+	const sortValue = searchParams.sort
+	const sortOrderValue = searchParams.sort_direction
+
+	return (
+		<div className="w-full flex flex-col gap-4">
+			<label className="text-sm font-medium text-blue-600/60">Trier par</label>
+		</div>
+	)
+}
 
 interface Props {
 	hiddenItemTypes?: string[]
@@ -187,6 +214,7 @@ const SearchBar = ({ hiddenItemTypes }: Props) => {
 							selected={getItemTypes().find((itemType) => itemType.value == searchParams.item)}
 						/>
 					</div>
+					<SortControl />
 					<div className="w-full flex-1 min-h-0 flex flex-col gap-4 h-full">
 						<label className="text-sm font-medium text-blue-600/60">Filtres</label>
 						<SearchFilters

@@ -63,10 +63,12 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 	// load the search params from the URL query
 
 	useEffect(() => {
+		console.log("setting search params to ", { ...initSearchParams, item: queryItemType })
 		setSearchParams({ ...initSearchParams, item: queryItemType })
 	}, [])
 
 	useEffect(() => {
+		console.log("search params are ", searchParams)
 		if (!initSearchParamsLoaded && JSON.stringify(searchParams) == JSON.stringify({ ...initSearchParams, item: queryItemType })) {
 			setInitSearchParamsLoaded(true)
 		}
