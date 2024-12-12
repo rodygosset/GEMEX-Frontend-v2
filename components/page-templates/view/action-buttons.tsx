@@ -20,9 +20,10 @@ import { useEffect, useState } from "react"
 interface Props {
 	itemType: string
 	itemData: any
+	userIsInGroup: boolean
 }
 
-const ActionButtons = ({ itemType, itemData }: Props) => {
+const ActionButtons = ({ itemType, itemData, userIsInGroup }: Props) => {
 	const router = useRouter()
 
 	// user privileges
@@ -150,7 +151,7 @@ const ActionButtons = ({ itemType, itemData }: Props) => {
 		return (
 			user &&
 			userRole &&
-			(userRole.permissions.includes("manage") || ficheData.auteur_id == user.id || ficheData.user_en_charge_id == user.id) &&
+			(userRole.permissions.includes("manage") || ficheData.auteur_id == user.id || ficheData.user_en_charge_id == user.id || userIsInGroup) &&
 			ficheData.status_id != APPROVED_STATUS_ID
 		)
 	}

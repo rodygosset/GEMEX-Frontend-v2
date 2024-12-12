@@ -20,18 +20,16 @@ import { authOptions } from "./api/auth/[...nextauth]"
 
 import Image from "next/image"
 import { useSession } from "next-auth/react"
-import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { capitalizeFirstLetter, toISO } from "@utils/general"
 import { apiURLs } from "@conf/api/conf"
-import { Skeleton } from "@components/radix/skeleton"
 import { cn } from "@utils/tailwind"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@components/radix/dialog"
 import { Button } from "@components/radix/button"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@components/radix/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@components/radix/form"
 import { Checkbox } from "@components/radix/checkbox"
 import { ScrollArea } from "@components/radix/scroll-area"
 import { Loader } from "lucide-react"
@@ -63,12 +61,10 @@ const Search: NextPage<Props> = ({ queryItemType, initSearchParams, results, ini
 	// load the search params from the URL query
 
 	useEffect(() => {
-		console.log("setting search params to ", { ...initSearchParams, item: queryItemType })
 		setSearchParams({ ...initSearchParams, item: queryItemType })
 	}, [])
 
 	useEffect(() => {
-		console.log("search params are ", searchParams)
 		if (!initSearchParamsLoaded && JSON.stringify(searchParams) == JSON.stringify({ ...initSearchParams, item: queryItemType })) {
 			setInitSearchParamsLoaded(true)
 		}

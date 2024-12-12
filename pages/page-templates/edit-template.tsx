@@ -163,6 +163,7 @@ const EditTemplate = ({ itemType, excluded, defaultValues }: Props) => {
 
 	const isFicheTargetItemEmpty = () => {
 		if (!formData) return true
+		if (ficheTargetItemTypes.every((v) => getExcludedFields().includes(v))) return false
 		let isTargetFieldEmpty = true
 		for (const fieldName of ficheTargetItemTypes) {
 			if (!isEmpty(formData[fieldName].value)) {
@@ -366,9 +367,10 @@ const EditTemplate = ({ itemType, excluded, defaultValues }: Props) => {
 									: "",
 								formData?.nom?.isInErrorState ? "border-red-600 ring-red-600" : ""
 							)}
+							disabled={getExcludedFields().includes("nom")}
 							placeholder={getTitlePlaceHolder()}
 							onChange={(e) => handleTitleChange(e.target.value)}
-							value={formData?.nom?.value ?? ""}
+							value={formData?.nom?.value ?? defaultValues?.nom ?? ""}
 						/>
 						<div className="w-full flex flex-wrap items-center justify-between gap-4">
 							<span className="text-sm uppercase tracking-widest text-blue-600/60">{getItemTypeLabel()}</span>

@@ -1,10 +1,12 @@
 import { Fiche, fichesViewConf } from "@conf/api/data-types/fiche"
+import { User } from "@conf/api/data-types/user"
 import { MySession } from "@conf/utility-types"
 import { getExtraSSRData, isAuthError } from "@utils/req-utils"
 import SSRmakeAPIRequest from "@utils/ssr-make-api-request"
 import axios from "axios"
 import { GetServerSideProps, NextPage } from "next"
 import { getServerSession } from "next-auth"
+import { useSession } from "next-auth/react"
 import Head from "next/head"
 import { authOptions } from "pages/api/auth/[...nextauth]"
 import ViewTemplate from "pages/page-templates/view-template"
@@ -17,6 +19,7 @@ const itemType = "fiches"
 
 interface Props {
 	data: Fiche | null
+	usersInGroups: string[] | null
 	extra: {
 		auteur: string
 		exposition: string
@@ -28,8 +31,11 @@ interface Props {
 	} | null
 }
 
-const ViewFiche: NextPage<Props> = ({ data, extra }) => {
+const ViewFiche: NextPage<Props> = ({ data, usersInGroups, extra }) => {
 	// useEffect(() => console.log(data), [])
+
+	const session = useSession().data as MySession | null
+	const user = session?.user
 
 	// utils
 
@@ -54,6 +60,7 @@ const ViewFiche: NextPage<Props> = ({ data, extra }) => {
 				itemType={itemType}
 				itemTitle={data.nom}
 				itemData={data}
+				userIsInGroup={user && usersInGroups ? usersInGroups.includes(user.username) : false}
 				extraData={extra}
 				hidden={getHiddenAttributes()}
 			/>
@@ -79,7 +86,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 	// return empty props if we don't have an auth token
 	// because if means we have no way to retrieve the data
 
-	if (session == null) return { props: { data: null, extra: null } }
+	if (session == null) return { props: { data: null, usersInGroups: null, extra: null } }
 
 	// make the API request
 
@@ -103,7 +110,75 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 		}
 	})
 
-	if (is401 || isError) return { props: { data: null, extra: null } }
+	const author = data
+		? await SSRmakeAPIRequest<User, User>({
+				session: session,
+				verb: "get",
+				itemType: "users",
+				additionalPath: `id/${data.auteur_id}`,
+				onSuccess: (res) => res.data,
+				onFailure: (error) => {
+					if (isAuthError(error)) is401 = true
+					else if (axios.isAxiosError(error) && error.response?.status == 404) {
+						is404 = true
+					} else {
+						isError = true
+					}
+				}
+			})
+		: null
+
+	const userEnCharge = data
+		? await SSRmakeAPIRequest<User, User>({
+				session: session,
+				verb: "get",
+				itemType: "users",
+				additionalPath: `id/${data.user_en_charge_id}`,
+				onSuccess: (res) => res.data,
+				onFailure: (error) => {
+					if (isAuthError(error)) is401 = true
+					else if (axios.isAxiosError(error) && error.response?.status == 404) {
+						is404 = true
+					} else {
+						isError = true
+					}
+				}
+			})
+		: null
+
+	interface Group {
+		id: number
+		nom: string
+		users: string[]
+	}
+
+	const getGroupUsernames = async (groupName: string) =>
+		await SSRmakeAPIRequest<Group, string[]>({
+			session: session,
+			verb: "get",
+			itemType: "groups",
+			additionalPath: `${groupName}/`,
+			onSuccess: (res) => res.data.users,
+			onFailure: (error) => {}
+		})
+
+	const usersInGroupsSettledPromises =
+		author && userEnCharge ? await Promise.allSettled([...author.groups.map(getGroupUsernames), ...userEnCharge.groups.map(getGroupUsernames)]) : null
+
+	// resolve settled promises
+	const usersInGroups = usersInGroupsSettledPromises
+		? Array.from(
+				new Set(
+					usersInGroupsSettledPromises
+						.filter((p) => p.status == "fulfilled")
+						.map((p) => p.value)
+						.filter((v): v is string[] => !!v)
+						.flat()
+				)
+			)
+		: null
+
+	if (is401 || isError) return { props: { data: null, usersInGroups: null, extra: null } }
 	// in case the provided fiche_id doesn't exist in the database
 	else if (is404) return { notFound: true } // show the 404 page
 
@@ -129,6 +204,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 	return {
 		props: {
 			data: data ? data : null,
+			usersInGroups: usersInGroups ? usersInGroups : null,
 			extra: {
 				auteur: auteur ? auteur : "Erreur",
 				exposition: exposition ? exposition : "Erreur",

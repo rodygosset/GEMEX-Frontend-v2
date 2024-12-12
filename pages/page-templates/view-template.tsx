@@ -11,11 +11,12 @@ interface Props {
 	itemType: string
 	itemTitle: string
 	itemData: any
+	userIsInGroup: boolean
 	extraData?: any
 	hidden?: string[]
 }
 
-const ViewTemplate = ({ itemType, itemTitle, itemData, extraData, hidden }: Props) => {
+const ViewTemplate = ({ itemType, itemTitle, itemData, userIsInGroup, extraData, hidden }: Props) => {
 	// utils
 
 	const getItemTypeLabel = () => {
@@ -65,6 +66,7 @@ const ViewTemplate = ({ itemType, itemTitle, itemData, extraData, hidden }: Prop
 					<ActionButtons
 						itemType={itemType}
 						itemData={itemData}
+						userIsInGroup={userIsInGroup}
 					/>
 				</div>
 			</div>
