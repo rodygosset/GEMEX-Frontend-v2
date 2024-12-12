@@ -12,8 +12,6 @@ import { useRouter } from "next/router"
 import { toSearchFiltersObject, toURLQuery } from "@utils/search-utils"
 import { capitalizeFirstLetter } from "@utils/general"
 
-// todo: sort & sort order component
-
 const SortControl = () => {
 	const { searchParams, setSearchParams } = useContext(Context)
 
