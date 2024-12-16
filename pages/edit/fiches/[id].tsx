@@ -197,7 +197,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 		? Array.from(
 				new Set(
 					usersInGroupsSettledPromises
-						.filter((p) => p.status == "fulfilled")
+						.filter((p): p is PromiseFulfilledResult<string[]> => p.status == "fulfilled")
 						.map((p) => p.value)
 						.filter((v): v is string[] => !!v)
 						.flat()
