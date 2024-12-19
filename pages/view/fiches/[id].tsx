@@ -45,8 +45,6 @@ const ViewFiche: NextPage<Props> = ({ data, usersInGroups, extra }) => {
 		return fichesViewConf[ficheType].excludedFields
 	}
 
-	console.log("users in groups", usersInGroups)
-
 	// render
 
 	return data ? (
