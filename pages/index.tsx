@@ -147,7 +147,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 			data: {
 				tags: ["Panne"],
 				date_debut: toISO(new Date()),
-				is_active: true
+				is_active: true,
+				status_id: 2 // en cours
 			},
 			onSuccess: (res) => res.data.nb_results
 		})) ?? 0,
@@ -197,7 +198,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 			caption: "Pannes en cours",
 			color: "from-fuchsia-700 to-red-600",
 			icon: faBox,
-			link: `/search?item=fiches&tags=Panne&date_debut=${toISO(new Date())}&is_active=true`,
+			link: `/search?item=fiches&tags=Panne&date_debut=${toISO(new Date())}&is_active=true&status_id=2`,
 			value: values[0]
 		},
 		{

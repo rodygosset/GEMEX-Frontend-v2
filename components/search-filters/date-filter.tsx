@@ -63,6 +63,7 @@ const DateFilter = ({ name, filter, onChange, onToggle }: SearchFilterProps) => 
 				strict={false}
 				format={format}
 				onFormatChange={setFormat}
+				popperPlacement="left"
 			/>
 		</FilterWrapper>
 	)

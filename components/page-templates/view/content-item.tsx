@@ -22,9 +22,10 @@ interface Props {
 	data: any
 	itemType: string
 	itemData: any
+	userIsInGroup?: boolean
 }
 
-const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
+const ContentItem = ({ name, conf, data, itemType, itemData, userIsInGroup }: Props) => {
 	const router = useRouter()
 
 	const getContent = () => {
@@ -103,6 +104,7 @@ const ContentItem = ({ name, conf, data, itemType, itemData }: Props) => {
 					<FicheStatus
 						ficheData={itemData as Fiche}
 						status={data}
+						userIsInGroup={userIsInGroup}
 					/>
 				)
 			case "expoOpeningPeriod":

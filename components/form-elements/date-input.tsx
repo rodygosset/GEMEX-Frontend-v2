@@ -20,6 +20,8 @@ import { DatePicker } from "@components/radix/date-picker"
 // in which case strict is set to false
 // & by other forms, which use it in its default mode
 
+type Placement = React.ComponentProps<typeof ReactDatePicker>["popperPlacement"]
+
 interface Props {
 	// this prop determines whether the user is allowed to
 	// select a single month, year or day
@@ -36,6 +38,7 @@ interface Props {
 	maxDate?: Date
 	onChange: (newValue: Date) => void
 	onFormatChange?: (newFormat: DateFormat) => void
+	popperPlacement?: Placement
 }
 
 // custom select styles for the format selector
@@ -107,7 +110,8 @@ const DateInput = ({
 	minDate,
 	maxDate,
 	onChange,
-	onFormatChange
+	onFormatChange,
+	popperPlacement = "auto"
 }: Props) => {
 	// state
 
@@ -222,6 +226,7 @@ const DateInput = ({
 						maxDate={maxDate}
 						// @ts-ignore
 						customInput={<CustomInput showLocaleDate={showLocaleDate} />}
+						popperPlacement={popperPlacement}
 					/>
 				)}
 				{!strict && (

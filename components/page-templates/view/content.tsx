@@ -7,6 +7,7 @@ interface Props {
 	itemData: any
 	extraData?: any
 	hidden?: string[]
+	userIsInGroup?: boolean
 }
 
 // the goal of this component is to generate a list
@@ -14,7 +15,7 @@ interface Props {
 // it uses the view conf to determine how to display each item
 // & in which order
 
-const Content = ({ itemType, itemData, extraData, hidden }: Props) => {
+const Content = ({ itemType, itemData, extraData, hidden, userIsInGroup }: Props) => {
 	const hiddenAttributes = ["nom", "username", "titre", "fichiers"]
 
 	// the content is displayed in two columns / lists
@@ -62,6 +63,7 @@ const Content = ({ itemType, itemData, extraData, hidden }: Props) => {
 					data={getData()}
 					itemType={itemType}
 					itemData={itemData}
+					userIsInGroup={userIsInGroup}
 				/>
 			)
 		})

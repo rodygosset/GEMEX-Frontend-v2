@@ -19,9 +19,10 @@ interface Props {
 		label: string
 		id: number
 	}
+	userIsInGroup?: boolean
 }
 
-const FicheStatus = ({ ficheData, status }: Props) => {
+const FicheStatus = ({ ficheData, status, userIsInGroup }: Props) => {
 	// lifecycle
 	// 1. Demande => can be accepted or closed by a group manager only
 	// 2. Ouverte => can be marked as in progress ("en cours")
@@ -62,9 +63,9 @@ const FicheStatus = ({ ficheData, status }: Props) => {
 
 	const shouldAllowAcceptOrClose = () => status.id == REQUEST_STATUS_ID && userIsManager
 
-	const shouldAllowMarkAsInit = () => status.id == DONE_STATUS_ID && userIsInvolved
+	const shouldAllowMarkAsInit = () => status.id == DONE_STATUS_ID && (userIsInvolved || userIsInGroup)
 
-	const shouldAllowMarkAsDone = () => status.id == INIT_STATUS_ID && userIsInvolved
+	const shouldAllowMarkAsDone = () => status.id == INIT_STATUS_ID && (userIsInvolved || userIsInGroup)
 
 	const shouldAllowMarkAsApproved = () => status.id == DONE_STATUS_ID && userIsManager
 

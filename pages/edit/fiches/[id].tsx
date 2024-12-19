@@ -180,18 +180,22 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 	}
 
 	const getGroupUsernames = async (groupName: string) =>
-		await SSRmakeAPIRequest<Group, string[]>({
+		await SSRmakeAPIRequest<Group[], string[]>({
 			session: session,
-			verb: "get",
+			verb: "post",
 			itemType: "groups",
-			additionalPath: `${groupName}/`,
-			onSuccess: (res) => res.data.users,
+			additionalPath: `search/`,
+			data: {
+				nom: groupName
+			},
+			onSuccess: (res) => res.data.map((group) => group.users).flat(),
 			onFailure: (error) => {}
 		})
 
 	const usersInGroupsSettledPromises =
 		author && userEnCharge ? await Promise.allSettled([...author.groups.map(getGroupUsernames), ...userEnCharge.groups.map(getGroupUsernames)]) : null
 
+	console.log("usersInGroupsSettledPromises is", usersInGroupsSettledPromises)
 	// resolve settled promises
 	const usersInGroups = usersInGroupsSettledPromises
 		? Array.from(

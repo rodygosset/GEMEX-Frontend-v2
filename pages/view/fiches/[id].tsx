@@ -45,6 +45,8 @@ const ViewFiche: NextPage<Props> = ({ data, usersInGroups, extra }) => {
 		return fichesViewConf[ficheType].excludedFields
 	}
 
+	console.log("users in groups", usersInGroups)
+
 	// render
 
 	return data ? (
@@ -153,13 +155,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 	}
 
 	const getGroupUsernames = async (groupName: string) =>
-		await SSRmakeAPIRequest<Group, string[]>({
+		await SSRmakeAPIRequest<Group[], string[]>({
 			session: session,
-			verb: "get",
+			verb: "post",
 			itemType: "groups",
-			additionalPath: `${groupName}/`,
-			onSuccess: (res) => res.data.users,
-			onFailure: (error) => {}
+			additionalPath: `search/`,
+			data: {
+				nom: groupName
+			},
+			onSuccess: (res) => res.data.map((group) => group.users).flat(),
+			onFailure: (error) => {
+				console.log("error is", error)
+			}
 		})
 
 	const usersInGroupsSettledPromises =

@@ -76,6 +76,7 @@ const ViewTemplate = ({ itemType, itemTitle, itemData, userIsInGroup, extraData,
 					itemData={itemData}
 					extraData={extraData}
 					hidden={hidden}
+					userIsInGroup={userIsInGroup}
 				/>
 				{
 					// only render the file cards
